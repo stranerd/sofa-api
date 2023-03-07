@@ -1,0 +1,88 @@
+version: '3.8'
+services:
+  traefik:
+    build:
+      context: ./docker/traefik
+      args:
+        BASE_DOMAIN: ${BASE_DOMAIN}
+        USE_SSL: ${USE_SSL}
+        PORT: ${PORT}
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/c/data/docker/sofa/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
+      - "/c/data/docker/sofa/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  api:
+    build:
+      context: ./services/api
+      target: production
+    hostname: api
+    restart: always
+    stop_grace_period: 60s
+    depends_on:
+      - mongo
+      - redis
+      - kafka
+      - debezium
+    volumes:
+      - '/c/data/docker/sofa/api/public/:/app/public/'
+    command: 'sh ./wait-for-it.sh mongo:27017 redis:6379 kafka:9092 debezium:8083 -- node lib/index.js'
+
+  mongo:
+    image: 'mongo:6.0.3'
+    hostname: mongo
+    volumes:
+      - '/c/data/docker/sofa/mongo/data/db:/data/db'
+      - '/c/data/docker/sofa/mongo/data/configdb:/data/configdb'
+    restart: always
+    command: '--quiet --bind_ip_all --replSet rs0'
+
+  rsinit:
+    build:
+      context: ./docker/mongo
+    hostname: rsinit
+    depends_on:
+      - mongo
+    restart: on-failure
+    entrypoint: 'bash ./rs.sh'
+
+  redis:
+    image: 'redis:6.2.5-alpine'
+    hostname: redis
+    restart: always
+
+  kafka:
+    image: bitnami/kafka:3.4.0
+    hostname: kafka
+    restart: always
+    volumes:
+      - '/c/data/docker/sofa/kafka/data:/bitnami/kafka'
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093,PLAINTEXT_HOST://0.0.0.0:29092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+  debezium:
+    image: debezium/connect:2.2
+    environment:
+      BOOTSTRAP_SERVERS: ${KAFKA_BROKERS}
+      GROUP_ID: sofa-api
+      CONFIG_STORAGE_TOPIC: debezium.connect.configs
+      OFFSET_STORAGE_TOPIC: debezium.connect.offsets
+      STATUS_STORAGE_TOPIC: debezium.connect.status
+    depends_on:
+      - kafka
+    volumes:
+      - '/c/data/docker/sofa/debezium/data/config:/kafka/config'
+      - '/c/data/docker/sofa/debezium/data/logs:/kafka/logs'
