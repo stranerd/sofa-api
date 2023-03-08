@@ -13,7 +13,7 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 		await appInstance.listener.created(`users/connects/${after.id}/${after.from.id}`, after)
 		await appInstance.listener.created(`users/connects/${after.id}/${after.to.id}`, after)
 		await sendNotification([after.to.id], {
-			title: `${after.from.bio.fullName} is requesting to connect`,
+			title: `${after.from.bio.name.full} is requesting to connect`,
 			sendEmail: false,
 			body: 'Check out their profile',
 			data: { type: NotificationType.ConnectRequested, connectId: after.id, userId: after.from.id }
@@ -33,12 +33,12 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 				id: after.to.id, property: UserMeta.connects, value: after.accepted ? 1 : -1
 			}),
 			after.accepted ? sendNotification([after.from.id], {
-				title: `${after.from.bio.fullName} accepted your request`,
+				title: `${after.from.bio.name.full} accepted your request`,
 				sendEmail: false,
 				body: 'Go message them!',
 				data: { type: NotificationType.ConnectAccepted, connectId: after.id, userId: after.to.id }
 			}) : sendNotification([after.from.id], {
-				title: `${after.from.bio.fullName} declined your request`,
+				title: `${after.from.bio.name.full} declined your request`,
 				sendEmail: false,
 				body: 'Try connecting later!',
 				data: { type: NotificationType.ConnectDeclined, connectId: after.id, userId: after.to.id }

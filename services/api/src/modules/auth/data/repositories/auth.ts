@@ -164,7 +164,8 @@ export class AuthRepository implements IAuthRepository {
 		} as unknown as MediaOutput : null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, firstName: data.first_name, lastName: data.last_name,
+			email, photo,
+			name: { first: data.first_name, last: data.last_name },
 			isVerified: data.email_verified === 'true'
 		})
 	}
@@ -177,17 +178,17 @@ export class AuthRepository implements IAuthRepository {
 		if (!email) throw new BadRequestError('can\'t access your email. Signin another way')
 
 		return this.authorizeSocial(AuthTypes.apple, {
-			email, photo: null, firstName: firstName ?? 'Apple User', lastName: lastName ?? '',
+			email, photo: null,
+			name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
 			isVerified: data.email_verified === 'true'
 		})
 	}
 
-	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'firstName' | 'lastName' | 'photo' | 'isVerified'>) {
+	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
-			firstName: data.firstName,
-			lastName: data.lastName,
+			name: data.name,
 			description: '',
 			email: data.email,
 			photo: data.photo,

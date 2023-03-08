@@ -20,17 +20,9 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: ''
 	},
-	firstName: {
-		type: String,
-		trim: true,
-		required: false,
-		default: ''
-	},
-	lastName: {
-		type: String,
-		trim: true,
-		required: false,
-		default: ''
+	name: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
 	},
 	description: {
 		type: String,

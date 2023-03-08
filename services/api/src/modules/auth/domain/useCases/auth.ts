@@ -24,12 +24,7 @@ export class AuthUseCase {
 
 	async registerUser (params: RegisterInput) {
 		const userModel: UserToModel = {
-			firstName: params.firstName,
-			lastName: params.lastName,
-			password: params.password,
-			email: params.email,
-			description: params.description,
-			photo: params.photo,
+			...params,
 			phone: null,
 			isVerified: false,
 			authTypes: [AuthTypes.email]

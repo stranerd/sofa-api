@@ -12,8 +12,7 @@ export interface UserToModel {
 	email: string
 	password: string
 	description: string
-	firstName: string
-	lastName: string
+	name: { first: string, last: string }
 	photo: MediaOutput | null
 	phone: Phone | null
 	isVerified: boolean

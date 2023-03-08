@@ -12,9 +12,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			id: after.id,
 			timestamp: after.signedUpAt,
 			data: {
-				firstName: after.firstName,
-				lastName: after.lastName,
-				fullName: after.fullName,
+				name: after.allNames,
 				email: after.email,
 				description: after.description,
 				phone: after.phone,
@@ -32,9 +30,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			id: after.id,
 			timestamp: Date.now(),
 			data: {
-				firstName: after.firstName,
-				lastName: after.lastName,
-				fullName: after.fullName,
+				name: after.allNames,
 				email: after.email,
 				description: after.description,
 				phone: after.phone,

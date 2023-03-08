@@ -6,8 +6,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly email: string
 	public readonly password: string
 	public readonly description: string
-	public readonly firstName: string
-	public readonly lastName: string
+	public readonly name: { first: string, last: string }
 	public readonly photo: MediaOutput | null
 	public readonly phone: Phone | null
 	public readonly isVerified: boolean
@@ -21,8 +20,7 @@ export class AuthUserEntity extends BaseEntity {
 		this.id = data.id
 		this.email = data.email
 		this.password = data.password
-		this.firstName = data.firstName
-		this.lastName = data.lastName
+		this.name = data.name
 		this.description = data.description
 		this.photo = data.photo
 		this.phone = data.phone
@@ -33,12 +31,15 @@ export class AuthUserEntity extends BaseEntity {
 		this.signedUpAt = data.signedUpAt
 	}
 
-	get fullName () {
-		return [this.firstName, this.lastName].join(' ').replaceAll('  ', ' ')
+	get allNames () {
+		return {
+			...this.name,
+			full: [this.name.first, this.name.last].join(' ').replaceAll('  ', ' ')
+		}
 	}
 
 	static bioKeys (): (keyof UserUpdateInput | 'email' | 'phone')[] {
-		return ['firstName', 'lastName', 'email', 'photo', 'description', 'phone']
+		return ['name', 'email', 'photo', 'description', 'phone']
 	}
 }
 
@@ -48,8 +49,7 @@ export interface UserConstructorArgs {
 	password: string
 	description: string
 	roles: AuthRoles
-	firstName: string
-	lastName: string
+	name: { first: string, last: string }
 	photo: MediaOutput | null
 	phone: Phone | null
 	isVerified: boolean

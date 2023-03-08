@@ -3,9 +3,7 @@ import { AuthRoles, MediaOutput } from 'equipped'
 
 export type UserBio = {
 	email: string
-	firstName: string
-	lastName: string
-	fullName: string
+	name: { first: string, last: string, full: string }
 	description: string
 	photo: MediaOutput | null
 	phone: Phone | null
@@ -36,8 +34,8 @@ export type UserAccount = {
 
 export type EmbeddedUser = {
 	id: string
-	bio: UserBio
-	roles: UserRoles
+	bio: Pick<UserBio, 'name' | 'photo'>
+	roles: {}
 }
 
 export enum UserMeta {
