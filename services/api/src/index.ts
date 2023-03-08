@@ -19,7 +19,6 @@ const start = async () => {
 			await UsersUseCases.updateStatus({
 				userId, socketId, add: true
 			})
-			await UsersUseCases.updateStreak(userId)
 		},
 		onDisconnect: async (userId, socketId) => {
 			await UsersUseCases.updateStatus({

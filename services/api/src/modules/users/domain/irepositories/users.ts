@@ -19,8 +19,6 @@ export interface IUserRepository {
 
 	resetRankings (key: keyof UserAccount['rankings']): Promise<boolean>
 
-	updateUserStreak (userId: string): Promise<{ skip: boolean, increase: boolean, reset: boolean, streak: number }>
-
 	updateUserStatus (userId: string, socketId: string, add: boolean): Promise<boolean>
 
 	resetAllUsersStatus (): Promise<boolean>

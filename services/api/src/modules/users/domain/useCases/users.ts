@@ -52,8 +52,4 @@ export class UsersUseCase {
 	async updateSchool (params: { userId: string, data: UserSchoolData }) {
 		return await this.repository.updateUserSchoolData(params.userId, params.data)
 	}
-
-	async updateStreak (id: string) {
-		return await this.repository.updateUserStreak(id)
-	}
 }

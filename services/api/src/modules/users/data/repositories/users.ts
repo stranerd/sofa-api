@@ -1,7 +1,7 @@
-import { getDateDifference } from '../../utils/dates'
 import { appInstance } from '@utils/types'
 import { IUserRepository } from '../../domain/irepositories/users'
 import { UserAccount, UserBio, UserRankings, UserRoles, UserSchoolData } from '../../domain/types'
+import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
@@ -75,7 +75,7 @@ export class UserRepository implements IUserRepository {
 		})
 	}
 
-	async updateUserStreak (userId: string) {
+	private async updateUserStreak (userId: string) {
 		const res = { skip: false, increase: false, reset: false, streak: 0 }
 		await User.collection.conn.transaction(async (session) => {
 			const userModel = await User.findById(userId, null, { session })
@@ -103,6 +103,7 @@ export class UserRepository implements IUserRepository {
 			$set: { 'status.lastUpdatedAt': Date.now() },
 			[add ? '$addToSet' : '$pull']: { 'status.connections': socketId }
 		})
+		if (add) await this.updateUserStreak(userId)
 		return !!user
 	}
 
