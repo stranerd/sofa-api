@@ -50,5 +50,5 @@ link-commons:
 	$(foreach app, $(APPS),\
 	rm -r ./services/$(app)/src/utils/app &&\
 	mkdir -p ./services/$(app)/src/utils/app/commons &&\
-	cp -al ./services/links/* ./services/$(app)/src/utils/app/ &&\
+	cp -al ./services/types/* ./services/$(app)/src/utils/types/ &&\
 ) echo
