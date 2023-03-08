@@ -23,17 +23,10 @@ export class UserRepository implements IUserRepository {
 		}
 	}
 
-	async createUserWithBio (userId: string, data: UserBio, timestamp: number) {
+	async createOrUpdateUser (userId: string, data: UserBio, timestamp: number) {
 		await User.findByIdAndUpdate(userId, {
 			$set: { bio: data },
 			$setOnInsert: { _id: userId, dates: { createdAt: timestamp, deletedAt: null } }
-		}, { upsert: true })
-	}
-
-	async updateUserWithBio (userId: string, data: UserBio, _: number) {
-		await User.findByIdAndUpdate(userId, {
-			$set: { bio: data },
-			$setOnInsert: { _id: userId }
 		}, { upsert: true })
 	}
 
@@ -56,8 +49,7 @@ export class UserRepository implements IUserRepository {
 			Object.keys(UserRankings).map((key) => [`account.rankings.${key}.lastUpdatedAt`, amount])
 		)
 		const user = await User.findByIdAndUpdate(userId, {
-			$set: lastUpdatedAt,
-			$inc: { ...rankings, 'account.score': amount }
+			$set: lastUpdatedAt, $inc: rankings
 		})
 		return !!user
 	}

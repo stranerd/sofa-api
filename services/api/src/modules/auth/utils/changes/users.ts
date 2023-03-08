@@ -8,7 +8,7 @@ import { subscribeToMailingList } from '../mailing'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEntity> = {
 	created: async ({ after }) => {
-		await UsersUseCases.createWithBio({
+		await UsersUseCases.createOrUpdateUser({
 			id: after.id,
 			timestamp: after.signedUpAt,
 			data: {
@@ -26,7 +26,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 
 		const updatedBio = AuthUserEntity.bioKeys().some((key) => changes[key])
-		if (updatedBio) await UsersUseCases.updateWithBio({
+		if (updatedBio) await UsersUseCases.createOrUpdateUser({
 			id: after.id,
 			timestamp: Date.now(),
 			data: {

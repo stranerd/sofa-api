@@ -84,11 +84,6 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		}
 	},
 	account: {
-		score: {
-			type: Number,
-			required: false,
-			default: 0
-		},
 		rankings: Rankings,
 		meta: Meta,
 		streak: UserStreak

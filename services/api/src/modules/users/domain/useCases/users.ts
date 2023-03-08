@@ -9,12 +9,8 @@ export class UsersUseCase {
 		this.repository = repo
 	}
 
-	async createWithBio (params: { id: string, data: UserBio, timestamp: number }) {
-		return await this.repository.createUserWithBio(params.id, params.data, params.timestamp)
-	}
-
-	async updateWithBio (params: { id: string, data: UserBio, timestamp: number }) {
-		return await this.repository.updateUserWithBio(params.id, params.data, params.timestamp)
+	async createOrUpdateUser (params: { id: string, data: UserBio, timestamp: number }) {
+		return await this.repository.createOrUpdateUser(params.id, params.data, params.timestamp)
 	}
 
 	async updateRoles (params: { id: string, data: UserRoles, timestamp: number }) {

@@ -5,9 +5,7 @@ import { ScoreRewards, UserAccount, UserBio, UserRoles, UserSchoolData } from '.
 export interface IUserRepository {
 	getUsers (query: QueryParams): Promise<QueryResults<UserEntity>>
 
-	createUserWithBio (userId: string, data: UserBio, timestamp: number): Promise<void>
-
-	updateUserWithBio (userId: string, data: UserBio, timestamp: number): Promise<void>
+	createOrUpdateUser (userId: string, data: UserBio, timestamp: number): Promise<void>
 
 	updateUserWithRoles (userId: string, data: UserRoles, timestamp: number): Promise<void>
 

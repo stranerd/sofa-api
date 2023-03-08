@@ -23,7 +23,7 @@ export class UserEntity extends BaseEntity {
 	}
 
 	get rank () {
-		return getRank(this.account.score ?? 0)
+		return getRank(this.account.rankings.overall.value ?? 0)
 	}
 
 	get nextRank () {
