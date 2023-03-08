@@ -18,14 +18,10 @@ const Ev = makeEnum('EventTypes', {
 } as const)
 
 const Dj = makeEnum('DelayedJobs', {
-	TestTimer: 'TestTimer',
 	RenewSubscription: 'RenewSubscription',
-	ClassEvent: 'ClassEvent'
 } as const)
 
-const Clj = makeEnum('CronLikeJobs', {
-	ClassEvent: 'ClassEvent'
-} as const)
+const Clj = makeEnum('CronLikeJobs', {} as const)
 
 // @ts-ignore
 declare module 'equipped/lib/enums/types' {

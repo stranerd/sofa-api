@@ -30,9 +30,6 @@
 			],
 			"@utils/*": [
 				"./src/utils/*"
-			],
-			"@index": [
-				"./src/index"
 			]
 		},
 		"types": [
