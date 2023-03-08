@@ -48,7 +48,7 @@ build-all:
 
 link-commons:
 	$(foreach app, $(APPS),\
-	rm -r ./services/$(app)/src/utils/app &&\
-	mkdir -p ./services/$(app)/src/utils/app/commons &&\
+	rm -rf ./services/$(app)/src/utils/types &&\
+	mkdir -p ./services/$(app)/src/utils/types &&\
 	cp -al ./services/types/* ./services/$(app)/src/utils/types/ &&\
 ) echo

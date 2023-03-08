@@ -76,7 +76,7 @@ services:
   debezium:
     image: debezium/connect:2.2
     environment:
-      BOOTSTRAP_SERVERS: ${KAFKA_BROKERS}
+      BOOTSTRAP_SERVERS: ${KAFKA_URIS}
       GROUP_ID: sofa-api
       CONFIG_STORAGE_TOPIC: debezium.connect.configs
       OFFSET_STORAGE_TOPIC: debezium.connect.offsets
