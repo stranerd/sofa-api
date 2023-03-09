@@ -1,7 +1,7 @@
-import FlutterwaveNode from 'flutterwave-node-v3'
 import { flutterwaveConfig } from '@utils/environment'
-import { Currencies, CurrencyCountries, MethodType } from '../domain/types'
+import FlutterwaveNode from 'flutterwave-node-v3'
 import { MethodToModel } from '../data/models/methods'
+import { Currencies, MethodType } from '../domain/types'
 
 const flw = () => new FlutterwaveNode(flutterwaveConfig.publicKey, flutterwaveConfig.secretKey)
 
@@ -30,12 +30,6 @@ type TransferRate = {
 	rate: number
 	source: { currency: Currencies, amount: number }
 	destination: { currency: Currencies, amount: number }
-}
-
-type Bank = {
-	id: number
-	code: string
-	name: string
 }
 
 export class FlutterwavePayment {
@@ -88,18 +82,5 @@ export class FlutterwavePayment {
 			tx_ref: data.id
 		}).catch(() => null)
 		return (res?.data as FwTransaction | null)?.status === 'successful'
-	}
-
-	static async getBanks (country: CurrencyCountries) {
-		const res = await flw().CustomRequest.custom(`v3/banks/${country}`, { method: 'GET' }).catch(() => null)
-		return res?.body?.data as Bank[] ?? []
-	}
-
-	static async verifyAccount ({ number, bankCode }: { number: string, bankCode: string }) {
-		const res = await flw().Misc.verify_Account({
-			account_number: number,
-			account_bank: bankCode
-		}).catch(() => null)
-		return !!res?.data
 	}
 }

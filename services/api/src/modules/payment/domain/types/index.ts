@@ -4,10 +4,6 @@ export enum Currencies {
 	NGN = 'NGN'
 }
 
-export enum CurrencyCountries {
-	NG = 'NG'
-}
-
 export enum TransactionStatus {
 	initialized = 'initialized',
 	fulfilled = 'fulfilled',
@@ -68,13 +64,6 @@ export type PlanFeatures = {
 	tests: boolean
 	solutions: boolean
 	manuals: boolean
-}
-
-export type AccountDetails = {
-	country: CurrencyCountries
-	number: string
-	bankCode: string
-	bankName: string
 }
 
 export enum MethodType {

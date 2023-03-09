@@ -1,6 +1,6 @@
 import { BadRequestError } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
-import { AccountDetails, PlanDataType, SubscriptionModel } from '../../domain/types'
+import { PlanDataType, SubscriptionModel } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
 import { Wallet } from '../mongooseModels/wallets'
 
@@ -53,12 +53,6 @@ export class WalletRepository implements IWalletRepository {
 	async updateSubscriptionData (userId: string, key: PlanDataType, value: number) {
 		let wallet = await WalletRepository.getUserWallet(userId)
 		wallet = (await Wallet.findByIdAndUpdate(wallet._id, { $inc: { [`subscription.data.${key}`]: value } }, { new: true }))!
-		return this.mapper.mapFrom(wallet)!
-	}
-
-	async updateAccount (userId: string, account: AccountDetails) {
-		let wallet = await WalletRepository.getUserWallet(userId)
-		wallet = (await Wallet.findByIdAndUpdate(wallet._id, { $set: { account } }, { new: true }))!
 		return this.mapper.mapFrom(wallet)!
 	}
 }
