@@ -4,7 +4,7 @@ import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
 export const notificationsRoutes = groupRoutes('/notifications', [
 	{
-		path: '/notifications/',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -16,7 +16,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			})
 		]
 	}, {
-		path: '/notifications/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -28,7 +28,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			})
 		]
 	}, {
-		path: '/notifications/seen',
+		path: '/seen',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
@@ -40,7 +40,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			})
 		]
 	}, {
-		path: '/notifications/:id/seen',
+		path: '/:id/seen',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
