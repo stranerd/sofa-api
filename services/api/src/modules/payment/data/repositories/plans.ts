@@ -2,7 +2,7 @@ import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IPlanRepository } from '../../domain/irepositories/plans'
 import { PlanMapper } from '../mappers/plans'
-import { PlanFromModel, PlanToModel } from '../models/plans'
+import { PlanToModel } from '../models/plans'
 import { Plan } from '../mongooseModels/plans'
 
 export class PlanRepository implements IPlanRepository {
@@ -19,7 +19,7 @@ export class PlanRepository implements IPlanRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query<PlanFromModel>(Plan, query)
+		const data = await appInstance.dbs.mongo.query(Plan, query)
 
 		return {
 			...data,

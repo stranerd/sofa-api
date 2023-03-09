@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { DepartmentEntity } from '../../domain/entities/departments'
 import { IDepartmentRepository } from '../../domain/irepositories/departments'
 import { DepartmentMapper } from '../mappers/departments'
-import { DepartmentFromModel, DepartmentToModel } from '../models/departments'
+import { DepartmentToModel } from '../models/departments'
 import { Department } from '../mongooseModels/departments'
 
 export class DepartmentRepository implements IDepartmentRepository {
@@ -20,7 +20,7 @@ export class DepartmentRepository implements IDepartmentRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query<DepartmentFromModel>(Department, query)
+		const data = await appInstance.dbs.mongo.query(Department, query)
 
 		return {
 			...data,

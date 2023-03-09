@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { CourseEntity } from '../../domain/entities/courses'
 import { ICourseRepository } from '../../domain/irepositories/courses'
 import { CourseMapper } from '../mappers/courses'
-import { CourseFromModel, CourseToModel } from '../models/courses'
+import { CourseToModel } from '../models/courses'
 import { Course } from '../mongooseModels/courses'
 
 export class CourseRepository implements ICourseRepository {
@@ -20,7 +20,7 @@ export class CourseRepository implements ICourseRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query<CourseFromModel>(Course, query)
+		const data = await appInstance.dbs.mongo.query(Course, query)
 
 		return {
 			...data,

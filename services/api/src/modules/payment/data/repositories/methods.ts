@@ -2,7 +2,7 @@ import { appInstance } from '@utils/types'
 import { BadRequestError, QueryParams } from 'equipped'
 import { IMethodRepository } from '../../domain/irepositories/methods'
 import { MethodMapper } from '../mappers/methods'
-import { MethodFromModel, MethodToModel } from '../models/methods'
+import { MethodToModel } from '../models/methods'
 import { Method } from '../mongooseModels/methods'
 
 export class MethodRepository implements IMethodRepository {
@@ -19,7 +19,7 @@ export class MethodRepository implements IMethodRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query<MethodFromModel>(Method, query)
+		const data = await appInstance.dbs.mongo.query(Method, query)
 
 		return {
 			...data,

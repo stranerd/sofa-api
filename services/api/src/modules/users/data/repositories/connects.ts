@@ -2,7 +2,7 @@ import { appInstance } from '@utils/types'
 import { IConnectRepository } from '../../domain/irepositories/connects'
 import { EmbeddedUser } from '../../domain/types'
 import { ConnectMapper } from '../mappers/connects'
-import { ConnectFromModel, ConnectToModel } from '../models/connects'
+import { ConnectToModel } from '../models/connects'
 import { Connect } from '../mongooseModels/connects'
 
 export class ConnectRepository implements IConnectRepository {
@@ -20,7 +20,7 @@ export class ConnectRepository implements IConnectRepository {
 	}
 
 	async get (query) {
-		const data = await appInstance.dbs.mongo.query<ConnectFromModel>(Connect, query)
+		const data = await appInstance.dbs.mongo.query(Connect, query)
 		return {
 			...data,
 			results: data.results.map((u) => this.mapper.mapFrom(u)!)

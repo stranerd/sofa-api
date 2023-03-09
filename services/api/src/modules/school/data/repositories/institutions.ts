@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { InstitutionEntity } from '../../domain/entities/institutions'
 import { IInstitutionRepository } from '../../domain/irepositories/institutions'
 import { InstitutionMapper } from '../mappers/institutions'
-import { InstitutionFromModel, InstitutionToModel } from '../models/institutions'
+import { InstitutionToModel } from '../models/institutions'
 import { Institution } from '../mongooseModels/institutions'
 
 export class InstitutionRepository implements IInstitutionRepository {
@@ -20,7 +20,7 @@ export class InstitutionRepository implements IInstitutionRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query<InstitutionFromModel>(Institution, query)
+		const data = await appInstance.dbs.mongo.query(Institution, query)
 
 		return {
 			...data,

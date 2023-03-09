@@ -3,7 +3,6 @@ import { IUserRepository } from '../../domain/irepositories/users'
 import { UserAccount, UserBio, UserRankings, UserRoles, UserSchoolData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
-import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
@@ -16,7 +15,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async getUsers (query) {
-		const data = await appInstance.dbs.mongo.query<UserFromModel>(User, query)
+		const data = await appInstance.dbs.mongo.query(User, query)
 		return {
 			...data,
 			results: data.results.map((u) => this.mapper.mapFrom(u)!)

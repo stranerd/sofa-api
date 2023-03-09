@@ -9,5 +9,5 @@ const connectRepository = ConnectRepository.getInstance()
 export const UsersUseCases = new UsersUseCase(userRepository)
 export const ConnectsUseCases = new ConnectsUseCase(connectRepository)
 
-export { UserEntity } from './domain/entities/users'
-export { UserRankings, UserSchoolType } from './domain/types'
+export { generateDefaultUser, UserEntity } from './domain/entities/users'
+export { EmbeddedUser, UserRankings, UserSchoolType } from './domain/types'

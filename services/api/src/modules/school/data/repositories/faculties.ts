@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { FacultyEntity } from '../../domain/entities/faculties'
 import { IFacultyRepository } from '../../domain/irepositories/faculties'
 import { FacultyMapper } from '../mappers/faculties'
-import { FacultyFromModel, FacultyToModel } from '../models/faculties'
+import { FacultyToModel } from '../models/faculties'
 import { Faculty } from '../mongooseModels/faculties'
 
 export class FacultyRepository implements IFacultyRepository {
@@ -20,7 +20,7 @@ export class FacultyRepository implements IFacultyRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query<FacultyFromModel>(Faculty, query)
+		const data = await appInstance.dbs.mongo.query(Faculty, query)
 
 		return {
 			...data,
