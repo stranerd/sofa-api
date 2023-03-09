@@ -10,4 +10,4 @@ export const AuthUseCases = new AuthUseCase(authRepository)
 export const AuthUsersUseCases = new AuthUsersUseCase(userRepository)
 
 export type { Phone } from './domain/types'
-export { deleteUnverifiedUsers } from './utils/auth'
+export { deleteUnverifiedUsers, generateAuthOutput, getNewTokens, signOutUser } from './utils/auth'

@@ -39,12 +39,6 @@ export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { u
 	return { ...newTokens, user: user! }
 }
 
-export const verifyReferrer = async (referrer: string | null) => {
-	if (!referrer) return false
-	const user = await AuthUsersUseCases.findUser(referrer)
-	return !!user
-}
-
 export const deleteUnverifiedUsers = async () => {
 	const unverifiedUsers = await getUnverifiedUsers()
 	const sevenDays = 7 * 24 * 60 * 60 * 1000
