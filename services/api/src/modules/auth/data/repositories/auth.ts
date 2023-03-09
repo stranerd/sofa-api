@@ -84,7 +84,7 @@ export class AuthRepository implements IAuthRepository {
 		if (!userEmail) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('email-verification-token-' + token)
 
-		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { isVerified: true } }, { new: true })
+		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { isEmailVerified: true } }, { new: true })
 		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!
@@ -166,7 +166,7 @@ export class AuthRepository implements IAuthRepository {
 		return this.authorizeSocial(AuthTypes.google, {
 			email, photo,
 			name: { first: data.first_name, last: data.last_name },
-			isVerified: data.email_verified === 'true'
+			isEmailVerified: data.email_verified === 'true'
 		})
 	}
 
@@ -180,11 +180,11 @@ export class AuthRepository implements IAuthRepository {
 		return this.authorizeSocial(AuthTypes.apple, {
 			email, photo: null,
 			name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
-			isVerified: data.email_verified === 'true'
+			isEmailVerified: data.email_verified === 'true'
 		})
 	}
 
-	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
+	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isEmailVerified'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
@@ -194,7 +194,7 @@ export class AuthRepository implements IAuthRepository {
 			photo: data.photo,
 			authTypes: [type],
 			password: '', phone: null,
-			isVerified: data.isVerified
+			isEmailVerified: data.isEmailVerified
 		}, type)
 
 		return await this.authenticateUser({

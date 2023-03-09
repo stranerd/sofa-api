@@ -21,7 +21,7 @@ export const generateAuthOutput = async (user: AuthUserEntity): Promise<AuthOutp
 		id: user.id,
 		email: user.email,
 		roles: user.roles,
-		isVerified: user.isVerified
+		isEmailVerified: user.isEmailVerified
 	})
 	const refreshToken = await makeRefreshToken({ id: user.id })
 	return { accessToken, refreshToken, user }
@@ -48,7 +48,7 @@ export const deleteUnverifiedUsers = async () => {
 
 const getUnverifiedUsers = async () => {
 	const { results: users } = await AuthUsersUseCases.getUsers({
-		where: [{ field: 'isVerified', value: false }],
+		where: [{ field: 'isEmailVerified', value: false }],
 		all: true
 	})
 	return users

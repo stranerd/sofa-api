@@ -13,7 +13,7 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserE
 			description: param.description,
 			photo: param.photo,
 			phone: param.phone,
-			isVerified: param.isVerified,
+			isEmailVerified: param.isEmailVerified,
 			authTypes: param.authTypes,
 			lastSignedInAt: param.lastSignedInAt,
 			signedUpAt: param.signedUpAt
@@ -29,7 +29,7 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserE
 			description: param.description,
 			photo: param.photo,
 			phone: param.phone,
-			isVerified: param.isVerified,
+			isEmailVerified: param.isEmailVerified,
 			authTypes: param.authTypes,
 			lastSignedInAt: param.lastSignedInAt,
 			signedUpAt: param.signedUpAt

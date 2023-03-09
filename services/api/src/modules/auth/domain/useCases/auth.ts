@@ -26,7 +26,7 @@ export class AuthUseCase {
 		const userModel: UserToModel = {
 			...params,
 			phone: null,
-			isVerified: false,
+			isEmailVerified: false,
 			authTypes: [AuthTypes.email]
 		}
 

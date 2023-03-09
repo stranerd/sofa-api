@@ -35,7 +35,7 @@ export class UserController {
 
 	static async updateUserRole (req: Request) {
 		const { role, userId, value } = validateReq({
-			role: Schema.any<Enum<typeof AuthRole>>().in([AuthRole.isStranerdAdmin, AuthRole.isStranerdTutor]),
+			role: Schema.any<Enum<typeof AuthRole>>().in([AuthRole.isAdmin, AuthRole.isTutor]),
 			userId: Schema.string().min(1),
 			value: Schema.boolean()
 		}, req.body)
@@ -57,7 +57,7 @@ export class UserController {
 		return await AuthUsersUseCases.updateUserRole({
 			userId: user.id,
 			roles: {
-				[AuthRole.isStranerdAdmin]: true,
+				[AuthRole.isAdmin]: true,
 				[AuthRole.isSuperAdmin]: true
 			}
 		})

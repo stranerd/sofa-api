@@ -38,7 +38,9 @@ export class UserEntity extends BaseEntity {
 		return {
 			id: this.id,
 			bio: { name: this.bio.name, photo: this.bio.photo },
-			roles: this.roles
+			roles: {
+				...('isTutor' in this.roles ? { isTutor: this.roles.isTutor } : {})
+			}
 		}
 	}
 }

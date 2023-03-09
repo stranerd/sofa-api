@@ -9,7 +9,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly name: { first: string, last: string }
 	public readonly photo: MediaOutput | null
 	public readonly phone: Phone | null
-	public readonly isVerified: boolean
+	public readonly isEmailVerified: boolean
 	public readonly authTypes: Enum<typeof AuthTypes>[]
 	public readonly roles: AuthRoles
 	public readonly lastSignedInAt: number
@@ -24,7 +24,7 @@ export class AuthUserEntity extends BaseEntity {
 		this.description = data.description
 		this.photo = data.photo
 		this.phone = data.phone
-		this.isVerified = data.isVerified
+		this.isEmailVerified = data.isEmailVerified
 		this.authTypes = data.authTypes
 		this.roles = data.roles ?? {}
 		this.lastSignedInAt = data.lastSignedInAt
@@ -52,7 +52,7 @@ export interface UserConstructorArgs {
 	name: { first: string, last: string }
 	photo: MediaOutput | null
 	phone: Phone | null
-	isVerified: boolean
+	isEmailVerified: boolean
 	authTypes: Enum<typeof AuthTypes>[]
 	lastSignedInAt: number
 	signedUpAt: number

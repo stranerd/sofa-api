@@ -40,7 +40,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: null
 	},
-	isVerified: {
+	isEmailVerified: {
 		type: Boolean,
 		required: false,
 		default: false

@@ -1,8 +1,8 @@
 import { makeEnum } from 'equipped'
 
 const Ar = makeEnum('AuthRole', {
-	isStranerdAdmin: 'isStranerdAdmin',
-	isStranerdTutor: 'isStranerdTutor',
+	isAdmin: 'isAdmin',
+	isTutor: 'isTutor',
 	isSuperAdmin: 'isSuperAdmin',
 	isSubscribed: 'isSubscribed'
 } as const)
@@ -23,7 +23,6 @@ const Dj = makeEnum('DelayedJobs', {
 
 const Clj = makeEnum('CronLikeJobs', {} as const)
 
-// @ts-ignore
 declare module 'equipped/lib/enums/types' {
 	type TAr = typeof Ar
 	type TEl = typeof El
