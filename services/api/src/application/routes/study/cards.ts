@@ -74,18 +74,6 @@ export const cardsRoutes = groupRoutes('/cards', [
 			})
 		]
 	}, {
-		path: '/:id/price',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CardController.updatePrice(req)
-				}
-			})
-		]
-	}, {
 		path: '/:id/publish',
 		method: 'post',
 		controllers: [

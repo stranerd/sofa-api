@@ -38,10 +38,6 @@ export class CardsUseCase {
 		return await this.repository.saveMatch(input.cardId, input.userId, input.time)
 	}
 
-	async updatePrice (input: { id: string, userId: string, price: CardToModel['price'] }) {
-		return await this.repository.updatePrice(input.id, input.userId, input.price)
-	}
-
 	async publish (input: { id: string, userId: string }) {
 		return await this.repository.publish(input.id, input.userId)
 	}

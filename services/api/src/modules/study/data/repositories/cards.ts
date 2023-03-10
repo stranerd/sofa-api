@@ -65,13 +65,6 @@ export class CardRepository implements ICardRepository {
 		return { time, record: true }
 	}
 
-	async updatePrice (id: string, userId: string, price: CardToModel['price']) {
-		const card = await Card.findOneAndUpdate({
-			_id: id, 'user.id': userId, status: DraftStatus.draft
-		}, { $set: { price } }, { new: true })
-		return this.mapper.mapFrom(card)
-	}
-
 	async publish (id: string, userId: string) {
 		const card = await Card.findOneAndUpdate({
 			_id: id, 'user.id': userId, status: DraftStatus.draft

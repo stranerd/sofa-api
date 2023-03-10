@@ -20,7 +20,11 @@ export class CardController {
 			set: Schema.array(Schema.object({
 				question: Schema.string().min(1),
 				answer: Schema.string().min(1)
-			})).min(1).max(128)
+			})).min(1).max(128),
+			price: Schema.object({
+				amount: Schema.number().gte(0).default(0),
+				currency: Schema.any<Currencies>().in(Object.values(Currencies)).default(Currencies.NGN)
+			})
 		}, req.body)
 
 		const authUserId = req.authUser!.id
@@ -72,21 +76,6 @@ export class CardController {
 			cardId: req.params.id,
 			time: data.time
 		})
-	}
-
-	static async updatePrice (req: Request) {
-		const data = validateReq({
-			price: Schema.object({
-				amount: Schema.number().gte(0),
-				currency: Schema.any<Currencies>().in(Object.values(Currencies))
-			})
-		}, req.body)
-
-		const authUserId = req.authUser!.id
-
-		const updatedCard = await CardsUseCases.updatePrice({ id: req.params.id, userId: authUserId, price: data.price })
-		if (updatedCard) return updatedCard
-		throw new NotAuthorizedError()
 	}
 
 	static async publish (req: Request) {
