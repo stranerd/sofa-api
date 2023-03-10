@@ -10,7 +10,7 @@ export const coursesRoutes = groupRoutes('/courses', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CourseController.GetCourses(req)
+					result: await CourseController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const coursesRoutes = groupRoutes('/courses', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CourseController.FindCourse(req)
+					result: await CourseController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const coursesRoutes = groupRoutes('/courses', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CourseController.CreateCourse(req)
+					result: await CourseController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const coursesRoutes = groupRoutes('/courses', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CourseController.UpdateCourse(req)
+					result: await CourseController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const coursesRoutes = groupRoutes('/courses', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CourseController.DeleteCourse(req)
+					result: await CourseController.delete(req)
 				}
 			})
 		]

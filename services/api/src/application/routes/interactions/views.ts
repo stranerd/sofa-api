@@ -10,7 +10,7 @@ export const viewsRoutes = groupRoutes('/views', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ViewsController.getViews(req)
+					result: await ViewsController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const viewsRoutes = groupRoutes('/views', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ViewsController.findView(req)
+					result: await ViewsController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const viewsRoutes = groupRoutes('/views', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ViewsController.createView(req)
+					result: await ViewsController.create(req)
 				}
 			})
 		]

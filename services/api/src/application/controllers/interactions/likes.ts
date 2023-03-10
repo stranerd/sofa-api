@@ -3,16 +3,16 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class LikesController {
-	static async getLikes (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await LikesUseCases.get(query)
 	}
 
-	static async findLike (req: Request) {
+	static async find (req: Request) {
 		return await LikesUseCases.find(req.params.id)
 	}
 
-	static async createLike (req: Request) {
+	static async create (req: Request) {
 		const { entity, value } = validateReq({
 			value: Schema.boolean(),
 			entity: Schema.object({

@@ -2,16 +2,16 @@ import { CoursesUseCases, DepartmentsUseCases, InstitutionsUseCases } from '@mod
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class CourseController {
-	static async FindCourse (req: Request) {
+	static async find (req: Request) {
 		return await CoursesUseCases.find(req.params.id)
 	}
 
-	static async GetCourses (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await CoursesUseCases.get(query)
 	}
 
-	static async CreateCourse (req: Request) {
+	static async create (req: Request) {
 		const data = validateReq({
 			name: Schema.string().min(3),
 			institutionId: Schema.string().min(1),
@@ -32,7 +32,7 @@ export class CourseController {
 		})
 	}
 
-	static async UpdateCourse (req: Request) {
+	static async update (req: Request) {
 		const data = validateReq({
 			name: Schema.string().min(3)
 		}, req.body)
@@ -42,7 +42,7 @@ export class CourseController {
 		throw new NotAuthorizedError()
 	}
 
-	static async DeleteCourse (req: Request) {
+	static async delete (req: Request) {
 		const isDeleted = await CoursesUseCases.delete(req.params.id)
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()

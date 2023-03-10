@@ -11,4 +11,6 @@ export interface ICardRepository {
 	delete: (id: string, userId: string) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	saveMatch: (cardId: string, userId: string, time: number) => Promise<{ time: number, record: boolean }>
+	updatePrice: (id: string, userId: string, price: CardToModel['price']) => Promise<CardEntity | null>
+	publish: (id: string, userId: string) => Promise<CardEntity | null>
 }

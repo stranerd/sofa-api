@@ -10,7 +10,7 @@ export const institutionsRoutes = groupRoutes('/institutions', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await InstitutionController.GetInstitutions(req)
+					result: await InstitutionController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const institutionsRoutes = groupRoutes('/institutions', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await InstitutionController.FindInstitution(req)
+					result: await InstitutionController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const institutionsRoutes = groupRoutes('/institutions', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await InstitutionController.CreateInstitution(req)
+					result: await InstitutionController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const institutionsRoutes = groupRoutes('/institutions', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await InstitutionController.UpdateInstitution(req)
+					result: await InstitutionController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const institutionsRoutes = groupRoutes('/institutions', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await InstitutionController.DeleteInstitution(req)
+					result: await InstitutionController.delete(req)
 				}
 			})
 		]

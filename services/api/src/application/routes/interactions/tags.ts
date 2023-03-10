@@ -10,7 +10,7 @@ export const tagsRoutes = groupRoutes('/tags', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await TagController.GetTags(req)
+					result: await TagController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const tagsRoutes = groupRoutes('/tags', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await TagController.FindTag(req)
+					result: await TagController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const tagsRoutes = groupRoutes('/tags', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await TagController.UpdateTag(req)
+					result: await TagController.update(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const tagsRoutes = groupRoutes('/tags', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await TagController.CreateTag(req)
+					result: await TagController.create(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const tagsRoutes = groupRoutes('/tags', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await TagController.DeleteTag(req)
+					result: await TagController.delete(req)
 				}
 			})
 		]

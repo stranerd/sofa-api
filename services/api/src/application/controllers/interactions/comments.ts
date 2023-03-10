@@ -10,16 +10,16 @@ import {
 } from 'equipped'
 
 export class CommentsController {
-	static async getComments (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await CommentsUseCases.get(query)
 	}
 
-	static async findComment (req: Request) {
+	static async find (req: Request) {
 		return await CommentsUseCases.find(req.params.id)
 	}
 
-	static async createComment (req: Request) {
+	static async create (req: Request) {
 		const { body, entity } = validateReq(
 			{
 				body: Schema.string().min(1),
@@ -42,7 +42,7 @@ export class CommentsController {
 		})
 	}
 
-	static async updateComment (req: Request) {
+	static async update (req: Request) {
 		const { body } = validateReq(
 			{
 				body: Schema.string().min(1)
@@ -59,7 +59,7 @@ export class CommentsController {
 		throw new NotAuthorizedError()
 	}
 
-	static async deleteComment (req: Request) {
+	static async delete (req: Request) {
 		const isDeleted = await CommentsUseCases.delete({
 			id: req.params.id,
 			userId: req.authUser!.id

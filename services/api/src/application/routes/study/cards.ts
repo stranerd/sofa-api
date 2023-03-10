@@ -10,7 +10,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.GetCard(req)
+					result: await CardController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.FindCard(req)
+					result: await CardController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.UpdateCard(req)
+					result: await CardController.update(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.CreateCard(req)
+					result: await CardController.create(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.DeleteCard(req)
+					result: await CardController.delete(req)
 				}
 			})
 		]
@@ -69,7 +69,31 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.SaveMatch(req)
+					result: await CardController.saveMatch(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/price',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await CardController.updatePrice(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/publish',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await CardController.publish(req)
 				}
 			})
 		]

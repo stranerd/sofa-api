@@ -2,16 +2,16 @@ import { DepartmentsUseCases, FacultiesUseCases } from '@modules/school'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class DepartmentController {
-	static async FindDepartment (req: Request) {
+	static async find (req: Request) {
 		return await DepartmentsUseCases.find(req.params.id)
 	}
 
-	static async GetDepartments (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await DepartmentsUseCases.get(query)
 	}
 
-	static async CreateDepartment (req: Request) {
+	static async create (req: Request) {
 		const data = validateReq({
 			name: Schema.string().min(3),
 			facultyId: Schema.string().min(1),
@@ -22,7 +22,7 @@ export class DepartmentController {
 		return await DepartmentsUseCases.add({ ...data, institutionId: faculty.institutionId })
 	}
 
-	static async UpdateDepartment (req: Request) {
+	static async update (req: Request) {
 		const data = validateReq({
 			name: Schema.string().min(3),
 		}, req.body)
@@ -32,7 +32,7 @@ export class DepartmentController {
 		throw new NotAuthorizedError()
 	}
 
-	static async DeleteDepartment (req: Request) {
+	static async delete (req: Request) {
 		const isDeleted = await DepartmentsUseCases.delete(req.params.id)
 
 		if (isDeleted) return isDeleted

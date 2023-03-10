@@ -10,7 +10,7 @@ export const facultiesRoutes = groupRoutes('/faculties', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FacultyController.GetFaculties(req)
+					result: await FacultyController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const facultiesRoutes = groupRoutes('/faculties', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FacultyController.FindFaculty(req)
+					result: await FacultyController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const facultiesRoutes = groupRoutes('/faculties', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FacultyController.CreateFaculty(req)
+					result: await FacultyController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const facultiesRoutes = groupRoutes('/faculties', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FacultyController.UpdateFaculty(req)
+					result: await FacultyController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const facultiesRoutes = groupRoutes('/faculties', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FacultyController.DeleteFaculty(req)
+					result: await FacultyController.delete(req)
 				}
 			})
 		]

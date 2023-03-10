@@ -11,7 +11,7 @@ export const userRoutes = groupRoutes('/user', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await UserController.findUser(req)
+					result: await UserController.find(req)
 				}
 			})
 		]
@@ -23,7 +23,7 @@ export const userRoutes = groupRoutes('/user', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await UserController.updateUser(req)
+					result: await UserController.update(req)
 				}
 			})
 		]
@@ -35,7 +35,7 @@ export const userRoutes = groupRoutes('/user', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await UserController.updateUserRole(req)
+					result: await UserController.updateRole(req)
 				}
 
 			})

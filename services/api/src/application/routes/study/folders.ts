@@ -10,7 +10,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FolderController.GetFolders(req)
+					result: await FolderController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FolderController.FindFolder(req)
+					result: await FolderController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FolderController.CreateFolder(req)
+					result: await FolderController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FolderController.UpdateFolder(req)
+					result: await FolderController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FolderController.SaveProp(req)
+					result: await FolderController.saveProp(req)
 				}
 			})
 		]
@@ -69,7 +69,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await FolderController.DeleteFolder(req)
+					result: await FolderController.delete(req)
 				}
 			})
 		]

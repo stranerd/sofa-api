@@ -10,7 +10,7 @@ export const commentsRoutes = groupRoutes('/comments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CommentsController.getComments(req)
+					result: await CommentsController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const commentsRoutes = groupRoutes('/comments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CommentsController.findComment(req)
+					result: await CommentsController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const commentsRoutes = groupRoutes('/comments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CommentsController.createComment(req)
+					result: await CommentsController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const commentsRoutes = groupRoutes('/comments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CommentsController.updateComment(req)
+					result: await CommentsController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const commentsRoutes = groupRoutes('/comments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CommentsController.deleteComment(req)
+					result: await CommentsController.delete(req)
 				}
 			})
 		]

@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ICardRepository } from '../../domain/irepositories/cards'
-import { EmbeddedUser } from '../../domain/types'
+import { DraftStatus, EmbeddedUser } from '../../domain/types'
 import { CardMapper } from '../mappers/cards'
 import { CardToModel } from '../models/cards'
 import { Card } from '../mongooseModels/cards'
@@ -40,8 +40,7 @@ export class CardRepository implements ICardRepository {
 
 	async update (id: string, userId: string, data: Partial<CardToModel>) {
 		const card = await Card.findOneAndUpdate({
-			_id: id,
-			'user.id': userId
+			_id: id, 'user.id': userId
 		}, { $set: data }, { new: true })
 		return this.mapper.mapFrom(card)
 	}
@@ -64,5 +63,19 @@ export class CardRepository implements ICardRepository {
 		if (cachedTime && time >= cachedTime) return { time: cachedTime, record: false }
 		await appInstance.cache.set(key, time.toString(), -1)
 		return { time, record: true }
+	}
+
+	async updatePrice (id: string, userId: string, price: CardToModel['price']) {
+		const card = await Card.findOneAndUpdate({
+			_id: id, 'user.id': userId, status: DraftStatus.draft
+		}, { $set: { price } }, { new: true })
+		return this.mapper.mapFrom(card)
+	}
+
+	async publish (id: string, userId: string) {
+		const card = await Card.findOneAndUpdate({
+			_id: id, 'user.id': userId, status: DraftStatus.draft
+		}, { $set: { status: DraftStatus.published } }, { new: true })
+		return this.mapper.mapFrom(card)
 	}
 }

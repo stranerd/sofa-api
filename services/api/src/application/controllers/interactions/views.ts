@@ -3,16 +3,16 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class ViewsController {
-	static async getViews (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await ViewsUseCases.get(query)
 	}
 
-	static async findView (req: Request) {
+	static async find (req: Request) {
 		return await ViewsUseCases.find(req.params.id)
 	}
 
-	static async createView (req: Request) {
+	static async create (req: Request) {
 		const { entity } = validateReq({
 			entity: Schema.object({
 				id: Schema.string().min(1),
@@ -30,7 +30,7 @@ export class ViewsController {
 		})
 	}
 
-	static async deleteView (req: Request) {
+	static async delete (req: Request) {
 		const isDeleted = await ViewsUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()

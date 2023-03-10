@@ -11,7 +11,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await NotificationsController.getNotifications(req)
+					result: await NotificationsController.get(req)
 				}
 			})
 		]
@@ -23,7 +23,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await NotificationsController.findNotification(req)
+					result: await NotificationsController.find(req)
 				}
 			})
 		]
@@ -35,7 +35,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await NotificationsController.markAllNotificationsSeen(req)
+					result: await NotificationsController.markAllSeen(req)
 				}
 			})
 		]
@@ -47,7 +47,7 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await NotificationsController.markNotificationSeen(req)
+					result: await NotificationsController.markSeen(req)
 				}
 			})
 		]

@@ -4,12 +4,12 @@ import { superAdminEmail } from '@utils/environment'
 import { AuthRole, BadRequestError, Enum, NotFoundError, Request, Schema, validateReq, verifyAccessToken } from 'equipped'
 
 export class UserController {
-	static async findUser (req: Request) {
+	static async find (req: Request) {
 		const userId = req.authUser!.id
 		return await AuthUsersUseCases.findUser(userId)
 	}
 
-	static async updateUser (req: Request) {
+	static async update (req: Request) {
 		const userId = req.authUser!.id
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
@@ -33,7 +33,7 @@ export class UserController {
 		})
 	}
 
-	static async updateUserRole (req: Request) {
+	static async updateRole (req: Request) {
 		const { role, userId, value } = validateReq({
 			role: Schema.any<Enum<typeof AuthRole>>().in([AuthRole.isAdmin, AuthRole.isTutor]),
 			userId: Schema.string().min(1),

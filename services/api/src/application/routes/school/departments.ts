@@ -10,7 +10,7 @@ export const departmentsRoutes = groupRoutes('/departments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await DepartmentController.GetDepartments(req)
+					result: await DepartmentController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const departmentsRoutes = groupRoutes('/departments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await DepartmentController.FindDepartment(req)
+					result: await DepartmentController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const departmentsRoutes = groupRoutes('/departments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await DepartmentController.CreateDepartment(req)
+					result: await DepartmentController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const departmentsRoutes = groupRoutes('/departments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await DepartmentController.UpdateDepartment(req)
+					result: await DepartmentController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const departmentsRoutes = groupRoutes('/departments', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await DepartmentController.DeleteDepartment(req)
+					result: await DepartmentController.delete(req)
 				}
 			})
 		]

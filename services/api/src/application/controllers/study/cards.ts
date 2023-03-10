@@ -5,16 +5,16 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class CardController {
-	static async FindCard (req: Request) {
+	static async find (req: Request) {
 		return await CardsUseCases.find(req.params.id)
 	}
 
-	static async GetCard (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await CardsUseCases.get(query)
 	}
 
-	static async UpdateCard (req: Request) {
+	static async update (req: Request) {
 		const data = validateReq({
 			title: Schema.string().min(1),
 			set: Schema.array(Schema.object({
@@ -30,7 +30,7 @@ export class CardController {
 		throw new NotAuthorizedError()
 	}
 
-	static async CreateCard (req: Request) {
+	static async create (req: Request) {
 		const data = validateReq({
 			title: Schema.string().min(1),
 			set: Schema.array(Schema.object({
@@ -55,14 +55,14 @@ export class CardController {
 		})
 	}
 
-	static async DeleteCard (req: Request) {
+	static async delete (req: Request) {
 		const authUserId = req.authUser!.id
 		const isDeleted = await CardsUseCases.delete({ id: req.params.id, userId: authUserId })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}
 
-	static async SaveMatch (req: Request) {
+	static async saveMatch (req: Request) {
 		const data = validateReq({
 			time: Schema.number().gt(0)
 		}, req.body)
@@ -72,5 +72,28 @@ export class CardController {
 			cardId: req.params.id,
 			time: data.time
 		})
+	}
+
+	static async updatePrice (req: Request) {
+		const data = validateReq({
+			price: Schema.object({
+				amount: Schema.number().gte(0),
+				currency: Schema.any<Currencies>().in(Object.values(Currencies))
+			})
+		}, req.body)
+
+		const authUserId = req.authUser!.id
+
+		const updatedCard = await CardsUseCases.updatePrice({ id: req.params.id, userId: authUserId, price: data.price })
+		if (updatedCard) return updatedCard
+		throw new NotAuthorizedError()
+	}
+
+	static async publish (req: Request) {
+		const authUserId = req.authUser!.id
+
+		const updatedCard = await CardsUseCases.publish({ id: req.params.id, userId: authUserId })
+		if (updatedCard) return updatedCard
+		throw new NotAuthorizedError()
 	}
 }

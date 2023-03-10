@@ -3,16 +3,16 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class FolderController {
-	static async FindFolder (req: Request) {
+	static async find (req: Request) {
 		return await FoldersUseCases.find(req.params.id)
 	}
 
-	static async GetFolders (req: Request) {
+	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await FoldersUseCases.get(query)
 	}
 
-	static async CreateFolder (req: Request) {
+	static async create (req: Request) {
 		const data = validateReq({
 			name: Schema.string().min(1),
 		}, req.body)
@@ -24,7 +24,7 @@ export class FolderController {
 		return await FoldersUseCases.add({ ...data, user: user.getEmbedded() })
 	}
 
-	static async UpdateFolder (req: Request) {
+	static async update (req: Request) {
 		const data = validateReq({
 			name: Schema.string().min(1),
 		}, req.body)
@@ -34,7 +34,7 @@ export class FolderController {
 		throw new NotAuthorizedError()
 	}
 
-	static async SaveProp (req: Request) {
+	static async saveProp (req: Request) {
 		const data = validateReq({
 			type: Schema.any<FolderSaved>().in(Object.values(FolderSaved)),
 			propIds: Schema.array(Schema.string().min(1)),
@@ -53,7 +53,7 @@ export class FolderController {
 		throw new NotAuthorizedError()
 	}
 
-	static async DeleteFolder (req: Request) {
+	static async delete (req: Request) {
 		const isDeleted = await FoldersUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
 
 		if (isDeleted) return isDeleted

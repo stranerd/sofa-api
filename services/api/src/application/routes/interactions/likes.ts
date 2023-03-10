@@ -10,7 +10,7 @@ export const likesRoutes = groupRoutes('/likes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await LikesController.getLikes(req)
+					result: await LikesController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const likesRoutes = groupRoutes('/likes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await LikesController.findLike(req)
+					result: await LikesController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const likesRoutes = groupRoutes('/likes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await LikesController.createLike(req)
+					result: await LikesController.create(req)
 				}
 			})
 		]
