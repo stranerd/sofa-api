@@ -1,0 +1,13 @@
+import { EmbeddedUser, FolderSaved } from '../../domain/types'
+
+export interface FolderFromModel extends FolderToModel {
+	_id: string
+	saved: Record<FolderSaved, string[]>
+	createdAt: number
+	updatedAt: number
+}
+
+export interface FolderToModel {
+	name: string
+	user: EmbeddedUser
+}

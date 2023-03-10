@@ -40,14 +40,8 @@ export type EmbeddedUser = {
 export enum UserMeta {
 	connects = 'connects',
 
-	questions = 'questions',
-	answers = 'answers',
-	bestAnswers = 'bestAnswers',
-
-	flashCards = 'flashCards',
-	notes = 'notes',
-	files = 'files',
-	sets = 'sets'
+	cards = 'cards',
+	folders = 'folders'
 }
 
 export enum UserRankings {
@@ -58,15 +52,8 @@ export enum UserRankings {
 }
 
 export enum ScoreRewards {
-	BestAnswer = 2,
-	NewAnswer = 1,
-	NewQuestion = 0.5,
-
-	CompleteTest = 1,
-	NewSet = 0.05,
-	NewFlashCard = 1,
-	NewFile = 0.05,
-	NewNote = 0.05
+	NewFolder = 0.05,
+	NewCard = 1
 }
 
 export enum UserSchoolType {
