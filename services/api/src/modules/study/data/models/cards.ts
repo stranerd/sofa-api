@@ -1,4 +1,4 @@
-import { EmbeddedUser } from '../../domain/types'
+import { EmbeddedUser, Publishable } from '../../domain/types'
 
 export interface CardFromModel extends CardToModel {
 	_id: string
@@ -6,7 +6,7 @@ export interface CardFromModel extends CardToModel {
 	updatedAt: number
 }
 
-export interface CardToModel {
+export interface CardToModel extends Publishable {
 	title: string
 	user: EmbeddedUser
 	set: {

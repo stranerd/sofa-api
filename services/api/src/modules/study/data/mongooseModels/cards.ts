@@ -20,6 +20,18 @@ const Schema = new appInstance.dbs.mongo.Schema<CardFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
+	status: {
+		type: String,
+		required: true
+	},
+	tagId: {
+		type: String,
+		required: true
+	},
+	price: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
 	createdAt: {
 		type: Number,
 		required: false,

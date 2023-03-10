@@ -13,7 +13,7 @@ export class FolderEntity extends BaseEntity {
 	constructor ({ id, name, saved, user, createdAt, updatedAt }: FolderConstructorArgs) {
 		super()
 		this.id = id
-		this.name = name ? name : 'My Library'
+		this.name = name
 		this.saved = saved
 		this.user = generateDefaultUser(user)
 		this.createdAt = createdAt
