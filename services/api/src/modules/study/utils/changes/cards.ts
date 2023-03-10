@@ -6,7 +6,7 @@ import { CardFromModel } from '../../data/models/cards'
 import { CardEntity } from '../../domain/entities/cards'
 import { FolderSaved } from '../../domain/types'
 
-export const FlashCardDbChangeCallbacks: DbChangeCallbacks<CardFromModel, CardEntity> = {
+export const CardDbChangeCallbacks: DbChangeCallbacks<CardFromModel, CardEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created('study/cards', after)
 		await appInstance.listener.created(`study/cards/${after.id}`, after)

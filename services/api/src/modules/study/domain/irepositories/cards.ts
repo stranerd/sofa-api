@@ -10,5 +10,5 @@ export interface ICardRepository {
 	update: (id: string, userId: string, data: Partial<CardToModel>) => Promise<CardEntity | null>
 	delete: (id: string, userId: string) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
-	saveMatch: (flashCardId: string, userId: string, time: number) => Promise<{ time: number, record: boolean }>
+	saveMatch: (cardId: string, userId: string, time: number) => Promise<{ time: number, record: boolean }>
 }

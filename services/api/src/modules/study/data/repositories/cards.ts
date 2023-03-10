@@ -4,10 +4,10 @@ import { ICardRepository } from '../../domain/irepositories/cards'
 import { EmbeddedUser } from '../../domain/types'
 import { CardMapper } from '../mappers/cards'
 import { CardToModel } from '../models/cards'
-import { FlashCard } from '../mongooseModels/cards'
+import { Card } from '../mongooseModels/cards'
 
-export class FlashCardRepository implements ICardRepository {
-	private static instance: FlashCardRepository
+export class CardRepository implements ICardRepository {
+	private static instance: CardRepository
 	private mapper: CardMapper
 
 	private constructor () {
@@ -15,12 +15,12 @@ export class FlashCardRepository implements ICardRepository {
 	}
 
 	static getInstance () {
-		if (!FlashCardRepository.instance) FlashCardRepository.instance = new FlashCardRepository()
-		return FlashCardRepository.instance
+		if (!CardRepository.instance) CardRepository.instance = new CardRepository()
+		return CardRepository.instance
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.dbs.mongo.query(FlashCard, query)
+		const data = await appInstance.dbs.mongo.query(Card, query)
 
 		return {
 			...data,
@@ -29,36 +29,36 @@ export class FlashCardRepository implements ICardRepository {
 	}
 
 	async add (data: CardToModel) {
-		const flashCard = await new FlashCard(data).save()
-		return this.mapper.mapFrom(flashCard)!
+		const card = await new Card(data).save()
+		return this.mapper.mapFrom(card)!
 	}
 
 	async find (id: string) {
-		const flashCard = await FlashCard.findById(id)
-		return this.mapper.mapFrom(flashCard)
+		const card = await Card.findById(id)
+		return this.mapper.mapFrom(card)
 	}
 
 	async update (id: string, userId: string, data: Partial<CardToModel>) {
-		const flashCard = await FlashCard.findOneAndUpdate({
+		const card = await Card.findOneAndUpdate({
 			_id: id,
 			'user.id': userId
 		}, { $set: data }, { new: true })
-		return this.mapper.mapFrom(flashCard)
+		return this.mapper.mapFrom(card)
 	}
 
 	async updateUserBio (user: EmbeddedUser) {
-		const flashCards = await FlashCard.updateMany({ 'user.id': user.id }, { $set: { user } })
-		return flashCards.acknowledged
+		const cards = await Card.updateMany({ 'user.id': user.id }, { $set: { user } })
+		return cards.acknowledged
 	}
 
 	async delete (id: string, userId: string) {
-		const flashCard = await FlashCard.findOneAndDelete({ _id: id, 'user.id': userId })
-		return !!flashCard
+		const card = await Card.findOneAndDelete({ _id: id, 'user.id': userId })
+		return !!card
 	}
 
-	async saveMatch (flashCardId: string, userId: string, time: number) {
+	async saveMatch (cardId: string, userId: string, time: number) {
 		time = Number(time.toFixed(1))
-		const key = `flashcard-matches-${flashCardId}-${userId}`
+		const key = `study-card-matches-${cardId}-${userId}`
 		const value = await appInstance.cache.get(key)
 		const cachedTime = Number(value ?? '0')
 		if (cachedTime && time >= cachedTime) return { time: cachedTime, record: false }

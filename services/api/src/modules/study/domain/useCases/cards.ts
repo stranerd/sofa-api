@@ -34,7 +34,7 @@ export class CardsUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async saveMatch (input: { flashCardId: string, userId: string, time: number }) {
-		return await this.repository.saveMatch(input.flashCardId, input.userId, input.time)
+	async saveMatch (input: { cardId: string, userId: string, time: number }) {
+		return await this.repository.saveMatch(input.cardId, input.userId, input.time)
 	}
 }

@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { FlashCardDbChangeCallbacks } from '../../utils/changes/cards'
+import { CardDbChangeCallbacks } from '../../utils/changes/cards'
 import { CardMapper } from '../mappers/cards'
 import { CardFromModel } from '../models/cards'
 
@@ -44,6 +44,6 @@ const Schema = new appInstance.dbs.mongo.Schema<CardFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const FlashCard = appInstance.dbs.mongo.use('study').model<CardFromModel>('Card', Schema)
+export const Card = appInstance.dbs.mongo.use('study').model<CardFromModel>('Card', Schema)
 
-export const FlashCardChange = appInstance.dbs.mongo.change(FlashCard, FlashCardDbChangeCallbacks, new CardMapper().mapFrom)
+export const CardChange = appInstance.dbs.mongo.change(Card, CardDbChangeCallbacks, new CardMapper().mapFrom)

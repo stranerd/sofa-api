@@ -1,5 +1,5 @@
 import { DepartmentsUseCases, FacultiesUseCases } from '@modules/school'
-import { BadRequestError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class DepartmentController {
 	static async FindDepartment (req: Request) {
@@ -29,13 +29,13 @@ export class DepartmentController {
 
 		const updatedDepartment = await DepartmentsUseCases.update({ id: req.params.id, data })
 		if (updatedDepartment) return updatedDepartment
-		throw new BadRequestError('department not found')
+		throw new NotAuthorizedError()
 	}
 
 	static async DeleteDepartment (req: Request) {
 		const isDeleted = await DepartmentsUseCases.delete(req.params.id)
 
 		if (isDeleted) return isDeleted
-		throw new BadRequestError('department not found')
+		throw new NotAuthorizedError()
 	}
 }

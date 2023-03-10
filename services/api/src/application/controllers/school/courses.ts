@@ -1,5 +1,5 @@
 import { CoursesUseCases, DepartmentsUseCases, InstitutionsUseCases } from '@modules/school'
-import { BadRequestError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
 export class CourseController {
 	static async FindCourse (req: Request) {
@@ -39,12 +39,12 @@ export class CourseController {
 
 		const updatedCourse = await CoursesUseCases.update({ id: req.params.id, data })
 		if (updatedCourse) return updatedCourse
-		throw new BadRequestError('course not found')
+		throw new NotAuthorizedError()
 	}
 
 	static async DeleteCourse (req: Request) {
 		const isDeleted = await CoursesUseCases.delete(req.params.id)
 		if (isDeleted) return isDeleted
-		throw new BadRequestError('course not found')
+		throw new NotAuthorizedError()
 	}
 }
