@@ -18,12 +18,16 @@ export const startJobs = async () => {
 		onCronLike: async () => { },
 		onCron: async (type) => {
 			if (type === CronTypes.hourly) {
-				const emails = await EmailErrorsUseCases.getAndDeleteAll()
-				await Promise.all(emails.map((e) => sendMailAndCatchError(e as any)))
-				const texts = await PhoneErrorsUseCases.getAndDeleteAll()
-				await Promise.all(texts.map((t) => sendTextAndCatchError(t as any)))
-				await retryTransactions(60 * 60 * 1000)
-				await appInstance.job.retryAllFailedJobs()
+				const [emails, texts] = await Promise.all([
+					EmailErrorsUseCases.getAndDeleteAll(),
+					PhoneErrorsUseCases.getAndDeleteAll()
+				])
+				await Promise.all([
+					retryTransactions(60 * 60 * 1000),
+					appInstance.job.retryAllFailedJobs(),
+					emails.map((e) => sendMailAndCatchError(e as any)),
+					texts.map((t) => sendTextAndCatchError(t))
+				])
 			}
 			if (type === CronTypes.daily) {
 				await UsersUseCases.resetRankings(UserRankings.daily)
