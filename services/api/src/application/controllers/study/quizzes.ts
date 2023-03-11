@@ -32,7 +32,7 @@ export class QuizController {
 
 		const { title, description, isPublic, price } = validateReq(this.schema(), { ...req.body, photo: uploadedPhoto })
 
-		const photo = uploadedPhoto ? await UploaderUseCases.upload('classes/photos', uploadedPhoto) : undefined
+		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/quizzes', uploadedPhoto) : undefined
 
 		const updatedQuiz = await QuizzesUseCases.update({
 			id: req.params.id, userId: req.authUser!.id,

@@ -1,3 +1,5 @@
+import { Media } from '../../domain/types'
+
 export interface QuestionFromModel extends QuestionToModel {
 	_id: string
 	createdAt: number
@@ -7,4 +9,6 @@ export interface QuestionFromModel extends QuestionToModel {
 export interface QuestionToModel {
 	userId: string
 	quizId: string
+	question: string
+	questionMedia: Media | null
 }

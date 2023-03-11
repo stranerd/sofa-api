@@ -8,11 +8,14 @@ export class FolderController {
 	})
 
 	static async find (req: Request) {
-		return await FoldersUseCases.find(req.params.id)
+		const folder = await FoldersUseCases.find(req.params.id)
+		if (!folder || folder.user.id !== req.authUser!.id) return null
+		return folder
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
+		query.auth = [{ field: 'user.id', value: req.authUser!.id }]
 		return await FoldersUseCases.get(query)
 	}
 

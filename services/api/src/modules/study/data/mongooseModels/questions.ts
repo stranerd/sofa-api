@@ -16,6 +16,16 @@ const Schema = new appInstance.dbs.mongo.Schema<QuestionFromModel>({
 		type: String,
 		required: true
 	},
+	question: {
+		type: String,
+		required: false,
+		default: ''
+	},
+	questionMedia: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	createdAt: {
 		type: Number,
 		required: false,

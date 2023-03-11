@@ -7,6 +7,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 		path: '/',
 		method: 'get',
 		controllers: [
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -18,6 +19,7 @@ export const foldersRoutes = groupRoutes('/folders', [
 		path: '/:id',
 		method: 'get',
 		controllers: [
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
