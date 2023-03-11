@@ -9,8 +9,7 @@ import { FolderSaved } from '../../domain/types'
 
 export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created('study/quizzes', after)
-		await appInstance.listener.created(`study/quizzes/${after.id}`, after)
+		await appInstance.listener.created(['study/quizzes', `study/quizzes/${after.id}`], after)
 
 		await UsersUseCases.updateNerdScore({
 			userId: after.user.id,
@@ -19,13 +18,11 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.quizzes })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated('study/quizzes', after)
-		await appInstance.listener.updated(`study/quizzes/${after.id}`, after)
+		await appInstance.listener.updated(['study/quizzes', `study/quizzes/${after.id}`], after)
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted('study/quizzes', before)
-		await appInstance.listener.deleted(`study/quizzes/${before.id}`, before)
+		await appInstance.listener.deleted(['study/quizzes', `study/quizzes/${before.id}`], before)
 
 		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })
 		await UsersUseCases.updateNerdScore({

@@ -7,8 +7,7 @@ import { CommentMetaType, InteractionEntities } from '../../domain/types'
 
 export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, CommentEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created('interactions/comments', after)
-		await appInstance.listener.created(`interactions/comments/${after.id}`, after)
+		await appInstance.listener.created(['interactions/comments', `interactions/comments/${after.id}`], after)
 
 		if (after.entity.type === InteractionEntities.comments) await CommentsUseCases.updateMeta({
 			id: after.entity.id,
@@ -17,12 +16,10 @@ export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, Comme
 		})
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.updated('interactions/comments', after)
-		await appInstance.listener.updated(`interactions/comments/${after.id}`, after)
+		await appInstance.listener.updated(['interactions/comments', `interactions/comments/${after.id}`], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted('interactions/comments', before)
-		await appInstance.listener.deleted(`interactions/comments/${before.id}`, before)
+		await appInstance.listener.deleted(['interactions/comments', `interactions/comments/${before.id}`], before)
 		await CommentsUseCases.deleteEntityComments({ type: InteractionEntities.comments, id: before.id })
 		if (before.entity.type === InteractionEntities.comments) await CommentsUseCases.updateMeta({
 			id: before.entity.id,

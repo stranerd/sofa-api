@@ -8,10 +8,10 @@ import { UserMeta } from '../../domain/types'
 
 export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, ConnectEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created(`users/connects/${after.from.id}`, after)
-		await appInstance.listener.created(`users/connects/${after.to.id}`, after)
-		await appInstance.listener.created(`users/connects/${after.id}/${after.from.id}`, after)
-		await appInstance.listener.created(`users/connects/${after.id}/${after.to.id}`, after)
+		await appInstance.listener.created([
+			`users/connects/${after.from.id}`, `users/connects/${after.to.id}`,
+			`users/connects/${after.id}/${after.from.id}`, `users/connects/${after.id}/${after.to.id}`,
+		], after)
 		await sendNotification([after.to.id], {
 			title: `${after.from.bio.name.full} is requesting to connect`,
 			sendEmail: false,
@@ -20,10 +20,10 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 		})
 	},
 	updated: async ({ after, changes }) => {
-		await appInstance.listener.updated(`users/connects/${after.from.id}`, after)
-		await appInstance.listener.updated(`users/connects/${after.to.id}`, after)
-		await appInstance.listener.updated(`users/connects/${after.id}/${after.from.id}`, after)
-		await appInstance.listener.updated(`users/connects/${after.id}/${after.to.id}`, after)
+		await appInstance.listener.created([
+			`users/connects/${after.from.id}`, `users/connects/${after.to.id}`,
+			`users/connects/${after.id}/${after.from.id}`, `users/connects/${after.id}/${after.to.id}`,
+		], after)
 
 		if (changes.pending && !after.pending) await Promise.all([
 			after.accepted && UsersUseCases.incrementMeta({
@@ -46,10 +46,10 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 		])
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted(`users/connects/${before.from.id}`, before)
-		await appInstance.listener.deleted(`users/connects/${before.to.id}`, before)
-		await appInstance.listener.deleted(`users/connects/${before.id}/${before.from.id}`, before)
-		await appInstance.listener.deleted(`users/connects/${before.id}/${before.to.id}`, before)
+		await appInstance.listener.created([
+			`users/connects/${before.from.id}`, `users/connects/${before.to.id}`,
+			`users/connects/${before.id}/${before.from.id}`, `users/connects/${before.id}/${before.to.id}`,
+		], before)
 
 		if (before.accepted) await Promise.all([
 			UsersUseCases.incrementMeta({ id: before.from.id, property: UserMeta.connects, value: -1 }),

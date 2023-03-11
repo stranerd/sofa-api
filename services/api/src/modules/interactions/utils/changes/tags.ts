@@ -5,15 +5,12 @@ import { TagEntity } from '../../domain/entities/tags'
 
 export const TagDbChangeCallbacks: DbChangeCallbacks<TagFromModel, TagEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created('interactions/tags', after)
-		await appInstance.listener.created(`interactions/tags/${after.id}`, after)
+		await appInstance.listener.created(['interactions/tags', `interactions/tags/${after.id}`], after)
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.updated('interactions/tags', after)
-		await appInstance.listener.updated(`interactions/tags/${after.id}`, after)
+		await appInstance.listener.updated(['interactions/tags', `interactions/tags/${after.id}`], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted('interactions/tags', before)
-		await appInstance.listener.deleted(`interactions/tags/${before.id}`, before)
+		await appInstance.listener.deleted(['interactions/tags', `interactions/tags/${before.id}`], before)
 	}
 }

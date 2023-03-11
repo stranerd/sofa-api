@@ -1,16 +1,18 @@
 import { UsersUseCases } from '@modules/users'
-import { DbChangeCallbacks, EmailsList, readEmailFromPug } from 'equipped'
-import { appInstance } from '@utils/types'
 import { clientDomain } from '@utils/environment'
 import { publishers } from '@utils/events'
-import { sendPushNotification } from '../push'
+import { appInstance } from '@utils/types'
+import { DbChangeCallbacks, EmailsList, readEmailFromPug } from 'equipped'
 import { NotificationFromModel } from '../../data/models/notifications'
 import { NotificationEntity } from '../../domain/entities/notifications'
+import { sendPushNotification } from '../push'
 
 export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromModel, NotificationEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created(`users/notifications/${after.userId}`, after)
-		await appInstance.listener.created(`users/notifications/${after.id}/${after.userId}`, after)
+		await appInstance.listener.created([
+			`notifications/notifications/${after.userId}`,
+			`notifications/notifications/${after.id}/${after.userId}`
+		], after)
 
 		await sendPushNotification({
 			userIds: [after.userId],
@@ -35,11 +37,15 @@ export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromMo
 		}
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.updated(`users/notifications/${after.userId}`, after)
-		await appInstance.listener.updated(`users/notifications/${after.id}/${after.userId}`, after)
+		await appInstance.listener.updated([
+			`notifications/notifications/${after.userId}`,
+			`notifications/notifications/${after.id}/${after.userId}`
+		], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted(`users/notifications/${before.userId}`, before)
-		await appInstance.listener.deleted(`users/notifications/${before.id}/${before.userId}`, before)
+		await appInstance.listener.deleted([
+			`notifications/notifications/${before.userId}`,
+			`notifications/notifications/${before.id}/${before.userId}`
+		], before)
 	}
 }
