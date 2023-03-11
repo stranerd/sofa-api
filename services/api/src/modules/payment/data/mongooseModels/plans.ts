@@ -9,7 +9,7 @@ const PlanSchema = new appInstance.dbs.mongo.Schema<PlanFromModel>({
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
 	},
-	name: {
+	title: {
 		type: String,
 		required: true
 	},

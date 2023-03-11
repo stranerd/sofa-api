@@ -27,7 +27,7 @@ const activateSub = async (userId: string, walletId: string, subscription: PlanE
 const chargeForSubscription = async (user: UserEntity, subscription: PlanEntity, method: MethodEntity) => {
 	const transaction = await TransactionsUseCases.create({
 		userId: user.id, email: user.bio.email, amount: 0 - subscription.amount, currency: subscription.currency,
-		status: TransactionStatus.initialized, title: `Subscription charge for ${subscription.name}`,
+		status: TransactionStatus.initialized, title: `Subscription charge for ${subscription.title}`,
 		data: { type: TransactionType.Subscription, subscriptionId: subscription.id }
 	})
 	const successful = await FlutterwavePayment.chargeCard({

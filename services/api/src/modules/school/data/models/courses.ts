@@ -5,7 +5,7 @@ export interface CourseFromModel extends CourseToModel {
 }
 
 export interface CourseToModel {
-	name: string
+	title: string
 	institutionId: string
 	facultyId: string | null
 	departmentId: string | null

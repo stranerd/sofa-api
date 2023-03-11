@@ -8,7 +8,7 @@ const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>({
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
 	},
-	name: {
+	title: {
 		type: String,
 		required: true
 	},

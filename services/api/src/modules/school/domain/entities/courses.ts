@@ -2,17 +2,17 @@ import { BaseEntity } from 'equipped'
 
 export class CourseEntity extends BaseEntity {
 	public readonly id: string
-	public readonly name: string
+	public readonly title: string
 	public readonly institutionId: string
 	public readonly facultyId: string | null
 	public readonly departmentId: string | null
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, name, institutionId, facultyId, departmentId, createdAt, updatedAt }: CourseConstructorArgs) {
+	constructor ({ id, title, institutionId, facultyId, departmentId, createdAt, updatedAt }: CourseConstructorArgs) {
 		super()
 		this.id = id
-		this.name = name
+		this.title = title
 		this.institutionId = institutionId
 		this.facultyId = facultyId
 		this.departmentId = departmentId
@@ -22,6 +22,6 @@ export class CourseEntity extends BaseEntity {
 }
 
 type CourseConstructorArgs = {
-	id: string, name: string, institutionId: string, facultyId: string | null, departmentId: string | null
+	id: string, title: string, institutionId: string, facultyId: string | null, departmentId: string | null
 	createdAt: number, updatedAt: number
 }

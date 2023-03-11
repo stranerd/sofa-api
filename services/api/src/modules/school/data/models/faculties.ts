@@ -5,6 +5,6 @@ export interface FacultyFromModel extends FacultyToModel {
 }
 
 export interface FacultyToModel {
-	name: string
+	title: string
 	institutionId: string
 }

@@ -3,7 +3,7 @@ import { Currencies, Interval, PlanData } from '../types'
 
 export class PlanEntity extends BaseEntity {
 	public readonly id: string
-	public readonly name: string
+	public readonly title: string
 	public readonly interval: Interval
 	public readonly active: boolean
 	public readonly amount: number
@@ -16,7 +16,7 @@ export class PlanEntity extends BaseEntity {
 		id,
 		amount,
 		currency,
-		name,
+		title,
 		interval,
 		active,
 		data,
@@ -25,7 +25,7 @@ export class PlanEntity extends BaseEntity {
 	}: PlanConstructorArgs) {
 		super()
 		this.id = id
-		this.name = name
+		this.title = title
 		this.interval = interval
 		this.active = active
 		this.amount = amount
@@ -47,7 +47,7 @@ export class PlanEntity extends BaseEntity {
 
 type PlanConstructorArgs = {
 	id: string
-	name: string
+	title: string
 	amount: number
 	active: boolean
 	currency: Currencies

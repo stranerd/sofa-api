@@ -1,4 +1,4 @@
-import { Currencies, PlanData, Interval } from '../../domain/types'
+import { Currencies, Interval, PlanData } from '../../domain/types'
 
 export interface PlanFromModel extends PlanToModel {
 	createdAt: number
@@ -9,7 +9,7 @@ export interface PlanToModel {
 	_id: string
 	amount: number
 	currency: Currencies
-	name: string
+	title: string
 	interval: Interval
 	active: boolean
 	data: PlanData

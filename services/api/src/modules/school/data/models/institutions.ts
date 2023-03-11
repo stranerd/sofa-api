@@ -5,6 +5,6 @@ export interface InstitutionFromModel extends InstitutionToModel {
 }
 
 export interface InstitutionToModel {
-	name: string
+	title: string
 	isGateway: boolean
 }

@@ -5,7 +5,7 @@ export interface DepartmentFromModel extends DepartmentToModel {
 }
 
 export interface DepartmentToModel {
-	name: string
+	title: string
 	institutionId: string
 	facultyId: string
 }

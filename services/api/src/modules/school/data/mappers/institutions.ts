@@ -5,15 +5,15 @@ import { InstitutionFromModel, InstitutionToModel } from '../models/institutions
 export class InstitutionMapper extends BaseMapper<InstitutionFromModel, InstitutionToModel, InstitutionEntity> {
 	mapFrom (model: InstitutionFromModel | null) {
 		if (!model) return null
-		const { _id, name, isGateway, createdAt, updatedAt } = model
+		const { _id, title, isGateway, createdAt, updatedAt } = model
 		return new InstitutionEntity({
-			id: _id.toString(), name, isGateway, createdAt, updatedAt
+			id: _id.toString(), title, isGateway, createdAt, updatedAt
 		})
 	}
 
 	mapTo (entity: InstitutionEntity) {
 		return {
-			name: entity.name,
+			title: entity.title,
 			isGateway: entity.isGateway
 		}
 	}

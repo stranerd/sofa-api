@@ -7,7 +7,7 @@ export const plansList: PlanToModel[] = [
 		_id: 'premium-plan',
 		amount: 2000,
 		currency: Currencies.NGN,
-		name: 'Premium',
+		title: 'Premium',
 		interval: CronTypes.monthly,
 		data: {},
 		active: true

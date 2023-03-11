@@ -10,6 +10,10 @@ import {
 } from 'equipped'
 
 export class CommentsController {
+	private static schema = () => ({
+		body: Schema.string().min(1)
+	})
+
 	static async get (req: Request) {
 		const query = req.query as QueryParams
 		return await CommentsUseCases.get(query)
@@ -20,16 +24,13 @@ export class CommentsController {
 	}
 
 	static async create (req: Request) {
-		const { body, entity } = validateReq(
-			{
-				body: Schema.string().min(1),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.any<InteractionEntities>().in(Object.values(InteractionEntities))
-				})
-			},
-			req.body
-		)
+		const { body, entity } = validateReq({
+			...this.schema(),
+			entity: Schema.object({
+				id: Schema.string().min(1),
+				type: Schema.any<InteractionEntities>().in(Object.values(InteractionEntities))
+			})
+		}, req.body)
 
 		const userId = await verifyInteractionEntity(entity.type, entity.id, 'comments')
 		const user = await UsersUseCases.find(req.authUser!.id)
@@ -43,12 +44,7 @@ export class CommentsController {
 	}
 
 	static async update (req: Request) {
-		const { body } = validateReq(
-			{
-				body: Schema.string().min(1)
-			},
-			req.body
-		)
+		const { body } = validateReq(this.schema(), req.body)
 
 		const updated = await CommentsUseCases.update({
 			id: req.params.id,

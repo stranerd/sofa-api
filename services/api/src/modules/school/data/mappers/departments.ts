@@ -5,15 +5,15 @@ import { DepartmentFromModel, DepartmentToModel } from '../models/departments'
 export class DepartmentMapper extends BaseMapper<DepartmentFromModel, DepartmentToModel, DepartmentEntity> {
 	mapFrom (model: DepartmentFromModel | null) {
 		if (!model) return null
-		const { _id, name, institutionId, facultyId, createdAt, updatedAt } = model
+		const { _id, title, institutionId, facultyId, createdAt, updatedAt } = model
 		return new DepartmentEntity({
-			id: _id.toString(), name, institutionId, facultyId, createdAt, updatedAt
+			id: _id.toString(), title, institutionId, facultyId, createdAt, updatedAt
 		})
 	}
 
 	mapTo (entity: DepartmentEntity) {
 		return {
-			name: entity.name,
+			title: entity.title,
 			institutionId: entity.institutionId,
 			facultyId: entity.facultyId
 		}

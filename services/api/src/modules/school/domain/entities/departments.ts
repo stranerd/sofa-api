@@ -2,16 +2,16 @@ import { BaseEntity } from 'equipped'
 
 export class DepartmentEntity extends BaseEntity {
 	public readonly id: string
-	public readonly name: string
+	public readonly title: string
 	public readonly institutionId: string
 	public readonly facultyId: string
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, name, institutionId, facultyId, createdAt, updatedAt }: DepartmentConstructorArgs) {
+	constructor ({ id, title, institutionId, facultyId, createdAt, updatedAt }: DepartmentConstructorArgs) {
 		super()
 		this.id = id
-		this.name = name
+		this.title = title
 		this.institutionId = institutionId
 		this.facultyId = facultyId
 		this.createdAt = createdAt
@@ -19,4 +19,4 @@ export class DepartmentEntity extends BaseEntity {
 	}
 }
 
-type DepartmentConstructorArgs = { id: string, name: string, institutionId: string, facultyId: string, createdAt: number, updatedAt: number }
+type DepartmentConstructorArgs = { id: string, title: string, institutionId: string, facultyId: string, createdAt: number, updatedAt: number }
