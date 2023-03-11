@@ -77,12 +77,9 @@ services:
     image: debezium/connect:2.2
     environment:
       BOOTSTRAP_SERVERS: ${KAFKA_URIS}
-      GROUP_ID: sofa-api
+      GROUP_ID: sofa
       CONFIG_STORAGE_TOPIC: debezium.connect.configs
       OFFSET_STORAGE_TOPIC: debezium.connect.offsets
       STATUS_STORAGE_TOPIC: debezium.connect.status
     depends_on:
       - kafka
-    volumes:
-      - '/c/data/docker/sofa/debezium/data/config:/kafka/config'
-      - '/c/data/docker/sofa/debezium/data/logs:/kafka/logs'

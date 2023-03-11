@@ -52,9 +52,9 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		default: []
 	},
 	roles: {
-		type: Object as unknown as UserFromModel['roles'],
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: {} as unknown as UserFromModel['roles']
+		default: {}
 	},
 	lastSignedInAt: {
 		type: Number,

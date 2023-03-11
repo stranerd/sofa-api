@@ -31,7 +31,7 @@ const Schema = new appInstance.dbs.mongo.Schema<EmailErrorFromModel>({
 	data: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: {} as unknown as EmailErrorFromModel['data']
+		default: {}
 	},
 	createdAt: {
 		type: Number,
