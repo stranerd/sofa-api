@@ -1,5 +1,6 @@
 export { EmbeddedUser } from '@modules/users'
 export { MediaOutput as Media } from 'equipped'
+export * from './questions'
 
 import { Currencies } from '@modules/payment'
 

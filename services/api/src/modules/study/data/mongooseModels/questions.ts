@@ -26,6 +26,14 @@ const Schema = new appInstance.dbs.mongo.Schema<QuestionFromModel>({
 		required: false,
 		default: null
 	},
+	timeLimit: {
+		type: Number,
+		required: true
+	},
+	data: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
 	createdAt: {
 		type: Number,
 		required: false,
