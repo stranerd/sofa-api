@@ -1,0 +1,35 @@
+import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
+import { appInstance } from '@utils/types'
+import { DbChangeCallbacks } from 'equipped'
+import { FoldersUseCases } from '../..'
+import { QuizFromModel } from '../../data/models/quizzes'
+import { QuizEntity } from '../../domain/entities/quizzes'
+import { FolderSaved } from '../../domain/types'
+
+export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity> = {
+	created: async ({ after }) => {
+		await appInstance.listener.created('study/quizzes', after)
+		await appInstance.listener.created(`study/quizzes/${after.id}`, after)
+
+		await UsersUseCases.updateNerdScore({
+			userId: after.user.id,
+			amount: ScoreRewards.NewQuiz
+		})
+		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.quizzes })
+	},
+	updated: async ({ after }) => {
+		await appInstance.listener.updated('study/quizzes', after)
+		await appInstance.listener.updated(`study/quizzes/${after.id}`, after)
+	},
+	deleted: async ({ before }) => {
+		await appInstance.listener.deleted('study/quizzes', before)
+		await appInstance.listener.deleted(`study/quizzes/${before.id}`, before)
+
+		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })
+		await UsersUseCases.updateNerdScore({
+			userId: before.user.id,
+			amount: -ScoreRewards.NewQuiz
+		})
+		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
+	}
+}

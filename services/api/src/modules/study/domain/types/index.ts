@@ -6,12 +6,13 @@ import { MediaOutput } from 'equipped'
 export type Media = MediaOutput
 
 export enum FolderSaved {
-	cards = 'cards'
+	quizzes = 'quizzes'
 }
 
 export enum DraftStatus {
 	draft = 'draft',
-	published = 'published'
+	published = 'published',
+	frozen = 'frozen'
 }
 
 export type Publishable = {

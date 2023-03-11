@@ -1,9 +1,9 @@
 import { appInstance } from '@utils/types'
-import { CardDbChangeCallbacks } from '../../utils/changes/cards'
-import { CardMapper } from '../mappers/cards'
-import { CardFromModel } from '../models/cards'
+import { QuizDbChangeCallbacks } from '../../utils/changes/quizzes'
+import { QuizMapper } from '../mappers/quizzes'
+import { QuizFromModel } from '../models/quizzes'
 
-const Schema = new appInstance.dbs.mongo.Schema<CardFromModel>({
+const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
 	_id: {
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
@@ -12,8 +12,8 @@ const Schema = new appInstance.dbs.mongo.Schema<CardFromModel>({
 		type: String,
 		required: true
 	},
-	set: {
-		type: [Object],
+	questions: {
+		type: [String],
 		required: true
 	},
 	user: {
@@ -44,6 +44,6 @@ const Schema = new appInstance.dbs.mongo.Schema<CardFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Card = appInstance.dbs.mongo.use('study').model<CardFromModel>('Card', Schema)
+export const Quiz = appInstance.dbs.mongo.use('study').model<QuizFromModel>('Quiz', Schema)
 
-export const CardChange = appInstance.dbs.mongo.change(Card, CardDbChangeCallbacks, new CardMapper().mapFrom)
+export const QuizChange = appInstance.dbs.mongo.change(Quiz, QuizDbChangeCallbacks, new QuizMapper().mapFrom)

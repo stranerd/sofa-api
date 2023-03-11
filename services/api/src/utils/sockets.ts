@@ -25,8 +25,8 @@ export const registerSockets = () => {
 		.register('school/faculties', isOpen)
 		.register('school/institutions', isOpen)
 
-		.register('study/cards', isOpen)
-		.register('study/folders', isOpen)
+		.register('study/folders', isMine)
+		.register('study/quizzes', isOpen)
 
 		.register('users/users', isOpen)
 		.register('users/connects', isMine)

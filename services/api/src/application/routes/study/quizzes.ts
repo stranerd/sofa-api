@@ -1,8 +1,8 @@
-import { CardController } from '@application/controllers/study/cards'
+import { QuizController } from '@application/controllers/study/quizzes'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
-export const cardsRoutes = groupRoutes('/cards', [
+export const quizzesRoutes = groupRoutes('/quizzes', [
 	{
 		path: '/',
 		method: 'get',
@@ -10,7 +10,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.get(req)
+					result: await QuizController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.find(req)
+					result: await QuizController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.update(req)
+					result: await QuizController.update(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.create(req)
+					result: await QuizController.create(req)
 				}
 			})
 		]
@@ -57,19 +57,7 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.delete(req)
-				}
-			})
-		]
-	}, {
-		path: '/:id/match',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CardController.saveMatch(req)
+					result: await QuizController.delete(req)
 				}
 			})
 		]
@@ -81,7 +69,19 @@ export const cardsRoutes = groupRoutes('/cards', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CardController.publish(req)
+					result: await QuizController.publish(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/freeze',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.freeze(req)
 				}
 			})
 		]

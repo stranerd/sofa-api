@@ -1,5 +1,5 @@
 import { CommentsUseCases } from '@modules/interactions'
-import { CardsUseCases } from '@modules/study'
+import { QuizzesUseCases } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { ConnectsUseCases } from '../../'
@@ -16,7 +16,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		await appInstance.listener.updated(`users/users/${after.id}`, after)
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
 		if (updatedBioOrRoles) await Promise.all([
-			ConnectsUseCases, CommentsUseCases, CardsUseCases
+			ConnectsUseCases, CommentsUseCases, QuizzesUseCases
 		].map(async (useCase) => await useCase.updateUserBio(after.getEmbedded())))
 	},
 	deleted: async ({ before }) => {

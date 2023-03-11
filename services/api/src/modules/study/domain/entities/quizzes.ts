@@ -2,10 +2,10 @@ import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { EmbeddedUser, Publishable } from '../types'
 
-export class CardEntity extends BaseEntity implements Publishable {
+export class QuizEntity extends BaseEntity implements Publishable {
 	public readonly id: string
 	public readonly title: string
-	public readonly set: { question: string, answer: string }[]
+	public readonly questions: string[]
 	public readonly user: EmbeddedUser
 	public readonly tagId: Publishable['tagId']
 	public readonly status: Publishable['status']
@@ -13,11 +13,11 @@ export class CardEntity extends BaseEntity implements Publishable {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, set, user, tagId, status, price, createdAt, updatedAt }: CardConstructorArgs) {
+	constructor ({ id, title, questions, user, tagId, status, price, createdAt, updatedAt }: QuizConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
-		this.set = set
+		this.questions = questions
 		this.user = generateDefaultUser(user)
 		this.tagId = tagId
 		this.status = status
@@ -27,10 +27,10 @@ export class CardEntity extends BaseEntity implements Publishable {
 	}
 }
 
-type CardConstructorArgs = Publishable & {
+type QuizConstructorArgs = Publishable & {
 	id: string
 	title: string
-	set: { question: string, answer: string }[]
+	questions: string[]
 	user: EmbeddedUser
 	createdAt: number
 	updatedAt: number

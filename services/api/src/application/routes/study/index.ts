@@ -1,8 +1,8 @@
 import { groupRoutes } from 'equipped'
-import { cardsRoutes } from './cards'
 import { foldersRoutes } from './folders'
+import { quizzesRoutes } from './quizzes'
 
 export const studyRoutes = groupRoutes('/study', [
-	...cardsRoutes,
+	...quizzesRoutes,
 	...foldersRoutes
 ])

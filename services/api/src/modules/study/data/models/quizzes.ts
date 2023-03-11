@@ -1,16 +1,13 @@
 import { EmbeddedUser, Publishable } from '../../domain/types'
 
-export interface CardFromModel extends CardToModel {
+export interface QuizFromModel extends QuizToModel {
 	_id: string
+	questions: string[]
 	createdAt: number
 	updatedAt: number
 }
 
-export interface CardToModel extends Publishable {
+export interface QuizToModel extends Publishable {
 	title: string
 	user: EmbeddedUser
-	set: {
-		question: string
-		answer: string
-	}[]
 }

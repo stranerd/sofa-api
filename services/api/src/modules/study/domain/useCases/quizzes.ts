@@ -1,16 +1,16 @@
 import { QueryParams } from 'equipped'
-import { CardToModel } from '../../data/models/cards'
-import { ICardRepository } from '../irepositories/cards'
+import { QuizToModel } from '../../data/models/quizzes'
+import { IQuizRepository } from '../irepositories/quizzes'
 import { EmbeddedUser } from '../types'
 
-export class CardsUseCase {
-	private repository: ICardRepository
+export class QuizzesUseCase {
+	private repository: IQuizRepository
 
-	constructor (repository: ICardRepository) {
+	constructor (repository: IQuizRepository) {
 		this.repository = repository
 	}
 
-	async add (data: CardToModel) {
+	async add (data: QuizToModel) {
 		return await this.repository.add(data)
 	}
 
@@ -26,7 +26,7 @@ export class CardsUseCase {
 		return await this.repository.get(query)
 	}
 
-	async update (input: { id: string, userId: string, data: Partial<CardToModel> }) {
+	async update (input: { id: string, userId: string, data: Partial<QuizToModel> }) {
 		return await this.repository.update(input.id, input.userId, input.data)
 	}
 
@@ -34,11 +34,11 @@ export class CardsUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async saveMatch (input: { cardId: string, userId: string, time: number }) {
-		return await this.repository.saveMatch(input.cardId, input.userId, input.time)
-	}
-
 	async publish (input: { id: string, userId: string }) {
 		return await this.repository.publish(input.id, input.userId)
+	}
+
+	async freeze (input: { id: string, userId: string }) {
+		return await this.repository.freeze(input.id, input.userId)
 	}
 }
