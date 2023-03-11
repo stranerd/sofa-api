@@ -82,4 +82,14 @@ export class QuizController {
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
+
+	static async reorder (req: Request) {
+		const { questions } = validateReq({
+			questions: Schema.array(Schema.string().min(1)).min(1)
+		}, req.body)
+
+		const updatedQuiz = await QuizzesUseCases.reorder({ id: req.params.id, userId: req.authUser!.id, questionIds: questions })
+		if (updatedQuiz) return updatedQuiz
+		throw new NotAuthorizedError()
+	}
 }

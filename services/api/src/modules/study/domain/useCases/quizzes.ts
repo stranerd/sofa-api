@@ -45,4 +45,8 @@ export class QuizzesUseCase {
 	async toggleQuestion (input: { quizId: string, userId: string, questionId: string, add: boolean }) {
 		return await this.repository.toggleQuestion(input.quizId, input.userId, input.questionId, input.add)
 	}
+
+	async reorder (input: { id: string, userId: string, questionIds: string[] }) {
+		return await this.repository.reorder(input.id, input.userId, input.questionIds)
+	}
 }

@@ -2,8 +2,9 @@ import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IQuizRepository } from '../../domain/irepositories/quizzes'
 import { DraftStatus, EmbeddedUser } from '../../domain/types'
+import { compareArrayContents } from '../../utils'
 import { QuizMapper } from '../mappers/quizzes'
-import { QuizToModel } from '../models/quizzes'
+import { QuizFromModel, QuizToModel } from '../models/quizzes'
 import { Quiz } from '../mongooseModels/quizzes'
 
 export class QuizRepository implements IQuizRepository {
@@ -74,5 +75,17 @@ export class QuizRepository implements IQuizRepository {
 			_id: id, 'user.id': userId
 		}, { [add ? '$addToSet' : '$pull']: { questions: questionId } }, { new: true })
 		return this.mapper.mapFrom(quiz)
+	}
+
+	async reorder (id: string, userId: string, questionIds: string[]) {
+		let res = null as QuizFromModel | null
+		await Quiz.collection.conn.transaction(async (session) => {
+			const quizRaw = await Quiz.findOne({ _id: id, 'user.id': userId }, null, { session })
+			if (!quizRaw) return
+			const quiz = this.mapper.mapFrom(quizRaw)!
+			if (!compareArrayContents(quiz.questions, questionIds)) return
+			res = await Quiz.findByIdAndUpdate(id, { $set: { questions: questionIds } }, { new: true, session })
+		})
+		return this.mapper.mapFrom(res)
 	}
 }

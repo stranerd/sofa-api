@@ -85,5 +85,17 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/reorder',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.reorder(req)
+				}
+			})
+		]
 	}
 ])
