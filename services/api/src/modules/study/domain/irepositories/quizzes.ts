@@ -12,4 +12,5 @@ export interface IQuizRepository {
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	publish: (id: string, userId: string) => Promise<QuizEntity | null>
 	freeze: (id: string, userId: string) => Promise<QuizEntity | null>
+	toggleQuestion: (id: string, userId: string, questionId: string, add: boolean) => Promise<QuizEntity | null>
 }
