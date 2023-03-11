@@ -42,7 +42,7 @@ export class QuizzesUseCase {
 		return await this.repository.freeze(input.id, input.userId)
 	}
 
-	async toggleQuestion (input: { id: string, userId: string, questionId: string, add: boolean }) {
-		return await this.repository.toggleQuestion(input.id, input.userId, input.questionId, input.add)
+	async toggleQuestion (input: { quizId: string, userId: string, questionId: string, add: boolean }) {
+		return await this.repository.toggleQuestion(input.quizId, input.userId, input.questionId, input.add)
 	}
 }

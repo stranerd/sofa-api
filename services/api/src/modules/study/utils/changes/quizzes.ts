@@ -1,7 +1,7 @@
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
-import { FoldersUseCases } from '../..'
+import { FoldersUseCases, QuestionsUseCases } from '../..'
 import { QuizFromModel } from '../../data/models/quizzes'
 import { QuizEntity } from '../../domain/entities/quizzes'
 import { FolderSaved } from '../../domain/types'
@@ -31,5 +31,6 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			amount: -ScoreRewards.NewQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
+		await QuestionsUseCases.deleteQuizQuestions(before.id)
 	}
 }
