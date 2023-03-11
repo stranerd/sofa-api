@@ -1,3 +1,5 @@
+import { QuizzesUseCases } from '..'
+
 export const compareArrayContents = <T extends string | number> (arr1: T[], arr2: T[]): boolean => {
 	if (arr1.length !== arr2.length) return false
 	const sorted1 = arr1.sort()
@@ -6,4 +8,12 @@ export const compareArrayContents = <T extends string | number> (arr1: T[], arr2
 		if (sorted1[i] !== sorted2[i]) return false
 	}
 	return true
+}
+
+export const canAccessQuiz = async (quizId: string, userId: string) => {
+	const quiz = await QuizzesUseCases.find(quizId)
+	if (!quiz) return false
+	if (quiz.user.id === userId) return true
+	// TODO: check  if user has paid for this quiz
+	return !!userId
 }

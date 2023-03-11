@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { QuestionsUseCases, QuizzesUseCases } from '@modules/study'
+import { canAccessQuiz, QuestionsUseCases, QuizzesUseCases } from '@modules/study'
 import { BadRequestError, NotAuthorizedError, Request, Schema, validateReq } from 'equipped'
 
 export class QuestionController {
@@ -7,6 +7,23 @@ export class QuestionController {
 		question: Schema.string().min(1),
 		questionMedia: Schema.or([Schema.file().image(), Schema.file().audio(), Schema.file().video()]).nullable()
 	})
+
+	static async find (req: Request) {
+		const hasAccess = await canAccessQuiz(req.params.quizId, req.authUser!.id)
+		if (!hasAccess) throw new NotAuthorizedError('cannot access the questions for this quiz')
+		const question = await QuestionsUseCases.find(req.params.id)
+		if (!question || question.quizId !== req.params.quizId) return null
+		return question
+	}
+
+	static async get (req: Request) {
+		const hasAccess = await canAccessQuiz(req.params.quizId, req.authUser!.id)
+		if (!hasAccess) throw new NotAuthorizedError('cannot access the questions for this quiz')
+		return await QuestionsUseCases.get({
+			where: [{ field: 'quizId', value: req.params.quizId }],
+			all: true
+		})
+	}
 
 	static async update (req: Request) {
 		const uploadedMedia = req.files.questionMedia?.[0] ?? null
@@ -17,7 +34,7 @@ export class QuestionController {
 		const media = uploadedMedia ? await UploaderUseCases.upload('study/questions', uploadedMedia) : undefined
 
 		const updatedQuestion = await QuestionsUseCases.update({
-			id: req.params.id, userId: req.authUser!.id,
+			quizId: req.params.quizId, id: req.params.id, userId: req.authUser!.id,
 			data: {
 				question,
 				...(changedMedia ? { questionMedia: media } : {})
@@ -43,7 +60,7 @@ export class QuestionController {
 	}
 
 	static async delete (req: Request) {
-		const isDeleted = await QuestionsUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
+		const isDeleted = await QuestionsUseCases.delete({ quizId: req.params.quizId, id: req.params.id, userId: req.authUser!.id })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}

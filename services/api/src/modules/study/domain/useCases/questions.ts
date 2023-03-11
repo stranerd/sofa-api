@@ -13,8 +13,8 @@ export class QuestionsUseCase {
 		return await this.repository.add(data)
 	}
 
-	async delete (input: { id: string, userId: string }) {
-		return await this.repository.delete(input.id, input.userId)
+	async delete (input: { quizId: string, id: string, userId: string }) {
+		return await this.repository.delete(input.quizId, input.id, input.userId)
 	}
 
 	async find (id: string) {
@@ -25,8 +25,8 @@ export class QuestionsUseCase {
 		return await this.repository.get(query)
 	}
 
-	async update (input: { id: string, userId: string, data: Partial<QuestionToModel> }) {
-		return await this.repository.update(input.id, input.userId, input.data)
+	async update (input: { quizId: string, id: string, userId: string, data: Partial<QuestionToModel> }) {
+		return await this.repository.update(input.quizId, input.id, input.userId, input.data)
 	}
 
 	async deleteQuizQuestions (quizId: string) {

@@ -37,15 +37,15 @@ export class QuestionRepository implements IQuestionRepository {
 		return this.mapper.mapFrom(question)
 	}
 
-	async update (id: string, userId: string, data: Partial<QuestionToModel>) {
+	async update (quizId: string, id: string, userId: string, data: Partial<QuestionToModel>) {
 		const question = await Question.findOneAndUpdate({
-			_id: id, userId
+			_id: id, userId, quizId
 		}, { $set: data }, { new: true })
 		return this.mapper.mapFrom(question)
 	}
 
-	async delete (id: string, userId: string) {
-		const question = await Question.findOneAndDelete({ _id: id, userId })
+	async delete (quizId: string, id: string, userId: string) {
+		const question = await Question.findOneAndDelete({ _id: id, userId, quizId })
 		return !!question
 	}
 

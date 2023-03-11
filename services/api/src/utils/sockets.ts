@@ -1,3 +1,4 @@
+import { canAccessQuiz } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { OnJoinFn } from 'equipped'
 
@@ -6,6 +7,12 @@ export const registerSockets = () => {
 	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
 	// const isSubbed: OnJoinFn = async ({ channel, user }) => user?.roles[AuthRole.isSubscribed] ? channel : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
+	const quizQuestionsCb: OnJoinFn = async (data, params) => {
+		const { quizId = null } = params
+		if (!quizId || !data.user) return null
+		const hasAccess = await canAccessQuiz(quizId, data.user.id)
+		return hasAccess ? await isOpen(data, params) : null
+	}
 
 	appInstance.listener
 		.register('interactions/comments', isOpen)
@@ -27,6 +34,7 @@ export const registerSockets = () => {
 
 		.register('study/folders', isMine)
 		.register('study/quizzes', isOpen)
+		.register('study/:quizId/questions', quizQuestionsCb)
 
 		.register('users/users', isOpen)
 		.register('users/connects', isMine)

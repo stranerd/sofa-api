@@ -6,7 +6,7 @@ export interface IQuestionRepository {
 	add: (data: QuestionToModel) => Promise<QuestionEntity>
 	get: (condition: QueryParams) => Promise<QueryResults<QuestionEntity>>
 	find: (id: string) => Promise<QuestionEntity | null>
-	update: (id: string, userId: string, data: Partial<QuestionToModel>) => Promise<QuestionEntity | null>
-	delete: (id: string, userId: string) => Promise<boolean>
+	update: (quizId: string, id: string, userId: string, data: Partial<QuestionToModel>) => Promise<QuestionEntity | null>
+	delete: (quizId: string, id: string, userId: string) => Promise<boolean>
 	deleteQuizQuestions: (quizId: string) => Promise<boolean>
 }
