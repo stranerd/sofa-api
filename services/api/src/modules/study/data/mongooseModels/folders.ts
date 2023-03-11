@@ -9,7 +9,7 @@ const Schema = new appInstance.dbs.mongo.Schema<FolderFromModel>({
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
 	},
-	name: {
+	title: {
 		type: String,
 		required: false,
 		default: ''

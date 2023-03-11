@@ -4,16 +4,16 @@ import { EmbeddedUser, FolderSaved } from '../types'
 
 export class FolderEntity extends BaseEntity {
 	public readonly id: string
-	public readonly name: string
+	public readonly title: string
 	public readonly saved: Record<FolderSaved, string[]>
 	public readonly user: EmbeddedUser
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, name, saved, user, createdAt, updatedAt }: FolderConstructorArgs) {
+	constructor ({ id, title, saved, user, createdAt, updatedAt }: FolderConstructorArgs) {
 		super()
 		this.id = id
-		this.name = name
+		this.title = title
 		this.saved = saved
 		this.user = generateDefaultUser(user)
 		this.createdAt = createdAt
@@ -23,7 +23,7 @@ export class FolderEntity extends BaseEntity {
 
 type FolderConstructorArgs = {
 	id: string
-	name: string
+	title: string
 	saved: Record<FolderSaved, string[]>
 	user: EmbeddedUser
 	createdAt: number

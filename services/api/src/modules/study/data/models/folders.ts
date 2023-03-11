@@ -8,6 +8,6 @@ export interface FolderFromModel extends FolderToModel {
 }
 
 export interface FolderToModel {
-	name: string
+	title: string
 	user: EmbeddedUser
 }

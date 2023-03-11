@@ -1,9 +1,7 @@
 export { EmbeddedUser } from '@modules/users'
+export { MediaOutput as Media } from 'equipped'
 
 import { Currencies } from '@modules/payment'
-import { MediaOutput } from 'equipped'
-
-export type Media = MediaOutput
 
 export enum FolderSaved {
 	quizzes = 'quizzes'

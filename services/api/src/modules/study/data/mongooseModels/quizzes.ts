@@ -12,6 +12,21 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
 		type: String,
 		required: true
 	},
+	description: {
+		type: String,
+		required: false,
+		default: ''
+	},
+	photo: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
+	isPublic: {
+		type: Boolean,
+		required: false,
+		default: false
+	},
 	questions: {
 		type: [String],
 		required: true
