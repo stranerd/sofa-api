@@ -1,5 +1,6 @@
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
+import { MessagesUseCases } from '../../'
 import { ConversationFromModel } from '../../data/models/conversations'
 import { ConversationEntity } from '../../domain/entities/conversations'
 
@@ -21,5 +22,7 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 			`conversations/conversations/${before.user.id}`,
 			`conversations/conversations/${before.id}/${before.user.id}`
 		], before)
+
+		await MessagesUseCases.deleteConversationMessages(before.id)
 	}
 }
