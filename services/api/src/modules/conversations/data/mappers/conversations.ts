@@ -5,9 +5,9 @@ import { ConversationFromModel, ConversationToModel } from '../models/conversati
 export class ConversationMapper extends BaseMapper<ConversationFromModel, ConversationToModel, ConversationEntity> {
 	mapFrom (model: ConversationFromModel | null) {
 		if (!model) return null
-		const { _id, title, user, createdAt, updatedAt } = model
+		const { _id, title, user, tutor, createdAt, updatedAt } = model
 		return new ConversationEntity({
-			id: _id.toString(), title, user, createdAt, updatedAt
+			id: _id.toString(), title, user, tutor, createdAt, updatedAt
 		})
 	}
 

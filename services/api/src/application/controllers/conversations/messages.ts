@@ -1,6 +1,6 @@
 import { canAccessConversation, ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
 import { UploaderUseCases } from '@modules/storage'
-import { NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validateReq, ValidationError } from 'equipped'
 
 export class MessageController {
 	static async find (req: Request) {
@@ -21,14 +21,16 @@ export class MessageController {
 
 	static async create (req: Request) {
 		const data = validateReq({
-			body: Schema.string().min(1),
+			body: Schema.string(),
 			media: Schema.file().nullable(),
 		}, { ...req.body, media: req.files.media?.[0] ?? null })
 
 		const conversation = await ConversationsUseCases.find(req.params.conversationId)
 		if (!conversation) throw new NotAuthorizedError()
 		const hasAccess = await canAccessConversation(req.params.conversationId, req.authUser!.id, conversation)
-		if (!conversation || !hasAccess) throw new NotAuthorizedError('cannot send a messages to this conversation')
+		if (!hasAccess) throw new NotAuthorizedError()
+		if (!conversation.tutor) data.media = null
+		if (!data.media && data.body.length === 0) throw new ValidationError([{ field: 'body', messages: ['cannot be empty'] }])
 
 		const media = data.media ? await UploaderUseCases.upload(`conversations/${conversation.id}/messages`, data.media) : null
 

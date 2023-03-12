@@ -17,6 +17,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ConversationFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
+	tutor: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	createdAt: {
 		type: Number,
 		required: false,
