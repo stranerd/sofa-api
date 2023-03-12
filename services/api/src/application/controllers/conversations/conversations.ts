@@ -1,4 +1,4 @@
-import { ConversationsUseCases } from '@modules/conversations'
+import { ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
 import { UsersUseCases } from '@modules/users'
 import { AI } from '@utils/ai'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
@@ -26,7 +26,15 @@ export class ConversationController {
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
 		const title = await AI.summarizeForTitle(body)
-		return await ConversationsUseCases.add({ title, user: user.getEmbedded() })
+		const conversation = await ConversationsUseCases.add({ title, user: user.getEmbedded() })
+		await MessagesUseCases.add({
+			body, media: null, starred: false,
+			conversationId: conversation.id,
+			userId: conversation.user.id,
+			tags: conversation.tags(conversation.user.id)
+		})
+
+		return conversation
 	}
 
 	static async delete (req: Request) {

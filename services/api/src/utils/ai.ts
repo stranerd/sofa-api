@@ -23,4 +23,17 @@ export class AI {
 		if (title.endsWith('"')) title = title.slice(0, -1)
 		return title
 	}
+
+	static async replyMessage (message: string) {
+		const prompt = `The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly and always provides all logic behind its answers..
+
+Human: Hello, who are you?
+AI: I am an AI created by OpenAI. How can I help you today?
+Human: ${message}
+AI: `
+
+		const reply = await this.#getResponse(prompt)
+		if (!reply) return null
+		return reply.trim()
+	}
 }

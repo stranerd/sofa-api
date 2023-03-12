@@ -3,6 +3,7 @@ import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { MessageFromModel } from '../../data/models/messages'
 import { MessageEntity } from '../../domain/entities/messages'
+import { generateResponse } from '../messages'
 
 export const MessageDbChangeCallbacks: DbChangeCallbacks<MessageFromModel, MessageEntity> = {
 	created: async ({ after }) => {
@@ -10,6 +11,8 @@ export const MessageDbChangeCallbacks: DbChangeCallbacks<MessageFromModel, Messa
 			`conversations/${after.conversationId}/messages`,
 			`conversations/${after.conversationId}/messages/${after.id}`
 		], after)
+
+		await generateResponse(after)
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.updated([

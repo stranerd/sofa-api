@@ -19,8 +19,9 @@ export class ConversationEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	tags () {
-		return [ConversationEntity.AI_Id]
+	tags (userId: string) {
+		// TODO: add tutor id if there is a tutor
+		return this.user.id === userId ? [ConversationEntity.AI_Id] : [this.user.id]
 	}
 }
 

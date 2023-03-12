@@ -14,7 +14,8 @@ const Schema = new appInstance.dbs.mongo.Schema<MessageFromModel>({
 	},
 	userId: {
 		type: String,
-		required: true
+		required: false,
+		default: ''
 	},
 	body: {
 		type: String,

@@ -34,7 +34,7 @@ export class MessageController {
 
 		return await MessagesUseCases.add({
 			...data, media, starred: false,
-			conversationId: conversation.id, userId: req.authUser!.id, tags: conversation.tags()
+			conversationId: conversation.id, userId: req.authUser!.id, tags: conversation.tags(req.authUser!.id)
 		})
 	}
 
