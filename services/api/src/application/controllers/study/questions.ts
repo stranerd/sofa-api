@@ -1,6 +1,6 @@
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessQuiz, QuestionsUseCases, QuestionTypes, QuizzesUseCases } from '@modules/study'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq, Validation } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validateReq, Validation } from 'equipped'
 
 export class QuestionController {
 	private static schema = (body: Record<string, any>) => ({
@@ -93,8 +93,7 @@ export class QuestionController {
 		}, { ...req.body, quizId: req.params.quizId, questionMedia: req.files.photo?.[0] ?? null })
 
 		const quiz = await QuizzesUseCases.find(data.quizId)
-		if (!quiz) throw new BadRequestError('quiz not found')
-		if (quiz.user.id !== req.authUser!.id) throw new NotAuthorizedError()
+		if (!quiz || quiz.user.id !== req.authUser!.id) throw new NotAuthorizedError()
 
 		const questionMedia = data.questionMedia ? await UploaderUseCases.upload('study/questions', data.questionMedia) : null
 

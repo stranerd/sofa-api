@@ -17,15 +17,15 @@ export class ConversationController {
 	}
 
 	static async create (req: Request) {
-		const { message } = validateReq({
-			message: Schema.string().min(1),
+		const { body } = validateReq({
+			body: Schema.string().min(1),
 		}, req.body)
 
 		const authUserId = req.authUser!.id
 		const user = await UsersUseCases.find(authUserId)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
-		const title = await AI.summarizeForTitle(message)
+		const title = await AI.summarizeForTitle(body)
 		return await ConversationsUseCases.add({ title, user: user.getEmbedded() })
 	}
 
