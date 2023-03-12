@@ -15,6 +15,8 @@ export const registerSockets = () => {
 	}
 
 	appInstance.listener
+		.register('conversations/conversations', isMine)
+
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
 		.register('interactions/tags', isOpen)
@@ -22,9 +24,9 @@ export const registerSockets = () => {
 
 		.register('notifications/notifications', isMine)
 
+		.register('payment/methods', isMine)
 		.register('payment/plans', isOpen)
 		.register('payment/transactions', isMine)
-		.register('payment/methods', isMine)
 		.register('payment/wallets', isMine)
 
 		.register('school/courses', isOpen)
@@ -36,6 +38,6 @@ export const registerSockets = () => {
 		.register('study/quizzes', isOpen)
 		.register('study/:quizId/questions', quizQuestionsCb)
 
-		.register('users/users', isOpen)
 		.register('users/connects', isMine)
+		.register('users/users', isOpen)
 }
