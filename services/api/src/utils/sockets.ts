@@ -1,5 +1,5 @@
 import { canAccessConversation } from '@modules/conversations'
-import { canAccessQuiz } from '@modules/study'
+import { canAccessCoursable, Coursable } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { OnJoinFn } from 'equipped'
 
@@ -13,10 +13,10 @@ export const registerSockets = () => {
 		if (!conversationId || !data.user) return null
 		return await canAccessConversation(conversationId, data.user.id) ? await isOpen(data, params) : null
 	}
-	const quizQuestionsCb: OnJoinFn = async (data, params) => {
+	const coursablesCb: OnJoinFn = async (data, params) => {
 		const { quizId = null } = params
 		if (!quizId || !data.user) return null
-		return await canAccessQuiz(quizId, data.user.id) ? await isOpen(data, params) : null
+		return await canAccessCoursable(Coursable.quiz, quizId, data.user.id) ? await isOpen(data, params) : null
 	}
 
 	appInstance.listener
@@ -42,7 +42,7 @@ export const registerSockets = () => {
 
 		.register('study/folders', isMine)
 		.register('study/quizzes', isOpen)
-		.register('study/:quizId/questions', quizQuestionsCb)
+		.register('study/:quizId/questions', coursablesCb)
 		.register('study/courses', isOpen)
 
 		.register('users/connects', isMine)

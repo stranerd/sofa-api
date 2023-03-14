@@ -1,4 +1,5 @@
 import { QuizzesUseCases } from '..'
+import { Coursable, DraftStatus } from '../domain/types'
 
 export const compareArrayContents = <T extends string | number> (arr1: T[], arr2: T[]): boolean => {
 	if (arr1.length !== arr2.length) return false
@@ -10,11 +11,16 @@ export const compareArrayContents = <T extends string | number> (arr1: T[], arr2
 	return true
 }
 
-export const canAccessQuiz = async (quizId: string, userId: string) => {
-	const quiz = await QuizzesUseCases.find(quizId)
-	if (!quiz) return false
-	if (quiz.user.id === userId) return true
-	if (!quiz.courseId) return true
-	// TODO: check  if user has paid for this quiz's course
+const finders = {
+	[Coursable.quiz]: QuizzesUseCases
+}
+
+export const canAccessCoursable = async (type: Coursable, coursableId: string, userId: string) => {
+	const coursable = await finders[type]?.find(coursableId) ?? null
+	if (!coursable) return false
+	if (coursable.user.id === userId) return true
+	if (coursable.status === DraftStatus.draft) return false
+	if (!coursable.courseId) return true
+	// TODO: check  if user has paid for this coursable's course
 	return !!userId
 }
