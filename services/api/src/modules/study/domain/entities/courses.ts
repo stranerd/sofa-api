@@ -1,9 +1,10 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { Publishable, Saleable } from '../types'
+import { Coursable, Publishable, Saleable } from '../types'
 
 export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 	public readonly id: string
+	public readonly coursables: { id: string, type: Coursable }[]
 	public readonly title: Publishable['title']
 	public readonly description: Publishable['description']
 	public readonly photo: Publishable['photo']
@@ -15,9 +16,10 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, description, photo, isPublic, user, tagId, status, price, createdAt, updatedAt }: CourseConstructorArgs) {
+	constructor ({ id, coursables, title, description, photo, isPublic, user, tagId, status, price, createdAt, updatedAt }: CourseConstructorArgs) {
 		super()
 		this.id = id
+		this.coursables = coursables
 		this.title = title
 		this.description = description
 		this.photo = photo
@@ -29,10 +31,19 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
+
+	getCoursables () {
+		const obj = {} as Record<Coursable, string[]>
+		this.coursables.map(({ id, type }) => {
+			(obj[type] ||= []).push(id)
+		})
+		return obj
+	}
 }
 
 type CourseConstructorArgs = Publishable & Saleable & {
 	id: string
+	coursables: { id: string, type: Coursable }[]
 	createdAt: number
 	updatedAt: number
 }

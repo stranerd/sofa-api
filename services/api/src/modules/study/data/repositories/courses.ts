@@ -89,8 +89,7 @@ export class CourseRepository implements ICourseRepository {
 				$set: { courseId: course.id, status: DraftStatus.draft }
 			}, { session })
 			res = await Course.findByIdAndUpdate(course.id, {
-				// TODO: add coursableId to course
-				$set: {}
+				[add ? '$addToSet' : '$pull']: { coursables: { id: coursable.id, type } }
 			}, { session, new: true })
 		})
 		return this.mapper.mapFrom(res)

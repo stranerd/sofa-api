@@ -5,6 +5,11 @@ import { CourseMapper } from '../mappers/courses'
 import { CourseFromModel } from '../models/courses'
 
 const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>({
+	coursables: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as CourseFromModel['coursables'],
+		required: false,
+		default: []
+	},
 	...PublishableSchema,
 	...SaleableSchema
 }, { timestamps: { currentTime: Date.now }, minimize: false })
