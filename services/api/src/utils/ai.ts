@@ -1,23 +1,28 @@
 import { openAIKey } from '@utils/environment'
 import { Configuration, OpenAIApi } from 'openai'
 
+type Message = { role: 'system' | 'user' | 'assistant', content: string }
+
 export class AI {
 	static #client = new OpenAIApi(new Configuration({ apiKey: openAIKey }))
 
-	static async #getResponse (prompt: string) {
+	static async #getResponse (messages: Message[]) {
 		try {
-			const response = await this.#client.createCompletion({
-				model: 'text-davinci-003', temperature: 0.3, max_tokens: 1000,
-				prompt
+			const response = await this.#client.createChatCompletion({
+				model: 'gpt-3.5-turbo', temperature: 0.3, max_tokens: 1000,
+				messages
 			})
-			return response.data.choices.at(0)?.text ?? ''
+			return response.data.choices.at(0)?.message?.content ?? ''
 		} catch (err) {
 			throw new Error('failed to generate response')
 		}
 	}
 
-	static async summarizeForTitle (text: string) {
-		let title = await this.#getResponse(`Making it as short as possible, summarize the following text into a one phrase title: ${text}`)
+	static async summarizeForTitle (message: string) {
+		let title = await this.#getResponse([
+			{ role: 'system', content: 'You are a helpful assistant that always summarizes the question into a one phrase title, making it as short as possible' },
+			{ role: 'user', content: message }
+		])
 		title = title.trim()
 		if (title.startsWith('"')) title = title.slice(1)
 		if (title.endsWith('"')) title = title.slice(0, -1)
@@ -25,14 +30,12 @@ export class AI {
 	}
 
 	static async replyMessage (message: string) {
-		const prompt = `The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly and always provides all logic behind its answers..
-
-Human: Hello, who are you?
-AI: I am an AI created by OpenAI. How can I help you today?
-Human: ${message}
-AI: `
-
-		const reply = await this.#getResponse(prompt)
+		const reply = await this.#getResponse([
+			{ role: 'system', content: 'You are a helpful, creative, clever, and very friendly assistant that always provides all logic behind its answers.' },
+			{ role: 'user', content: 'Hello, who are you' },
+			{ role: 'assistant', content: 'I am an AI created by OpenAI. How can I help you today?' },
+			{ role: 'user', content: message }
+		])
 		if (!reply) return null
 		return reply.trim()
 	}
