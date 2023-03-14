@@ -1,10 +1,11 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ICourseRepository } from '../../domain/irepositories/courses'
-import { DraftStatus, EmbeddedUser } from '../../domain/types'
+import { Coursable, DraftStatus, EmbeddedUser } from '../../domain/types'
 import { CourseMapper } from '../mappers/courses'
-import { CourseToModel } from '../models/courses'
+import { CourseFromModel, CourseToModel } from '../models/courses'
 import { Course } from '../mongooseModels/courses'
+import { Quiz } from '../mongooseModels/quizzes'
 
 export class CourseRepository implements ICourseRepository {
 	private static instance: CourseRepository
@@ -67,5 +68,31 @@ export class CourseRepository implements ICourseRepository {
 			_id: id, 'user.id': userId, status: DraftStatus.published
 		}, { $set: { status: DraftStatus.frozen } }, { new: true })
 		return this.mapper.mapFrom(course)
+	}
+
+	async move (id: string, coursableId: string, type: Coursable, userId: string, add: boolean) {
+		let res = null as CourseFromModel | null
+		const finder = {
+			[Coursable.quiz]: Quiz
+		}[type]
+		await Course.collection.conn.transaction(async (session) => {
+			if (!finder) return
+			const [course, coursable] = await Promise.all([
+				Course.findById(id, null, { session }),
+				finder.findById(coursableId, null, { session })
+			])
+			if (!course || !coursable) return
+			if (course.user.id !== userId || coursable.user.id !== userId) return
+			if (add && coursable.courseId !== null) return
+			if (!add && course.status !== DraftStatus.draft) return
+			await finder.findByIdAndUpdate(coursable.id, {
+				$set: { courseId: course.id, status: DraftStatus.draft }
+			}, { session })
+			res = await Course.findByIdAndUpdate(course.id, {
+				// TODO: add coursableId to course
+				$set: {}
+			}, { session, new: true })
+		})
+		return this.mapper.mapFrom(res)
 	}
 }

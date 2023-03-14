@@ -1,18 +1,18 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, Media, Publishable } from '../types'
+import { CoursableData } from '../types'
 
-export class QuizEntity extends BaseEntity implements Publishable {
+export class QuizEntity extends BaseEntity implements CoursableData {
 	public readonly id: string
-	public readonly title: string
-	public readonly description: string
-	public readonly photo: Media | null
-	public readonly isPublic: boolean
 	public readonly questions: string[]
-	public readonly courseId: string | null
-	public readonly user: EmbeddedUser
-	public readonly tagId: Publishable['tagId']
-	public readonly status: Publishable['status']
+	public readonly title: CoursableData['title']
+	public readonly description: CoursableData['description']
+	public readonly photo: CoursableData['photo']
+	public readonly isPublic: CoursableData['isPublic']
+	public readonly courseId: CoursableData['courseId']
+	public readonly user: CoursableData['user']
+	public readonly tagId: CoursableData['tagId']
+	public readonly status: CoursableData['status']
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
@@ -33,15 +33,9 @@ export class QuizEntity extends BaseEntity implements Publishable {
 	}
 }
 
-type QuizConstructorArgs = Publishable & {
+type QuizConstructorArgs = CoursableData & {
 	id: string
-	title: string
-	description: string
-	photo: Media | null
-	isPublic: boolean
 	questions: string[]
-	courseId: string | null
-	user: EmbeddedUser
 	createdAt: number
 	updatedAt: number
 }

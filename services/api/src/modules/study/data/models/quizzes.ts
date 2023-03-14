@@ -1,4 +1,4 @@
-import { EmbeddedUser, Media, Publishable } from '../../domain/types'
+import { CoursableData } from '../../domain/types'
 
 export interface QuizFromModel extends QuizToModel {
 	_id: string
@@ -7,11 +7,4 @@ export interface QuizFromModel extends QuizToModel {
 	updatedAt: number
 }
 
-export interface QuizToModel extends Publishable {
-	title: string
-	description: string
-	photo: Media | null
-	isPublic: boolean
-	courseId: string | null
-	user: EmbeddedUser
-}
+export interface QuizToModel extends CoursableData { }

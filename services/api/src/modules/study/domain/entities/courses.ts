@@ -1,14 +1,14 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, Media, Publishable, Saleable } from '../types'
+import { Publishable, Saleable } from '../types'
 
 export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 	public readonly id: string
-	public readonly title: string
-	public readonly description: string
-	public readonly photo: Media | null
-	public readonly isPublic: boolean
-	public readonly user: EmbeddedUser
+	public readonly title: Publishable['title']
+	public readonly description: Publishable['description']
+	public readonly photo: Publishable['photo']
+	public readonly isPublic: Publishable['isPublic']
+	public readonly user: Publishable['user']
 	public readonly tagId: Publishable['tagId']
 	public readonly status: Publishable['status']
 	public readonly price: Saleable['price']
@@ -33,11 +33,6 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 
 type CourseConstructorArgs = Publishable & Saleable & {
 	id: string
-	title: string
-	description: string
-	photo: Media | null
-	isPublic: boolean
-	user: EmbeddedUser
 	createdAt: number
 	updatedAt: number
 }

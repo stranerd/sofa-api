@@ -1,62 +1,14 @@
 import { appInstance } from '@utils/types'
+import { CoursableDataSchema } from '.'
 import { QuizDbChangeCallbacks } from '../../utils/changes/quizzes'
 import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel } from '../models/quizzes'
 
 const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
-	_id: {
-		type: String,
-		default: () => appInstance.dbs.mongo.Id.toString()
-	},
-	title: {
-		type: String,
-		required: true
-	},
-	description: {
-		type: String,
-		required: false,
-		default: ''
-	},
-	photo: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: false,
-		default: null
-	},
-	isPublic: {
-		type: Boolean,
-		required: false,
-		default: false
-	},
+	...CoursableDataSchema,
 	questions: {
 		type: [String],
 		required: true
-	},
-	courseId: {
-		type: String,
-		required: false,
-		default: null
-	},
-	user: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
-	},
-	status: {
-		type: String,
-		required: true
-	},
-	tagId: {
-		type: String,
-		required: true
-	},
-	createdAt: {
-		type: Number,
-		required: false,
-		default: Date.now
-	},
-	updatedAt: {
-		type: Number,
-		required: false,
-		default: Date.now
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 

@@ -1,4 +1,4 @@
-import { EmbeddedUser, Media, Publishable, Saleable } from '../../domain/types'
+import { Publishable, Saleable } from '../../domain/types'
 
 export interface CourseFromModel extends CourseToModel {
 	_id: string
@@ -6,10 +6,4 @@ export interface CourseFromModel extends CourseToModel {
 	updatedAt: number
 }
 
-export interface CourseToModel extends Publishable, Saleable {
-	title: string
-	description: string
-	photo: Media | null
-	isPublic: boolean
-	user: EmbeddedUser
-}
+export interface CourseToModel extends Publishable, Saleable { }

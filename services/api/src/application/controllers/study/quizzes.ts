@@ -58,7 +58,7 @@ export class QuizController {
 		const course = data.courseId ? await CoursesUseCases.find(data.courseId) : null
 		if (data.courseId && !course) throw new BadRequestError('course not found')
 		if (course && course.user.id !== user.id) throw new NotAuthorizedError()
-		if (course && course!.status !== DraftStatus.draft) throw new BadRequestError('course cannot be updated')
+		if (course && course.status !== DraftStatus.draft) throw new BadRequestError('course cannot be updated')
 
 		return await QuizzesUseCases.add({
 			...data, user: user.getEmbedded(),

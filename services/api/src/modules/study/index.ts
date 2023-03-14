@@ -17,5 +17,5 @@ export const QuizzesUseCases = new QuizzesUseCase(quizRepository)
 export const QuestionsUseCases = new QuestionsUseCase(questionRepository)
 export const CoursesUseCases = new CoursesUseCase(courseRepository)
 
-export { DraftStatus, FolderSaved, QuestionTypes } from './domain/types'
+export { Coursable, DraftStatus, FolderSaved, QuestionTypes } from './domain/types'
 export { canAccessQuiz } from './utils'

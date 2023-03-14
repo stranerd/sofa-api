@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { CourseToModel } from '../../data/models/courses'
 import { ICourseRepository } from '../irepositories/courses'
-import { EmbeddedUser } from '../types'
+import { Coursable, EmbeddedUser } from '../types'
 
 export class CoursesUseCase {
 	private repository: ICourseRepository
@@ -40,5 +40,9 @@ export class CoursesUseCase {
 
 	async freeze (input: { id: string, userId: string }) {
 		return await this.repository.freeze(input.id, input.userId)
+	}
+
+	async move (input: { id: string, userId: string, add: boolean, type: Coursable, coursableId: string }) {
+		return await this.repository.move(input.id, input.coursableId, input.type, input.userId, input.add)
 	}
 }

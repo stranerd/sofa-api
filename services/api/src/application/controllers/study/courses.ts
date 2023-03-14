@@ -1,7 +1,7 @@
 import { TagsUseCases } from '@modules/interactions'
 import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
-import { DraftStatus, CoursesUseCases } from '@modules/study'
+import { DraftStatus, CoursesUseCases, Coursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
@@ -79,6 +79,20 @@ export class CourseController {
 
 	static async freeze (req: Request) {
 		const updatedCourse = await CoursesUseCases.freeze({ id: req.params.id, userId: req.authUser!.id })
+		if (updatedCourse) return updatedCourse
+		throw new NotAuthorizedError()
+	}
+
+	static async move (req: Request) {
+		const { coursableId, type, add } = validateReq({
+			type: Schema.any<Coursable>().in(Object.values(Coursable)),
+			coursableId: Schema.string().min(1),
+			add: Schema.boolean()
+		}, req.body)
+
+		const updatedCourse = await CoursesUseCases.move({
+			id: req.params.id, userId: req.authUser!.id, add, type, coursableId
+		})
 		if (updatedCourse) return updatedCourse
 		throw new NotAuthorizedError()
 	}
