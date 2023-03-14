@@ -1,8 +1,8 @@
-import { QuizController } from '@application/controllers/study/quizzes'
+import { CourseController } from '@application/controllers/study/courses'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
-export const quizzesRoutes = groupRoutes('/quizzes', [
+export const coursesRoutes = groupRoutes('/courses', [
 	{
 		path: '/',
 		method: 'get',
@@ -10,7 +10,7 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.get(req)
+					result: await CourseController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.find(req)
+					result: await CourseController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.update(req)
+					result: await CourseController.update(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.create(req)
+					result: await CourseController.create(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.delete(req)
+					result: await CourseController.delete(req)
 				}
 			})
 		]
@@ -69,19 +69,19 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.publish(req)
+					result: await CourseController.publish(req)
 				}
 			})
 		]
 	}, {
-		path: '/:id/reorder',
+		path: '/:id/freeze',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await QuizController.reorder(req)
+					result: await CourseController.freeze(req)
 				}
 			})
 		]

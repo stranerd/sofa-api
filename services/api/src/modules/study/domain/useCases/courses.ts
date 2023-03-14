@@ -1,16 +1,16 @@
 import { QueryParams } from 'equipped'
-import { QuizToModel } from '../../data/models/quizzes'
-import { IQuizRepository } from '../irepositories/quizzes'
+import { CourseToModel } from '../../data/models/courses'
+import { ICourseRepository } from '../irepositories/courses'
 import { EmbeddedUser } from '../types'
 
-export class QuizzesUseCase {
-	private repository: IQuizRepository
+export class CoursesUseCase {
+	private repository: ICourseRepository
 
-	constructor (repository: IQuizRepository) {
+	constructor (repository: ICourseRepository) {
 		this.repository = repository
 	}
 
-	async add (data: QuizToModel) {
+	async add (data: CourseToModel) {
 		return await this.repository.add(data)
 	}
 
@@ -26,7 +26,7 @@ export class QuizzesUseCase {
 		return await this.repository.get(query)
 	}
 
-	async update (input: { id: string, userId: string, data: Partial<QuizToModel> }) {
+	async update (input: { id: string, userId: string, data: Partial<CourseToModel> }) {
 		return await this.repository.update(input.id, input.userId, input.data)
 	}
 
@@ -38,11 +38,7 @@ export class QuizzesUseCase {
 		return await this.repository.publish(input.id, input.userId)
 	}
 
-	async toggleQuestion (input: { quizId: string, userId: string, questionId: string, add: boolean }) {
-		return await this.repository.toggleQuestion(input.quizId, input.userId, input.questionId, input.add)
-	}
-
-	async reorder (input: { id: string, userId: string, questionIds: string[] }) {
-		return await this.repository.reorder(input.id, input.userId, input.questionIds)
+	async freeze (input: { id: string, userId: string }) {
+		return await this.repository.freeze(input.id, input.userId)
 	}
 }

@@ -63,13 +63,6 @@ export class QuizRepository implements IQuizRepository {
 		return this.mapper.mapFrom(quiz)
 	}
 
-	async freeze (id: string, userId: string) {
-		const quiz = await Quiz.findOneAndUpdate({
-			_id: id, 'user.id': userId, status: DraftStatus.published
-		}, { $set: { status: DraftStatus.frozen } }, { new: true })
-		return this.mapper.mapFrom(quiz)
-	}
-
 	async toggleQuestion (id: string, userId: string, questionId: string, add: boolean) {
 		const quiz = await Quiz.findOneAndUpdate({
 			_id: id, 'user.id': userId

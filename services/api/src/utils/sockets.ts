@@ -43,6 +43,7 @@ export const registerSockets = () => {
 		.register('study/folders', isMine)
 		.register('study/quizzes', isOpen)
 		.register('study/:quizId/questions', quizQuestionsCb)
+		.register('study/courses', isOpen)
 
 		.register('users/connects', isMine)
 		.register('users/users', isOpen)

@@ -40,6 +40,7 @@ export type EmbeddedUser = {
 export enum UserMeta {
 	connects = 'connects',
 
+	courses = 'courses',
 	quizzes = 'quizzes',
 	folders = 'folders'
 }
@@ -52,6 +53,7 @@ export enum UserRankings {
 }
 
 export enum ScoreRewards {
+	NewCourse = 1,
 	NewFolder = 0.05,
 	NewQuiz = 1
 }
