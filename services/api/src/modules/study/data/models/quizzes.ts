@@ -12,5 +12,6 @@ export interface QuizToModel extends Publishable {
 	description: string
 	photo: Media | null
 	isPublic: boolean
+	courseId: string | null
 	user: EmbeddedUser
 }

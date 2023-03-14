@@ -31,6 +31,11 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
 		type: [String],
 		required: true
 	},
+	courseId: {
+		type: String,
+		required: false,
+		default: null
+	},
 	user: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true

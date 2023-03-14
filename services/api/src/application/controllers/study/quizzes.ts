@@ -1,6 +1,6 @@
 import { TagsUseCases } from '@modules/interactions'
 import { UploaderUseCases } from '@modules/storage'
-import { DraftStatus, QuizzesUseCases } from '@modules/study'
+import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
 
@@ -43,7 +43,8 @@ export class QuizController {
 	static async create (req: Request) {
 		const data = validateReq({
 			...this.schema(),
-			tagId: Schema.string().min(1)
+			tagId: Schema.string().min(1),
+			courseId: Schema.string().min(1).nullable()
 		}, { ...req.body, photo: req.files.photo?.[0] ?? null })
 
 		const tag = await TagsUseCases.find(data.tagId)
@@ -54,9 +55,20 @@ export class QuizController {
 
 		const photo = data.photo ? await UploaderUseCases.upload('study/quizzes', data.photo) : null
 
+		const course = data.courseId ? await CoursesUseCases.find(data.courseId) : null
+		if (data.courseId && !course) throw new BadRequestError('course not found')
+		if (course && course.user.id !== user.id) throw new NotAuthorizedError()
+		if (course && course!.status !== DraftStatus.draft) throw new BadRequestError('course cannot be updated')
+
 		return await QuizzesUseCases.add({
 			...data, user: user.getEmbedded(),
-			photo, status: DraftStatus.draft
+			photo, status: DraftStatus.draft,
+			...(data.courseId && course ? {
+				courseId: course.id,
+				status: course.status,
+				tagId: course.tagId,
+				isPublic: course.isPublic
+			} : {})
 		})
 	}
 

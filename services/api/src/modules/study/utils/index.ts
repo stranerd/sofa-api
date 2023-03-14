@@ -14,6 +14,7 @@ export const canAccessQuiz = async (quizId: string, userId: string) => {
 	const quiz = await QuizzesUseCases.find(quizId)
 	if (!quiz) return false
 	if (quiz.user.id === userId) return true
-	// TODO: check  if user has paid for this quiz
+	if (!quiz.courseId) return true
+	// TODO: check  if user has paid for this quiz's course
 	return !!userId
 }

@@ -9,13 +9,14 @@ export class QuizEntity extends BaseEntity implements Publishable {
 	public readonly photo: Media | null
 	public readonly isPublic: boolean
 	public readonly questions: string[]
+	public readonly courseId: string | null
 	public readonly user: EmbeddedUser
 	public readonly tagId: Publishable['tagId']
 	public readonly status: Publishable['status']
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, description, photo, isPublic, questions, user, tagId, status, createdAt, updatedAt }: QuizConstructorArgs) {
+	constructor ({ id, title, description, photo, isPublic, questions, courseId, user, tagId, status, createdAt, updatedAt }: QuizConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -23,6 +24,7 @@ export class QuizEntity extends BaseEntity implements Publishable {
 		this.photo = photo
 		this.isPublic = isPublic
 		this.questions = questions
+		this.courseId = courseId
 		this.user = generateDefaultUser(user)
 		this.tagId = tagId
 		this.status = status
@@ -38,6 +40,7 @@ type QuizConstructorArgs = Publishable & {
 	photo: Media | null
 	isPublic: boolean
 	questions: string[]
+	courseId: string | null
 	user: EmbeddedUser
 	createdAt: number
 	updatedAt: number

@@ -52,7 +52,13 @@ export class QuizRepository implements IQuizRepository {
 	}
 
 	async delete (id: string, userId: string) {
-		const quiz = await Quiz.findOneAndDelete({ _id: id, 'user.id': userId, status: DraftStatus.draft })
+		const quiz = await Quiz.findOneAndDelete({
+			_id: id, 'user.id': userId,
+			$or: [
+				{ courseId: null },
+				{ courseId: { $ne: null }, status: DraftStatus.draft }
+			]
+		})
 		return !!quiz
 	}
 
