@@ -1,6 +1,6 @@
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessQuiz, QuestionsUseCases, QuestionTypes, QuizzesUseCases } from '@modules/study'
-import { NotAuthorizedError, QueryParams, Request, Schema, validateReq, Validation } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
 export class QuestionController {
 	private static schema = (body: Record<string, any>) => ({
@@ -14,7 +14,7 @@ export class QuestionController {
 		timeLimit: Schema.number().gt(0).lte(300).round(),
 		data: Schema.or([
 			Schema.object({
-				type: Schema.any<QuestionTypes.multipleChoice>().eq(QuestionTypes.multipleChoice),
+				type: Schema.is(QuestionTypes.multipleChoice as const),
 				answers: Schema.array(Schema.string().min(1)).min(2).max(6),
 				correct: Schema.array(Schema.number().gte(0).round()).min(1).set()
 			}).custom((value) => {
@@ -22,15 +22,15 @@ export class QuestionController {
 				return Schema.array(Schema.number().lt(length)).max(length).parse(value.correct).valid
 			}),
 			Schema.object({
-				type: Schema.any<QuestionTypes.trueOrFalse>().eq(QuestionTypes.trueOrFalse),
+				type: Schema.is(QuestionTypes.trueOrFalse as const),
 				answer: Schema.boolean()
 			}),
 			Schema.object({
-				type: Schema.any<QuestionTypes.writeAnswer>().eq(QuestionTypes.writeAnswer),
+				type: Schema.is(QuestionTypes.writeAnswer as const),
 				answers: Schema.array(Schema.string().min(1)).min(1).max(6)
 			}),
 			Schema.object({
-				type: Schema.any<QuestionTypes.fillInBlanks | QuestionTypes.dragAnswers>().in([QuestionTypes.fillInBlanks, QuestionTypes.dragAnswers]),
+				type: Schema.in([QuestionTypes.fillInBlanks, QuestionTypes.dragAnswers] as const),
 				indicator: Schema.string().min(1),
 				answers: Schema.array(Schema.string().min(1)).min(1)
 			}).custom((value) => {
@@ -38,11 +38,11 @@ export class QuestionController {
 				return Schema.array(Schema.any()).max(length - 1).parse(value.answers).valid
 			}),
 			Schema.object({
-				type: Schema.any<QuestionTypes.sequence>().eq(QuestionTypes.sequence),
+				type: Schema.is(QuestionTypes.sequence as const),
 				answers: Schema.array(Schema.string().min(1)).min(2).max(6)
 			}),
 			Schema.object({
-				type: Schema.any<QuestionTypes.match>().eq(QuestionTypes.match),
+				type: Schema.is(QuestionTypes.match as const),
 				set: Schema.array(Schema.object({
 					q: Schema.string().min(1),
 					a: Schema.string().min(1)
@@ -71,7 +71,7 @@ export class QuestionController {
 		const uploadedMedia = req.files.questionMedia?.[0] ?? null
 		const changedMedia = !!uploadedMedia || req.body.photo === null
 
-		const { question, timeLimit, data } = validateReq(this.schema(req.body ?? {}), { ...req.body, questionMedia: uploadedMedia })
+		const { question, timeLimit, data } = validate(this.schema(req.body ?? {}), { ...req.body, questionMedia: uploadedMedia })
 
 		const media = uploadedMedia ? await UploaderUseCases.upload('study/questions', uploadedMedia) : undefined
 
@@ -87,7 +87,7 @@ export class QuestionController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq({
+		const data = validate({
 			...this.schema(req.body),
 			quizId: Schema.string().min(1)
 		}, { ...req.body, quizId: req.params.quizId, questionMedia: req.files.photo?.[0] ?? null })

@@ -6,7 +6,7 @@ import {
 	QueryParams,
 	Request,
 	Schema,
-	validateReq
+	validate
 } from 'equipped'
 
 export class CommentsController {
@@ -24,11 +24,11 @@ export class CommentsController {
 	}
 
 	static async create (req: Request) {
-		const { body, entity } = validateReq({
+		const { body, entity } = validate({
 			...this.schema(),
 			entity: Schema.object({
 				id: Schema.string().min(1),
-				type: Schema.any<InteractionEntities>().in(Object.values(InteractionEntities))
+				type: Schema.in(Object.values(InteractionEntities))
 			})
 		}, req.body)
 
@@ -44,7 +44,7 @@ export class CommentsController {
 	}
 
 	static async update (req: Request) {
-		const { body } = validateReq(this.schema(), req.body)
+		const { body } = validate(this.schema(), req.body)
 
 		const updated = await CommentsUseCases.update({
 			id: req.params.id,

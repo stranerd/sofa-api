@@ -1,7 +1,7 @@
 import { ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
 import { UsersUseCases } from '@modules/users'
 import { AI } from '@utils/ai'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ConversationController {
 	static async find (req: Request) {
@@ -17,7 +17,7 @@ export class ConversationController {
 	}
 
 	static async create (req: Request) {
-		const { body } = validateReq({
+		const { body } = validate({
 			body: Schema.string().min(1),
 		}, req.body)
 

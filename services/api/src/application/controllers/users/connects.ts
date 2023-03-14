@@ -5,7 +5,7 @@ import {
 	QueryKeys,
 	QueryParams,
 	Request,
-	Schema, validateReq
+	Schema, validate
 } from 'equipped'
 
 export class ConnectsController {
@@ -30,7 +30,7 @@ export class ConnectsController {
 	}
 
 	static async create (req: Request) {
-		const { to } = validateReq({
+		const { to } = validate({
 			to: Schema.string()
 		}, req.body)
 		const fromUser = await UsersUseCases.find(req.authUser!.id)
@@ -45,7 +45,7 @@ export class ConnectsController {
 	}
 
 	static async accept (req: Request) {
-		const { accept } = validateReq({
+		const { accept } = validate({
 			accept: Schema.boolean()
 		}, req.body)
 		const isUpdated = await ConnectsUseCases.accept({

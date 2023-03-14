@@ -1,6 +1,6 @@
 import { canAccessConversation, ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
 import { UploaderUseCases } from '@modules/storage'
-import { NotAuthorizedError, QueryParams, Request, Schema, validateReq, ValidationError } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class MessageController {
 	static async find (req: Request) {
@@ -20,7 +20,7 @@ export class MessageController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq({
+		const data = validate({
 			body: Schema.string(),
 			media: Schema.file().nullable(),
 		}, { ...req.body, media: req.files.media?.[0] ?? null })
@@ -41,7 +41,7 @@ export class MessageController {
 	}
 
 	static async star (req: Request) {
-		const { starred } = validateReq({
+		const { starred } = validate({
 			starred: Schema.boolean(),
 		}, req.body)
 		const updated = await MessagesUseCases.star({

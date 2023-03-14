@@ -1,6 +1,6 @@
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UserSchoolType, UsersUseCases } from '@modules/users'
-import { BadRequestError, Conditions, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, Conditions, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
 	static async get (req: Request) {
@@ -16,14 +16,14 @@ export class UsersController {
 	}
 
 	static async updateSchool (req: Request) {
-		const { school } = validateReq({
+		const { school } = validate({
 			school: Schema.or([
 				Schema.object({
-					type: Schema.any<UserSchoolType.college>().eq(UserSchoolType.college),
+					type: Schema.is(UserSchoolType.college as const),
 					departmentId: Schema.string().min(1)
 				}),
 				Schema.object({
-					type: Schema.any<UserSchoolType.aspirant>().eq(UserSchoolType.aspirant),
+					type: Schema.is(UserSchoolType.aspirant as const),
 					exams: Schema.array(Schema.any().custom((exam) => {
 						const matches = [Schema.string().parse(exam?.institutionId).valid]
 						matches.push(Schema.number().parse(exam?.startDate).valid)

@@ -1,6 +1,6 @@
 import { AuthUseCases, AuthUsersUseCases, generateAuthOutput } from '@modules/auth'
 import { UploaderUseCases } from '@modules/storage'
-import { AuthTypes, Request, Schema, validateReq, Validation, ValidationError } from 'equipped'
+import { AuthTypes, Request, Schema, validate, Validation, ValidationError } from 'equipped'
 
 export class EmailsController {
 	static async signup (req: Request) {
@@ -14,7 +14,7 @@ export class EmailsController {
 
 		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)
 
-		const { email, name, description, password, photo: userPhoto } = validateReq({
+		const { email, name, description, password, photo: userPhoto } = validate({
 			email: Schema.string().email().addRule((value) => {
 				const email = value as string
 				if (!user) return Validation.isValid(email)
@@ -42,7 +42,7 @@ export class EmailsController {
 	}
 
 	static async signin (req: Request) {
-		const validateData = validateReq({
+		const validateData = validate({
 			email: Schema.string().email(),
 			password: Schema.string(),
 		}, req.body)
@@ -52,7 +52,7 @@ export class EmailsController {
 	}
 
 	static async sendVerificationMail (req: Request) {
-		const { email } = validateReq({
+		const { email } = validate({
 			email: Schema.string().email()
 		}, req.body)
 
@@ -63,7 +63,7 @@ export class EmailsController {
 	}
 
 	static async verifyEmail (req: Request) {
-		const { token } = validateReq({
+		const { token } = validate({
 			token: Schema.force.string()
 		}, req.body)
 

@@ -1,6 +1,6 @@
 import { Currencies, FlutterwavePayment, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TransactionsController {
 	static async getSecrets (_: Request) {
@@ -24,9 +24,9 @@ export class TransactionsController {
 		const types = [TransactionType.NewCard]
 		const authUser = req.authUser!
 
-		const { data: { type } } = validateReq({
+		const { data: { type } } = validate({
 			data: Schema.object({
-				type: Schema.any<TransactionType>().in(types)
+				type: Schema.in(types)
 			})
 		}, req.body)
 

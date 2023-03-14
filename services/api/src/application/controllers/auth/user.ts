@@ -1,7 +1,7 @@
 import { AuthUsersUseCases, signOutUser } from '@modules/auth'
 import { UploaderUseCases } from '@modules/storage'
 import { superAdminEmail } from '@utils/environment'
-import { AuthRole, BadRequestError, Enum, NotFoundError, Request, Schema, validateReq, verifyAccessToken } from 'equipped'
+import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
 
 export class UserController {
 	static async find (req: Request) {
@@ -13,7 +13,7 @@ export class UserController {
 		const userId = req.authUser!.id
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
-		const data = validateReq({
+		const data = validate({
 			name: Schema.object({
 				first: Schema.string().min(1),
 				last: Schema.string().min(1),
@@ -34,8 +34,8 @@ export class UserController {
 	}
 
 	static async updateRole (req: Request) {
-		const { role, userId, value } = validateReq({
-			role: Schema.any<Enum<typeof AuthRole>>().in([AuthRole.isAdmin, AuthRole.isTutor]),
+		const { role, userId, value } = validate({
+			role: Schema.in([AuthRole.isAdmin, AuthRole.isTutor]),
 			userId: Schema.string().min(1),
 			value: Schema.boolean()
 		}, req.body)

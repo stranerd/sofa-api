@@ -1,5 +1,5 @@
 import { cancelSubscription, subscribeToPlan, WalletsUseCases } from '@modules/payment'
-import { Request, Schema, validateReq } from 'equipped'
+import { Request, Schema, validate } from 'equipped'
 
 export class WalletsController {
 	static async get (req: Request) {
@@ -7,7 +7,7 @@ export class WalletsController {
 	}
 
 	static async subscribeToPlan (req: Request) {
-		const { planId } = validateReq({
+		const { planId } = validate({
 			planId: Schema.string().min(1)
 		}, req.body)
 		return await subscribeToPlan(req.authUser!.id, planId)

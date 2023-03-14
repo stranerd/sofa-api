@@ -1,9 +1,9 @@
 import { TagsUseCases } from '@modules/interactions'
 import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
-import { DraftStatus, CoursesUseCases, Coursable } from '@modules/study'
+import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class CourseController {
 	private static schema = () => ({
@@ -13,7 +13,7 @@ export class CourseController {
 		isPublic: Schema.boolean(),
 		price: Schema.object({
 			amount: Schema.number().gte(0).default(0),
-			currency: Schema.any<Currencies>().in(Object.values(Currencies)).default(Currencies.NGN)
+			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
 		})
 	})
 
@@ -30,7 +30,7 @@ export class CourseController {
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, isPublic, price } = validateReq(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, isPublic, price } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/courses', uploadedPhoto) : undefined
 
@@ -46,7 +46,7 @@ export class CourseController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq({
+		const data = validate({
 			...this.schema(),
 			tagId: Schema.string().min(1)
 		}, { ...req.body, photo: req.files.photo?.[0] ?? null })
@@ -84,8 +84,8 @@ export class CourseController {
 	}
 
 	static async move (req: Request) {
-		const { coursableId, type, add } = validateReq({
-			type: Schema.any<Coursable>().in(Object.values(Coursable)),
+		const { coursableId, type, add } = validate({
+			type: Schema.in(Object.values(Coursable)),
 			coursableId: Schema.string().min(1),
 			add: Schema.boolean()
 		}, req.body)

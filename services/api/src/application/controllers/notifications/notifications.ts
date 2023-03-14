@@ -1,5 +1,5 @@
 import { NotificationsUseCases } from '@modules/notifications'
-import { QueryParams, Request, Schema, validateReq } from 'equipped'
+import { QueryParams, Request, Schema, validate } from 'equipped'
 
 export class NotificationsController {
 	static async get (req: Request) {
@@ -15,7 +15,7 @@ export class NotificationsController {
 	}
 
 	static async markSeen (req: Request) {
-		const data = validateReq({
+		const data = validate({
 			seen: Schema.boolean()
 		}, req.body)
 
@@ -29,7 +29,7 @@ export class NotificationsController {
 	}
 
 	static async markAllSeen (req: Request) {
-		const { seen } = validateReq({
+		const { seen } = validate({
 			seen: Schema.boolean()
 		}, req.body)
 

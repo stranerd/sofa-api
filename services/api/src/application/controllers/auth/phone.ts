@@ -1,9 +1,9 @@
 import { AuthUseCases, generateAuthOutput } from '@modules/auth'
-import { Request, Schema, validateReq, Validation } from 'equipped'
+import { Request, Schema, validate, Validation } from 'equipped'
 
 export class PhoneController {
 	static async sendVerificationText (req: Request) {
-		const { phone } = validateReq({
+		const { phone } = validate({
 			phone: Schema.any().addRule(Validation.isValidPhone())
 		}, req.body)
 
@@ -13,7 +13,7 @@ export class PhoneController {
 	}
 
 	static async verifyPhone (req: Request) {
-		const { token } = validateReq({
+		const { token } = validate({
 			token: Schema.force.string()
 		}, req.body)
 

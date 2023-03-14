@@ -1,6 +1,6 @@
 import { InteractionEntities, verifyInteractionEntity, ViewsUseCases } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ViewsController {
 	static async get (req: Request) {
@@ -13,10 +13,10 @@ export class ViewsController {
 	}
 
 	static async create (req: Request) {
-		const { entity } = validateReq({
+		const { entity } = validate({
 			entity: Schema.object({
 				id: Schema.string().min(1),
-				type: Schema.any<InteractionEntities>().in(Object.values(InteractionEntities))
+				type: Schema.in(Object.values(InteractionEntities))
 			})
 		}, req.body)
 

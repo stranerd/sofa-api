@@ -1,6 +1,6 @@
 import { InteractionEntities, LikesUseCases, verifyInteractionEntity } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class LikesController {
 	static async get (req: Request) {
@@ -13,11 +13,11 @@ export class LikesController {
 	}
 
 	static async create (req: Request) {
-		const { entity, value } = validateReq({
+		const { entity, value } = validate({
 			value: Schema.boolean(),
 			entity: Schema.object({
 				id: Schema.string().min(1),
-				type: Schema.any<InteractionEntities>().in(Object.values(InteractionEntities))
+				type: Schema.in(Object.values(InteractionEntities))
 			})
 		}, req.body)
 

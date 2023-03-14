@@ -1,6 +1,6 @@
 import { FolderSaved, FoldersUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class FolderController {
 	private static schema = () => ({
@@ -20,7 +20,7 @@ export class FolderController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq(this.schema(), req.body)
+		const data = validate(this.schema(), req.body)
 
 		const authUserId = req.authUser!.id
 		const user = await UsersUseCases.find(authUserId)
@@ -30,7 +30,7 @@ export class FolderController {
 	}
 
 	static async update (req: Request) {
-		const data = validateReq(this.schema(), req.body)
+		const data = validate(this.schema(), req.body)
 
 		const updatedFolder = await FoldersUseCases.update({ id: req.params.id, userId: req.authUser!.id, data })
 		if (updatedFolder) return updatedFolder
@@ -38,8 +38,8 @@ export class FolderController {
 	}
 
 	static async saveProp (req: Request) {
-		const data = validateReq({
-			type: Schema.any<FolderSaved>().in(Object.values(FolderSaved)),
+		const data = validate({
+			type: Schema.in(Object.values(FolderSaved)),
 			propIds: Schema.array(Schema.string().min(1)),
 			add: Schema.boolean()
 		}, req.body)

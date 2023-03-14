@@ -2,7 +2,7 @@ import { TagsUseCases } from '@modules/interactions'
 import { UploaderUseCases } from '@modules/storage'
 import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class QuizController {
 	private static schema = () => ({
@@ -25,7 +25,7 @@ export class QuizController {
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, isPublic } = validateReq(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, isPublic } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/quizzes', uploadedPhoto) : undefined
 
@@ -41,7 +41,7 @@ export class QuizController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq({
+		const data = validate({
 			...this.schema(),
 			tagId: Schema.string().min(1),
 			courseId: Schema.string().min(1).nullable()
@@ -85,7 +85,7 @@ export class QuizController {
 	}
 
 	static async reorder (req: Request) {
-		const { questions } = validateReq({
+		const { questions } = validate({
 			questions: Schema.array(Schema.string().min(1)).min(1)
 		}, req.body)
 

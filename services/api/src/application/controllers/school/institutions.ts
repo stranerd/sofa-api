@@ -1,5 +1,5 @@
 import { InstitutionsUseCases } from '@modules/school'
-import { NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class InstitutionController {
 	private static schema = () => ({
@@ -17,12 +17,12 @@ export class InstitutionController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq(this.schema(), req.body)
+		const data = validate(this.schema(), req.body)
 		return await InstitutionsUseCases.add(data)
 	}
 
 	static async update (req: Request) {
-		const data = validateReq(this.schema(), req.body)
+		const data = validate(this.schema(), req.body)
 		const updatedInstitution = await InstitutionsUseCases.update({ id: req.params.id, data })
 		if (updatedInstitution) return updatedInstitution
 		throw new NotAuthorizedError()

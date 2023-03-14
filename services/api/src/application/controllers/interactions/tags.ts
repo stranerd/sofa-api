@@ -1,5 +1,5 @@
 import { TagsUseCases, TagTypes } from '@modules/interactions'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TagController {
 	private static schema = () => ({
@@ -16,7 +16,7 @@ export class TagController {
 	}
 
 	static async update (req: Request) {
-		const data = validateReq(this.schema(), req.body)
+		const data = validate(this.schema(), req.body)
 
 		const updatedTag = await TagsUseCases.update({ id: req.params.id, data })
 		if (updatedTag) return updatedTag
@@ -24,9 +24,9 @@ export class TagController {
 	}
 
 	static async create (req: Request) {
-		const data = validateReq({
+		const data = validate({
 			...this.schema(),
-			type: Schema.any<TagTypes>().in(Object.values(TagTypes)),
+			type: Schema.in(Object.values(TagTypes)),
 			parent: Schema.string().nullable()
 		}, req.body)
 

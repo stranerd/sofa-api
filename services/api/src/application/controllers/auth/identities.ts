@@ -1,9 +1,9 @@
 import { AuthUseCases, generateAuthOutput } from '@modules/auth'
-import { Request, Schema, validateReq } from 'equipped'
+import { Request, Schema, validate } from 'equipped'
 
 export class IdentitiesController {
 	static async googleSignIn (req: Request) {
-		const validatedData = validateReq({
+		const validatedData = validate({
 			idToken: Schema.string()
 		}, req.body)
 
@@ -12,7 +12,7 @@ export class IdentitiesController {
 	}
 
 	static async appleSignIn (req: Request) {
-		const { firstName, lastName, email, idToken } = validateReq({
+		const { firstName, lastName, email, idToken } = validate({
 			firstName: Schema.string().nullable(),
 			lastName: Schema.string().nullable(),
 			email: Schema.string().nullable(),
