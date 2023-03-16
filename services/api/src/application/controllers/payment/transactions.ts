@@ -20,8 +20,8 @@ export class TransactionsController {
 	}
 
 	static async create (req: Request) {
-		const isNewCardType = req.body.data?.type === TransactionType.NewCard
-		const types = [TransactionType.NewCard]
+		const isNewCardType = req.body.data?.type === TransactionType.newCard
+		const types = [TransactionType.newCard]
 		const authUser = req.authUser!
 
 		const { data: { type } } = validate({

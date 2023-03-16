@@ -13,7 +13,7 @@ export const FolderDbChangeCallbacks: DbChangeCallbacks<FolderFromModel, FolderE
 
 		await UsersUseCases.updateNerdScore({
 			userId: after.user.id,
-			amount: ScoreRewards.NewFolder
+			amount: ScoreRewards.newFolder
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.folders })
 	},
@@ -31,7 +31,7 @@ export const FolderDbChangeCallbacks: DbChangeCallbacks<FolderFromModel, FolderE
 
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,
-			amount: -ScoreRewards.NewFolder
+			amount: -ScoreRewards.newFolder
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.folders })
 	}

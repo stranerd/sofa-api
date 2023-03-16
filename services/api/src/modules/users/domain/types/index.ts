@@ -53,9 +53,9 @@ export enum UserRankings {
 }
 
 export enum ScoreRewards {
-	NewCourse = 1,
-	NewFolder = 0.05,
-	NewQuiz = 1
+	newCourse = 1,
+	newFolder = 0.05,
+	newQuiz = 1
 }
 
 export enum UserSchoolType {

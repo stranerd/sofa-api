@@ -1,9 +1,9 @@
 export enum RankTypes {
-	Rookie = 'Rookie',
-	Comrade = 'Comrade',
-	Scholar = 'Scholar',
-	Wizard = 'Wizard',
-	Einstein = 'Einstein'
+	rookie = 'rookie',
+	comrade = 'comrade',
+	scholar = 'scholar',
+	wizard = 'wizard',
+	einstein = 'einstein'
 }
 
 type Rank = {
@@ -13,28 +13,28 @@ type Rank = {
 }
 
 const Ranks: Record<RankTypes, Rank> = {
-	[RankTypes.Rookie]: {
-		id: RankTypes.Rookie,
+	[RankTypes.rookie]: {
+		id: RankTypes.rookie,
 		level: 1,
 		score: 100
 	},
-	[RankTypes.Comrade]: {
-		id: RankTypes.Comrade,
+	[RankTypes.comrade]: {
+		id: RankTypes.comrade,
 		level: 2,
 		score: 250
 	},
-	[RankTypes.Scholar]: {
-		id: RankTypes.Scholar,
+	[RankTypes.scholar]: {
+		id: RankTypes.scholar,
 		level: 3,
 		score: 600
 	},
-	[RankTypes.Wizard]: {
-		id: RankTypes.Wizard,
+	[RankTypes.wizard]: {
+		id: RankTypes.wizard,
 		level: 4,
 		score: 1500
 	},
-	[RankTypes.Einstein]: {
-		id: RankTypes.Einstein,
+	[RankTypes.einstein]: {
+		id: RankTypes.einstein,
 		level: 5,
 		score: Number.POSITIVE_INFINITY
 	}
@@ -42,7 +42,7 @@ const Ranks: Record<RankTypes, Rank> = {
 
 export const ranks = Object.values(Ranks).sort((a, b) => a.level - b.level)
 
-export const getRank = (score: number) => ranks.find((r) => score < r.score) ?? Ranks[RankTypes.Rookie]
+export const getRank = (score: number) => ranks.find((r) => score < r.score) ?? Ranks[RankTypes.rookie]
 
 export const getNextRank = (rank: RankTypes): Rank | null => {
 	const index = ranks.findIndex((r) => r.id === rank)

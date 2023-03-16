@@ -5,19 +5,10 @@ import { Currencies, TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
 
 export const fulfillTransaction = async (transaction: TransactionEntity) => {
-	if (transaction.data.type === TransactionType.NewCard) {
+	if (transaction.data.type === TransactionType.newCard) {
 		const method = await FlutterwavePayment.saveCard(transaction.userId, transaction.id)
 		if (!method) return
 		await MethodsUseCases.create(method)
-		await WalletsUseCases.updateAmount({
-			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
-		})
-		await TransactionsUseCases.update({
-			id: transaction.id,
-			data: { status: TransactionStatus.settled }
-		})
-	} else if (transaction.data.type === TransactionType.BestAnswer) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
 			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)

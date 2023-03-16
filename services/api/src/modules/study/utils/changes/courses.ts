@@ -13,7 +13,7 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 
 		await UsersUseCases.updateNerdScore({
 			userId: after.user.id,
-			amount: ScoreRewards.NewCourse
+			amount: ScoreRewards.newCourse
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.courses })
 	},
@@ -27,7 +27,7 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 		await FoldersUseCases.removeProp({ prop: FolderSaved.courses, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,
-			amount: -ScoreRewards.NewCourse
+			amount: -ScoreRewards.newCourse
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.courses })
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)

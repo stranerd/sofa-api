@@ -12,27 +12,16 @@ export enum TransactionStatus {
 }
 
 export enum TransactionType {
-	NewCard = 'NewCard',
-	Subscription = 'Subscription',
-	BestAnswer = 'BestAnswer'
+	newCard = 'newCard',
+	subscription = 'subscription'
 }
 
-type TransactionNewCard = {
-	type: TransactionType.NewCard
-}
-
-type TransactionSubscription = {
-	type: TransactionType.Subscription
+export type TransactionData = {
+	type: TransactionType.newCard
+} | {
+	type: TransactionType.subscription
 	subscriptionId: string
 }
-
-type TransactionBestAnswer = {
-	type: TransactionType.BestAnswer
-	answerId: string
-	questionId: string
-}
-
-export type TransactionData = TransactionNewCard | TransactionSubscription | TransactionBestAnswer
 
 export type SubscriptionModel = {
 	active: boolean
@@ -49,7 +38,7 @@ export type SubscriptionModel = {
 	data: PlanData
 }
 
-export enum PlanDataType {}
+export enum PlanDataType { }
 
 export type PlanData = Record<PlanDataType, number> | {}
 

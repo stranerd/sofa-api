@@ -13,7 +13,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 
 		await UsersUseCases.updateNerdScore({
 			userId: after.user.id,
-			amount: ScoreRewards.NewQuiz
+			amount: ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.quizzes })
 	},
@@ -27,7 +27,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,
-			amount: -ScoreRewards.NewQuiz
+			amount: -ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
 		await QuestionsUseCases.deleteQuizQuestions(before.id)
