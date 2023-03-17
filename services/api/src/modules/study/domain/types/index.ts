@@ -1,8 +1,8 @@
-import { Currencies } from '@modules/payment'
-import { EmbeddedUser } from '@modules/users'
-import { MediaOutput as Media } from 'equipped'
+export { Saleable } from '@modules/payment'
 export * from './questions'
 export { EmbeddedUser, Media }
+import { EmbeddedUser } from '@modules/users'
+import { MediaOutput as Media } from 'equipped'
 
 export enum FolderSaved {
 	courses = 'courses',
@@ -23,13 +23,6 @@ export type Publishable = {
 	tagId: string
 	status: DraftStatus
 	isPublic: boolean
-}
-
-export type Saleable = {
-	price: {
-		amount: number
-		currency: Currencies
-	} | false
 }
 
 export enum Coursable {
