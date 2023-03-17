@@ -1,9 +1,7 @@
 export { EmbeddedUser } from '@modules/users'
 
 export enum InteractionEntities {
-	comments = 'comments',
-	courses = 'courses',
-	quizzes = 'quizzes',
+	comments = 'comments'
 }
 
 export type Interaction = {
