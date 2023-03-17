@@ -5,7 +5,7 @@ export type Saleable = {
 	price: {
 		amount: number
 		currency: Currencies
-	} | false
+	}
 }
 
 export enum Purchasables {

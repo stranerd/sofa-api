@@ -6,8 +6,7 @@ export interface PurchaseFromModel extends PurchaseToModel {
 	updatedAt: number
 }
 
-export interface PurchaseToModel {
+export interface PurchaseToModel extends Saleable {
 	user: EmbeddedUser
 	data: PurchaseData
-	price: Exclude<Saleable['price'], false>
 }

@@ -11,15 +11,10 @@ export class CourseController {
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
 		isPublic: Schema.boolean(),
-		price: Schema.or([
-			Schema.is(false as const),
-			...(user?.roles.isVerified ? [
-				Schema.object({
-					amount: Schema.number().gt(0),
-					currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
-				})
-			] : [])
-		]).default(false)
+		price: Schema.object({
+			amount: Schema.number().gte(0).lte(user?.roles.isVerified ? Number.POSITIVE_INFINITY : 0).default(0),
+			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
+		})
 	})
 
 	static async find (req: Request) {

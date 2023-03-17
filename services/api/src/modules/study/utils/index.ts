@@ -1,3 +1,4 @@
+import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { QuizzesUseCases } from '..'
 import { Coursable, DraftStatus } from '../domain/types'
 
@@ -21,6 +22,8 @@ export const canAccessCoursable = async (type: Coursable, coursableId: string, u
 	if (coursable.user.id === userId) return true
 	if (coursable.status === DraftStatus.draft) return false
 	if (!coursable.courseId) return true
-	// TODO: check  if user has paid for this coursable's course
-	return !!userId
+	const purchase = await PurchasesUseCases.for({
+		userId, type: Purchasables.courses, itemId: coursable.courseId
+	})
+	return !!purchase
 }

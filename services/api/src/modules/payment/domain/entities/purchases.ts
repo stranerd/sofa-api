@@ -1,9 +1,9 @@
 import { BaseEntity } from 'equipped'
 import { EmbeddedUser, PurchaseData, Saleable } from '../types'
 
-export class PurchaseEntity extends BaseEntity {
+export class PurchaseEntity extends BaseEntity implements Saleable {
 	public readonly id: string
-	public readonly price: Exclude<Saleable['price'], false>
+	public readonly price: Saleable['price']
 	public readonly user: EmbeddedUser
 	public readonly data: PurchaseData
 	public readonly createdAt: number
@@ -22,7 +22,7 @@ export class PurchaseEntity extends BaseEntity {
 	}
 }
 
-type PurchaseConstructorArgs = {
+type PurchaseConstructorArgs = Saleable & {
 	id: string
 	price: Exclude<Saleable['price'], false>
 	user: EmbeddedUser
