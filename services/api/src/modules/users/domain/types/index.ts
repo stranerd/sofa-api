@@ -34,7 +34,7 @@ export type UserAccount = {
 export type EmbeddedUser = {
 	id: string
 	bio: Pick<UserBio, 'name' | 'photo'>
-	roles: Pick<UserRoles, 'isTutor'>
+	roles: Pick<UserRoles, 'isTutor' | 'isVerified'>
 }
 
 export enum UserMeta {

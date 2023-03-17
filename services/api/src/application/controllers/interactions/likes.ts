@@ -1,4 +1,4 @@
-import { InteractionEntities, LikesUseCases, verifyInteractionEntity } from '@modules/interactions'
+import { InteractionEntities, LikesUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -21,7 +21,7 @@ export class LikesController {
 			})
 		}, req.body)
 
-		const userId = await verifyInteractionEntity(entity.type, entity.id, value ? 'likes' : 'dislikes')
+		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, value ? 'likes' : 'dislikes')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

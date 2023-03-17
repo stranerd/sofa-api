@@ -1,4 +1,4 @@
-import { InteractionEntities, verifyInteractionEntity, ViewsUseCases } from '@modules/interactions'
+import { InteractionEntities, verifyInteractionAndGetUserId, ViewsUseCases } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -20,7 +20,7 @@ export class ViewsController {
 			})
 		}, req.body)
 
-		const userId = await verifyInteractionEntity(entity.type, entity.id, 'views')
+		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'views')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

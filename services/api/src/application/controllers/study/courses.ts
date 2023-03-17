@@ -3,18 +3,23 @@ import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthUser, BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class CourseController {
-	private static schema = () => ({
+	private static schema = (user: AuthUser | null) => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
 		isPublic: Schema.boolean(),
-		price: Schema.object({
-			amount: Schema.number().gte(0).default(0),
-			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
-		})
+		price: Schema.or([
+			Schema.is(false as const),
+			...(user?.roles.isVerified ? [
+				Schema.object({
+					amount: Schema.number().gt(0),
+					currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
+				})
+			] : [])
+		]).default(false)
 	})
 
 	static async find (req: Request) {
@@ -30,7 +35,7 @@ export class CourseController {
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, isPublic, price } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, isPublic, price } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/courses', uploadedPhoto) : undefined
 
@@ -47,7 +52,7 @@ export class CourseController {
 
 	static async create (req: Request) {
 		const data = validate({
-			...this.schema(),
+			...this.schema(req.authUser),
 			tagId: Schema.string().min(1)
 		}, { ...req.body, photo: req.files.photo?.[0] ?? null })
 

@@ -51,7 +51,8 @@ export const PublishableSchema = {
 export const SaleableSchema = {
 	price: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
+		required: true,
+		default: false
 	},
 }
 

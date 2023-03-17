@@ -1,4 +1,4 @@
-import { CommentsUseCases, InteractionEntities, verifyInteractionEntity } from '@modules/interactions'
+import { CommentsUseCases, InteractionEntities, verifyInteractionAndGetUserId } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
@@ -32,7 +32,7 @@ export class CommentsController {
 			})
 		}, req.body)
 
-		const userId = await verifyInteractionEntity(entity.type, entity.id, 'comments')
+		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'comments')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
