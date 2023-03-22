@@ -1,6 +1,6 @@
 import { AuthUseCases, AuthUsersUseCases, generateAuthOutput } from '@modules/auth'
 import { UploaderUseCases } from '@modules/storage'
-import { AuthTypes, Request, Schema, validate, Validation, ValidationError } from 'equipped'
+import { AuthTypes, BadRequestError, Request, Schema, validate, Validation } from 'equipped'
 
 export class EmailsController {
 	static async signup (req: Request) {
@@ -52,13 +52,8 @@ export class EmailsController {
 	}
 
 	static async sendVerificationMail (req: Request) {
-		const { email } = validate({
-			email: Schema.string().email()
-		}, req.body)
-
-		const user = await AuthUsersUseCases.findUserByEmail(email)
-		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
-
+		const user = await AuthUsersUseCases.findUser(req.authUser!.id)
+		if (!user) throw new BadRequestError('profile not found')
 		return await AuthUseCases.sendVerificationMail(user.email)
 	}
 
