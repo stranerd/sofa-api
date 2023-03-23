@@ -1,5 +1,5 @@
 import { Conditions } from 'equipped'
-import { MethodsUseCases, TransactionsUseCases, WalletsUseCases } from '../'
+import { MethodsUseCases, PurchasesUseCases, TransactionsUseCases, WalletsUseCases } from '../'
 import { TransactionEntity } from '../domain/entities/transactions'
 import { Currencies, TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
@@ -13,6 +13,13 @@ export const fulfillTransaction = async (transaction: TransactionEntity) => {
 			userId: transaction.userId,
 			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
 		})
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: TransactionStatus.settled }
+		})
+	}
+	if (transaction.data.type === TransactionType.purchase) {
+		await PurchasesUseCases.create(transaction.data.purchase)
 		await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: TransactionStatus.settled }

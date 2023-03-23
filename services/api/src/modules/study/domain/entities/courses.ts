@@ -39,6 +39,10 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 		})
 		return obj
 	}
+
+	isFree () {
+		return this.price.amount === 0
+	}
 }
 
 type CourseConstructorArgs = Publishable & Saleable & {

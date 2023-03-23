@@ -20,6 +20,7 @@ export const canAccessCoursable = async (type: Coursable, coursableId: string, u
 	const coursable = await finders[type]?.find(coursableId) ?? null
 	if (!coursable) return false
 	if (coursable.user.id === userId) return true
+	if (!coursable.isPublic) return false
 	if (coursable.status === DraftStatus.draft) return false
 	if (!coursable.courseId) return true
 	const purchase = await PurchasesUseCases.for({
