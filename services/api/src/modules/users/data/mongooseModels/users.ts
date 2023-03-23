@@ -92,6 +92,13 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: null
+	},
+	tutor: {
+		conversations: {
+			type: [String],
+			required: false,
+			default: []
+		}
 	}
 }, { minimize: false })
 

@@ -117,4 +117,11 @@ export class UserRepository implements IUserRepository {
 		const user = await User.findByIdAndUpdate(userId, { $set: { school: data } })
 		return !!user
 	}
+
+	async updateTutorConversations (userId: string, conversationId: string, add: boolean) {
+		const user = await User.findByIdAndUpdate(userId, {
+			[add ? '$addToSet' : '$pull']: { 'tutor.conversations': conversationId }
+		})
+		return !!user
+	}
 }

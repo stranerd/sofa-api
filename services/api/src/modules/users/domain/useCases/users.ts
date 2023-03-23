@@ -52,4 +52,8 @@ export class UsersUseCase {
 	async updateSchool (params: { userId: string, data: UserSchoolData }) {
 		return await this.repository.updateUserSchoolData(params.userId, params.data)
 	}
+
+	async updateTutorConversations (params: { userId: string, conversationId: string, add: boolean }) {
+		return await this.repository.updateTutorConversations(params.userId, params.conversationId, params.add)
+	}
 }

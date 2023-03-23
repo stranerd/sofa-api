@@ -1,6 +1,6 @@
 import { BaseEntity, Validation } from 'equipped'
 import { getNextRank, getRank } from '../../utils/ranks'
-import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserSchoolData, UserStatus } from '../types'
+import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserSchoolData, UserStatus, UserTutor } from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -10,8 +10,9 @@ export class UserEntity extends BaseEntity {
 	public readonly status: UserStatus
 	public readonly account: UserAccount
 	public readonly school: UserSchoolData | null
+	public readonly tutor: UserTutor
 
-	constructor ({ id, bio, roles, dates, status, account, school }: UserConstructorArgs) {
+	constructor ({ id, bio, roles, dates, status, account, school, tutor }: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = generateDefaultBio(bio ?? {})
@@ -20,6 +21,7 @@ export class UserEntity extends BaseEntity {
 		this.status = status
 		this.account = account
 		this.school = school
+		this.tutor = tutor
 	}
 
 	get rank () {
@@ -44,6 +46,10 @@ export class UserEntity extends BaseEntity {
 			}
 		}
 	}
+
+	canJoinConversations () {
+		return this.roles.isTutor && this.tutor.conversations.length < 5
+	}
 }
 
 type UserConstructorArgs = {
@@ -54,6 +60,7 @@ type UserConstructorArgs = {
 	status: UserStatus
 	account: UserAccount
 	school: UserSchoolData | null
+	tutor: UserTutor
 }
 
 const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {

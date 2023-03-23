@@ -24,4 +24,6 @@ export interface IUserRepository {
 	resetAllUsersStatus (): Promise<boolean>
 
 	updateUserSchoolData (userId: string, data: UserSchoolData): Promise<boolean>
+
+	updateTutorConversations (userId: string, conversationId: string, add: boolean): Promise<boolean>
 }

@@ -81,3 +81,7 @@ type CollegeType = {
 }
 
 export type UserSchoolData = AspirantType | CollegeType
+
+export type UserTutor = {
+	conversations: string[]
+}
