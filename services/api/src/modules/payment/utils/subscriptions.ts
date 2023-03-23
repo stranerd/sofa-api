@@ -7,7 +7,7 @@ import { PlanEntity } from '../domain/entities/plans'
 import { TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
 
-const activateSub = async (userId: string, walletId: string, subscription: PlanEntity, successful: boolean) => {
+const activateSub = async (userId: string, walletId: string, subscription: PlanEntity) => {
 	const now = Date.now()
 	const renewedAt = subscription.getNextCharge(now)
 	const jobId = await appInstance.job.addDelayedJob({
@@ -16,10 +16,10 @@ const activateSub = async (userId: string, walletId: string, subscription: PlanE
 	return await WalletsUseCases.updateSubscription({
 		id: walletId,
 		data: {
-			active: successful,
-			current: successful ? { id: subscription.id, activatedAt: now, expiredAt: renewedAt, jobId } : null,
-			next: successful ? { id: subscription.id, renewedAt } : null,
-			...(successful ? { data: subscription.data } : {})
+			active: true,
+			current: { id: subscription.id, activatedAt: now, expiredAt: renewedAt, jobId },
+			next: { id: subscription.id, renewedAt },
+			data: subscription.data
 		}
 	})
 }
@@ -60,7 +60,7 @@ export const subscribeToPlan = async (userId: string, subscriptionId: string) =>
 	if (!method) throw new BadRequestError('no method found')
 	const successful = await chargeForSubscription(user, subscription, method)
 	if (!successful) throw new BadRequestError('charge failed')
-	return activateSub(userId, wallet.id, subscription, successful)
+	return activateSub(userId, wallet.id, subscription)
 }
 
 export const renewSubscription = async (userId: string) => {
@@ -76,7 +76,7 @@ export const renewSubscription = async (userId: string) => {
 	const method = methods.at(0)
 	if (!method) return await deactivateSub(wallet.id)
 	const successful = await chargeForSubscription(user, subscription, method)
-	return successful ? activateSub(userId, wallet.id, subscription, successful) : await deactivateSub(wallet.id)
+	return successful ? activateSub(userId, wallet.id, subscription) : await deactivateSub(wallet.id)
 }
 
 export const cancelSubscription = async (userId: string) => {
