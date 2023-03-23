@@ -66,7 +66,7 @@ export class CourseRepository implements ICourseRepository {
 	async freeze (id: string, userId: string) {
 		const course = await Course.findOneAndUpdate({
 			_id: id, 'user.id': userId, status: DraftStatus.published
-		}, { $set: { status: DraftStatus.frozen } }, { new: true })
+		}, { $set: { frozen: true } }, { new: true })
 		return this.mapper.mapFrom(course)
 	}
 
@@ -86,7 +86,7 @@ export class CourseRepository implements ICourseRepository {
 			if (add && coursable.courseId !== null) return
 			if (!add && course.status !== DraftStatus.draft) return
 			await finder.findByIdAndUpdate(coursable.id, {
-				$set: { courseId: course.id, status: DraftStatus.draft }
+				$set: { courseId: add ? course.id : null, status: DraftStatus.draft }
 			}, { session })
 			res = await Course.findByIdAndUpdate(course.id, {
 				[add ? '$addToSet' : '$pull']: { coursables: { id: coursable.id, type } }

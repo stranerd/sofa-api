@@ -49,6 +49,11 @@ export const PublishableSchema = {
 }
 
 export const SaleableSchema = {
+	frozen: {
+		type: Boolean,
+		required: false,
+		default: false
+	},
 	price: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true

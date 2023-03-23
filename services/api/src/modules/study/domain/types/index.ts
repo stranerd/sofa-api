@@ -11,8 +11,7 @@ export enum FolderSaved {
 
 export enum DraftStatus {
 	draft = 'draft',
-	published = 'published',
-	frozen = 'frozen'
+	published = 'published'
 }
 
 export type Publishable = {

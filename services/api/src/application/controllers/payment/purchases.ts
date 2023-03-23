@@ -1,4 +1,4 @@
-import { findPurchaseable, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { findPurchasable, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
@@ -32,8 +32,9 @@ export class PurchasesController {
 		const purchase = await PurchasesUseCases.for({ userId, type, itemId: id })
 		if (purchase) return true
 
-		const purchaseable = await findPurchaseable(type, id)
-		if (!purchaseable) throw new BadRequestError('item not found')
+		const purchasable = await findPurchasable(type, id)
+		if (!purchasable) throw new BadRequestError('item not found')
+		if (purchasable.frozen) throw new BadRequestError('item cannot be purchased')
 
 		const user = await UsersUseCases.find(userId)
 		if (!user) throw new BadRequestError('profile not found')
@@ -41,22 +42,22 @@ export class PurchasesController {
 		const transaction = await TransactionsUseCases.create({
 			userId: user.id,
 			email: user.bio.email,
-			amount: 0 - purchaseable.price.amount,
-			currency: purchaseable.price.currency,
+			amount: 0 - purchasable.price.amount,
+			currency: purchasable.price.currency,
 			status: TransactionStatus.initialized,
-			title: `Purchasing ${Validation.capitalize(purchaseable.title)}`,
+			title: `Purchasing ${Validation.capitalize(purchasable.title)}`,
 			data: {
 				type: TransactionType.purchase,
 				purchase: {
-					price: purchaseable.price,
+					price: purchasable.price,
 					user: user.getEmbedded(),
-					data: { type, id: purchaseable.id, userId: purchaseable.user.id }
+					data: { type, id: purchasable.id, userId: purchasable.user.id }
 				}
 			}
 		})
 		let successful = false
 
-		if (purchaseable.price.amount === 0) successful = true
+		if (purchasable.price.amount === 0) successful = true
 		else {
 			const { methodId } = validate({ methodId: Schema.string().min(1) }, req.body)
 			const method = await MethodsUseCases.find(methodId)

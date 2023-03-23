@@ -61,7 +61,8 @@ export class CourseController {
 
 		return await CoursesUseCases.add({
 			...data, user: user.getEmbedded(),
-			photo, status: DraftStatus.draft
+			photo, status: DraftStatus.draft,
+			frozen: false
 		})
 	}
 

@@ -7,7 +7,7 @@ type Purchable = Saleable & {
 	title: string
 }
 
-export const findPurchaseable = async (type: Purchasables, id: string): Promise<Purchable | null> => {
+export const findPurchasable = async (type: Purchasables, id: string): Promise<Purchable | null> => {
 	if (type === Purchasables.courses) {
 		return await CoursesUseCases.find(id)
 	}
