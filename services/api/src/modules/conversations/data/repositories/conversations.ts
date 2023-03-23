@@ -39,12 +39,22 @@ export class ConversationRepository implements IConversationRepository {
 	}
 
 	async updateUserBio (user: EmbeddedUser) {
-		const conversations = await Conversation.updateMany({ 'user.id': user.id }, { $set: { user } })
-		return conversations.acknowledged
+		const conversations = await Promise.all([
+			Conversation.updateMany({ 'user.id': user.id }, { $set: { user } }),
+			Conversation.updateMany({ 'tutor.id': user.id }, { $set: { tutor: user } })
+		])
+		return conversations.every((c) => c.acknowledged)
 	}
 
 	async delete (id: string, userId: string) {
 		const conversation = await Conversation.findOneAndDelete({ _id: id, 'user.id': userId })
 		return !!conversation
+	}
+
+	async setTutor (id: string, userId: string, tutor: EmbeddedUser | null) {
+		const conversation = await Conversation.findOneAndUpdate({
+			_id: id, 'user.id': userId, tutor: { [tutor ? '$eq' : '$ne']: null }
+		}, { $set: { tutor } }, { new: true })
+		return this.mapper.mapFrom(conversation)
 	}
 }

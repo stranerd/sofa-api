@@ -1,5 +1,5 @@
 import { BaseEntity } from 'equipped'
-import { Currencies, SubscriptionModel } from '../types'
+import { Currencies, PlanDataType, SubscriptionModel } from '../types'
 
 export class WalletEntity extends BaseEntity {
 	public readonly id: string
@@ -19,6 +19,10 @@ export class WalletEntity extends BaseEntity {
 		this.subscription = subscription
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+	}
+
+	canAddTutorToConversation () {
+		return this.subscription.data[PlanDataType.tutorAidedConversations] > 0
 	}
 }
 

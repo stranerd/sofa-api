@@ -29,4 +29,8 @@ export class ConversationsUseCase {
 	async updateUserBio (user: EmbeddedUser) {
 		return await this.repository.updateUserBio(user)
 	}
+
+	async setTutor (input: { id: string, userId: string, tutor: EmbeddedUser | null }) {
+		return await this.repository.setTutor(input.id, input.userId, input.tutor)
+	}
 }

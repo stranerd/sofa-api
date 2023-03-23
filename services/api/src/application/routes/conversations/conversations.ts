@@ -51,5 +51,29 @@ export const conversationsRoutes = groupRoutes('/conversations', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/tutor',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await ConversationController.addTutor(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/tutor',
+		method: 'delete',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await ConversationController.removeTutor(req)
+				}
+			})
+		]
 	}
 ])

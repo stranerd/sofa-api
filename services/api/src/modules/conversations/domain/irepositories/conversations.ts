@@ -9,4 +9,5 @@ export interface IConversationRepository {
 	find: (id: string) => Promise<ConversationEntity | null>
 	delete: (id: string, userId: string) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
+	setTutor: (id: string, userId: string, tutor: EmbeddedUser | null) => Promise<ConversationEntity | null>
 }

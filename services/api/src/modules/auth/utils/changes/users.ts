@@ -45,5 +45,6 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 	deleted: async ({ before }) => {
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 		await UsersUseCases.markDeleted({ id: before.id, timestamp: Date.now() })
+		await UsersUseCases.updateRoles({ id: before.id, data: {}, timestamp: Date.now() })
 	}
 }

@@ -1,15 +1,3 @@
-import { CronTypes } from 'equipped'
 import { PlanToModel } from '../data/models/plans'
-import { Currencies } from '../domain/types'
 
-export const plansList: PlanToModel[] = [
-	{
-		_id: 'premium-plan',
-		amount: 2000,
-		currency: Currencies.NGN,
-		title: 'Premium',
-		interval: CronTypes.monthly,
-		data: {},
-		active: true
-	}
-]
+export const plansList: PlanToModel[] = []

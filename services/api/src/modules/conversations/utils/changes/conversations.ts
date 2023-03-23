@@ -1,3 +1,4 @@
+import { PlanDataType, WalletsUseCases } from '@modules/payment'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { MessagesUseCases } from '../../'
@@ -8,19 +9,35 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 	created: async ({ after }) => {
 		await appInstance.listener.created([
 			`conversations/conversations/${after.user.id}`,
-			`conversations/conversations/${after.id}/${after.user.id}`
+			`conversations/conversations/${after.id}/${after.user.id}`,
+			...(after.tutor ? [`conversations/conversations/${after.tutor.id}`, `conversations/conversations/${after.id}/${after.tutor.id}`] : [])
 		], after)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated([
 			`conversations/conversations/${after.user.id}`,
-			`conversations/conversations/${after.id}/${after.user.id}`
+			`conversations/conversations/${after.id}/${after.user.id}`,
+			...(after.tutor ? [`conversations/conversations/${after.tutor.id}`, `conversations/conversations/${after.id}/${after.tutor.id}`] : [])
 		], after)
+
+		if (changes.tutor) {
+			const addedTutor = !before.tutor && after.tutor
+			const removedTutor = before.tutor && !after.tutor
+
+			if (addedTutor) {
+				await WalletsUseCases.updateSubscriptionData({ userId: after.user.id, key: PlanDataType.tutorAidedConversations, value: -1 })
+			}
+
+			if (removedTutor) {
+				//
+			}
+		}
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
 			`conversations/conversations/${before.user.id}`,
-			`conversations/conversations/${before.id}/${before.user.id}`
+			`conversations/conversations/${before.id}/${before.user.id}`,
+			...(before.tutor ? [`conversations/conversations/${before.tutor.id}`, `conversations/conversations/${before.id}/${before.tutor.id}`] : [])
 		], before)
 
 		await MessagesUseCases.deleteConversationMessages(before.id)

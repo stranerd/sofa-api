@@ -44,9 +44,11 @@ export type SubscriptionModel = {
 	data: PlanData
 }
 
-export enum PlanDataType { }
+export enum PlanDataType {
+	tutorAidedConversations = 'tutorAidedConversations'
+}
 
-export type PlanData = Record<PlanDataType, number> | {}
+export type PlanData = Record<PlanDataType, number>
 
 export type PlanFeatures = {}
 

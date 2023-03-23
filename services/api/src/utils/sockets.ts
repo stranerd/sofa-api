@@ -31,6 +31,7 @@ export const registerSockets = () => {
 		.register('notifications/notifications', isMine)
 
 		.register('payment/methods', isMine)
+		.register('payment/purchases', isMine)
 		.register('payment/plans', isOpen)
 		.register('payment/transactions', isMine)
 		.register('payment/wallets', isMine)
