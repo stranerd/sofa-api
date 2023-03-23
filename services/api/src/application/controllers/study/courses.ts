@@ -1,5 +1,5 @@
 import { TagsUseCases } from '@modules/interactions'
-import { Currencies, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
@@ -95,54 +95,5 @@ export class CourseController {
 		})
 		if (updatedCourse) return updatedCourse
 		throw new NotAuthorizedError()
-	}
-
-	static async purchase (req: Request) {
-		const userId = req.authUser!.id
-		const course = await CoursesUseCases.find(req.params.id)
-		if (!course) throw new BadRequestError('course not found')
-		const purchase = await PurchasesUseCases.for({
-			userId, type: Purchasables.courses, itemId: course.id,
-		})
-		if (purchase) return true
-
-		const user = await UsersUseCases.find(userId)
-		if (!user) throw new BadRequestError('profile not found')
-
-		const transaction = await TransactionsUseCases.create({
-			userId: user.id,
-			email: user.bio.email,
-			amount: 0 - course.price.amount,
-			currency: course.price.currency,
-			status: TransactionStatus.initialized,
-			title: `Purchasing course: ${course.title}`,
-			data: {
-				type: TransactionType.purchase,
-				purchase: {
-					price: course.price,
-					user: user.getEmbedded(),
-					data: { type: Purchasables.courses, id: course.id, userId: course.user.id }
-				}
-			}
-		})
-		let successful = false
-
-		if (course.isFree()) successful = true
-		else {
-			const { methodId } = validate({ methodId: Schema.string().min(1) }, req.body)
-			const method = await MethodsUseCases.find(methodId)
-			if (!method || method.userId !== userId) throw new BadRequestError('invalid method')
-			successful = await FlutterwavePayment.chargeCard({
-				email: transaction.email, amount: Math.abs(transaction.amount), currency: transaction.currency,
-				token: method.token, id: transaction.id
-			})
-		}
-
-		await TransactionsUseCases.update({
-			id: transaction.id,
-			data: { status: successful ? TransactionStatus.fulfilled : TransactionStatus.failed }
-		})
-
-		return successful
 	}
 }

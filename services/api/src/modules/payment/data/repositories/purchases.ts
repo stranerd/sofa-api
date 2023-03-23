@@ -1,6 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IPurchaseRepository } from '../../domain/irepositories/purchases'
+import { EmbeddedUser } from '../../domain/types'
 import { PurchaseMapper } from '../mappers/purchases'
 import { PurchaseToModel } from '../models/purchases'
 import { Purchase } from '../mongooseModels/purchases'
@@ -35,5 +36,10 @@ export class PurchaseRepository implements IPurchaseRepository {
 	async find (id: string) {
 		const purchase = await Purchase.findById(id)
 		return this.mapper.mapFrom(purchase)
+	}
+
+	async updateUserBio (user: EmbeddedUser) {
+		const purchases = await Purchase.updateMany({ 'user.id': user.id }, { $set: { user } })
+		return purchases.acknowledged
 	}
 }
