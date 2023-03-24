@@ -11,8 +11,9 @@ export class MessageEntity extends BaseEntity {
 	public readonly starred: boolean
 	public readonly createdAt: number
 	public readonly updatedAt: number
+	public readonly readAt: Record<string, number>
 
-	constructor ({ id, conversationId, userId, body, media, tags, starred, createdAt, updatedAt }: MessageConstructorArgs) {
+	constructor ({ id, conversationId, userId, body, media, tags, starred, createdAt, updatedAt, readAt }: MessageConstructorArgs) {
 		super()
 		this.id = id
 		this.conversationId = conversationId
@@ -23,6 +24,7 @@ export class MessageEntity extends BaseEntity {
 		this.starred = starred
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+		this.readAt = readAt
 	}
 }
 
@@ -36,4 +38,5 @@ type MessageConstructorArgs = {
 	starred: boolean
 	createdAt: number
 	updatedAt: number
+	readAt: Record<string, number>
 }

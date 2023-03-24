@@ -51,5 +51,17 @@ export const messagesRoutes = groupRoutes('/conversations/:conversationId/messag
 				}
 			})
 		]
+	}, {
+		path: '/read',
+		method: 'put',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await MessageController.markRead(req)
+				}
+			})
+		]
 	}
 ])

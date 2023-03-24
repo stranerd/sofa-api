@@ -1,6 +1,7 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { EmbeddedUser } from '../types'
+import { MessageEntity } from './messages'
 
 export class ConversationEntity extends BaseEntity {
 	static AI_Id = ''
@@ -10,8 +11,10 @@ export class ConversationEntity extends BaseEntity {
 	public readonly tutor: EmbeddedUser | null
 	public readonly createdAt: number
 	public readonly updatedAt: number
+	public readonly last: MessageEntity | null
+	public readonly readAt: Record<string, number>
 
-	constructor ({ id, title, user, tutor, createdAt, updatedAt }: ConversationConstructorArgs) {
+	constructor ({ id, title, user, tutor, createdAt, updatedAt, last, readAt }: ConversationConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -19,6 +22,8 @@ export class ConversationEntity extends BaseEntity {
 		this.tutor = tutor ? generateDefaultUser(tutor) : null
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+		this.last = last
+		this.readAt = readAt
 	}
 
 	tags (userId: string) {
@@ -33,4 +38,6 @@ type ConversationConstructorArgs = {
 	tutor: EmbeddedUser | null
 	createdAt: number
 	updatedAt: number
+	last: MessageEntity | null
+	readAt: Record<string, number>
 }

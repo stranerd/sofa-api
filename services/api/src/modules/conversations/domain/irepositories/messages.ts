@@ -8,4 +8,5 @@ export interface IMessageRepository {
 	find: (id: string) => Promise<MessageEntity | null>
 	star: (conversationId: string, id: string, userId: string, starred: boolean) => Promise<MessageEntity | null>
 	deleteConversationMessages: (conversationId: string) => Promise<boolean>
+	markRead: (userId: string, conversationId: string) => Promise<boolean>
 }

@@ -44,10 +44,24 @@ export class MessageController {
 		const { starred } = validate({
 			starred: Schema.boolean(),
 		}, req.body)
+
+		const hasAccess = await canAccessConversation(req.params.conversationId, req.authUser!.id)
+		if (!hasAccess) throw new NotAuthorizedError()
+
 		const updated = await MessagesUseCases.star({
 			id: req.params.id, userId: req.authUser!.id, conversationId: req.params.conversationId, starred
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
+	}
+
+	static async markRead (req: Request) {
+		const hasAccess = await canAccessConversation(req.params.conversationId, req.authUser!.id)
+		if (!hasAccess) throw new NotAuthorizedError()
+
+		return await MessagesUseCases.markRead({
+			userId: req.authUser!.id,
+			conversationId: req.params.conversationId
+		})
 	}
 }

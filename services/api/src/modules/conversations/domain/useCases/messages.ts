@@ -28,4 +28,8 @@ export class MessagesUseCase {
 	async deleteConversationMessages (conversationId: string) {
 		return await this.repository.deleteConversationMessages(conversationId)
 	}
+
+	async markRead (input: { userId: string, conversationId: string }) {
+		return await this.repository.markRead(input.userId, input.conversationId)
+	}
 }

@@ -1,3 +1,4 @@
+import { MessageFromModel } from '@modules/conversations/data/models/messages'
 import { QueryParams, QueryResults } from 'equipped'
 import { ConversationToModel } from '../../data/models/conversations'
 import { ConversationEntity } from '../entities/conversations'
@@ -10,4 +11,5 @@ export interface IConversationRepository {
 	delete: (id: string, userId: string) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	setTutor: (id: string, userId: string, tutor: EmbeddedUser | null) => Promise<ConversationEntity | null>
+	updateLastMessage: (message: MessageFromModel) => Promise<void>
 }

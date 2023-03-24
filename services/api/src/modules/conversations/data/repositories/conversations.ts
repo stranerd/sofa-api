@@ -4,6 +4,7 @@ import { IConversationRepository } from '../../domain/irepositories/conversation
 import { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
 import { ConversationToModel } from '../models/conversations'
+import { MessageFromModel } from '../models/messages'
 import { Conversation } from '../mongooseModels/conversations'
 
 export class ConversationRepository implements IConversationRepository {
@@ -56,5 +57,9 @@ export class ConversationRepository implements IConversationRepository {
 			_id: id, 'user.id': userId, tutor: { [tutor ? '$eq' : '$ne']: null }
 		}, { $set: { tutor } }, { new: true })
 		return this.mapper.mapFrom(conversation)
+	}
+
+	async updateLastMessage (message: MessageFromModel) {
+		await Conversation.updateMany({ 'last._id': message._id }, { $set: { last: message } })
 	}
 }

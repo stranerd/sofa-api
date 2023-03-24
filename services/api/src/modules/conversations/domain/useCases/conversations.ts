@@ -1,5 +1,6 @@
 import { QueryParams } from 'equipped'
 import { ConversationToModel } from '../../data/models/conversations'
+import { MessageFromModel } from '../../data/models/messages'
 import { IConversationRepository } from '../irepositories/conversations'
 import { EmbeddedUser } from '../types'
 
@@ -32,5 +33,9 @@ export class ConversationsUseCase {
 
 	async setTutor (input: { id: string, userId: string, tutor: EmbeddedUser | null }) {
 		return await this.repository.setTutor(input.id, input.userId, input.tutor)
+	}
+
+	async updateLastMessage (message: MessageFromModel) {
+		return await this.repository.updateLastMessage(message)
 	}
 }

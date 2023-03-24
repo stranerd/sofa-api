@@ -31,6 +31,16 @@ const Schema = new appInstance.dbs.mongo.Schema<ConversationFromModel>({
 		type: Number,
 		required: false,
 		default: Date.now
+	},
+	readAt: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: {}
+	},
+	last: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
