@@ -1,10 +1,11 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IQuizRepository } from '../../domain/irepositories/quizzes'
-import { DraftStatus, EmbeddedUser } from '../../domain/types'
+import { Coursable, DraftStatus, EmbeddedUser } from '../../domain/types'
 import { compareArrayContents } from '../../utils'
 import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel, QuizToModel } from '../models/quizzes'
+import { Course } from '../mongooseModels/courses'
 import { Quiz } from '../mongooseModels/quizzes'
 
 export class QuizRepository implements IQuizRepository {
@@ -30,8 +31,16 @@ export class QuizRepository implements IQuizRepository {
 	}
 
 	async add (data: QuizToModel) {
-		const quiz = await new Quiz(data).save()
-		return this.mapper.mapFrom(quiz)!
+		let res = null as any
+		await Quiz.collection.conn.transaction(async (session) => {
+			const quiz = await new Quiz(data).save({ session })
+			if (data.courseId) await Course.findByIdAndUpdate(data.courseId, {
+				$addToSet: { coursables: { id: quiz.id, type: Coursable.quiz } }
+			}, { session })
+			res = quiz
+			return res
+		})
+		return this.mapper.mapFrom(res)!
 	}
 
 	async find (id: string) {
