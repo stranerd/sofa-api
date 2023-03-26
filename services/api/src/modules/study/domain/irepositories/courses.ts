@@ -1,7 +1,7 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { CourseToModel } from '../../data/models/courses'
 import { CourseEntity } from '../entities/courses'
-import { Coursable, EmbeddedUser } from '../types'
+import { Coursable, CourseSections, EmbeddedUser } from '../types'
 
 export interface ICourseRepository {
 	add: (data: CourseToModel) => Promise<CourseEntity>
@@ -13,4 +13,5 @@ export interface ICourseRepository {
 	publish: (id: string, userId: string) => Promise<CourseEntity | null>
 	freeze: (id: string, userId: string) => Promise<CourseEntity | null>
 	move: (id: string, coursableId: string, type: Coursable, userId: string, add: boolean) => Promise<CourseEntity | null>
+	updateSections: (id: string, userId: string, sections: CourseSections) => Promise<CourseEntity | null>
 }

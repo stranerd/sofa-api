@@ -1,8 +1,9 @@
-import { Coursable, Publishable, Saleable } from '../../domain/types'
+import { Coursable, CourseSections, Publishable, Saleable } from '../../domain/types'
 
 export interface CourseFromModel extends CourseToModel {
 	_id: string
 	coursables: { id: string, type: Coursable }[]
+	sections: CourseSections
 	createdAt: number
 	updatedAt: number
 }

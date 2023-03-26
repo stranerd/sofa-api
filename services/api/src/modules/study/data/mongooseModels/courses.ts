@@ -10,6 +10,11 @@ const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>({
 		required: false,
 		default: []
 	},
+	sections: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as CourseFromModel['sections'],
+		required: false,
+		default: []
+	},
 	...PublishableSchema,
 	...SaleableSchema
 }, { timestamps: { currentTime: Date.now }, minimize: false })

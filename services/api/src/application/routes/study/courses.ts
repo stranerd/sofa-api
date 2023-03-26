@@ -97,5 +97,17 @@ export const coursesRoutes = groupRoutes('/courses', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/sections',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await CourseController.updateSections(req)
+				}
+			})
+		]
 	}
 ])

@@ -31,3 +31,8 @@ export enum Coursable {
 export type CoursableData = Publishable & {
 	courseId: string | null
 }
+
+export type CourseSections = {
+	label: string
+	items: { id: string, type: Coursable }[]
+}[]

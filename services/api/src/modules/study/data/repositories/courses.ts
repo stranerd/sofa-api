@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ICourseRepository } from '../../domain/irepositories/courses'
-import { Coursable, DraftStatus, EmbeddedUser } from '../../domain/types'
+import { Coursable, CourseSections, DraftStatus, EmbeddedUser } from '../../domain/types'
+import { compareArrayContents } from '../../utils'
 import { CourseMapper } from '../mappers/courses'
 import { CourseFromModel, CourseToModel } from '../models/courses'
 import { Course } from '../mongooseModels/courses'
@@ -91,6 +92,21 @@ export class CourseRepository implements ICourseRepository {
 			res = await Course.findByIdAndUpdate(course.id, {
 				[add ? '$addToSet' : '$pull']: { coursables: { id: coursable.id, type } }
 			}, { session, new: true })
+		})
+		return this.mapper.mapFrom(res)
+	}
+
+	async updateSections (id: string, userId: string, sections: CourseSections) {
+		let res = null as CourseFromModel | null
+		await Course.collection.conn.transaction(async (session) => {
+			const course = await Course.findById(id, null, { session })
+			if (!course || course.user.id !== userId) return
+			const secs = sections.map((s) => s.items)
+				.flat()
+				.map((s) => `${s.type}:${s.id}`)
+			const coursables = course.coursables.map((c) => `${c.type}:${c.id}`)
+			if (!compareArrayContents(secs, coursables)) return
+			res = await Course.findByIdAndUpdate(course.id, { $set: { sections } }, { session, new: true })
 		})
 		return this.mapper.mapFrom(res)
 	}

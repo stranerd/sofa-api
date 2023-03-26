@@ -97,4 +97,22 @@ export class CourseController {
 		if (updatedCourse) return updatedCourse
 		throw new NotAuthorizedError()
 	}
+
+	static async updateSections (req: Request) {
+		const { sections } = validate({
+			sections: Schema.array(Schema.object({
+				label: Schema.string().min(1),
+				items: Schema.array(Schema.object({
+					id: Schema.string().min(1),
+					type: Schema.in(Object.values(Coursable))
+				}))
+			}))
+		}, req.body)
+
+		const updatedCourse = await CoursesUseCases.updateSections({
+			id: req.params.id, userId: req.authUser!.id, sections
+		})
+		if (updatedCourse) return updatedCourse
+		throw new NotAuthorizedError()
+	}
 }
