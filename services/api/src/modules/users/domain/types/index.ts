@@ -1,6 +1,8 @@
 import { Phone } from '@modules/auth'
 import { AuthRoles, MediaOutput } from 'equipped'
 
+export * from './verifications'
+
 export type UserBio = {
 	email: string
 	name: { first: string, last: string, full: string }
