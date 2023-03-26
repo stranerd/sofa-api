@@ -4,7 +4,7 @@ import { TransactionEntity } from '../domain/entities/transactions'
 import { Currencies, TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
 
-export const fulfillTransaction = async (transaction: TransactionEntity) => {
+export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.newCard) {
 		const method = await FlutterwavePayment.saveCard(transaction.userId, transaction.id)
 		if (!method) return
@@ -25,6 +25,16 @@ export const fulfillTransaction = async (transaction: TransactionEntity) => {
 			data: { status: TransactionStatus.settled }
 		})
 	}
+	if (transaction.data.type === TransactionType.purchased) {
+		await WalletsUseCases.updateAmount({
+			userId: transaction.userId,
+			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
+		})
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: TransactionStatus.settled }
+		})
+	}
 }
 
 export const retryTransactions = async (timeInMs: number) => {
@@ -35,7 +45,7 @@ export const retryTransactions = async (timeInMs: number) => {
 		],
 		all: true
 	})
-	await Promise.all(fulfilledTransactions.map(fulfillTransaction))
+	await Promise.all(fulfilledTransactions.map(settleTransaction))
 
 	const { results: initializedTransactions } = await TransactionsUseCases.get({
 		where: [

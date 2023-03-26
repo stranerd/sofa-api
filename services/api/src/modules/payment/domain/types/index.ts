@@ -16,7 +16,8 @@ export enum TransactionStatus {
 export enum TransactionType {
 	newCard = 'newCard',
 	subscription = 'subscription',
-	purchase = 'purchase'
+	purchase = 'purchase',
+	purchased = 'purchased'
 }
 
 export type TransactionData = {
@@ -27,6 +28,9 @@ export type TransactionData = {
 } | {
 	type: TransactionType.purchase
 	purchase: PurchaseToModel
+} | {
+	type: TransactionType.purchased
+	purchaseId: string
 }
 
 export type SubscriptionModel = {
