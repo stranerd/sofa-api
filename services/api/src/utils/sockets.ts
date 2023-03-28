@@ -46,6 +46,7 @@ export const registerSockets = () => {
 		.register('study/quizzes', isOpen)
 		.register('study/:quizId/questions', coursablesCb)
 		.register('study/courses', isOpen)
+		.register('study/games', isMine)
 
 		.register('users/connects', isMine)
 		.register('users/users', isOpen)

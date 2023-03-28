@@ -17,7 +17,7 @@ const finders = {
 }
 
 export const canAccessCoursable = async (type: Coursable, coursableId: string, userId: string) => {
-	const coursable = await finders[type]?.find(coursableId) ?? null
+	const coursable =  await finders[type]?.find(coursableId) ?? null
 	if (!coursable) return false
 	if (coursable.user.id === userId) return true
 	if (!coursable.isPublic) return false
