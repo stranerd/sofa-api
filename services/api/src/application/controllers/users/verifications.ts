@@ -13,16 +13,14 @@ import {
 export class VerificationsController {
 	static async find (req: Request) {
 		const verification = await VerificationsUseCases.find(req.params.id)
-		const isAdmin = req.authUser?.roles.isAdmin || req.authUser?.roles.isSuperAdmin
 		if (!verification) return null
-		if (verification.userId === req.authUser!.id || isAdmin) return verification
+		if (verification.userId === req.authUser!.id || req.authUser?.roles.isAdmin) return verification
 		return null
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		const isAdmin = req.authUser?.roles.isAdmin || req.authUser?.roles.isSuperAdmin
-		if (!isAdmin) query.auth = [{ field: 'userId', value: req.authUser!.id }]
+		if (!req.authUser?.roles.isAdmin) query.auth = [{ field: 'userId', value: req.authUser!.id }]
 		return await VerificationsUseCases.get(query)
 	}
 

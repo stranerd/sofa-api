@@ -1,6 +1,6 @@
-import { MessageFromModel } from '@modules/conversations/data/models/messages'
 import { QueryParams, QueryResults } from 'equipped'
 import { ConversationToModel } from '../../data/models/conversations'
+import { MessageFromModel } from '../../data/models/messages'
 import { ConversationEntity } from '../entities/conversations'
 import { EmbeddedUser } from '../types'
 

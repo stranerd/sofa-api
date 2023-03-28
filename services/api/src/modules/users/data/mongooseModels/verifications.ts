@@ -1,5 +1,5 @@
-import { VerificationSocials } from '@modules/users/domain/types'
 import { appInstance } from '@utils/types'
+import { VerificationSocials } from '../../domain/types'
 import { VerificationDbChangeCallbacks } from '../../utils/changes/verifications'
 import { VerificationMapper } from '../mappers/verifications'
 import { VerificationFromModel } from '../models/verifications'
