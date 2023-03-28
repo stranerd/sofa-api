@@ -10,8 +10,8 @@ export enum QuestionTypes {
 
 export type QuestionData = {
 	type: QuestionTypes.multipleChoice,
-	answers: string[],
-	correct: number[]
+	options: string[],
+	answers: number[]
 } | {
 	type: QuestionTypes.trueOrFalse,
 	answer: boolean
@@ -32,4 +32,26 @@ export type QuestionData = {
 } | {
 	type: QuestionTypes.match,
 	set: { q: string, a: string }[]
+}
+
+export type StrippedQuestionData = {
+	type: QuestionTypes.multipleChoice,
+	options: string[]
+} | {
+	type: QuestionTypes.trueOrFalse
+} | {
+	type: QuestionTypes.writeAnswer
+} | {
+	type: QuestionTypes.fillInBlanks,
+	indicator: string
+} | {
+	type: QuestionTypes.dragAnswers,
+	indicator: string
+	answers: string[]
+} | {
+	type: QuestionTypes.sequence
+	answers: string[]
+} | {
+	type: QuestionTypes.match,
+	set: { q: string }[]
 }

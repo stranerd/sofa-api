@@ -1,5 +1,5 @@
-import { BaseEntity } from 'equipped'
-import { Media, QuestionData } from '../types'
+import { BaseEntity, Validation } from 'equipped'
+import { Media, QuestionData, QuestionTypes, StrippedQuestionData } from '../types'
 
 export class QuestionEntity extends BaseEntity {
 	public readonly id: string
@@ -23,6 +23,41 @@ export class QuestionEntity extends BaseEntity {
 		this.data = data
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+	}
+
+	strip () {
+		return structuredClone({
+			...this,
+			data: this.stripAnswers(this.data)
+		})
+	}
+
+	private stripAnswers (data: QuestionData): StrippedQuestionData {
+		if (data.type === QuestionTypes.multipleChoice) {
+			return { type: data.type, options: data.options }
+		} else if (data.type === QuestionTypes.trueOrFalse) {
+			return { type: data.type }
+		} else if (data.type === QuestionTypes.writeAnswer) {
+			return { type: data.type }
+		} else if (data.type === QuestionTypes.fillInBlanks) {
+			return { type: data.type, indicator: data.indicator }
+		} else if (data.type === QuestionTypes.dragAnswers) {
+			return {
+				type: data.type, indicator: data.indicator,
+				answers: Validation.shuffleArray(data.answers)
+			}
+		} else if (data.type === QuestionTypes.sequence) {
+			return {
+				type: data.type,
+				answers: Validation.shuffleArray(data.answers)
+			}
+		} else if (data.type === QuestionTypes.match) {
+			return {
+				type: data.type,
+				set: data.set.map(({ q }) => ({ q }))
+			}
+		}
+		return data
 	}
 }
 
