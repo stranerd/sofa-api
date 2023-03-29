@@ -1,18 +1,18 @@
 #!/bin/bash
 
-#MONGODB1=`ping -c 1 mongo1 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
+#MONGO1=`ping -c 1 mongo1 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
 
-MONGODB1=mongodb
+MONGO1=mongo
 
-echo "**********************************************" ${MONGODB1}
+echo "**********************************************" ${MONGO1}
 echo "Waiting for startup.."
-until curl http://${MONGODB1}:27017/serverStatus\?text\=1 2>&1 | grep uptime | head -1; do
+until curl http://${MONGO1}:27017/serverStatus\?text\=1 2>&1 | grep uptime | head -1; do
   printf '.'
   sleep 1
 done
 
 
-mongosh --host ${MONGODB1}:27017 <<EOF
+mongosh --host ${MONGO1}:27017 <<EOF
 var cfg = {
     "_id": "rs0",
     "protocolVersion": 1,
@@ -20,7 +20,7 @@ var cfg = {
     "members": [
         {
             "_id": 0,
-            "host": "${MONGODB1}:27017",
+            "host": "${MONGO1}:27017",
             "priority": 2
         }
     ],settings: {chainingAllowed: true}
