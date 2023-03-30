@@ -23,7 +23,7 @@ export class MessageController {
 		const data = validate({
 			body: Schema.string(),
 			media: Schema.file().nullable(),
-		}, { ...req.body, media: req.files.media?.[0] ?? null })
+		}, { ...req.body, media: req.files.media?.at(0) ?? null })
 
 		const conversation = await ConversationsUseCases.find(req.params.conversationId)
 		if (!conversation) throw new NotAuthorizedError()

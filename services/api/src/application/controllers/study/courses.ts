@@ -27,7 +27,7 @@ export class CourseController {
 	}
 
 	static async update (req: Request) {
-		const uploadedPhoto = req.files.photo?.[0] ?? null
+		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 		const { title, description, isPublic, price } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
@@ -49,7 +49,7 @@ export class CourseController {
 		const data = validate({
 			...this.schema(req.authUser),
 			tagId: Schema.string().min(1)
-		}, { ...req.body, photo: req.files.photo?.[0] ?? null })
+		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
 		const tag = await TagsUseCases.find(data.tagId)
 		if (!tag) throw new BadRequestError('tag not found')

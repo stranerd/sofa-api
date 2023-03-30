@@ -7,7 +7,7 @@ import { WalletFromModel } from '../models/wallets'
 const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 	_id: {
 		type: String,
-		default: () => appInstance.dbs.mongo.toString()
+		default: () => appInstance.dbs.mongo.Id.toString()
 	},
 	userId: {
 		type: String,

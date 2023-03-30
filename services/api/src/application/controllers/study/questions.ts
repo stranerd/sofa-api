@@ -68,7 +68,7 @@ export class QuestionController {
 	}
 
 	static async update (req: Request) {
-		const uploadedMedia = req.files.questionMedia?.[0] ?? null
+		const uploadedMedia = req.files.questionMedia?.at(0) ?? null
 		const changedMedia = !!uploadedMedia || req.body.photo === null
 
 		const { question, timeLimit, data } = validate(this.schema(req.body ?? {}), { ...req.body, questionMedia: uploadedMedia })
@@ -90,7 +90,7 @@ export class QuestionController {
 		const data = validate({
 			...this.schema(req.body),
 			quizId: Schema.string().min(1)
-		}, { ...req.body, quizId: req.params.quizId, questionMedia: req.files.photo?.[0] ?? null })
+		}, { ...req.body, quizId: req.params.quizId, questionMedia: req.files.photo?.at(0) ?? null })
 
 		const quiz = await QuizzesUseCases.find(data.quizId)
 		if (!quiz || quiz.user.id !== req.authUser!.id) throw new NotAuthorizedError()
