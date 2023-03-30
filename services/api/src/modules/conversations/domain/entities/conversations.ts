@@ -4,7 +4,7 @@ import { EmbeddedUser } from '../types'
 import { MessageEntity } from './messages'
 
 export class ConversationEntity extends BaseEntity {
-	static AI_Id = ''
+	static AI_Id = 'ai-bot'
 	public readonly id: string
 	public readonly title: string
 	public readonly user: EmbeddedUser
