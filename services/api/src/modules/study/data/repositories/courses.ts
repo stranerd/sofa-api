@@ -58,10 +58,19 @@ export class CourseRepository implements ICourseRepository {
 	}
 
 	async publish (id: string, userId: string) {
-		const course = await Course.findOneAndUpdate({
-			_id: id, 'user.id': userId, status: DraftStatus.draft
-		}, { $set: { status: DraftStatus.published } }, { new: true })
-		return this.mapper.mapFrom(course)
+		let res = null as CourseFromModel | null
+		await Course.collection.conn.transaction(async (session) => {
+			const course = await Course.findOneAndUpdate({
+				_id: id, 'user.id': userId, status: DraftStatus.draft
+			}, { $set: { status: DraftStatus.published } }, { new: true, session })
+			if (!course) return
+
+			await Quiz.updateMany({ courseId: id }, { $set: { status: DraftStatus.published } }, { session })
+
+			res = course
+			return res
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async freeze (id: string, userId: string) {

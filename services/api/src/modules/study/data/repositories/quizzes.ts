@@ -73,7 +73,7 @@ export class QuizRepository implements IQuizRepository {
 
 	async publish (id: string, userId: string) {
 		const quiz = await Quiz.findOneAndUpdate({
-			_id: id, 'user.id': userId, status: DraftStatus.draft
+			_id: id, 'user.id': userId, status: DraftStatus.draft, courseId: null
 		}, { $set: { status: DraftStatus.published } }, { new: true })
 		return this.mapper.mapFrom(quiz)
 	}
