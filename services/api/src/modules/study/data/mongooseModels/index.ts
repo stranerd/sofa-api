@@ -19,11 +19,6 @@ export const PublishableSchema = {
 		required: false,
 		default: null
 	},
-	isPublic: {
-		type: Boolean,
-		required: false,
-		default: false
-	},
 	user: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true

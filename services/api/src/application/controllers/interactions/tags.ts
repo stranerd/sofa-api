@@ -1,5 +1,5 @@
 import { TagsUseCases, TagTypes } from '@modules/interactions'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TagController {
 	private static schema = () => ({
@@ -26,13 +26,12 @@ export class TagController {
 	static async create (req: Request) {
 		const data = validate({
 			...this.schema(),
-			type: Schema.in(Object.values(TagTypes)),
-			parent: Schema.string().nullable()
+			type: Schema.in(Object.values(TagTypes))
 		}, req.body)
 
-		if (data.parent !== null) throw new BadRequestError('no tag type can have children')
+		// if (data.parent !== null) throw new BadRequestError('no tag type can have children')
 
-		return await TagsUseCases.add(data)
+		return await TagsUseCases.add({ ...data, parent: null })
 	}
 
 	static async delete (req: Request) {

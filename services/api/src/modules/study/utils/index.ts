@@ -1,6 +1,6 @@
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { QuizzesUseCases } from '..'
-import { Coursable, DraftStatus } from '../domain/types'
+import { Coursable } from '../domain/types'
 
 export const compareArrayContents = <T extends string | number> (arr1: T[], arr2: T[]): boolean => {
 	if (arr1.length !== arr2.length) return false
@@ -17,14 +17,9 @@ const finders = {
 }
 
 export const canAccessCoursable = async (type: Coursable, coursableId: string, userId: string) => {
-	const coursable =  await finders[type]?.find(coursableId) ?? null
-	if (!coursable) return false
-	if (coursable.user.id === userId) return true
-	if (!coursable.isPublic) return false
-	if (coursable.status === DraftStatus.draft) return false
-	if (!coursable.courseId) return true
-	const purchase = await PurchasesUseCases.for({
-		userId, type: Purchasables.courses, itemId: coursable.courseId
-	})
-	return !!purchase
+	const [coursable, purchase] = await Promise.all([
+		finders[type]?.find(coursableId),
+		PurchasesUseCases.for({ userId, type: Purchasables.courses, itemId: coursableId })
+	])
+	return !!purchase || coursable?.user.id === userId
 }

@@ -21,7 +21,6 @@ export type Publishable = {
 	user: EmbeddedUser
 	tagId: string
 	status: DraftStatus
-	isPublic: boolean
 }
 
 export enum Coursable {

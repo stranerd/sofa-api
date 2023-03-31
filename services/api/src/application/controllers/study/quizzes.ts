@@ -8,8 +8,7 @@ export class QuizController {
 	private static schema = () => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable(),
-		isPublic: Schema.boolean()
+		photo: Schema.file().image().nullable()
 	})
 
 	static async find (req: Request) {
@@ -25,14 +24,14 @@ export class QuizController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, isPublic } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/quizzes', uploadedPhoto) : undefined
 
 		const updatedQuiz = await QuizzesUseCases.update({
 			id: req.params.id, userId: req.authUser!.id,
 			data: {
-				title, description, isPublic,
+				title, description,
 				...(changedPhoto ? { photo } : {})
 			}
 		})
@@ -66,8 +65,7 @@ export class QuizController {
 			...(data.courseId && course ? {
 				courseId: course.id,
 				status: course.status,
-				tagId: course.tagId,
-				isPublic: course.isPublic
+				tagId: course.tagId
 			} : {})
 		})
 	}

@@ -10,7 +10,6 @@ export class CourseController {
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
-		isPublic: Schema.boolean(),
 		price: Schema.object({
 			amount: Schema.number().gte(0).lte(user?.roles.isVerified ? Number.POSITIVE_INFINITY : 0).default(0),
 			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
@@ -30,14 +29,14 @@ export class CourseController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, isPublic, price } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
+		const { title, description, price } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/courses', uploadedPhoto) : undefined
 
 		const updatedCourse = await CoursesUseCases.update({
 			id: req.params.id, userId: req.authUser!.id,
 			data: {
-				title, description, isPublic, price,
+				title, description, price,
 				...(changedPhoto ? { photo } : {})
 			}
 		})

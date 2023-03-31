@@ -35,7 +35,7 @@ export class QuestionController {
 				answers: Schema.array(Schema.string().min(1)).min(1)
 			}).custom((value) => {
 				const length = body?.question?.split(value.indicator).length ?? 1
-				return Schema.array(Schema.any()).max(length - 1).parse(value.answers).valid
+				return Schema.array(Schema.any()).has(length - 1).parse(value.answers).valid
 			}),
 			Schema.object({
 				type: Schema.is(QuestionTypes.sequence as const),
