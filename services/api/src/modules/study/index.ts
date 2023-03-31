@@ -22,4 +22,4 @@ export const CoursesUseCases = new CoursesUseCase(courseRepository)
 export const GamesUseCases = new GamesUseCase(gameRepository)
 
 export { Coursable, DraftStatus, FolderSaved, QuestionTypes } from './domain/types'
-export { canAccessCoursable } from './utils'
+export { canAccessCoursable } from './utils/courses'
