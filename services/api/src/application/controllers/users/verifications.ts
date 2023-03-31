@@ -82,7 +82,7 @@ export class VerificationsController {
 		})
 
 		if (quizzes.length !== content.quizzes.length) return false
-		const validQuizzes = quizzes.every((quiz) => quiz.user.id === userId && quiz.status === DraftStatus.published && !quiz.courseId)
+		const validQuizzes = quizzes.every((quiz) => quiz.user.id === userId && quiz.status === DraftStatus.published)
 		if (!validQuizzes) return false
 
 		return true

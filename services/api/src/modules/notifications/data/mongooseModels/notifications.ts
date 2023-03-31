@@ -6,7 +6,7 @@ import { NotificationFromModel } from '../models/notifications'
 const NotificationSchema = new appInstance.dbs.mongo.Schema<NotificationFromModel>({
 	_id: {
 		type: String,
-		default: () => appInstance.dbs.mongo.toString()
+		default: () => appInstance.dbs.mongo.Id.toString()
 	},
 	title: {
 		type: String,
