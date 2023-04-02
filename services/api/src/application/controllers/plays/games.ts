@@ -36,4 +36,17 @@ export class GameController {
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}
+
+	static async join (req: Request) {
+		const { join } = validate({ join: Schema.boolean() }, req.body)
+		const updated = await GamesUseCases.join({ id: req.params.id, userId: req.authUser!.id, join })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async start (req: Request) {
+		const updated = await GamesUseCases.start({ id: req.params.id, userId: req.authUser!.id })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
 }

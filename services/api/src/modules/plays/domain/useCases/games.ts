@@ -29,4 +29,12 @@ export class GamesUseCase {
 	async updateUserBio (user: EmbeddedUser) {
 		return await this.repository.updateUserBio(user)
 	}
+
+	async start (input: { id: string, userId: string }) {
+		return await this.repository.start(input.id, input.userId)
+	}
+
+	async join (data: { id: string, userId: string, join: boolean }) {
+		return await this.repository.join(data.id, data.userId, data.join)
+	}
 }

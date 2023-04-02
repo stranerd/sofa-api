@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/types'
+import { GameStatus } from '../../domain/types'
 import { GameDbChangeCallbacks } from '../../utils/changes/games'
 import { GameMapper } from '../mappers/games'
 import { GameFromModel } from '../models/games'
@@ -16,6 +17,11 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
+	status: {
+		type: String,
+		required: true,
+		default: GameStatus.created
+	},
 	participants: {
 		type: [String],
 		required: false,
@@ -25,6 +31,11 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 		type: [String],
 		required: false,
 		default: []
+	},
+	startedAt: {
+		type: Number,
+		required: false,
+		default: null
 	},
 	createdAt: {
 		type: Number,

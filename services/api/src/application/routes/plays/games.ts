@@ -49,5 +49,29 @@ export const gamesRoutes = groupRoutes('/games', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/start',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await GameController.start(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/join',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await GameController.join(req)
+				}
+			})
+		]
 	}
 ])

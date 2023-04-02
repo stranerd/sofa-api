@@ -5,9 +5,10 @@ import { GameFromModel, GameToModel } from '../models/games'
 export class GameMapper extends BaseMapper<GameFromModel, GameToModel, GameEntity> {
 	mapFrom (model: GameFromModel | null) {
 		if (!model) return null
-		const { _id, quizId, user, participants, questions, createdAt, updatedAt } = model
+		const { _id, quizId, user, status, participants, questions, startedAt, createdAt, updatedAt } = model
 		return new GameEntity({
-			id: _id.toString(), quizId, user, participants, questions, createdAt, updatedAt
+			id: _id.toString(), quizId, user, status, participants, questions,
+			startedAt, createdAt, updatedAt
 		})
 	}
 
@@ -15,6 +16,7 @@ export class GameMapper extends BaseMapper<GameFromModel, GameToModel, GameEntit
 		return {
 			quizId: entity.quizId,
 			user: entity.user,
+			status: entity.status,
 			questions: entity.questions
 		}
 	}

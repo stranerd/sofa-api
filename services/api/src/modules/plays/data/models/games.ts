@@ -1,8 +1,10 @@
-import { EmbeddedUser } from '../../domain/types'
+import { EmbeddedUser, GameStatus } from '../../domain/types'
 
 export interface GameFromModel extends GameToModel {
 	_id: string
+	status: GameStatus
 	participants: string[]
+	startedAt: number | null
 	createdAt: number
 	updatedAt: number
 }

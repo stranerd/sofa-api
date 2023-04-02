@@ -1,6 +1,7 @@
 import { ConversationsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ViewsUseCases } from '@modules/interactions'
 import { PurchasesUseCases } from '@modules/payment'
+import { GamesUseCases } from '@modules/plays'
 import { CoursesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
@@ -19,6 +20,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			ConversationsUseCases,
 			CommentsUseCases, LikesUseCases, ViewsUseCases,
 			PurchasesUseCases,
+			GamesUseCases,
 			CoursesUseCases, FoldersUseCases, QuizzesUseCases,
 			ConnectsUseCases,
 		].map(async (useCase) => await useCase.updateUserBio(after.getEmbedded())))
