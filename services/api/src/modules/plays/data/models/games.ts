@@ -10,4 +10,5 @@ export interface GameFromModel extends GameToModel {
 export interface GameToModel {
 	quizId: string
 	user: EmbeddedUser
+	questions: string[]
 }

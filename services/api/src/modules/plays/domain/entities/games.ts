@@ -7,15 +7,17 @@ export class GameEntity extends BaseEntity {
 	public readonly quizId: string
 	public readonly user: EmbeddedUser
 	public readonly participants: string[]
+	public readonly questions: string[]
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, quizId, user, participants, createdAt, updatedAt }: GameConstructorArgs) {
+	constructor ({ id, quizId, user, participants, questions, createdAt, updatedAt }: GameConstructorArgs) {
 		super()
 		this.id = id
 		this.quizId = quizId
 		this.user = generateDefaultUser(user)
 		this.participants = participants
+		this.questions = questions
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -26,6 +28,7 @@ type GameConstructorArgs = {
 	quizId: string
 	user: EmbeddedUser
 	participants: string[]
+	questions: string[]
 	createdAt: number
 	updatedAt: number
 }

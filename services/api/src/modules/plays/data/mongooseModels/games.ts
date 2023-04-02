@@ -21,6 +21,11 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 		required: false,
 		default: []
 	},
+	questions: {
+		type: [String],
+		required: false,
+		default: []
+	},
 	createdAt: {
 		type: Number,
 		required: false,
