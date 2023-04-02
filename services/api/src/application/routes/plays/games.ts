@@ -1,4 +1,4 @@
-import { GameController } from '@application/controllers/study/games'
+import { GameController } from '@application/controllers/plays/games'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 

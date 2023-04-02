@@ -1,4 +1,5 @@
-import { canAccessCoursable, Coursable, GamesUseCases } from '@modules/study'
+import { GamesUseCases } from '@modules/plays'
+import { canAccessCoursable, Coursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 

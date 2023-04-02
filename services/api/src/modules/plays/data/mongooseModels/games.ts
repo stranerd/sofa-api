@@ -33,6 +33,6 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Game = appInstance.dbs.mongo.use('study').model<GameFromModel>('Game', Schema)
+export const Game = appInstance.dbs.mongo.use('plays').model<GameFromModel>('Game', Schema)
 
 export const GameChange = appInstance.dbs.mongo.change(Game, GameDbChangeCallbacks, new GameMapper().mapFrom)

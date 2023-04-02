@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IGameRepository } from '../../domain/irepositories/games'
-import { DraftStatus, EmbeddedUser } from '../../domain/types'
+import { EmbeddedUser } from '../../domain/types'
 import { GameMapper } from '../mappers/games'
 import { GameToModel } from '../models/games'
 import { Game } from '../mongooseModels/games'
@@ -44,7 +44,7 @@ export class GameRepository implements IGameRepository {
 	}
 
 	async delete (id: string, userId: string) {
-		const game = await Game.findOneAndDelete({ _id: id, 'user.id': userId, status: DraftStatus.draft })
+		const game = await Game.findOneAndDelete({ _id: id, 'user.id': userId })
 		return !!game
 	}
 }
