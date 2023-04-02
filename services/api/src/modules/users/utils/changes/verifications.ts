@@ -8,14 +8,12 @@ import { VerificationEntity } from '../../domain/entities/verifications'
 export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromModel, VerificationEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created([
-			'users/verifications', `users/verifications/${after.id}`,
-			`users/verifications/${after.userId}`, `users/verifications/${after.id}/${after.userId}}`,
+			'users/verifications', `users/verifications/${after.id}`
 		], after)
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.created([
-			'users/verifications', `users/verifications/${after.id}`,
-			`users/verifications/${after.userId}`, `users/verifications/${after.id}/${after.userId}}`,
+			'users/verifications', `users/verifications/${after.id}`
 		], after)
 
 		if (changes.pending && before.pending && !after.pending) {
@@ -36,8 +34,7 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.created([
-			'users/verifications', `users/verifications/${before.id}`,
-			`users/verifications/${before.userId}`, `users/verifications/${before.id}/${before.userId}}`,
+			'users/verifications', `users/verifications/${before.id}`
 		], before)
 	}
 }

@@ -1,6 +1,6 @@
 import { groupRoutes } from 'equipped'
 import { gamesRoutes } from './games'
 
-export const studyRoutes = groupRoutes('/plays', [
+export const playRoutes = groupRoutes('/plays', [
 	...gamesRoutes,
 ])
