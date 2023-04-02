@@ -1,4 +1,4 @@
-import { canAccessConversation, ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
+import { canAccessConversation, MessagesUseCases } from '@modules/conversations'
 import { UploaderUseCases } from '@modules/storage'
 import { NotAuthorizedError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
 
@@ -25,10 +25,8 @@ export class MessageController {
 			media: Schema.file().nullable(),
 		}, { ...req.body, media: req.files.media?.at(0) ?? null })
 
-		const conversation = await ConversationsUseCases.find(req.params.conversationId)
+		const conversation = await canAccessConversation(req.params.conversationId, req.authUser!.id)
 		if (!conversation) throw new NotAuthorizedError()
-		const hasAccess = await canAccessConversation(req.params.conversationId, req.authUser!.id, conversation)
-		if (!hasAccess) throw new NotAuthorizedError()
 		if (!conversation.tutor) data.media = null
 		if (!data.media && data.body.length === 0) throw new ValidationError([{ field: 'body', messages: ['cannot be empty'] }])
 

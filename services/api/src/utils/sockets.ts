@@ -11,12 +11,12 @@ export const registerSockets = () => {
 	const conversationMessagesCb: OnJoinFn = async (data, params) => {
 		const { conversationId = null } = params
 		if (!conversationId || !data.user) return null
-		return await canAccessConversation(conversationId, data.user.id) ? await isOpen(data, params) : null
+		return (await canAccessConversation(conversationId, data.user.id)) ? await isOpen(data, params) : null
 	}
 	const coursablesCb: OnJoinFn = async (data, params) => {
 		const { quizId = null } = params
 		if (!quizId || !data.user) return null
-		return await canAccessCoursable(Coursable.quiz, quizId, data.user.id) ? await isOpen(data, params) : null
+		return (await canAccessCoursable(Coursable.quiz, quizId, data.user.id)) ? await isOpen(data, params) : null
 	}
 
 	appInstance.listener

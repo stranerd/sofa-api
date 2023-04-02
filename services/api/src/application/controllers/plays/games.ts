@@ -1,5 +1,5 @@
 import { GamesUseCases } from '@modules/plays'
-import { canAccessCoursable, Coursable, QuizzesUseCases } from '@modules/study'
+import { canAccessCoursable, Coursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -24,12 +24,10 @@ export class GameController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
-		const quiz = (await QuizzesUseCases.find(data.quizId))!
-
 		return await GamesUseCases.add({
 			quizId: data.quizId,
 			user: user.getEmbedded(),
-			questions: quiz.questions
+			questions: hasAccess.questions
 		})
 	}
 
