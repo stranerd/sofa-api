@@ -7,6 +7,7 @@ export const gamesRoutes = groupRoutes('/games', [
 		path: '/',
 		method: 'get',
 		controllers: [
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -18,6 +19,7 @@ export const gamesRoutes = groupRoutes('/games', [
 		path: '/:id',
 		method: 'get',
 		controllers: [
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -70,6 +72,18 @@ export const gamesRoutes = groupRoutes('/games', [
 				return {
 					status: StatusCodes.Ok,
 					result: await GameController.join(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/questions',
+		method: 'get',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await GameController.getQuestions(req)
 				}
 			})
 		]

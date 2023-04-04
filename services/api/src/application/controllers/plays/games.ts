@@ -1,7 +1,7 @@
 import { GamesUseCases } from '@modules/plays'
-import { canAccessCoursable, Coursable } from '@modules/study'
+import { canAccessCoursable, Coursable, QuestionsUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class GameController {
 	static async find (req: Request) {
@@ -48,5 +48,15 @@ export class GameController {
 		const updated = await GamesUseCases.start({ id: req.params.id, userId: req.authUser!.id })
 		if (updated) return updated
 		throw new NotAuthorizedError()
+	}
+
+	static async getQuestions (req: Request) {
+		const game = await GamesUseCases.find(req.params.id)
+		if (!game) throw new NotFoundError()
+		const { results: questions } = await QuestionsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: game.questions }],
+			all: true
+		})
+		return game.questions.map((id) => questions.find((q) => q.id === id)!)
 	}
 }
