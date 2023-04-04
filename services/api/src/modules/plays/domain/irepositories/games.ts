@@ -8,7 +8,8 @@ export interface IGameRepository {
 	get: (condition: QueryParams) => Promise<QueryResults<GameEntity>>
 	find: (id: string) => Promise<GameEntity | null>
 	delete: (id: string, userId: string) => Promise<boolean>
-	start: (id: string, userId: string) => Promise<GameEntity | null>
+	start: (id: string, userId: string, totalTimeInSec: number) => Promise<GameEntity | null>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	join: (id: string, userId: string, join: boolean) => Promise<GameEntity | null>
+	end: (id: string, userId: string) => Promise<GameEntity | null>
 }

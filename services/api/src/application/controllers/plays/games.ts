@@ -45,7 +45,14 @@ export class GameController {
 	}
 
 	static async start (req: Request) {
-		const updated = await GamesUseCases.start({ id: req.params.id, userId: req.authUser!.id })
+		const game = await GamesUseCases.find(req.params.id)
+		if (!game) throw new NotAuthorizedError()
+		const { results: questions } = await QuestionsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: game.questions }],
+			all: true
+		})
+		const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
+		const updated = await GamesUseCases.start({ id: req.params.id, userId: req.authUser!.id, totalTimeInSec })
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}

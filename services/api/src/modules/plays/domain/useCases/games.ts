@@ -30,11 +30,15 @@ export class GamesUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async start (input: { id: string, userId: string }) {
-		return await this.repository.start(input.id, input.userId)
+	async start (input: { id: string, userId: string, totalTimeInSec: number }) {
+		return await this.repository.start(input.id, input.userId, input.totalTimeInSec)
 	}
 
 	async join (data: { id: string, userId: string, join: boolean }) {
 		return await this.repository.join(data.id, data.userId, data.join)
+	}
+
+	async end (input: { id: string, userId: string }) {
+		return await this.repository.end(input.id, input.userId)
 	}
 }

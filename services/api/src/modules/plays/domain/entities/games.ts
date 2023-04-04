@@ -10,10 +10,11 @@ export class GameEntity extends BaseEntity {
 	public readonly participants: string[]
 	public readonly questions: string[]
 	public readonly startedAt: number | null
+	public readonly endedAt: number | null
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, quizId, user, status, participants, questions, startedAt, createdAt, updatedAt }: GameConstructorArgs) {
+	constructor ({ id, quizId, user, status, participants, questions, startedAt, endedAt, createdAt, updatedAt }: GameConstructorArgs) {
 		super()
 		this.id = id
 		this.quizId = quizId
@@ -22,6 +23,7 @@ export class GameEntity extends BaseEntity {
 		this.participants = participants
 		this.questions = questions
 		this.startedAt = startedAt
+		this.endedAt = endedAt
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -35,6 +37,7 @@ type GameConstructorArgs = {
 	participants: string[]
 	questions: string[]
 	startedAt: number | null
+	endedAt: number | null
 	createdAt: number
 	updatedAt: number
 }

@@ -5,6 +5,7 @@ export interface GameFromModel extends GameToModel {
 	status: GameStatus
 	participants: string[]
 	startedAt: number | null
+	endedAt: number | null
 	createdAt: number
 	updatedAt: number
 }

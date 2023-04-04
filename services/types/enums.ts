@@ -20,6 +20,7 @@ const Ev = makeEnum('EventTypes', {
 
 const Dj = makeEnum('DelayedJobs', {
 	RenewSubscription: 'RenewSubscription',
+	GameTimer: 'GameTimer',
 } as const)
 
 const Clj = makeEnum('CronLikeJobs', {} as const)

@@ -37,6 +37,11 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 		required: false,
 		default: null
 	},
+	endedAt: {
+		type: Number,
+		required: false,
+		default: null
+	},
 	createdAt: {
 		type: Number,
 		required: false,
