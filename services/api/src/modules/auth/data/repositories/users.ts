@@ -3,7 +3,7 @@ import { AuthTypes, Hash, NotFoundError, QueryParams } from 'equipped'
 import { IUserRepository } from '../../domain/irepositories/users'
 import { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
-import User from '../mongooseModels/users'
+import { User } from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository

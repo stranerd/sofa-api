@@ -17,7 +17,7 @@ import { IAuthRepository } from '../../domain/irepositories/auth'
 import { Credential, PasswordResetInput, Phone } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel, UserToModel } from '../models/users'
-import User from '../mongooseModels/users'
+import { User } from '../mongooseModels/users'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
