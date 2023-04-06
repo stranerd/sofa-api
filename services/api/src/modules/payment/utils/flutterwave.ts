@@ -1,4 +1,5 @@
 import { flutterwaveConfig } from '@utils/environment'
+import axios from 'axios'
 import FlutterwaveNode from 'flutterwave-node-v3'
 import { MethodToModel } from '../data/models/methods'
 import { Currencies, MethodType } from '../domain/types'
@@ -33,17 +34,25 @@ type TransferRate = {
 }
 
 export class FlutterwavePayment {
+	private static async verifyById (transactionId: string) {
+		const res = await axios.get(`/v3/transactions/verify_by_reference?tx_ref=${transactionId}`, {
+			baseURL: 'https://api.flutterwave.com',
+			headers: { Authorization: flutterwaveConfig.secretKey }
+		}).catch(() => null)
+		if (!res) return null
+		if (res.data.status !== 'success') return null
+		return res.data.data as FwTransaction | null
+	}
+
 	static async verify (transactionId: string, amount: number, currency: Currencies) {
-		const res = await flw().CustomRequest.custom(`v3/transactions/verify_by_reference?tx_ref=${transactionId}`, { method: 'GET' }).catch(() => null)
-		const transaction = res?.body?.data as FwTransaction | null
+		const transaction = await this.verifyById(transactionId)
 		if (!transaction) return false
-		if (transaction.currency !== currency || transaction.amount !== amount) return false
+		if (transaction.currency !== currency || transaction.amount !== Math.abs(amount)) return false
 		return transaction.status === 'successful'
 	}
 
 	static async saveCard (userId: string, transactionId: string): Promise<MethodToModel | null> {
-		const res = await flw().CustomRequest.custom(`v3/transactions/verify_by_reference?tx_ref=${transactionId}`, { method: 'GET' }).catch(() => null)
-		const transaction = res?.body?.data as FwTransaction | null
+		const transaction = await this.verifyById(transactionId)
 		if (!transaction) return null
 		const [month, year] = transaction.card.expiry.split('/').map((x) => parseInt(x))
 		const expireTime = new Date(2000 + year, month).getTime()

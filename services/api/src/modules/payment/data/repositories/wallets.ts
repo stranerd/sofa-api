@@ -1,4 +1,3 @@
-import { BadRequestError } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import { PlanDataType, SubscriptionModel } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
@@ -35,11 +34,12 @@ export class WalletRepository implements IWalletRepository {
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId, session))!
 			const updatedBalance = wallet.balance.amount + amount
-			if (updatedBalance < 0) throw new BadRequestError('wallet balance can\'t go below 0')
+			if (updatedBalance < 0) return false
 			res = !!(await Wallet.findByIdAndUpdate(wallet.id,
 				{ $inc: { 'balance.amount': amount } },
 				{ new: true, session }
 			))
+			return res
 		})
 		return res
 	}
