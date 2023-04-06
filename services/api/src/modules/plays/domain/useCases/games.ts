@@ -41,4 +41,8 @@ export class GamesUseCase {
 	async end (input: { id: string, userId: string }) {
 		return await this.repository.end(input.id, input.userId)
 	}
+
+	async score (data: { id: string, userId: string, scores: Record<string, number> }) {
+		return await this.repository.score(data.id, data.userId, data.scores)
+	}
 }

@@ -12,4 +12,5 @@ export interface IGameRepository {
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	join: (id: string, userId: string, join: boolean) => Promise<GameEntity | null>
 	end: (id: string, userId: string) => Promise<GameEntity | null>
+	score: (id: string, userId: string, scores: Record<string, number>) => Promise<GameEntity | null>
 }

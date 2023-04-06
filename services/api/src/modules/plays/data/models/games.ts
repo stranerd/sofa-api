@@ -4,6 +4,7 @@ export interface GameFromModel extends GameToModel {
 	_id: string
 	status: GameStatus
 	participants: string[]
+	scores: Record<string, number>
 	startedAt: number | null
 	endedAt: number | null
 	createdAt: number

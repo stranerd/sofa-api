@@ -1,10 +1,10 @@
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
-import { startGameTimer } from '..'
 import { AnswersUseCases } from '../..'
 import { GameFromModel } from '../../data/models/games'
 import { GameEntity } from '../../domain/entities/games'
 import { GameStatus } from '../../domain/types'
+import { calculateGameResults, startGameTimer } from '../games'
 
 export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity> = {
 	created: async ({ after }) => {
@@ -20,7 +20,7 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 			]).flat(), after)
 
 		if (before.status === GameStatus.created && after.status === GameStatus.started) await startGameTimer(after)
-		if (before.status === GameStatus.started && after.status === GameStatus.ended) {/* Calculate results */ }
+		if (before.status === GameStatus.started && after.status === GameStatus.ended) await calculateGameResults(after)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(

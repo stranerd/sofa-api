@@ -72,4 +72,11 @@ export class GameRepository implements IGameRepository {
 			{ $set: { status: GameStatus.ended } }, { new: true })
 		return this.mapper.mapFrom(game)
 	}
+
+	async score (id: string, userId: string, scores: Record<string, number>) {
+		const game = await Game.findOneAndUpdate(
+			{ _id: id, 'user.id': userId, status: GameStatus.ended },
+			{ $set: { scores, status: GameStatus.scored } }, { new: true })
+		return this.mapper.mapFrom(game)
+	}
 }
