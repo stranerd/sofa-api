@@ -60,6 +60,12 @@ export enum ScoreRewards {
 	newQuiz = 1
 }
 
+
+export enum UserType {
+	student = 'student',
+	teacher = 'teacher'
+}
+
 export enum UserSchoolType {
 	'aspirant' = 'aspirant',
 	'college' = 'college'
@@ -82,7 +88,13 @@ type CollegeType = {
 	departmentId: string
 }
 
-export type UserSchoolData = AspirantType | CollegeType
+export type UserTypeData = {
+	type: UserType.student,
+	school: AspirantType | CollegeType
+} | {
+	type: UserType.teacher,
+	school: string
+}
 
 export type UserTutor = {
 	conversations: string[]

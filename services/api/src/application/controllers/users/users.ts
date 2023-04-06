@@ -1,5 +1,5 @@
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
-import { UserSchoolType, UsersUseCases } from '@modules/users'
+import { UserSchoolType, UsersUseCases, UserType } from '@modules/users'
 import { BadRequestError, Conditions, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
@@ -15,46 +15,64 @@ export class UsersController {
 		return user
 	}
 
-	static async updateSchool (req: Request) {
-		const { school } = validate({
-			school: Schema.or([
+	static async updateType (req: Request) {
+		const { data } = validate({
+			data: Schema.or([
 				Schema.object({
-					type: Schema.is(UserSchoolType.college as const),
-					departmentId: Schema.string().min(1)
+					type: Schema.is(UserType.student as const),
+					school: Schema.or([
+						Schema.object({
+							type: Schema.is(UserSchoolType.college as const),
+							departmentId: Schema.string().min(1)
+						}),
+						Schema.object({
+							type: Schema.is(UserSchoolType.aspirant as const),
+							exams: Schema.array(Schema.any().custom((exam) => {
+								const matches = [Schema.string().parse(exam?.institutionId).valid]
+								matches.push(Schema.number().parse(exam?.startDate).valid)
+								matches.push(Schema.number().gte(exam?.startDate).parse(exam?.endDate).valid)
+								matches.push(Schema.array(Schema.string().min(1)).parse(exam?.courseIds).valid)
+								return matches.every((m) => m)
+							}))
+						})
+					])
 				}),
 				Schema.object({
-					type: Schema.is(UserSchoolType.aspirant as const),
-					exams: Schema.array(Schema.any().custom((exam) => {
-						const matches = [Schema.string().parse(exam?.institutionId).valid]
-						matches.push(Schema.number().parse(exam?.startDate).valid)
-						matches.push(Schema.number().gte(exam?.startDate).parse(exam?.endDate).valid)
-						matches.push(Schema.array(Schema.string().min(1)).parse(exam?.courseIds).valid)
-						return matches.every((m) => m)
-					}))
+					type: Schema.is(UserType.teacher as const),
+					school: Schema.string().min(1)
 				})
 			])
 		}, req.body)
 
-		if (school.type === UserSchoolType.college) {
-			const department = await DepartmentsUseCases.find(school.departmentId)
-			if (!department) throw new BadRequestError('department not found')
-			return await UsersUseCases.updateSchool({
-				userId: req.authUser!.id, data: {
-					...school,
-					institutionId: department.institutionId,
-					facultyId: department.facultyId,
-				}
-			})
-		} else {
-			for (const exam of school.exams) {
-				const { results: courses } = await CoursesUseCases.get({
-					where: [{ field: 'id', condition: Conditions.in, value: exam.courseIds }],
-					all: true
+		if (data.type === UserType.student) {
+			if (data.school.type === UserSchoolType.college) {
+				const department = await DepartmentsUseCases.find(data.school.departmentId)
+				if (!department) throw new BadRequestError('department not found')
+				return await UsersUseCases.updateType({
+					userId: req.authUser!.id, data: {
+						...data,
+						school: {
+							...data.school,
+							institutionId: department.institutionId,
+							facultyId: department.facultyId,
+						}
+					}
 				})
-				if (courses.length !== exam.courseIds.length) throw new BadRequestError('courses not found')
-				if (courses.find((c) => c.institutionId !== exam.institutionId)) throw new BadRequestError('mismatched courses and institutions')
+			} else if (data.school.type === UserSchoolType.aspirant) {
+				for (const exam of data.school.exams) {
+					const { results: courses } = await CoursesUseCases.get({
+						where: [{ field: 'id', condition: Conditions.in, value: exam.courseIds }],
+						all: true
+					})
+					if (courses.length !== exam.courseIds.length) throw new BadRequestError('courses not found')
+					if (courses.find((c) => c.institutionId !== exam.institutionId)) throw new BadRequestError('mismatched courses and institutions')
+				}
+				return await UsersUseCases.updateType({
+					userId: req.authUser!.id,
+					data: { ...data, school: data.school }
+				})
 			}
-			return await UsersUseCases.updateSchool({ userId: req.authUser!.id, data: school })
-		}
+		} else if (data.type === UserType.teacher) return await UsersUseCases.updateType({ userId: req.authUser!.id, data })
+		throw new BadRequestError('invalid data')
 	}
 }

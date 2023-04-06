@@ -88,7 +88,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		meta: Meta,
 		streak: UserStreak
 	},
-	school: {
+	type: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: null

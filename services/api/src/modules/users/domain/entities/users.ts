@@ -1,6 +1,6 @@
 import { BaseEntity, Validation } from 'equipped'
 import { getNextRank, getRank } from '../../utils/ranks'
-import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserSchoolData, UserStatus, UserTutor } from '../types'
+import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserTutor, UserTypeData } from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -9,10 +9,10 @@ export class UserEntity extends BaseEntity {
 	public readonly dates: UserDates
 	public readonly status: UserStatus
 	public readonly account: UserAccount
-	public readonly school: UserSchoolData | null
+	public readonly type: UserTypeData | null
 	public readonly tutor: UserTutor
 
-	constructor ({ id, bio, roles, dates, status, account, school, tutor }: UserConstructorArgs) {
+	constructor ({ id, bio, roles, dates, status, account, type, tutor }: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = generateDefaultBio(bio ?? {})
@@ -20,7 +20,7 @@ export class UserEntity extends BaseEntity {
 		this.dates = dates
 		this.status = status
 		this.account = account
-		this.school = school
+		this.type = type
 		this.tutor = tutor
 	}
 
@@ -59,7 +59,7 @@ type UserConstructorArgs = {
 	dates: UserDates
 	status: UserStatus
 	account: UserAccount
-	school: UserSchoolData | null
+	type: UserTypeData | null
 	tutor: UserTutor
 }
 

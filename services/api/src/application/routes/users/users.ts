@@ -4,14 +4,14 @@ import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
 export const usersRoutes = groupRoutes('/users', [
 	{
-		path: '/school',
+		path: '/type',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await UsersController.updateSchool(req)
+					result: await UsersController.updateType(req)
 				}
 			})
 		]

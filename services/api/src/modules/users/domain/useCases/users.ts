@@ -1,6 +1,6 @@
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../irepositories/users'
-import { UserAccount, UserBio, UserRoles, UserSchoolData } from '../types'
+import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -49,8 +49,8 @@ export class UsersUseCase {
 		return await this.repository.updateNerdScore(params.userId, params.amount)
 	}
 
-	async updateSchool (params: { userId: string, data: UserSchoolData }) {
-		return await this.repository.updateUserSchoolData(params.userId, params.data)
+	async updateType (params: { userId: string, data: UserTypeData }) {
+		return await this.repository.updateUserType(params.userId, params.data)
 	}
 
 	async updateTutorConversations (params: { userId: string, conversationId: string, add: boolean }) {

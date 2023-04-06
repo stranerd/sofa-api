@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/types'
 import { IUserRepository } from '../../domain/irepositories/users'
-import { UserAccount, UserBio, UserRankings, UserRoles, UserSchoolData } from '../../domain/types'
+import { UserAccount, UserBio, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
@@ -113,9 +113,9 @@ export class UserRepository implements IUserRepository {
 		return !!res.acknowledged
 	}
 
-	async updateUserSchoolData (userId: string, data: UserSchoolData) {
-		const user = await User.findByIdAndUpdate(userId, { $set: { school: data } })
-		return !!user
+	async updateUserType (userId: string, data: UserTypeData) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { type: data } })
+		return this.mapper.mapFrom(user)
 	}
 
 	async updateTutorConversations (userId: string, conversationId: string, add: boolean) {
