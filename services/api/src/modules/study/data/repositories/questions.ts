@@ -1,9 +1,11 @@
+import { DraftStatus } from '@modules/study/domain/types'
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IQuestionRepository } from '../../domain/irepositories/questions'
 import { QuestionMapper } from '../mappers/questions'
 import { QuestionToModel } from '../models/questions'
 import { Question } from '../mongooseModels/questions'
+import { Quiz } from '../mongooseModels/quizzes'
 
 export class QuestionRepository implements IQuestionRepository {
 	private static instance: QuestionRepository
@@ -45,8 +47,15 @@ export class QuestionRepository implements IQuestionRepository {
 	}
 
 	async delete (quizId: string, id: string, userId: string) {
-		const question = await Question.findOneAndDelete({ _id: id, userId, quizId })
-		return !!question
+		let res = false
+		await Question.collection.conn.transaction(async (session) => {
+			const quiz = await Quiz.findById(quizId, {}, { session })
+			if (!quiz || quiz.user.id !== userId || quiz.status !== DraftStatus.draft) return false
+			const question = await Question.findOneAndDelete({ _id: id, userId, quizId }, { session })
+			res = !!question
+			return res
+		})
+		return res
 	}
 
 	async deleteQuizQuestions (quizId: string) {

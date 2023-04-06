@@ -7,10 +7,10 @@ export const startGameTimer = async (game: GameEntity) => {
 	const cachedJobId = await appInstance.cache.get(cacheKey)
 	if (cachedJobId) return
 	let endsIn = (game.endedAt ?? 0) - Date.now()
-	if (endsIn < 3000) endsIn = 3000
+	if (endsIn < 5000) endsIn = 5000
 	const jobId = await appInstance.job.addDelayedJob({
 		type: DelayedJobs.GameTimer,
 		data: { gameId: game.id, userId: game.user.id },
 	}, endsIn)
-	await appInstance.cache.set(cacheKey, jobId, endsIn * 1000)
+	await appInstance.cache.set(cacheKey, jobId, endsIn / 1000)
 }

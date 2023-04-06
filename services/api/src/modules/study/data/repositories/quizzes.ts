@@ -79,9 +79,8 @@ export class QuizRepository implements IQuizRepository {
 	async reorder (id: string, userId: string, questionIds: string[]) {
 		let res = null as QuizFromModel | null
 		await Quiz.collection.conn.transaction(async (session) => {
-			const quizRaw = await Quiz.findOne({ _id: id, 'user.id': userId }, null, { session })
-			if (!quizRaw) return
-			const quiz = this.mapper.mapFrom(quizRaw)!
+			const quiz = await Quiz.findOne({ _id: id, 'user.id': userId }, null, { session })
+			if (!quiz) return
 			if (!compareArrayContents(quiz.questions, questionIds)) return
 			res = await Quiz.findByIdAndUpdate(id, { $set: { questions: questionIds } }, { new: true, session })
 		})

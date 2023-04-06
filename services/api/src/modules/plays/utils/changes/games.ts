@@ -20,12 +20,13 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 			]).flat(), after)
 
 		if (before.status === GameStatus.created && after.status === GameStatus.started) await startGameTimer(after)
+		if (before.status === GameStatus.started && after.status === GameStatus.ended) {/* Calculate results */ }
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
 			before.participants.concat(before.user.id).map((uid) => [
 				`plays/games/${uid}`, `plays/games/${before.id}/${uid}`
-			]).flat(), before) 
+			]).flat(), before)
 
 		await AnswersUseCases.deleteGameAnswers(before.id)
 	}

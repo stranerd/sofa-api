@@ -50,7 +50,7 @@ export class GameRepository implements IGameRepository {
 
 	async start (id: string, userId: string, totalTimeInSec: number) {
 		const startedAt = Date.now()
-		const endedAt = startedAt + (totalTimeInSec + 3) * 1000
+		const endedAt = startedAt + (totalTimeInSec + 5) * 1000
 		const game = await Game.findOneAndUpdate(
 			{ _id: id, 'user.id': userId, status: GameStatus.created },
 			{ $set: { startedAt, endedAt, status: GameStatus.started } }, { new: true })
