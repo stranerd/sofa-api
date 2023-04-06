@@ -65,5 +65,7 @@ export class GameController {
 			all: true
 		})
 		return game.questions.map((id) => questions.find((q) => q.id === id)!)
+			.filter((q) => !!q)
+			.map((q) => q.strip())
 	}
 }

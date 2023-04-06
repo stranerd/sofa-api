@@ -26,15 +26,15 @@ export class QuestionEntity extends BaseEntity {
 	}
 
 	strip () {
-		return structuredClone({
+		return {
 			...this,
 			data: this.stripAnswers(this.data)
-		})
+		}
 	}
 
 	private stripAnswers (data: QuestionData): StrippedQuestionData {
 		if (data.type === QuestionTypes.multipleChoice) {
-			return { type: data.type, options: data.options }
+			return { type: data.type, options: data.options, allowsMoreThanOneAnswer: data.answers.length > 1 }
 		} else if (data.type === QuestionTypes.trueOrFalse) {
 			return { type: data.type }
 		} else if (data.type === QuestionTypes.writeAnswer) {
