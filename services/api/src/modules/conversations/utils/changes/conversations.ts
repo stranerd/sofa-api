@@ -50,6 +50,12 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 			...(before.tutor ? [`conversations/conversations/${before.tutor.id}`, `conversations/conversations/${before.id}/${before.tutor.id}`] : [])
 		], before)
 
+		if (before.tutor) await UsersUseCases.updateTutorConversations({
+			userId: before.tutor.id,
+			conversationId: before.id,
+			add: false
+		})
+
 		await MessagesUseCases.deleteConversationMessages(before.id)
 	}
 }
