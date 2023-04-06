@@ -17,7 +17,12 @@ export class AnswerController {
 	static async answer (req: Request) {
 		const data = validate({
 			questionId: Schema.string().min(1),
-			answer: Schema.any()
+			answer: Schema.or([
+				Schema.array(Schema.number()),
+				Schema.boolean(),
+				Schema.string().min(1),
+				Schema.array(Schema.string())
+			])
 		}, req.body)
 		return await AnswersUseCases.answer({ ...data, gameId: req.params.gameId, userId: req.authUser!.id })
 	}

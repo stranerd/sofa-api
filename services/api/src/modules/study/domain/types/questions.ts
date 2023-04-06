@@ -35,24 +35,25 @@ export type QuestionData = {
 }
 
 export type StrippedQuestionData = {
-	type: QuestionTypes.multipleChoice,
-	allowsMoreThanOneAnswer: boolean,
+	type: QuestionTypes.multipleChoice
+	allowsMoreThanOneAnswer: boolean
 	options: string[]
 } | {
 	type: QuestionTypes.trueOrFalse
 } | {
 	type: QuestionTypes.writeAnswer
 } | {
-	type: QuestionTypes.fillInBlanks,
+	type: QuestionTypes.fillInBlanks
 	indicator: string
 } | {
-	type: QuestionTypes.dragAnswers,
+	type: QuestionTypes.dragAnswers
 	indicator: string
 	answers: string[]
 } | {
 	type: QuestionTypes.sequence
 	answers: string[]
 } | {
-	type: QuestionTypes.match,
-	set: { q: string }[]
+	type: QuestionTypes.match
+	questions: string[]
+	answers: string[]
 }
