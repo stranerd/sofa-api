@@ -43,3 +43,7 @@ export type CourseSections = {
 	label: string
 	items: { id: string, type: Coursable }[]
 }[]
+
+export enum QuizMetaType {
+	games = 'games',
+}

@@ -1,3 +1,4 @@
+import { QuizMetaType, QuizzesUseCases } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { AnswersUseCases } from '../..'
@@ -12,6 +13,8 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 			after.participants.concat(after.user.id).map((uid) => [
 				`plays/games/${uid}`, `plays/games/${after.id}/${uid}`
 			]).flat(), after)
+
+		await QuizzesUseCases.updateMeta({ id: after.quizId, property: QuizMetaType.games, value: 1 })
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
@@ -28,6 +31,7 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 				`plays/games/${uid}`, `plays/games/${before.id}/${uid}`
 			]).flat(), before)
 
+		await QuizzesUseCases.updateMeta({ id: before.quizId, property: QuizMetaType.games, value: -1 })
 		await AnswersUseCases.deleteGameAnswers(before.id)
 	}
 }

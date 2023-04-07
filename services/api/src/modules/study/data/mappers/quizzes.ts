@@ -5,10 +5,10 @@ import { QuizFromModel, QuizToModel } from '../models/quizzes'
 export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntity> {
 	mapFrom (model: QuizFromModel | null) {
 		if (!model) return null
-		const { _id, title, description, photo, questions, courseId, user, tagId, status, createdAt, updatedAt } = model
+		const { _id, title, description, photo, questions, courseId, user, tagId, status, meta, createdAt, updatedAt } = model
 		return new QuizEntity({
-			id: _id.toString(), title, description, photo,
-			questions, courseId, user, tagId, status, createdAt, updatedAt
+			id: _id.toString(), title, description, photo, questions,
+			courseId, user, tagId, status, meta, createdAt, updatedAt
 		})
 	}
 

@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IQuizRepository } from '../../domain/irepositories/quizzes'
-import { DraftStatus, EmbeddedUser } from '../../domain/types'
+import { DraftStatus, EmbeddedUser, QuizMetaType } from '../../domain/types'
 import { compareArrayContents } from '../../utils'
 import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel, QuizToModel } from '../models/quizzes'
@@ -90,5 +90,11 @@ export class QuizRepository implements IQuizRepository {
 	async deleteCourseQuizzes (courseId: string) {
 		const quizzes = await Quiz.deleteMany({ courseId })
 		return quizzes.acknowledged
+	}
+
+	async updateMeta (commentId: string, property: QuizMetaType, value: 1 | -1) {
+		await Quiz.findByIdAndUpdate(commentId, {
+			$inc: { [`meta.${property}`]: value }
+		})
 	}
 }
