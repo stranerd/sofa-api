@@ -14,6 +14,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly roles: AuthRoles
 	public readonly lastSignedInAt: number
 	public readonly signedUpAt: number
+	ignoreInJSON = ['password']
 
 	constructor (data: UserConstructorArgs) {
 		super()

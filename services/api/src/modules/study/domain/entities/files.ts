@@ -15,6 +15,7 @@ export class FileEntity extends BaseEntity implements CoursableData {
 	public readonly status: CoursableData['status']
 	public readonly createdAt: number
 	public readonly updatedAt: number
+	ignoreInJSON = ['media']
 
 	constructor ({ id, title, description, media, photo, type, courseId, user, tagId, status, createdAt, updatedAt }: FileConstructorArgs) {
 		super()

@@ -1,6 +1,6 @@
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { FilesUseCases, QuizzesUseCases } from '..'
-import { Coursable } from '../domain/types'
+import { Coursable, DraftStatus } from '../domain/types'
 
 const finders = {
 	[Coursable.quiz]: QuizzesUseCases,
@@ -10,9 +10,11 @@ const finders = {
 type Type<T extends Coursable> = Awaited<ReturnType<typeof finders[T]['find']>>
 
 export const canAccessCoursable = async<T extends Coursable> (type: T, coursableId: string, userId: string): Promise<Type<T> | null> => {
-	const [coursable, purchase] = await Promise.all([
-		finders[type]?.find(coursableId),
-		PurchasesUseCases.for({ userId, type: Purchasables.courses, itemId: coursableId })
-	])
-	return (purchase || coursable?.user.id === userId) ? coursable as any : null
+	const coursable = await finders[type]?.find(coursableId) ?? null
+	if (!coursable) return null
+	if (coursable.user.id === userId) return coursable as any
+	if (coursable.status === DraftStatus.draft) return null
+	if (!coursable.courseId) return coursable as any
+	const purchase = await PurchasesUseCases.for({ userId, type: Purchasables.courses, itemId: coursable.courseId })
+	return purchase ? coursable as any : null
 }
