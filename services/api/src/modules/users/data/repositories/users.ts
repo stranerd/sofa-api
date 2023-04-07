@@ -135,4 +135,18 @@ export class UserRepository implements IUserRepository {
 		const user = await User.findByIdAndUpdate(userId, { $set: ai }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
+
+	async updateRatings (userId: string, ratings: number, add: boolean) {
+		let res = false
+		await User.collection.conn.transaction(async (session) => {
+			const user = await User.findById(userId, {}, { session })
+			if (!user) return res
+			user.account.ratings.total += (add ? 1 : -1) * ratings
+			user.account.ratings.count += add ? 1 : -1
+			user.account.ratings.avg = Number((user.account.ratings.total / user.account.ratings.count).toFixed(2))
+			res = !!(await user.save({ session }))
+			return res
+		})
+		return res
+	}
 }

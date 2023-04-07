@@ -45,6 +45,24 @@ const UserStreak = {
 	}
 }
 
+const UserRatings = {
+	total: {
+		type: Number,
+		required: false,
+		default: 0
+	},
+	count: {
+		type: Number,
+		required: false,
+		default: 0
+	},
+	avg: {
+		type: Number,
+		required: false,
+		default: 0
+	}
+}
+
 const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 	_id: {
 		type: String,
@@ -86,7 +104,8 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 	account: {
 		rankings: Rankings,
 		meta: Meta,
-		streak: UserStreak
+		streak: UserStreak,
+		ratings: UserRatings
 	},
 	type: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,

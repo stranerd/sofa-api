@@ -31,6 +31,11 @@ export type UserAccount = {
 		longestStreak: number
 		lastEvaluatedAt: number
 	}
+	ratings: {
+		total: number
+		count: number
+		avg: number
+	}
 }
 
 export type EmbeddedUser = {

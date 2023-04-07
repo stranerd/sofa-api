@@ -60,4 +60,8 @@ export class UsersUseCase {
 	async updateAi (params: { userId: string, ai: Partial<UserAi> }) {
 		return await this.repository.updateAi(params.userId, params.ai)
 	}
+
+	async updateRatings (input: { userId: string, ratings: number, add: boolean }) {
+		return await this.repository.updateRatings(input.userId, input.ratings, input.add)
+	}
 }
