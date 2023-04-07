@@ -3,9 +3,11 @@ import { QueryParams } from 'equipped'
 import { IConversationRepository } from '../../domain/irepositories/conversations'
 import { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
-import { ConversationToModel } from '../models/conversations'
+import { ConversationFromModel, ConversationToModel } from '../models/conversations'
 import { MessageFromModel } from '../models/messages'
+import { ReviewToModel } from '../models/reviews'
 import { Conversation } from '../mongooseModels/conversations'
+import { Review } from '../mongooseModels/reviews'
 
 export class ConversationRepository implements IConversationRepository {
 	private static instance: ConversationRepository
@@ -52,11 +54,30 @@ export class ConversationRepository implements IConversationRepository {
 		return !!conversation
 	}
 
-	async setTutor (id: string, userId: string, tutor: EmbeddedUser | null) {
+	async addTutor (id: string, userId: string, tutor: EmbeddedUser) {
 		const conversation = await Conversation.findOneAndUpdate({
-			_id: id, 'user.id': userId, tutor: { [tutor ? '$eq' : '$ne']: null }
+			_id: id, 'user.id': userId, tutor: null
 		}, { $set: { tutor } }, { new: true })
 		return this.mapper.mapFrom(conversation)
+	}
+
+	async removeTutor (data: Omit<ReviewToModel, 'to'>) {
+		let res = null as ConversationFromModel | null
+		await Conversation.collection.conn.transaction(async (session) => {
+			const conversation = await Conversation.findById(data.conversationId, {}, { session })
+			if (!conversation) return
+			if (conversation.user.id !== data.user.id) return
+			if (!conversation.tutor) return
+			const updatedConversation = await Conversation.findByIdAndUpdate(data.conversationId, {
+				$set: { tutor: null }
+			}, { new: true, session })
+			await Review.findOneAndUpdate({
+				conversationId: data.conversationId, to: conversation.tutor.id
+			}, { $set: { ...data, to: conversation.tutor.id } }, { new: true, upsert: true, session })
+			res = updatedConversation
+			return res
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async updateLastMessage (message: MessageFromModel) {

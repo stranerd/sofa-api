@@ -54,10 +54,9 @@ export class ConversationController {
 		if (!tutor.canJoinConversations()) throw new BadRequestError('tutor can\'t join conversations right now')
 
 		const wallet = await WalletsUseCases.get(req.authUser!.id)
-		if (!wallet.canAddTutorToConversation())
-			throw new BadRequestError('you can\'t add a tutor to your conversations')
+		if (!wallet.canAddTutorToConversation()) throw new BadRequestError('you can\'t add a tutor to your conversations')
 
-		const updatedConversation = await ConversationsUseCases.setTutor({
+		const updatedConversation = await ConversationsUseCases.addTutor({
 			id: req.params.id,
 			userId: req.authUser!.id,
 			tutor: tutor.getEmbedded()
@@ -68,10 +67,17 @@ export class ConversationController {
 	}
 
 	static async removeTutor (req: Request) {
-		const updatedConversation = await ConversationsUseCases.setTutor({
-			id: req.params.id,
-			userId: req.authUser!.id,
-			tutor: null
+		const { rating, message } = validate({
+			rating: Schema.number().round(0).gte(0).lte(5),
+			message: Schema.string()
+		}, req.body)
+
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+
+		const updatedConversation = await ConversationsUseCases.removeTutor({
+			rating, message, conversationId: req.params.id,
+			user: user.getEmbedded()
 		})
 
 		if (updatedConversation) return updatedConversation
