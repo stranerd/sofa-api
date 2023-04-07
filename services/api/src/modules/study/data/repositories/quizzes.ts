@@ -86,4 +86,9 @@ export class QuizRepository implements IQuizRepository {
 		})
 		return this.mapper.mapFrom(res)
 	}
+
+	async deleteCourseQuizzes (courseId: string) {
+		const quizzes = await Quiz.deleteMany({ courseId })
+		return quizzes.acknowledged
+	}
 }

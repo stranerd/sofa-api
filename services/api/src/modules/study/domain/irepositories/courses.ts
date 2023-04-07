@@ -13,5 +13,6 @@ export interface ICourseRepository {
 	publish: (id: string, userId: string) => Promise<CourseEntity | null>
 	freeze: (id: string, userId: string) => Promise<CourseEntity | null>
 	move: (id: string, coursableId: string, type: Coursable, userId: string, add: boolean) => Promise<CourseEntity | null>
+	remove: (id: string, coursableId: string, type: Coursable) => Promise<boolean>
 	updateSections: (id: string, userId: string, sections: CourseSections) => Promise<CourseEntity | null>
 }

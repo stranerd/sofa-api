@@ -46,6 +46,10 @@ export class CoursesUseCase {
 		return await this.repository.move(input.id, input.coursableId, input.type, input.userId, input.add)
 	}
 
+	async remove (input: { id: string, type: Coursable, coursableId: string }) {
+		return await this.repository.remove(input.id, input.coursableId, input.type)
+	}
+
 	async updateSections (input: { id: string, userId: string, sections: CourseSections }) {
 		return await this.repository.updateSections(input.id, input.userId, input.sections)
 	}

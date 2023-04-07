@@ -108,6 +108,23 @@ export class CourseRepository implements ICourseRepository {
 		return this.mapper.mapFrom(res)
 	}
 
+	async remove (id: string, coursableId: string, type: Coursable) {
+		let res = false
+		await Course.collection.conn.transaction(async (session) => {
+			const course = await Course.findById(id, null, { session })
+			if (!course) return false
+			course.coursables = course.coursables.filter((c) => !(c.id === coursableId && c.type === type))
+			course.sections = course.sections.map((s) => ({
+				...s,
+				items: s.items.filter((i) => !(i.id === coursableId && i.type === type))
+			}))
+			const updatedCourse = await course.save({ session })
+			res = !!updatedCourse
+			return res
+		})
+		return res
+	}
+
 	async updateSections (id: string, userId: string, sections: CourseSections) {
 		let res = null as CourseFromModel | null
 		await Course.collection.conn.transaction(async (session) => {

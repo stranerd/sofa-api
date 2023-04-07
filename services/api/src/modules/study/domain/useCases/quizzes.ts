@@ -45,4 +45,8 @@ export class QuizzesUseCase {
 	async reorder (input: { id: string, userId: string, questionIds: string[] }) {
 		return await this.repository.reorder(input.id, input.userId, input.questionIds)
 	}
+
+	async deleteCourseQuizzes (courseId: string) {
+		return await this.repository.deleteCourseQuizzes(courseId)
+	}
 }

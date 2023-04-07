@@ -4,6 +4,12 @@ export { EmbeddedUser, Media }
 import { EmbeddedUser } from '@modules/users'
 import { MediaOutput as Media } from 'equipped'
 
+export enum FileType {
+	video = 'video',
+	image = 'image',
+	document = 'document',
+}
+
 export enum FolderSaved {
 	courses = 'courses',
 	quizzes = 'quizzes'
