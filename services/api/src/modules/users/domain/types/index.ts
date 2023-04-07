@@ -103,3 +103,9 @@ export type UserTypeData = {
 export type UserTutor = {
 	conversations: string[]
 }
+
+export type UserAi = {
+	photo: MediaOutput | null
+	name: string
+	tagline: string
+}

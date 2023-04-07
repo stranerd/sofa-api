@@ -1,6 +1,7 @@
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
+import { UploaderUseCases } from '@modules/storage'
 import { UserSchoolType, UsersUseCases, UserType } from '@modules/users'
-import { BadRequestError, Conditions, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
 	static async get (req: Request) {
@@ -74,5 +75,27 @@ export class UsersController {
 			}
 		} else if (data.type === UserType.teacher) return await UsersUseCases.updateType({ userId: req.authUser!.id, data })
 		throw new BadRequestError('invalid data')
+	}
+
+	static async updateAi (req: Request) {
+		const uploadedPhoto = req.files.photo?.at(0) ?? null
+		const changedPhoto = !!uploadedPhoto || req.body.photo === null
+
+		const { name, tagline } = validate({
+			name: Schema.string().min(1),
+			tagline: Schema.string().min(1),
+			photo: Schema.file().image().nullable()
+		}, { ...req.body, photo: uploadedPhoto })
+
+		const photo = uploadedPhoto ? await UploaderUseCases.upload('users/ai', uploadedPhoto) : undefined
+		const user = await UsersUseCases.updateAi({
+			userId: req.authUser!.id,
+			ai: {
+				name, tagline,
+				...(changedPhoto ? { photo } : {})
+			}
+		})
+		if (user) return user
+		throw new NotAuthorizedError('')
 	}
 }

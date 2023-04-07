@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/types'
 import { IUserRepository } from '../../domain/irepositories/users'
-import { UserAccount, UserBio, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
+import { UserAccount, UserAi, UserBio, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
@@ -115,7 +115,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async updateUserType (userId: string, data: UserTypeData) {
-		const user = await User.findByIdAndUpdate(userId, { $set: { type: data } })
+		const user = await User.findByIdAndUpdate(userId, { $set: { type: data } }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
 
@@ -124,5 +124,14 @@ export class UserRepository implements IUserRepository {
 			[add ? '$addToSet' : '$pull']: { 'tutor.conversations': conversationId }
 		})
 		return !!user
+	}
+
+	async updateAi (userId: string, ai: Partial<UserAi>) {
+		ai = Object.fromEntries(
+			Object.entries(ai)
+				.map(([key, value]) => [`ai.${key}`, value])
+		)
+		const user = await User.findByIdAndUpdate(userId, { $set: ai }, { new: true })
+		return this.mapper.mapFrom(user)
 	}
 }

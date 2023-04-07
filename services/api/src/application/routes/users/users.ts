@@ -5,13 +5,25 @@ import { groupRoutes, makeController, StatusCodes } from 'equipped'
 export const usersRoutes = groupRoutes('/users', [
 	{
 		path: '/type',
-		method: 'put',
+		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
 					result: await UsersController.updateType(req)
+				}
+			})
+		]
+	}, {
+		path: '/ai',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateAi(req)
 				}
 			})
 		]

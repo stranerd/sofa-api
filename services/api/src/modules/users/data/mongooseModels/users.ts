@@ -99,6 +99,23 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			required: false,
 			default: []
 		}
+	},
+	ai: {
+		photo: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: null
+		},
+		name: {
+			type: String,
+			required: false,
+			default: 'Dr. Sofa'
+		},
+		tagline: {
+			type: String,
+			required: false,
+			default: 'AI assistant'
+		}
 	}
 }, { minimize: false })
 
