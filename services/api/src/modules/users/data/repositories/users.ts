@@ -3,6 +3,7 @@ import { IUserRepository } from '../../domain/irepositories/users'
 import { UserAccount, UserAi, UserBio, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
+import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
@@ -75,36 +76,36 @@ export class UserRepository implements IUserRepository {
 		})
 	}
 
-	private async updateUserStreak (userId: string) {
-		const res = { skip: false, increase: false, reset: false, streak: 0 }
-		await User.collection.conn.transaction(async (session) => {
-			const userModel = await User.findById(userId, null, { session })
-			const user = this.mapper.mapFrom(userModel)
-			const { lastEvaluatedAt = 0, count = 0, longestStreak = 0 } = user?.account?.streak ?? {}
-			const { isLessThan, isNextDay } = getDateDifference(new Date(lastEvaluatedAt), new Date())
+	private async updateUserStreak (user: UserFromModel, session: any) {
+		const { lastEvaluatedAt = 0, count = 0, longestStreak = 0 } = user?.account?.streak ?? {}
+		const { isLessThan, isNextDay } = getDateDifference(new Date(lastEvaluatedAt), new Date())
 
-			res.skip = isLessThan
-			res.increase = !isLessThan && isNextDay
-			res.reset = !isLessThan && !isNextDay
-			res.streak = !isLessThan && isNextDay ? count + 1 : 1
-
-			const updateData = {
-				'account.streak.lastEvaluatedAt': Date.now(),
-				'account.streak.count': res.increase ? count + 1 : 1
-			}
-			if (res.increase && count + 1 > longestStreak) updateData['account.streak.longestStreak'] = count + 1
-			if (!res.skip) await User.findByIdAndUpdate(userId, { $set: updateData }, { session })
-		})
+		const res = {
+			skip: isLessThan, increase: !isLessThan && isNextDay, reset: !isLessThan && !isNextDay,
+			streak: !isLessThan && isNextDay ? count + 1 : 1
+		}
+		const updateData = {
+			'account.streak.lastEvaluatedAt': Date.now(),
+			'account.streak.count': res.increase ? count + 1 : 1
+		}
+		if (res.increase && count + 1 > longestStreak) updateData['account.streak.longestStreak'] = count + 1
+		if (!res.skip) await User.findByIdAndUpdate(user._id, { $set: updateData }, { session })
 		return res
 	}
 
 	async updateUserStatus (userId: string, socketId: string, add: boolean) {
-		const user = await User.findByIdAndUpdate(userId, {
-			$set: { 'status.lastUpdatedAt': Date.now() },
-			[add ? '$addToSet' : '$pull']: { 'status.connections': socketId }
+		let res = false
+		await User.collection.conn.transaction(async (session) => {
+			const user = await User.findByIdAndUpdate(userId, {
+				$set: { 'status.lastUpdatedAt': Date.now() },
+				[add ? '$addToSet' : '$pull']: { 'status.connections': socketId }
+			}, { session, new: true })
+			if (!user) return false
+			if (add) await this.updateUserStreak(user, session)
+			res = !!user
+			return res
 		})
-		if (add) await this.updateUserStreak(userId)
-		return !!user
+		return res
 	}
 
 	async resetAllUsersStatus () {
