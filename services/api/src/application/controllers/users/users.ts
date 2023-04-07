@@ -28,13 +28,14 @@ export class UsersController {
 						}),
 						Schema.object({
 							type: Schema.is(UserSchoolType.aspirant as const),
-							exams: Schema.array(Schema.any().custom((exam) => {
-								const matches = [Schema.string().parse(exam?.institutionId).valid]
-								matches.push(Schema.number().parse(exam?.startDate).valid)
-								matches.push(Schema.number().gte(exam?.startDate).parse(exam?.endDate).valid)
-								matches.push(Schema.array(Schema.string().min(1)).parse(exam?.courseIds).valid)
-								return matches.every((m) => m)
-							}))
+							exams: Schema.array(
+								Schema.object({
+									institutionId: Schema.string().min(1),
+									startDate: Schema.time().asStamp(),
+									endDate: Schema.time().asStamp(),
+									courseIds: Schema.array(Schema.string().min(1))
+								}).custom((exam) => exam.endDate >= exam.startDate, 'end date cannot be less than start date')
+							)
 						})
 					])
 				}),
