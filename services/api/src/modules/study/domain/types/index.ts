@@ -12,7 +12,8 @@ export enum FileType {
 
 export enum FolderSaved {
 	courses = 'courses',
-	quizzes = 'quizzes'
+	quizzes = 'quizzes',
+	files = 'files'
 }
 
 export enum DraftStatus {
@@ -30,7 +31,8 @@ export type Publishable = {
 }
 
 export enum Coursable {
-	quiz = 'quiz'
+	quiz = 'quiz',
+	file = 'file'
 }
 
 export type CoursableData = Publishable & {

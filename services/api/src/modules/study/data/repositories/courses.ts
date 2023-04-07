@@ -6,6 +6,7 @@ import { compareArrayContents } from '../../utils'
 import { CourseMapper } from '../mappers/courses'
 import { CourseFromModel, CourseToModel } from '../models/courses'
 import { Course } from '../mongooseModels/courses'
+import { File } from '../mongooseModels/files'
 import { Quiz } from '../mongooseModels/quizzes'
 
 export class CourseRepository implements ICourseRepository {
@@ -65,7 +66,10 @@ export class CourseRepository implements ICourseRepository {
 			}, { $set: { status: DraftStatus.published } }, { new: true, session })
 			if (!course) return
 
-			await Quiz.updateMany({ courseId: id }, { $set: { status: DraftStatus.published } }, { session })
+			await Promise.all([
+				Quiz.updateMany({ courseId: id }, { $set: { status: DraftStatus.published } }, { session }),
+				File.updateMany({ courseId: id }, { $set: { status: DraftStatus.published } }, { session })
+			])
 
 			res = course
 			return res
@@ -83,8 +87,9 @@ export class CourseRepository implements ICourseRepository {
 	async move (id: string, coursableId: string, type: Coursable, userId: string, add: boolean) {
 		let res = null as CourseFromModel | null
 		const finder = {
-			[Coursable.quiz]: Quiz
-		}[type]
+			[Coursable.quiz]: Quiz,
+			[Coursable.file]: File
+		}[type as Coursable.file]
 		await Course.collection.conn.transaction(async (session) => {
 			if (!finder) return
 			const [course, coursable] = await Promise.all([

@@ -47,8 +47,8 @@ export class QuizRepository implements IQuizRepository {
 	}
 
 	async updateUserBio (user: EmbeddedUser) {
-		const quizs = await Quiz.updateMany({ 'user.id': user.id }, { $set: { user } })
-		return quizs.acknowledged
+		const quizzes = await Quiz.updateMany({ 'user.id': user.id }, { $set: { user } })
+		return quizzes.acknowledged
 	}
 
 	async delete (id: string, userId: string) {

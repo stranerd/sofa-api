@@ -1,9 +1,10 @@
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
-import { QuizzesUseCases } from '..'
+import { FilesUseCases, QuizzesUseCases } from '..'
 import { Coursable } from '../domain/types'
 
 const finders = {
-	[Coursable.quiz]: QuizzesUseCases
+	[Coursable.quiz]: QuizzesUseCases,
+	[Coursable.file]: FilesUseCases,
 }
 
 type Type<T extends Coursable> = Awaited<ReturnType<typeof finders[T]['find']>>

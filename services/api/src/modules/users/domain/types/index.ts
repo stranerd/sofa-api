@@ -44,6 +44,9 @@ export enum UserMeta {
 
 	courses = 'courses',
 	quizzes = 'quizzes',
+	documents = 'documents',
+	images = 'images',
+	videos = 'videos',
 	folders = 'folders'
 }
 
@@ -57,6 +60,7 @@ export enum UserRankings {
 export enum ScoreRewards {
 	newCourse = 1,
 	newFolder = 0.05,
+	newFile = 1,
 	newQuiz = 1
 }
 
