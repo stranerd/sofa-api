@@ -7,11 +7,11 @@ import { FileFromModel } from '../../data/models/files'
 import { FileEntity } from '../../domain/entities/files'
 import { Coursable, FileType, FolderSaved } from '../../domain/types'
 
-const prop = {
+const getProp = (type: FileType) => ({
 	[FileType.document]: UserMeta.documents,
 	[FileType.image]: UserMeta.images,
 	[FileType.video]: UserMeta.videos,
-}
+})[type]
 
 export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity> = {
 	created: async ({ after }) => {
@@ -21,7 +21,7 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 			userId: after.user.id,
 			amount: ScoreRewards.newFile
 		})
-		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: prop[after.type] })
+		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: getProp(after.type) })
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['study/files', `study/files/${after.id}`], after)
@@ -37,7 +37,7 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 			userId: before.user.id,
 			amount: -ScoreRewards.newFile
 		})
-		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: prop[before.type] })
+		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: getProp(before.type) })
 		await publishers.DELETEFILE.publish(before.media)
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}
