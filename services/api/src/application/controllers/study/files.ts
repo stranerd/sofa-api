@@ -42,7 +42,7 @@ export class FileController {
 		})
 
 		const tag = await TagsUseCases.find(data.tagId)
-		if (!tag) throw new BadRequestError('tag not found')
+		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')

@@ -20,6 +20,10 @@ export class TagEntity extends BaseEntity {
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
+
+	isTopic () {
+		return this.type === TagTypes.topics
+	}
 }
 
 type TagConstructorArgs = {
