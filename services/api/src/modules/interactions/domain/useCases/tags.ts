@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { TagToModel } from '../../data/models/tags'
 import { ITagRepository } from '../irepositories/tags'
+import { TagMeta } from '../types'
 
 export class TagsUseCase {
 	private repository: ITagRepository
@@ -27,5 +28,9 @@ export class TagsUseCase {
 
 	async update (input: { id: string, data: Partial<TagToModel> }) {
 		return await this.repository.update(input.id, input.data)
+	}
+
+	async updateMeta (data: { ids: string[], property: TagMeta, value: 1 | -1 }) {
+		return this.repository.updateMeta(data.ids, data.property, data.value)
 	}
 }

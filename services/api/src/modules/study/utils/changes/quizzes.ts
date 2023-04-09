@@ -1,3 +1,4 @@
+import { TagMeta, TagsUseCases } from '@modules/interactions'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
@@ -16,6 +17,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			amount: ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.quizzes })
+		await TagsUseCases.updateMeta({ ids: [after.topicId], property: TagMeta.quizzes, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['study/quizzes', `study/quizzes/${after.id}`], after)
@@ -31,6 +33,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			amount: -ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
+		await TagsUseCases.updateMeta({ ids: [before.topicId], property: TagMeta.quizzes, value: -1 })
 		await QuestionsUseCases.deleteQuizQuestions(before.id)
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}

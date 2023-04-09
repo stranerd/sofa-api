@@ -1,3 +1,4 @@
+import { TagMeta, TagsUseCases } from '@modules/interactions'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
@@ -8,9 +9,9 @@ import { FileEntity } from '../../domain/entities/files'
 import { Coursable, FileType, FolderSaved } from '../../domain/types'
 
 const getProp = (type: FileType) => ({
-	[FileType.document]: UserMeta.documents,
-	[FileType.image]: UserMeta.images,
-	[FileType.video]: UserMeta.videos,
+	[FileType.document]: [UserMeta.documents, TagMeta.documents] as const,
+	[FileType.image]: [UserMeta.images, TagMeta.images] as const,
+	[FileType.video]: [UserMeta.videos, TagMeta.videos] as const,
 })[type]
 
 export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity> = {
@@ -21,7 +22,9 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 			userId: after.user.id,
 			amount: ScoreRewards.newFile
 		})
-		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: getProp(after.type) })
+		const [userType, tagType] = getProp(after.type)
+		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: userType })
+		await TagsUseCases.updateMeta({ ids: [after.topicId], property: tagType, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['study/files', `study/files/${after.id}`], after)
@@ -37,7 +40,9 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 			userId: before.user.id,
 			amount: -ScoreRewards.newFile
 		})
-		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: getProp(before.type) })
+		const [userType, tagType] = getProp(before.type)
+		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: userType })
+		await TagsUseCases.updateMeta({ ids: [before.topicId], property: tagType, value: -1 })
 		await publishers.DELETEFILE.publish(before.media)
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}

@@ -1,6 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ITagRepository } from '../../domain/irepositories/tags'
+import { TagMeta } from '../../domain/types'
 import { TagMapper } from '../mappers/tags'
 import { TagToModel } from '../models/tags'
 import { Tag } from '../mongooseModels/tags'
@@ -45,5 +46,11 @@ export class TagRepository implements ITagRepository {
 	async delete (id: string) {
 		const tag = await Tag.findOneAndDelete({ _id: id })
 		return !!tag
+	}
+
+	async updateMeta (ids: string[], property: TagMeta, value: 1 | -1) {
+		await Tag.updateMany({ _id: { $in: ids } }, {
+			$inc: { [`meta.${property}`]: value, [`meta.${TagMeta.total}`]: value }
+		})
 	}
 }

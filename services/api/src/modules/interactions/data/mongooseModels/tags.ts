@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/types'
+import { TagMeta } from '../../domain/types'
 import { TagDbChangeCallbacks } from '../../utils/changes/tags'
 import { TagMapper } from '../mappers/tags'
 import { TagFromModel } from '../models/tags'
@@ -21,6 +22,13 @@ const Schema = new appInstance.dbs.mongo.Schema<TagFromModel>({
 		required: false,
 		default: null
 	},
+	meta: Object.fromEntries(
+		Object.values(TagMeta).map((key) => [key, {
+			type: Number,
+			required: false,
+			default: 0
+		}])
+	),
 	createdAt: {
 		type: Number,
 		required: false,

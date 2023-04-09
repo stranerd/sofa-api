@@ -18,11 +18,17 @@ export enum CommentMeta {
 
 export type CommentMetaType = Record<CommentMeta, number>
 
-export enum TagMetaType {
-	tags = 'tags'
+export enum TagMeta {
+	courses = 'courses',
+	quizzes = 'quizzes',
+	images = 'images',
+	documents = 'documents',
+	videos = 'videos',
+
+	total = 'total'
 }
 
-export type TagMeta = Record<TagMetaType, number>
+export type TagMetaType = Record<TagMeta, number>
 
 export enum TagTypes {
 	topics = 'topics'

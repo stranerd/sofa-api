@@ -17,5 +17,5 @@ export const LikesUseCases = new LikesUseCase(likeRepository)
 export const ViewsUseCases = new ViewsUseCase(viewRepository)
 export const TagsUseCases = new TagsUseCase(tagRepository)
 
-export { InteractionEntities, TagTypes } from './domain/types'
+export { CommentMeta, InteractionEntities, TagMeta, TagTypes } from './domain/types'
 export { verifyInteractionAndGetUserId } from './utils'
