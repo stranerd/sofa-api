@@ -47,10 +47,10 @@ export class CourseController {
 	static async create (req: Request) {
 		const data = validate({
 			...this.schema(req.authUser),
-			tagId: Schema.string().min(1)
+			topicId: Schema.string().min(1)
 		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
-		const tag = await TagsUseCases.find(data.tagId)
+		const tag = await TagsUseCases.find(data.topicId)
 		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
 
 		const user = await UsersUseCases.find(req.authUser!.id)

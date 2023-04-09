@@ -25,7 +25,7 @@ export class FileController {
 	static async create (req: Request) {
 		const data = validate({
 			...this.schema(),
-			tagId: Schema.string().min(1),
+			topicId: Schema.string().min(1),
 			media: Schema.or([
 				Schema.file().video(),
 				Schema.file().image(),
@@ -41,7 +41,7 @@ export class FileController {
 			photo: req.files.photo?.at(0) ?? null
 		})
 
-		const tag = await TagsUseCases.find(data.tagId)
+		const tag = await TagsUseCases.find(data.topicId)
 		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
 
 		const user = await UsersUseCases.find(req.authUser!.id)

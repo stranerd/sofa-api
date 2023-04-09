@@ -46,6 +46,6 @@ const Schema = new appInstance.dbs.mongo.Schema<QuestionFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Question = appInstance.dbs.mongo.use('study').model<QuestionFromModel>('QuizQuestion', Schema)
+export const Question = appInstance.dbs.mongo.use('study').model<QuestionFromModel>('Quiz-Question', Schema)
 
 export const QuestionChange = appInstance.dbs.mongo.change(Question, QuestionDbChangeCallbacks, new QuestionMapper().mapFrom)

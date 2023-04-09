@@ -10,13 +10,13 @@ export class QuizEntity extends BaseEntity implements CoursableData {
 	public readonly photo: CoursableData['photo']
 	public readonly courseId: CoursableData['courseId']
 	public readonly user: CoursableData['user']
-	public readonly tagId: CoursableData['tagId']
+	public readonly topicId: CoursableData['topicId']
 	public readonly status: CoursableData['status']
 	public readonly meta: Record<QuizMetaType, number>
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, description, photo, questions, courseId, user, tagId, status, meta, createdAt, updatedAt }: QuizConstructorArgs) {
+	constructor ({ id, title, description, photo, questions, courseId, user, topicId, status, meta, createdAt, updatedAt }: QuizConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -25,7 +25,7 @@ export class QuizEntity extends BaseEntity implements CoursableData {
 		this.questions = questions
 		this.courseId = courseId
 		this.user = generateDefaultUser(user)
-		this.tagId = tagId
+		this.topicId = topicId
 		this.status = status
 		this.meta = meta
 		this.createdAt = createdAt

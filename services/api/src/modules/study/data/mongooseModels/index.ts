@@ -27,7 +27,7 @@ export const PublishableSchema = {
 		type: String,
 		required: true
 	},
-	tagId: {
+	topicId: {
 		type: String,
 		required: true
 	},

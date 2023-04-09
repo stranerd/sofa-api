@@ -33,6 +33,6 @@ const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Answer = appInstance.dbs.mongo.use('plays').model<AnswerFromModel>('GameAnswer', Schema)
+export const Answer = appInstance.dbs.mongo.use('plays').model<AnswerFromModel>('Game-Answer', Schema)
 
 export const AnswerChange = appInstance.dbs.mongo.change(Answer, AnswerDbChangeCallbacks, new AnswerMapper().mapFrom)

@@ -102,7 +102,7 @@ export class CourseRepository implements ICourseRepository {
 			if (!add && course.status !== DraftStatus.draft) return
 			await finder.findByIdAndUpdate(coursable.id, {
 				$set: {
-					...(add ? { tagId: course.tagId, courseId: course.id } : { courseId: null }),
+					...(add ? { topicId: course.topicId, courseId: course.id } : { courseId: null }),
 					status: DraftStatus.draft
 				}
 			}, { session })

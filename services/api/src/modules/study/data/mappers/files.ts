@@ -5,10 +5,10 @@ import { FileFromModel, FileToModel } from '../models/files'
 export class FileMapper extends BaseMapper<FileFromModel, FileToModel, FileEntity> {
 	mapFrom (model: FileFromModel | null) {
 		if (!model) return null
-		const { _id, title, description, photo, type, media, courseId, user, tagId, status, createdAt, updatedAt } = model
+		const { _id, title, description, photo, type, media, courseId, user, topicId, status, createdAt, updatedAt } = model
 		return new FileEntity({
 			id: _id.toString(), title, description, photo, type, media,
-			courseId, user, tagId, status, createdAt, updatedAt
+			courseId, user, topicId, status, createdAt, updatedAt
 		})
 	}
 
@@ -19,7 +19,7 @@ export class FileMapper extends BaseMapper<FileFromModel, FileToModel, FileEntit
 			photo: entity.photo,
 			courseId: entity.courseId,
 			user: entity.user,
-			tagId: entity.tagId,
+			topicId: entity.topicId,
 			status: entity.status,
 			type: entity.type,
 			media: entity.media

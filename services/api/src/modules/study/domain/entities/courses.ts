@@ -10,14 +10,14 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 	public readonly description: Publishable['description']
 	public readonly photo: Publishable['photo']
 	public readonly user: Publishable['user']
-	public readonly tagId: Publishable['tagId']
+	public readonly topicId: Publishable['topicId']
 	public readonly status: Publishable['status']
 	public readonly frozen: Saleable['frozen']
 	public readonly price: Saleable['price']
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, coursables, sections, title, description, photo, user, tagId, status, frozen, price, createdAt, updatedAt }: CourseConstructorArgs) {
+	constructor ({ id, coursables, sections, title, description, photo, user, topicId, status, frozen, price, createdAt, updatedAt }: CourseConstructorArgs) {
 		super()
 		this.id = id
 		this.coursables = coursables
@@ -26,7 +26,7 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 		this.description = description
 		this.photo = photo
 		this.user = generateDefaultUser(user)
-		this.tagId = tagId
+		this.topicId = topicId
 		this.status = status
 		this.frozen = frozen
 		this.price = price
