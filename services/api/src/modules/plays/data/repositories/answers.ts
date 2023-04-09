@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { IAnswerRepository } from '../../domain/irepositories/answers'
 import { GameStatus } from '../../domain/types'
 import { AnswerMapper } from '../mappers/answers'
-import { AnswerToModel } from '../models/answers'
+import { AnswerFromModel, AnswerToModel } from '../models/answers'
 import { Answer } from '../mongooseModels/answers'
 import { Game } from '../mongooseModels/games'
 
@@ -30,7 +30,7 @@ export class AnswerRepository implements IAnswerRepository {
 	}
 
 	async answer ({ gameId, userId, questionId, answer }: AnswerToModel & { questionId: string, answer: any }) {
-		let res = false
+		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
 			const game = await Game.findById(gameId, {}, { session })
 			if (!game) return false
@@ -44,10 +44,10 @@ export class AnswerRepository implements IAnswerRepository {
 					$set: { [`data.${questionId}`]: answer }
 				},
 				{ upsert: true, new: true, session })
-			res = !!newAnswer
+			res = newAnswer
 			return res
 		})
-		return res
+		return this.mapper.mapFrom(res)
 	}
 
 	async find (id: string) {

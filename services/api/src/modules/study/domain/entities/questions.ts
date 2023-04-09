@@ -28,7 +28,7 @@ export class QuestionEntity extends BaseEntity {
 
 	strip () {
 		return {
-			...this,
+			...this.toJSON(),
 			data: this.stripAnswers(this.data)
 		}
 	}
