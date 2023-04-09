@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ICommentRepository } from '../../domain/irepositories/comments'
-import { CommentMetaType, Interaction } from '../../domain/types'
+import { CommentMeta, Interaction } from '../../domain/types'
 import { CommentMapper } from '../mappers/comments'
 import { CommentToModel } from '../models/comments'
 import { Comment } from '../mongooseModels/comments'
@@ -53,9 +53,9 @@ export class CommentRepository implements ICommentRepository {
 		return !!comments.acknowledged
 	}
 
-	async updateMeta (commentId: string, property: CommentMetaType, value: 1 | -1) {
+	async updateMeta (commentId: string, property: CommentMeta, value: 1 | -1) {
 		await Comment.findByIdAndUpdate(commentId, {
-			$inc: { [`meta.${property}`]: value }
+			$inc: { [`meta.${property}`]: value, [`meta.${CommentMeta.total}`]: value }
 		})
 	}
 

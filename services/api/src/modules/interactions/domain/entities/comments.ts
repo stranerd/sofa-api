@@ -1,13 +1,13 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { CommentMeta, EmbeddedUser, InteractionEntity } from '../types'
+import { CommentMetaType, EmbeddedUser, InteractionEntity } from '../types'
 
 export class CommentEntity extends BaseEntity {
 	public readonly id: string
 	public readonly body: string
 	public readonly entity: InteractionEntity
 	public readonly user: EmbeddedUser
-	public readonly meta: CommentMeta
+	public readonly meta: CommentMetaType
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
@@ -28,7 +28,7 @@ type CommentConstructorArgs = {
 	body: string
 	entity: InteractionEntity
 	user: EmbeddedUser
-	meta: CommentMeta
+	meta: CommentMetaType
 	createdAt: number
 	updatedAt: number
 }

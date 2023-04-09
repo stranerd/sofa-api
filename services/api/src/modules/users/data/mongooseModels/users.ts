@@ -5,7 +5,7 @@ import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 
 const Meta = Object.fromEntries(
-	Object.keys(UserMeta).map((key) => [key, {
+	Object.values(UserMeta).map((key) => [key, {
 		type: Number,
 		required: false,
 		default: 0

@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { CommentToModel } from '../../data/models/comments'
 import { ICommentRepository } from '../irepositories/comments'
-import { CommentMetaType, Interaction } from '../types'
+import { CommentMeta, Interaction } from '../types'
 
 export class CommentsUseCase {
 	repository: ICommentRepository
@@ -34,7 +34,7 @@ export class CommentsUseCase {
 		return await this.repository.deleteEntityComments(entity)
 	}
 
-	async updateMeta (data: { id: string, property: CommentMetaType, value: 1 | -1 }) {
+	async updateMeta (data: { id: string, property: CommentMeta, value: 1 | -1 }) {
 		return this.repository.updateMeta(data.id, data.property, data.value)
 	}
 

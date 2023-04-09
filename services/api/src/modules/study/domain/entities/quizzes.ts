@@ -1,6 +1,6 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { CoursableData, QuizMetaType } from '../types'
+import { CoursableData, QuizMeta } from '../types'
 
 export class QuizEntity extends BaseEntity implements CoursableData {
 	public readonly id: string
@@ -12,7 +12,7 @@ export class QuizEntity extends BaseEntity implements CoursableData {
 	public readonly user: CoursableData['user']
 	public readonly topicId: CoursableData['topicId']
 	public readonly status: CoursableData['status']
-	public readonly meta: Record<QuizMetaType, number>
+	public readonly meta: Record<QuizMeta, number>
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
@@ -36,7 +36,7 @@ export class QuizEntity extends BaseEntity implements CoursableData {
 type QuizConstructorArgs = CoursableData & {
 	id: string
 	questions: string[]
-	meta: Record<QuizMetaType, number>
+	meta: Record<QuizMeta, number>
 	createdAt: number
 	updatedAt: number
 }

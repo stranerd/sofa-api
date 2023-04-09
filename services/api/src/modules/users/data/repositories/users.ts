@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/types'
 import { IUserRepository } from '../../domain/irepositories/users'
-import { UserAccount, UserAi, UserBio, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
+import { UserAccount, UserAi, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
@@ -71,7 +71,8 @@ export class UserRepository implements IUserRepository {
 	async incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1) {
 		await User.findByIdAndUpdate(userId, {
 			$inc: {
-				[`account.meta.${propertyName}`]: value
+				[`account.meta.${propertyName}`]: value,
+				[`account.meta.${UserMeta.total}`]: value
 			}
 		})
 	}

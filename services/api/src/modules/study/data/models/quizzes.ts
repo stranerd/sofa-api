@@ -1,9 +1,9 @@
-import { CoursableData, QuizMetaType } from '../../domain/types'
+import { CoursableData, QuizMeta } from '../../domain/types'
 
 export interface QuizFromModel extends QuizToModel {
 	_id: string
 	questions: string[]
-	meta: Record<QuizMetaType, number>
+	meta: Record<QuizMeta, number>
 	createdAt: number
 	updatedAt: number
 }

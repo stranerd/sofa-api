@@ -11,11 +11,18 @@ export type Interaction = {
 
 export type InteractionEntity = Interaction & { userId: string }
 
-export enum CommentMetaType {
-	comments = 'comments'
+export enum CommentMeta {
+	comments = 'comments',
+	total = 'total'
 }
 
-export type CommentMeta = Record<CommentMetaType, number>
+export type CommentMetaType = Record<CommentMeta, number>
+
+export enum TagMetaType {
+	tags = 'tags'
+}
+
+export type TagMeta = Record<TagMetaType, number>
 
 export enum TagTypes {
 	topics = 'topics'

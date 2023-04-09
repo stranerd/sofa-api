@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { CommentMetaType } from '../../domain/types'
+import { CommentMeta } from '../../domain/types'
 import { CommentDbChangeCallbacks } from '../../utils/changes/comments'
 import { CommentMapper } from '../mappers/comments'
 import { CommentFromModel } from '../models/comments'
@@ -22,7 +22,7 @@ const CommentSchema = new appInstance.dbs.mongo.Schema<CommentFromModel>({
 		required: true
 	},
 	meta: Object.fromEntries(
-		Object.keys(CommentMetaType).map((key) => [key, {
+		Object.values(CommentMeta).map((key) => [key, {
 			type: Number,
 			required: false,
 			default: 0

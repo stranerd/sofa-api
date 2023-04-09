@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { QuizToModel } from '../../data/models/quizzes'
 import { IQuizRepository } from '../irepositories/quizzes'
-import { EmbeddedUser, QuizMetaType } from '../types'
+import { EmbeddedUser, QuizMeta } from '../types'
 
 export class QuizzesUseCase {
 	private repository: IQuizRepository
@@ -50,7 +50,7 @@ export class QuizzesUseCase {
 		return await this.repository.deleteCourseQuizzes(courseId)
 	}
 
-	async updateMeta (data: { id: string, property: QuizMetaType, value: 1 | -1 }) {
+	async updateMeta (data: { id: string, property: QuizMeta, value: 1 | -1 }) {
 		return this.repository.updateMeta(data.id, data.property, data.value)
 	}
 }

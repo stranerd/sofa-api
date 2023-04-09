@@ -1,8 +1,8 @@
-import { CommentMeta, EmbeddedUser, InteractionEntity } from '../../domain/types'
+import { CommentMetaType, EmbeddedUser, InteractionEntity } from '../../domain/types'
 
 export interface CommentFromModel extends CommentToModel {
 	_id: string
-	meta: CommentMeta
+	meta: CommentMetaType
 	createdAt: number
 	updatedAt: number
 }

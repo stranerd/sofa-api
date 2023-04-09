@@ -52,7 +52,9 @@ export enum UserMeta {
 	documents = 'documents',
 	images = 'images',
 	videos = 'videos',
-	folders = 'folders'
+	folders = 'folders',
+
+	total = 'total'
 }
 
 export enum UserRankings {

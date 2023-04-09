@@ -3,7 +3,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { CommentsUseCases } from '../../'
 import { CommentFromModel } from '../../data/models/comments'
 import { CommentEntity } from '../../domain/entities/comments'
-import { CommentMetaType, InteractionEntities } from '../../domain/types'
+import { CommentMeta, InteractionEntities } from '../../domain/types'
 
 export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, CommentEntity> = {
 	created: async ({ after }) => {
@@ -11,7 +11,7 @@ export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, Comme
 
 		if (after.entity.type === InteractionEntities.comments) await CommentsUseCases.updateMeta({
 			id: after.entity.id,
-			property: CommentMetaType.comments,
+			property: CommentMeta.comments,
 			value: 1
 		})
 	},
@@ -23,7 +23,7 @@ export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, Comme
 		await CommentsUseCases.deleteEntityComments({ type: InteractionEntities.comments, id: before.id })
 		if (before.entity.type === InteractionEntities.comments) await CommentsUseCases.updateMeta({
 			id: before.entity.id,
-			property: CommentMetaType.comments,
+			property: CommentMeta.comments,
 			value: -1
 		})
 	}

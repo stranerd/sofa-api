@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/types'
 import { CoursableDataSchema } from '.'
-import { QuizMetaType } from '../../domain/types'
+import { QuizMeta } from '../../domain/types'
 import { QuizDbChangeCallbacks } from '../../utils/changes/quizzes'
 import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel } from '../models/quizzes'
@@ -12,7 +12,7 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
 		required: true
 	},
 	meta: Object.fromEntries(
-		Object.values(QuizMetaType).map((meta) => [meta, {
+		Object.values(QuizMeta).map((meta) => [meta, {
 			type: Number,
 			required: false,
 			default: 0
