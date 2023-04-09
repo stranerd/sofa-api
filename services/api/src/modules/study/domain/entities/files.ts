@@ -12,12 +12,13 @@ export class FileEntity extends BaseEntity implements CoursableData {
 	public readonly courseId: CoursableData['courseId']
 	public readonly user: CoursableData['user']
 	public readonly topicId: CoursableData['topicId']
+	public readonly tagIds: CoursableData['tagIds']
 	public readonly status: CoursableData['status']
 	public readonly createdAt: number
 	public readonly updatedAt: number
 	ignoreInJSON = ['media']
 
-	constructor ({ id, title, description, media, photo, type, courseId, user, topicId, status, createdAt, updatedAt }: FileConstructorArgs) {
+	constructor ({ id, title, description, media, photo, type, courseId, user, topicId, tagIds, status, createdAt, updatedAt }: FileConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -28,6 +29,7 @@ export class FileEntity extends BaseEntity implements CoursableData {
 		this.courseId = courseId
 		this.user = generateDefaultUser(user)
 		this.topicId = topicId
+		this.tagIds = tagIds
 		this.status = status
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt

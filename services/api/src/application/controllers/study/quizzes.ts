@@ -3,12 +3,15 @@ import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { verifyTags } from '.'
 
 export class QuizController {
 	private static schema = () => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable()
+		photo: Schema.file().image().nullable(),
+		topicId: Schema.string().min(1),
+		tagIds: Schema.array(Schema.string().min(1)).set(),
 	})
 
 	static async find (req: Request) {
@@ -24,14 +27,16 @@ export class QuizController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, topicId, tagIds } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+
+		const utags = await verifyTags(topicId, tagIds)
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/quizzes', uploadedPhoto) : undefined
 
 		const updatedQuiz = await QuizzesUseCases.update({
 			id: req.params.id, userId: req.authUser!.id,
 			data: {
-				title, description,
+				...utags, title, description,
 				...(changedPhoto ? { photo } : {})
 			}
 		})
@@ -40,10 +45,10 @@ export class QuizController {
 	}
 
 	static async create (req: Request) {
-		const data = validate({
-			...this.schema(),
-			topicId: Schema.string().min(1),
-		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
+		const data = validate(this.schema(),
+			{ ...req.body, photo: req.files.photo?.at(0) ?? null })
+
+		const tags = await verifyTags(data.topicId, data.tagIds)
 
 		const tag = await TagsUseCases.find(data.topicId)
 		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
@@ -54,7 +59,7 @@ export class QuizController {
 		const photo = data.photo ? await UploaderUseCases.upload('study/quizzes', data.photo) : null
 
 		return await QuizzesUseCases.add({
-			...data, user: user.getEmbedded(),
+			...data, ...tags, user: user.getEmbedded(),
 			photo, status: DraftStatus.draft,
 			courseId: null
 		})

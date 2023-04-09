@@ -1,15 +1,17 @@
-import { TagsUseCases } from '@modules/interactions'
 import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthUser, BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { verifyTags } from '.'
 
 export class CourseController {
 	private static schema = (user: AuthUser | null) => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
+		topicId: Schema.string().min(1),
+		tagIds: Schema.array(Schema.string().min(1)).set(),
 		price: Schema.object({
 			amount: Schema.number().gte(0).lte(user?.roles.isVerified ? Number.POSITIVE_INFINITY : 0).default(0),
 			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
@@ -29,14 +31,16 @@ export class CourseController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, price } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
+		const { title, description, price, topicId, tagIds } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
+
+		const utags = await verifyTags(topicId, tagIds)
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/courses', uploadedPhoto) : undefined
 
 		const updatedCourse = await CoursesUseCases.update({
 			id: req.params.id, userId: req.authUser!.id,
 			data: {
-				title, description, price,
+				...utags, title, description, price,
 				...(changedPhoto ? { photo } : {})
 			}
 		})
@@ -46,12 +50,10 @@ export class CourseController {
 
 	static async create (req: Request) {
 		const data = validate({
-			...this.schema(req.authUser),
-			topicId: Schema.string().min(1)
+			...this.schema(req.authUser)
 		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
-		const tag = await TagsUseCases.find(data.topicId)
-		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
+		const tags = await verifyTags(data.topicId, data.tagIds)
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
@@ -59,7 +61,7 @@ export class CourseController {
 		const photo = data.photo ? await UploaderUseCases.upload('study/courses', data.photo) : null
 
 		return await CoursesUseCases.add({
-			...data, user: user.getEmbedded(),
+			...data, ...tags, user: user.getEmbedded(),
 			photo, status: DraftStatus.draft,
 			frozen: false
 		})

@@ -31,5 +31,6 @@ export enum TagMeta {
 export type TagMetaType = Record<TagMeta, number>
 
 export enum TagTypes {
+	generic = 'generic',
 	topics = 'topics'
 }

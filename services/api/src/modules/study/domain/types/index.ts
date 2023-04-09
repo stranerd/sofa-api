@@ -27,6 +27,7 @@ export type Publishable = {
 	photo: Media | null
 	user: EmbeddedUser
 	topicId: string
+	tagIds: string[]
 	status: DraftStatus
 }
 

@@ -22,6 +22,17 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['study/courses', `study/courses/${after.id}`], after)
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
+
+		if (changes.topicId || changes.tagIds) {
+			const previousTags = before.tagIds.concat(before.topicId)
+			const currentTags = after.tagIds.concat(after.topicId)
+			const removed = previousTags.filter((t) => !currentTags.includes(t))
+			const added = currentTags.filter((t) => !previousTags.includes(t))
+			await Promise.all([
+				await TagsUseCases.updateMeta({ ids: removed, property: TagMeta.courses, value: -1 }),
+				await TagsUseCases.updateMeta({ ids: added, property: TagMeta.courses, value: 1 })
+			])
+		}
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['study/courses', `study/courses/${before.id}`], before)

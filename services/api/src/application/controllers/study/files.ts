@@ -1,8 +1,8 @@
-import { TagsUseCases } from '@modules/interactions'
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, MediaOutput, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation } from 'equipped'
+import { verifyTags } from '.'
 
 const allowedDocumentTypes = ['application/pdf', 'text/plain']
 
@@ -10,7 +10,9 @@ export class FileController {
 	private static schema = () => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable()
+		photo: Schema.file().image().nullable(),
+		topicId: Schema.string().min(1),
+		tagIds: Schema.array(Schema.string().min(1)).set(),
 	})
 
 	static async find (req: Request) {
@@ -25,7 +27,6 @@ export class FileController {
 	static async create (req: Request) {
 		const data = validate({
 			...this.schema(),
-			topicId: Schema.string().min(1),
 			media: Schema.or([
 				Schema.file().video(),
 				Schema.file().image(),
@@ -41,8 +42,7 @@ export class FileController {
 			photo: req.files.photo?.at(0) ?? null
 		})
 
-		const tag = await TagsUseCases.find(data.topicId)
-		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
+		const tags = await verifyTags(data.topicId, data.tagIds)
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
@@ -54,7 +54,7 @@ export class FileController {
 			Validation.isVideo()(data.media).valid ? FileType.video : FileType.document
 
 		return await FilesUseCases.add({
-			...data, user: user.getEmbedded(),
+			...data, ...tags, user: user.getEmbedded(),
 			photo, media, type, status: DraftStatus.draft,
 			courseId: null
 		})

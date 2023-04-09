@@ -30,6 +30,18 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 		await appInstance.listener.updated(['study/files', `study/files/${after.id}`], after)
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 		if (changes.media) await publishers.DELETEFILE.publish(before.media)
+
+		const [_, tagType] = getProp(after.type)
+		if (changes.topicId || changes.tagIds) {
+			const previousTags = before.tagIds.concat(before.topicId)
+			const currentTags = after.tagIds.concat(after.topicId)
+			const removed = previousTags.filter((t) => !currentTags.includes(t))
+			const added = currentTags.filter((t) => !previousTags.includes(t))
+			await Promise.all([
+				await TagsUseCases.updateMeta({ ids: removed, property: tagType, value: -1 }),
+				await TagsUseCases.updateMeta({ ids: added, property: tagType, value: 1 })
+			])
+		}
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['study/files', `study/files/${before.id}`], before)

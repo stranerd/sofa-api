@@ -26,6 +26,10 @@ export class TagEntity extends BaseEntity {
 	isTopic () {
 		return this.type === TagTypes.topics
 	}
+
+	isGeneric () {
+		return this.type === TagTypes.generic
+	}
 }
 
 type TagConstructorArgs = {

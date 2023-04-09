@@ -31,6 +31,11 @@ export const PublishableSchema = {
 		type: String,
 		required: true
 	},
+	tagIds: {
+		type: [String],
+		required: true,
+		default: []
+	},
 	createdAt: {
 		type: Number,
 		required: false,

@@ -42,10 +42,23 @@ export class CourseRepository implements ICourseRepository {
 	}
 
 	async update (id: string, userId: string, data: Partial<CourseToModel>) {
-		const course = await Course.findOneAndUpdate({
-			_id: id, 'user.id': userId
-		}, { $set: data }, { new: true })
-		return this.mapper.mapFrom(course)
+		let res = null as CourseFromModel | null
+		await Course.collection.conn.transaction(async (session) => {
+			const course = await Course.findOneAndUpdate({
+				_id: id, 'user.id': userId
+			}, { $set: data }, { new: true, session })
+			if (!course) return
+
+			const updatedData = { topicId: course.topicId, tagIds: course.tagIds }
+			await Promise.all([
+				Quiz.updateMany({ courseId: id }, { $set: updatedData }, { session }),
+				File.updateMany({ courseId: id }, { $set: updatedData }, { session })
+			])
+
+			res = course
+			return res
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async updateUserBio (user: EmbeddedUser) {
