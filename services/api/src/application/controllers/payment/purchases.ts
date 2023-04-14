@@ -23,9 +23,10 @@ export class PurchasesController {
 	}
 
 	static async create (req: Request) {
-		const { type, id } = validate({
+		const { type, id, methodId } = validate({
 			type: Schema.in(Object.values(Purchasables)),
 			id: Schema.string().min(1),
+			methodId: Schema.string().default('')
 		}, req.body)
 
 		const userId = req.authUser!.id
@@ -35,9 +36,13 @@ export class PurchasesController {
 		const purchasable = await findPurchasable(type, id)
 		if (!purchasable) throw new BadRequestError('item not found')
 		if (purchasable.frozen) throw new BadRequestError('item cannot be purchased')
+		const isFree = purchasable.price.amount === 0
 
 		const user = await UsersUseCases.find(userId)
 		if (!user) throw new BadRequestError('profile not found')
+
+		const method = await MethodsUseCases.find(methodId)
+		if (!isFree && (!method || method.userId !== userId)) throw new BadRequestError('invalid method')
 
 		const transaction = await TransactionsUseCases.create({
 			userId: user.id,
@@ -57,11 +62,9 @@ export class PurchasesController {
 		})
 		let successful = false
 
-		if (purchasable.price.amount === 0) successful = true
+		if (isFree) successful = true
 		else {
-			const { methodId } = validate({ methodId: Schema.string().min(1) }, req.body)
-			const method = await MethodsUseCases.find(methodId)
-			if (!method || method.userId !== userId) throw new BadRequestError('invalid method')
+			if (!method) throw new BadRequestError('invalid method')
 			successful = await FlutterwavePayment.chargeCard({
 				email: transaction.email, amount: Math.abs(transaction.amount), currency: transaction.currency,
 				token: method.token, id: transaction.id
