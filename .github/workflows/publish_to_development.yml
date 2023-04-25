@@ -3,11 +3,11 @@ name: Publish to Digital Ocean
 on:
   push:
     branches:
-      - develop
+      - development
 
 jobs:
   publish-do:
-    environment: develop
+    environment: development
     runs-on: development
     steps:
       - name: Checkout Repo
