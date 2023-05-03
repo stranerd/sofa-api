@@ -75,6 +75,6 @@ export class FileController {
 	static async media (req: Request) {
 		const hasAccess = await canAccessCoursable(Coursable.file, req.params.id, req.authUser!.id)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access this file')
-		return hasAccess.media
+		return hasAccess.media.link
 	}
 }

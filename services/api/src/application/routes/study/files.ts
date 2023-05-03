@@ -1,6 +1,7 @@
 import { FileController } from '@application/controllers/study/files'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController, StatusCodes } from 'equipped'
+import axios from 'axios'
+import { BadRequestError, groupRoutes, makeController, StatusCodes } from 'equipped'
 
 export const filesRoutes = groupRoutes('/files', [
 	{
@@ -66,10 +67,17 @@ export const filesRoutes = groupRoutes('/files', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
+			makeController(async (req, { pipeThrough }) => {
+				const url = await FileController.media(req)
+				const response = await axios.get(url, { baseURL: '', responseType: 'stream' })
+					.catch(() => {
+						throw new BadRequestError('failed to fetch file')
+					})
+				response.data.pipe(pipeThrough)
 				return {
 					status: StatusCodes.Ok,
-					result: await FileController.media(req)
+					result: true,
+					piped: true
 				}
 			})
 		]
