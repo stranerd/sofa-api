@@ -1,7 +1,7 @@
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, MediaOutput, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation } from 'equipped'
+import { BadRequestError, MediaOutput, NotAuthenticatedError, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
 import { verifyTags } from '.'
 
 const allowedDocumentTypes = ['application/pdf', 'text/plain']
@@ -60,6 +60,27 @@ export class FileController {
 		})
 	}
 
+	static async update (req: Request) {
+		const uploadedPhoto = req.files.photo?.at(0) ?? null
+		const changedPhoto = !!uploadedPhoto || req.body.photo === null
+
+		const { title, description, topicId, tagIds } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+
+		const utags = await verifyTags(topicId, tagIds)
+
+		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/files/covers', uploadedPhoto) : undefined
+
+		const updatedFile = await FilesUseCases.update({
+			id: req.params.id, userId: req.authUser!.id,
+			data: {
+				...utags, title, description,
+				...(changedPhoto ? { photo } : {})
+			}
+		})
+		if (updatedFile) return updatedFile
+		throw new NotAuthorizedError()
+	}
+
 	static async delete (req: Request) {
 		const isDeleted = await FilesUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
 		if (isDeleted) return isDeleted
@@ -73,7 +94,9 @@ export class FileController {
 	}
 
 	static async media (req: Request) {
-		const hasAccess = await canAccessCoursable(Coursable.file, req.params.id, req.authUser!.id)
+		const user = await verifyAccessToken(req.query.AccessToken ?? '')
+		if (!user) throw new NotAuthenticatedError()
+		const hasAccess = await canAccessCoursable(Coursable.file, req.params.id, user.id)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access this file')
 		return hasAccess.media.link
 	}

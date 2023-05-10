@@ -40,6 +40,18 @@ export const filesRoutes = groupRoutes('/files', [
 		]
 	}, {
 		path: '/:id',
+		method: 'put',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await FileController.update(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
@@ -66,7 +78,6 @@ export const filesRoutes = groupRoutes('/files', [
 		path: '/:id/media',
 		method: 'get',
 		controllers: [
-			isAuthenticated,
 			makeController(async (req, { pipeThrough }) => {
 				const url = await FileController.media(req)
 				const response = await axios.get(url, { baseURL: '', responseType: 'stream' })
