@@ -98,6 +98,6 @@ export class FileController {
 		if (!user) throw new NotAuthenticatedError()
 		const hasAccess = await canAccessCoursable(Coursable.file, req.params.id, user.id)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access this file')
-		return hasAccess.media.link
+		return hasAccess.media
 	}
 }

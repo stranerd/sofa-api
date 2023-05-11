@@ -18,7 +18,7 @@ export class QuestionController {
 				options: Schema.array(Schema.string().min(1)).min(2).max(6),
 				answers: Schema.array(Schema.number().gte(0).round()).min(1).set()
 			}).custom((value) => {
-				const length = value?.answers?.length ?? 1
+				const length = value?.options?.length ?? 1
 				return Schema.array(Schema.number().lt(length)).max(length).parse(value.answers).valid
 			}),
 			Schema.object({
