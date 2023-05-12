@@ -2,7 +2,7 @@
 
 CERT_PATH_STAGING=/etc/traefik/acmeStaging.json
 CERT_PATH_PRODUCTION=/etc/traefik/acmeProduction.json
-CERT_TYPE=staging
+CERT_TYPE=production
 
 similar="
 global:
