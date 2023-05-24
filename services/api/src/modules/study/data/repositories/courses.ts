@@ -116,7 +116,7 @@ export class CourseRepository implements ICourseRepository {
 			await finder.findByIdAndUpdate(coursable.id, {
 				$set: {
 					...(add ? { topicId: course.topicId, courseId: course.id } : { courseId: null }),
-					status: DraftStatus.draft
+					status: course.status
 				}
 			}, { session })
 			res = await Course.findByIdAndUpdate(course.id, {
