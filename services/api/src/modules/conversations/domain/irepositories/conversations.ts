@@ -10,6 +10,7 @@ export interface IConversationRepository {
 	get: (condition: QueryParams) => Promise<QueryResults<ConversationEntity>>
 	find: (id: string) => Promise<ConversationEntity | null>
 	delete: (id: string, userId: string) => Promise<boolean>
+	update: (id: string, userId: string, data: Partial<ConversationToModel>) => Promise<ConversationEntity | null>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	addTutor: (id: string, userId: string, tutor: EmbeddedUser) => Promise<ConversationEntity | null>
 	removeTutor: (data: Omit<ReviewToModel, 'to'>) => Promise<ConversationEntity | null>

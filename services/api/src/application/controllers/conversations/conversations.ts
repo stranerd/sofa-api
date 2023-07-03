@@ -38,6 +38,20 @@ export class ConversationController {
 		return conversation
 	}
 
+	static async update (req: Request) {
+		const { title } = validate({
+			title: Schema.string().min(1),
+		}, req.body)
+
+		const updated = await ConversationsUseCases.update({
+			id: req.params.id,
+			userId: req.authUser!.id,
+			data: { title }
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
 	static async delete (req: Request) {
 		const isDeleted = await ConversationsUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
 		if (isDeleted) return isDeleted

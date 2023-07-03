@@ -16,6 +16,10 @@ export class ConversationsUseCase {
 		return await this.repository.add(data)
 	}
 
+	async update (input: { id: string, userId: string, data: Partial<ConversationToModel> }) {
+		return await this.repository.update(input.id, input.userId, input.data)
+	}
+
 	async delete (input: { id: string, userId: string }) {
 		return await this.repository.delete(input.id, input.userId)
 	}

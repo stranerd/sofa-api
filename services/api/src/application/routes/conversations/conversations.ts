@@ -41,6 +41,18 @@ export const conversationsRoutes = groupRoutes('/conversations', [
 		]
 	}, {
 		path: '/:id',
+		method: 'put',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await ConversationController.update(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,

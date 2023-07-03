@@ -49,6 +49,11 @@ export class ConversationRepository implements IConversationRepository {
 		return conversations.every((c) => c.acknowledged)
 	}
 
+	async update (id: string, userId: string, data: Partial<ConversationToModel>) {
+		const conversation = await Conversation.findByIdAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
+		return this.mapper.mapFrom(conversation)
+	}
+
 	async delete (id: string, userId: string) {
 		const conversation = await Conversation.findOneAndDelete({ _id: id, 'user.id': userId })
 		return !!conversation
