@@ -39,8 +39,8 @@ export class VerificationsController {
 				[VerificationSocials.tiktok]: Schema.string().default(''),
 			}),
 			content: Schema.object({
-				courses: Schema.array(Schema.string().min(1)).has(1),
-				quizzes: Schema.array(Schema.string().min(1)).has(3),
+				courses: Schema.array(Schema.string().min(1)).max(5),
+				quizzes: Schema.array(Schema.string().min(3)).max(5),
 			}),
 		}, req.body)
 
