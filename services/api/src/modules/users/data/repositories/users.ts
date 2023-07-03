@@ -5,6 +5,7 @@ import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
+import { AuthRole } from 'equipped'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
@@ -124,8 +125,18 @@ export class UserRepository implements IUserRepository {
 	async updateTutorConversations (userId: string, conversationId: string, add: boolean) {
 		const user = await User.findByIdAndUpdate(userId, {
 			[add ? '$addToSet' : '$pull']: { 'tutor.conversations': conversationId }
-		})
+		}, { new: true })
 		return !!user
+	}
+
+	async updateTutorTopics (userId: string, topicId: string, add: boolean) {
+		const user = await User.findByIdAndUpdate({
+			_id: userId,
+			[`roles.${AuthRole.isTutor}`]: true
+		}, {
+			[add ? '$addToSet' : '$pull']: { 'tutor.topics': topicId }
+		}, { new: true })
+		return this.mapper.mapFrom(user)
 	}
 
 	async updateAi (userId: string, ai: Partial<UserAi>) {

@@ -49,5 +49,17 @@ export const usersRoutes = groupRoutes('/users', [
 				}
 			})
 		]
+	}, {
+		path: '/tutor/topics',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateTutorTopics(req)
+				}
+			})
+		]
 	}
 ])

@@ -109,6 +109,7 @@ export type UserTypeData = {
 
 export type UserTutor = {
 	conversations: string[]
+	topics: string[]
 }
 
 export type UserAi = {

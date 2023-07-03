@@ -27,6 +27,8 @@ export interface IUserRepository {
 
 	updateTutorConversations (userId: string, conversationId: string, add: boolean): Promise<boolean>
 
+	updateTutorTopics (userId: string, topicId: string, add: boolean): Promise<UserEntity | null>
+
 	updateAi (userId: string, ai: Partial<UserAi>): Promise<UserEntity | null>
 
 	updateRatings (userId: string, ratings: number, add: boolean): Promise<boolean>

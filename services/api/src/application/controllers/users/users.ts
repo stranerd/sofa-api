@@ -1,6 +1,7 @@
+import { TagsUseCases } from '@modules/interactions'
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UploaderUseCases } from '@modules/storage'
-import { UserSchoolType, UsersUseCases, UserType } from '@modules/users'
+import { UserSchoolType, UserType, UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
@@ -97,6 +98,26 @@ export class UsersController {
 			}
 		})
 		if (user) return user
-		throw new NotAuthorizedError('')
+		throw new NotAuthorizedError()
+	}
+
+	static async updateTutorTopics (req: Request) {
+		const { topicId, add } = validate({
+			topicId: Schema.string().min(1),
+			add: Schema.boolean()
+		}, req.body)
+
+		if (add) {
+			const topic = await TagsUseCases.find(topicId)
+			if (!topic || !topic.isTopic()) throw new BadRequestError('topic not found')
+		}
+
+		const updated = await UsersUseCases.updateTutorTopics({
+			userId: req.authUser!.id,
+			topicId, add
+		})
+
+		if (updated) return updated
+		throw new NotAuthorizedError()
 	}
 }

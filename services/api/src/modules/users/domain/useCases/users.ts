@@ -57,6 +57,10 @@ export class UsersUseCase {
 		return await this.repository.updateTutorConversations(params.userId, params.conversationId, params.add)
 	}
 
+	async updateTutorTopics (params: { userId: string, topicId: string, add: boolean }) {
+		return await this.repository.updateTutorTopics(params.userId, params.topicId, params.add)
+	}
+
 	async updateAi (params: { userId: string, ai: Partial<UserAi> }) {
 		return await this.repository.updateAi(params.userId, params.ai)
 	}

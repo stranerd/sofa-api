@@ -117,6 +117,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			type: [String],
 			required: false,
 			default: []
+		},
+		topics: {
+			type: [String],
+			required: false,
+			default: []
 		}
 	},
 	ai: {
