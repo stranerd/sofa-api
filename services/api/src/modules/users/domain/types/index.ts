@@ -41,7 +41,7 @@ export type UserAccount = {
 export type EmbeddedUser = {
 	id: string
 	bio: Pick<UserBio, 'name' | 'photo'>
-	roles: Pick<UserRoles, 'isTutor' | 'isVerified'>
+	roles: UserRoles
 	type: UserTypeData | null
 }
 

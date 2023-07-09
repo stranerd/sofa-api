@@ -1,6 +1,6 @@
 import { AuthUsersUseCases, signOutUser } from '@modules/auth'
 import { UploaderUseCases } from '@modules/storage'
-import { superAdminEmail } from '@utils/environment'
+import { officialAccountEmail, superAdminEmail } from '@utils/environment'
 import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
 
 export class UserController {
@@ -59,6 +59,17 @@ export class UserController {
 			roles: {
 				[AuthRole.isAdmin]: true,
 				[AuthRole.isSuperAdmin]: true
+			}
+		})
+	}
+
+	static async officialAccount (_: Request) {
+		const user = await AuthUsersUseCases.findUserByEmail(officialAccountEmail)
+		if (!user) throw new NotFoundError()
+		return await AuthUsersUseCases.updateUserRole({
+			userId: user.id,
+			roles: {
+				[AuthRole.isOfficialAccount]: true
 			}
 		})
 	}

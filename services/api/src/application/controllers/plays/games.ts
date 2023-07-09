@@ -18,7 +18,7 @@ export class GameController {
 			quizId: Schema.string().min(1),
 		}, req.body)
 
-		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!.id)
+		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access this quiz')
 
 		const user = await UsersUseCases.find(req.authUser!.id)

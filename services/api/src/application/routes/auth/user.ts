@@ -63,6 +63,17 @@ export const userRoutes = groupRoutes('/user', [
 			})
 		]
 	}, {
+		path: '/officialAccount',
+		method: 'get',
+		controllers: [
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UserController.officialAccount(req)
+				}
+			})
+		]
+	}, {
 		path: '/',
 		method: 'delete',
 		controllers: [

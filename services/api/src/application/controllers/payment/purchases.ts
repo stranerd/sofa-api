@@ -34,8 +34,7 @@ export class PurchasesController {
 		if (purchase) return true
 
 		const purchasable = await findPurchasable(type, id)
-		if (!purchasable) throw new BadRequestError('item not found')
-		if (purchasable.frozen) throw new BadRequestError('item cannot be purchased')
+		if (!purchasable || purchasable.frozen) throw new BadRequestError('item cannot be purchased')
 		const isFree = purchasable.price.amount === 0
 
 		const user = await UsersUseCases.find(userId)

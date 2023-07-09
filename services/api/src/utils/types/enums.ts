@@ -5,7 +5,8 @@ const Ar = makeEnum('AuthRole', {
 	isTutor: 'isTutor',
 	isVerified: 'isVerified',
 	isSuperAdmin: 'isSuperAdmin',
-	isSubscribed: 'isSubscribed'
+	isSubscribed: 'isSubscribed',
+	isOfficialAccount: 'isOfficialAccount'
 } as const)
 
 const El = makeEnum('EmailsList', {

@@ -52,7 +52,7 @@ export class QuestionController {
 	})
 
 	static async find (req: Request) {
-		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!.id)
+		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access the questions for this quiz')
 		const question = await QuestionsUseCases.find(req.params.id)
 		if (!question || question.quizId !== req.params.quizId) return null
@@ -60,7 +60,7 @@ export class QuestionController {
 	}
 
 	static async get (req: Request) {
-		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!.id)
+		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access the questions for this quiz')
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'quizId', value: req.params.quizId }]

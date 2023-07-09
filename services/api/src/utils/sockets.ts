@@ -16,7 +16,7 @@ export const registerSockets = () => {
 	const coursablesCb: OnJoinFn = async (data, params) => {
 		const { quizId = null } = params
 		if (!quizId || !data.user) return null
-		return (await canAccessCoursable(Coursable.quiz, quizId, data.user.id)) ? await isOpen(data, params) : null
+		return (await canAccessCoursable(Coursable.quiz, quizId, data.user)) ? await isOpen(data, params) : null
 	}
 
 	appInstance.listener
