@@ -1,7 +1,7 @@
 import { TagsUseCases } from '@modules/interactions'
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UploaderUseCases } from '@modules/storage'
-import { UserSchoolType, UserType, UsersUseCases } from '@modules/users'
+import { UserSchoolType, UserSocials, UserType, UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
@@ -120,6 +120,22 @@ export class UsersController {
 			userId: req.authUser!.id,
 			topicId, add
 		})
+
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async updateSocials (req: Request) {
+		const { socials } = validate({
+			socials: Schema.array(
+				Schema.object({
+					ref: Schema.in(Object.values(UserSocials)),
+					link:  Schema.string().url()
+				})
+			),
+		}, req.body)
+
+		const updated = await UsersUseCases.updateSocials({ userId: req.authUser!.id, socials })
 
 		if (updated) return updated
 		throw new NotAuthorizedError()

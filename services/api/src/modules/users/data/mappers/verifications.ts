@@ -7,7 +7,6 @@ export class VerificationMapper extends BaseMapper<VerificationFromModel, Verifi
 		return !param ? null : new VerificationEntity({
 			id: param._id.toString(),
 			userId: param.userId,
-			socials: param.socials,
 			content: param.content,
 			pending: param.pending,
 			accepted: param.accepted,
@@ -19,7 +18,6 @@ export class VerificationMapper extends BaseMapper<VerificationFromModel, Verifi
 	mapTo (param: VerificationEntity) {
 		return {
 			userId: param.userId,
-			socials: param.socials,
 			content: param.content,
 			pending: param.pending,
 			accepted: param.accepted

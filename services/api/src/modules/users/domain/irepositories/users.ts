@@ -1,6 +1,6 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
-import { ScoreRewards, UserAccount, UserAi, UserBio, UserRoles, UserTypeData } from '../types'
+import { ScoreRewards, UserAccount, UserAi, UserBio, UserRoles, UserSocialsType, UserTypeData } from '../types'
 
 export interface IUserRepository {
 	getUsers (query: QueryParams): Promise<QueryResults<UserEntity>>
@@ -28,6 +28,8 @@ export interface IUserRepository {
 	updateTutorConversations (userId: string, conversationId: string, add: boolean): Promise<boolean>
 
 	updateTutorTopics (userId: string, topicId: string, add: boolean): Promise<UserEntity | null>
+
+	updateSocials (userId: string, socials: UserSocialsType): Promise<UserEntity | null>
 
 	updateAi (userId: string, ai: Partial<UserAi>): Promise<UserEntity | null>
 

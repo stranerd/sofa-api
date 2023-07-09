@@ -140,7 +140,12 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			required: false,
 			default: 'AI assistant'
 		}
-	}
+	},
+	socials: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed as any],
+		required: false,
+		default: []
+	},
 }, { minimize: false })
 
 export const User = appInstance.dbs.mongo.use('users').model<UserFromModel>('User', UserSchema)

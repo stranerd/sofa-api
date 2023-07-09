@@ -122,3 +122,15 @@ export type UserAi = {
 	name: string
 	tagline: string
 }
+
+export enum UserSocials {
+	website = 'website',
+	facebook = 'facebook',
+	twitter = 'twitter',
+	instagram = 'instagram',
+	linkedIn = 'linkedIn',
+	youtube = 'youtube',
+	tiktok = 'tiktok',
+}
+
+export type UserSocialsType = { ref: UserSocials, link: string }[]

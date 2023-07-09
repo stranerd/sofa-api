@@ -1,4 +1,4 @@
-import { VerificationContent, VerificationSocialsType } from '../../domain/types'
+import { VerificationContent } from '../../domain/types'
 
 export interface VerificationFromModel extends VerificationToModel {
 	_id: string
@@ -10,6 +10,5 @@ export interface VerificationToModel {
 	pending: boolean
 	accepted: boolean
 	userId: string
-	socials: VerificationSocialsType
 	content: VerificationContent
 }

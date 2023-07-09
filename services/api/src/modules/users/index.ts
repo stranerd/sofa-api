@@ -14,4 +14,4 @@ export const ConnectsUseCases = new ConnectsUseCase(connectRepository)
 export const VerificationsUseCases = new VerificationsUseCase(verificationRepository)
 
 export { generateDefaultUser, UserEntity } from './domain/entities/users'
-export { EmbeddedUser, ScoreRewards, UserMeta, UserRankings, UserSchoolType, UserType, VerificationSocials } from './domain/types'
+export { EmbeddedUser, ScoreRewards, UserMeta, UserRankings, UserSchoolType, UserType, UserSocials } from './domain/types'

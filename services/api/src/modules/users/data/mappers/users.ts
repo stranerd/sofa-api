@@ -13,7 +13,8 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			account: param.account,
 			type: param.type,
 			tutor: param.tutor,
-			ai: param.ai
+			ai: param.ai,
+			socials: param.socials
 		})
 	}
 
@@ -26,7 +27,8 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			account: param.account,
 			type: param.type,
 			tutor: param.tutor,
-			ai: param.ai
+			ai: param.ai,
+			socials: param.socials
 		}
 	}
 }

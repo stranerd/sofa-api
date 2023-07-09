@@ -1,5 +1,4 @@
 import { appInstance } from '@utils/types'
-import { VerificationSocials } from '../../domain/types'
 import { VerificationDbChangeCallbacks } from '../../utils/changes/verifications'
 import { VerificationMapper } from '../mappers/verifications'
 import { VerificationFromModel } from '../models/verifications'
@@ -13,13 +12,6 @@ const VerificationSchema = new appInstance.dbs.mongo.Schema<VerificationFromMode
 		type: String,
 		required: true
 	},
-	socials: Object.fromEntries(
-		Object.keys(VerificationSocials).map((key) => [key, {
-			type: String,
-			required: false,
-			default: ''
-		}])
-	),
 	content: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true

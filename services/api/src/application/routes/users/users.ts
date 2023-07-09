@@ -61,5 +61,17 @@ export const usersRoutes = groupRoutes('/users', [
 				}
 			})
 		]
+	}, {
+		path: '/socials',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateSocials(req)
+				}
+			})
+		]
 	}
 ])

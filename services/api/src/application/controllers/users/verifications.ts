@@ -1,6 +1,5 @@
-import { AuthUsersUseCases } from '@modules/auth'
 import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
-import { VerificationSocials, VerificationsUseCases } from '@modules/users'
+import { UsersUseCases, VerificationsUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	Conditions,
@@ -28,31 +27,23 @@ export class VerificationsController {
 		const authUser = req.authUser!
 		if (authUser.roles.isVerified) throw new BadRequestError('User is already verified')
 
-		const { socials, content } = validate({
-			socials: Schema.object({
-				[VerificationSocials.website]: Schema.string().default(''),
-				[VerificationSocials.facebook]: Schema.string().default(''),
-				[VerificationSocials.twitter]: Schema.string().default(''),
-				[VerificationSocials.instagram]: Schema.string().default(''),
-				[VerificationSocials.linkedIn]: Schema.string().default(''),
-				[VerificationSocials.youtube]: Schema.string().default(''),
-				[VerificationSocials.tiktok]: Schema.string().default(''),
-			}),
+		const { content } = validate({
 			content: Schema.object({
 				courses: Schema.array(Schema.string().min(1)).max(5),
 				quizzes: Schema.array(Schema.string().min(3)).max(5),
 			}),
 		}, req.body)
 
-		const user = await AuthUsersUseCases.findUser(authUser.id)
+		const user = await UsersUseCases.find(authUser.id)
 		if (!user) throw new BadRequestError('User not found')
-		if (!user.photo || !user.description) throw new BadRequestError('Complete your bio before applying for verification')
+		if (!user.bio.photo || !user.bio.description) throw new BadRequestError('Complete your bio before applying for verification')
+		if (user.socials.length < 1) throw new BadRequestError('Add at least one social media account before applying for verification')
 
 		const validContent = await this.verifyContent(authUser.id, content)
 		if (!validContent) throw new BadRequestError('Make sure all content provided belong to you and are published')
 
 		return await VerificationsUseCases.create({
-			userId: authUser.id, socials, content,
+			userId: authUser.id, content,
 			pending: true, accepted: false
 		})
 	}
