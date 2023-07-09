@@ -13,7 +13,7 @@ export class PurchasesUseCase {
 	async for (data: { userId: string, type: Purchasables, itemId: string }) {
 		const { results } = await this.repository.get({
 			where: [
-				{ field: 'user.id', value: data.userId },
+				{ field: 'userId', value: data.userId },
 				{ field: 'data.id', value: data.itemId },
 				{ field: 'data.type', value: data.type },
 			],
