@@ -6,7 +6,7 @@ export class PurchaseMapper extends BaseMapper<PurchaseFromModel, PurchaseToMode
 	mapFrom (param: PurchaseFromModel | null) {
 		return !param ? null : new PurchaseEntity({
 			id: param._id.toString(),
-			user: param.user,
+			userId: param.userId,
 			price: param.price,
 			data: param.data,
 			createdAt: param.createdAt,
@@ -16,7 +16,7 @@ export class PurchaseMapper extends BaseMapper<PurchaseFromModel, PurchaseToMode
 
 	mapTo (param: PurchaseEntity) {
 		return {
-			user: param.user,
+			userId: param.userId,
 			price: param.price,
 			data: param.data
 		}

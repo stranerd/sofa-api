@@ -31,6 +31,9 @@ export type TransactionData = {
 } | {
 	type: TransactionType.purchased
 	purchaseId: string
+	userId: string
+	purchasedType: PurchaseToModel['data']['type']
+	purchasedId: PurchaseToModel['data']['id']
 }
 
 export type SubscriptionModel = {

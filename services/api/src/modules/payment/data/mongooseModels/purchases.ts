@@ -12,8 +12,8 @@ const PurchaseSchema = new appInstance.dbs.mongo.Schema<PurchaseFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
-	user: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+	userId: {
+		type: String,
 		required: true
 	},
 	data: {

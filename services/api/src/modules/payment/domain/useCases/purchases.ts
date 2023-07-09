@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { PurchaseToModel } from '../../data/models/purchases'
 import { IPurchaseRepository } from '../irepositories/purchases'
-import { EmbeddedUser, Purchasables } from '../types'
+import { Purchasables } from '../types'
 
 export class PurchasesUseCase {
 	repository: IPurchaseRepository
@@ -32,9 +32,5 @@ export class PurchasesUseCase {
 
 	async create (data: PurchaseToModel) {
 		return await this.repository.create(data)
-	}
-
-	async updateUserBio (user: EmbeddedUser) {
-		return await this.repository.updateUserBio(user)
 	}
 }

@@ -1,4 +1,4 @@
-import { EmbeddedUser, PurchaseData, Saleable } from '../../domain/types'
+import { PurchaseData, Saleable } from '../../domain/types'
 
 export interface PurchaseFromModel extends PurchaseToModel {
 	_id: string
@@ -8,6 +8,6 @@ export interface PurchaseFromModel extends PurchaseToModel {
 
 export interface PurchaseToModel {
 	price: Saleable['price']
-	user: EmbeddedUser
+	userId: string
 	data: PurchaseData
 }

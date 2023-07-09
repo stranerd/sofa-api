@@ -1,20 +1,20 @@
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, PurchaseData, Saleable } from '../types'
+import { PurchaseData, Saleable } from '../types'
 
 export class PurchaseEntity extends BaseEntity {
 	public readonly id: string
 	public readonly price: Saleable['price']
-	public readonly user: EmbeddedUser
+	public readonly userId: string
 	public readonly data: PurchaseData
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
 	constructor ({
-		id, user, price, data, createdAt, updatedAt
+		id, userId, price, data, createdAt, updatedAt
 	}: PurchaseConstructorArgs) {
 		super()
 		this.id = id
-		this.user = user
+		this.userId = userId
 		this.price = price
 		this.data = data
 		this.createdAt = createdAt
@@ -25,7 +25,7 @@ export class PurchaseEntity extends BaseEntity {
 type PurchaseConstructorArgs = {
 	id: string
 	price: Saleable['price']
-	user: EmbeddedUser
+	userId: string
 	data: PurchaseData
 	createdAt: number
 	updatedAt: number

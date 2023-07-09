@@ -1,5 +1,4 @@
 import { findPurchasable, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
-import { UsersUseCases } from '@modules/users'
 import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
 export class PurchasesController {
@@ -7,7 +6,7 @@ export class PurchasesController {
 		const userId = req.authUser!.id
 		const purchase = await PurchasesUseCases.find(req.params.id)
 		if (!purchase) return null
-		if (purchase.user.id === userId || purchase.data.userId === userId) return purchase
+		if (purchase.userId === userId || purchase.data.userId === userId) return purchase
 		return null
 	}
 
@@ -16,7 +15,7 @@ export class PurchasesController {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.or
 		query.auth = [
-			{ field: 'user.id', value: userId },
+			{ field: 'userId', value: userId },
 			{ field: 'data.userId', value: userId }
 		]
 		return await PurchasesUseCases.get(query)
@@ -35,17 +34,15 @@ export class PurchasesController {
 
 		const purchasable = await findPurchasable(type, id)
 		if (!purchasable || purchasable.frozen) throw new BadRequestError('item cannot be purchased')
+		if (purchasable.userId === userId) throw new BadRequestError('cannot purchase owned item')
 		const isFree = purchasable.price.amount === 0
-
-		const user = await UsersUseCases.find(userId)
-		if (!user) throw new BadRequestError('profile not found')
 
 		const method = await MethodsUseCases.find(methodId)
 		if (!isFree && (!method || method.userId !== userId)) throw new BadRequestError('invalid method')
 
 		const transaction = await TransactionsUseCases.create({
-			userId: user.id,
-			email: user.bio.email,
+			userId,
+			email: req.authUser!.email,
 			amount: 0 - purchasable.price.amount,
 			currency: purchasable.price.currency,
 			status: TransactionStatus.initialized,
@@ -54,8 +51,8 @@ export class PurchasesController {
 				type: TransactionType.purchase,
 				purchase: {
 					price: purchasable.price,
-					user: user.getEmbedded(),
-					data: { type, id: purchasable.id, userId: purchasable.user.id }
+					userId,
+					data: { type, id: purchasable.id, userId: purchasable.userId }
 				}
 			}
 		})
