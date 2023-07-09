@@ -45,7 +45,8 @@ export class UserEntity extends BaseEntity {
 			roles: {
 				...('isTutor' in this.roles ? { isTutor: this.roles.isTutor } : {}),
 				...('isVerified' in this.roles ? { isVerified: this.roles.isVerified } : {})
-			}
+			},
+			type: this.type
 		}
 	}
 
@@ -85,9 +86,11 @@ export const generateDefaultUser = (user: Partial<EmbeddedUser>): EmbeddedUser =
 	const id = user?.id ?? ''
 	const bio = generateDefaultBio(user?.bio ?? {})
 	const roles = generateDefaultRoles(user?.roles ?? {})
+	const type = user?.type ?? null
 	return {
 		id,
 		bio: { name: bio.name, photo: bio.photo },
-		roles
+		roles,
+		type
 	}
 }

@@ -42,6 +42,7 @@ export type EmbeddedUser = {
 	id: string
 	bio: Pick<UserBio, 'name' | 'photo'>
 	roles: Pick<UserRoles, 'isTutor' | 'isVerified'>
+	type: UserTypeData | null
 }
 
 export enum UserMeta {
@@ -74,7 +75,8 @@ export enum ScoreRewards {
 
 export enum UserType {
 	student = 'student',
-	teacher = 'teacher'
+	teacher = 'teacher',
+	organization = 'organization'
 }
 
 export enum UserSchoolType {
@@ -105,6 +107,9 @@ export type UserTypeData = {
 } | {
 	type: UserType.teacher,
 	school: string
+} | {
+	type: UserType.organization,
+	name: string
 }
 
 export type UserTutor = {

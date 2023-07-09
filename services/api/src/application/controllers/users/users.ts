@@ -43,6 +43,10 @@ export class UsersController {
 				Schema.object({
 					type: Schema.is(UserType.teacher as const),
 					school: Schema.string().min(1)
+				}),
+				Schema.object({
+					type: Schema.is(UserType.organization as const),
+					name: Schema.string().min(1)
 				})
 			])
 		}, req.body)
@@ -75,7 +79,7 @@ export class UsersController {
 					data: { ...data, school: data.school }
 				})
 			}
-		} else if (data.type === UserType.teacher) return await UsersUseCases.updateType({ userId: req.authUser!.id, data })
+		} else return await UsersUseCases.updateType({ userId: req.authUser!.id, data })
 		throw new BadRequestError('invalid data')
 	}
 
