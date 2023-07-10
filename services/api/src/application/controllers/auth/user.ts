@@ -34,8 +34,11 @@ export class UserController {
 	}
 
 	static async updateRole (req: Request) {
+		const updatableRoles: string[] = [AuthRole.isAdmin]
+		if (!req.body.value) updatableRoles.push(AuthRole.isTutor, AuthRole.isVerified)
+
 		const { role, userId, value } = validate({
-			role: Schema.in([AuthRole.isAdmin, AuthRole.isTutor]),
+			role: Schema.in(updatableRoles),
 			userId: Schema.string().min(1),
 			value: Schema.boolean()
 		}, req.body)

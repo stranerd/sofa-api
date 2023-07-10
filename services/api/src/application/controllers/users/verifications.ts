@@ -11,15 +11,11 @@ import {
 
 export class VerificationsController {
 	static async find (req: Request) {
-		const verification = await VerificationsUseCases.find(req.params.id)
-		if (!verification) return null
-		if (verification.userId === req.authUser!.id || req.authUser?.roles.isAdmin) return verification
-		return null
+		return await VerificationsUseCases.find(req.params.id)
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		if (!req.authUser?.roles.isAdmin) query.auth = [{ field: 'userId', value: req.authUser!.id }]
 		return await VerificationsUseCases.get(query)
 	}
 

@@ -4,6 +4,8 @@ export enum NotificationType {
 	ConnectDeclined = 'ConnectDeclined',
 	VerificationAccepted = 'VerificationAccepted',
 	VerificationRejected = 'VerificationRejected',
+	TutorRequestAccepted = 'TutorRequestAccepted',
+	TutorRequestRejected = 'TutorRequestRejected',
 }
 
 export type NotificationData =
@@ -12,3 +14,5 @@ export type NotificationData =
 	| { type: NotificationType.ConnectDeclined, connectId: string, userId: string }
 	| { type: NotificationType.VerificationAccepted, verificationId: string }
 	| { type: NotificationType.VerificationRejected, verificationId: string }
+	| { type: NotificationType.TutorRequestAccepted, tutorRequestId: string }
+	| { type: NotificationType.TutorRequestRejected, tutorRequestId: string }
