@@ -55,7 +55,7 @@ export class UsersController {
 			if (data.school.type === UserSchoolType.college) {
 				const department = await DepartmentsUseCases.find(data.school.departmentId)
 				if (!department) throw new BadRequestError('department not found')
-				return await UsersUseCases.updateType({
+				const updated = await UsersUseCases.updateType({
 					userId: req.authUser!.id, data: {
 						...data,
 						school: {
@@ -65,6 +65,7 @@ export class UsersController {
 						}
 					}
 				})
+				if (updated) return updated
 			} else if (data.school.type === UserSchoolType.aspirant) {
 				for (const exam of data.school.exams) {
 					const { results: courses } = await CoursesUseCases.get({
@@ -74,13 +75,17 @@ export class UsersController {
 					if (courses.length !== exam.courseIds.length) throw new BadRequestError('courses not found')
 					if (courses.find((c) => c.institutionId !== exam.institutionId)) throw new BadRequestError('mismatched courses and institutions')
 				}
-				return await UsersUseCases.updateType({
+				const updated = await UsersUseCases.updateType({
 					userId: req.authUser!.id,
 					data: { ...data, school: data.school }
 				})
+				if (updated) return updated
 			}
-		} else return await UsersUseCases.updateType({ userId: req.authUser!.id, data })
-		throw new BadRequestError('invalid data')
+		} else {
+			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data })
+			if (updated) return updated
+		}
+		throw new NotAuthorizedError('cannot update user type')
 	}
 
 	static async updateAi (req: Request) {
