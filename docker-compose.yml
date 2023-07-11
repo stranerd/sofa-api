@@ -33,7 +33,7 @@ services:
     command: 'sh ./wait-for-it.sh mongo:27017 redis:6379 kafka:9092 debezium:8083 -- node lib/index.js'
 
   mongo:
-    image: 'mongo:6.0.3'
+    image: 'mongo:6.0.7'
     hostname: mongo
     volumes:
       - '/c/data/docker/sofa/mongo/data/db:/data/db'
@@ -51,12 +51,12 @@ services:
     entrypoint: 'bash ./rs.sh'
 
   redis:
-    image: 'redis:6.2.5-alpine'
+    image: 'redis:6.2.13-alpine'
     hostname: redis
     restart: always
 
   kafka:
-    image: bitnami/kafka:3.4.0
+    image: bitnami/kafka:3.5.0
     hostname: kafka
     restart: always
     volumes:
@@ -75,7 +75,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
 
   debezium:
-    image: debezium/connect:2.2
+    image: debezium/connect:2.3
     environment:
       BOOTSTRAP_SERVERS: ${KAFKA_URIS}
       GROUP_ID: sofa
