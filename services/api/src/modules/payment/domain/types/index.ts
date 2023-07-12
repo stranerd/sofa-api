@@ -17,7 +17,9 @@ export enum TransactionType {
 	newCard = 'newCard',
 	subscription = 'subscription',
 	purchase = 'purchase',
-	purchased = 'purchased'
+	purchased = 'purchased',
+	sent = 'sent',
+	received = 'received'
 }
 
 export type TransactionData = {
@@ -35,6 +37,14 @@ export type TransactionData = {
 	serviceCharge: number
 	purchasedType: PurchaseToModel['data']['type']
 	purchasedId: PurchaseToModel['data']['id']
+} | {
+	type: TransactionType.sent,
+	note: string
+	to: string
+} | {
+	type: TransactionType.received,
+	note: string
+	from: string
 }
 
 export type SubscriptionModel = {
@@ -74,3 +84,12 @@ export type MethodData = {
 }
 
 export type Interval = Enum<typeof CronTypes>
+
+export type TransferData = {
+	from: string,
+	to: string,
+	fromEmail: string,
+	toEmail: string,
+	amount: number,
+	note: string
+}

@@ -1,6 +1,9 @@
+import { BadRequestError } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
-import { PlanDataType, SubscriptionModel } from '../../domain/types'
+import { PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
+import { TransactionToModel } from '../models/transactions'
+import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
 
 export class WalletRepository implements IWalletRepository {
@@ -54,5 +57,46 @@ export class WalletRepository implements IWalletRepository {
 		let wallet = await WalletRepository.getUserWallet(userId)
 		wallet = (await Wallet.findByIdAndUpdate(wallet._id, { $inc: { [`subscription.data.${key}`]: value } }, { new: true }))!
 		return this.mapper.mapFrom(wallet)!
+	}
+
+	async transfer (data: TransferData) {
+		let res = false
+		await Wallet.collection.conn.transaction(async (session) => {
+			const fromWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
+			const toWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.to, session))!
+			const updatedBalance = fromWallet.balance.amount - data.amount
+			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
+			const transactions: TransactionToModel[] = [
+				{
+					userId: data.from,
+					email: data.fromEmail,
+					title: 'You sent money',
+					amount: 0 - data.amount,
+					currency: fromWallet.balance.currency,
+					status: TransactionStatus.settled,
+					data: { type: TransactionType.sent, note: data.note, to: data.to }
+				}, {
+					userId: data.to,
+					email: data.toEmail,
+					title: 'You received money',
+					amount: data.amount,
+					currency: fromWallet.balance.currency,
+					status: TransactionStatus.settled,
+					data: { type: TransactionType.received, note: data.note, from: data.from }
+				}
+			]
+			await Transaction.insertMany(transactions, { session })
+			const updatedFromWallet =  await Wallet.findByIdAndUpdate(fromWallet.id,
+				{ $inc: { 'balance.amount': 0 - data.amount } },
+				{ new: true, session }
+			)
+			const updatedToWallet =  await Wallet.findByIdAndUpdate(toWallet.id,
+				{ $inc: { 'balance.amount': data.amount } },
+				{ new: true, session }
+			)
+			res = !!updatedFromWallet && !!updatedToWallet
+			return res
+		})
+		return res
 	}
 }

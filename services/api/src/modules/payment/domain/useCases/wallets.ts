@@ -1,5 +1,5 @@
 import { IWalletRepository } from '../irepositories/wallets'
-import { PlanDataType, SubscriptionModel } from '../types'
+import { PlanDataType, SubscriptionModel, TransferData } from '../types'
 
 export class WalletsUseCase {
 	repository: IWalletRepository
@@ -22,5 +22,9 @@ export class WalletsUseCase {
 
 	async updateSubscriptionData (data: { userId: string, key: PlanDataType, value: 1 | -1 }) {
 		return await this.repository.updateSubscriptionData(data.userId, data.key, data.value)
+	}
+
+	async transfer (data: TransferData) {
+		return await this.repository.transfer(data)
 	}
 }
