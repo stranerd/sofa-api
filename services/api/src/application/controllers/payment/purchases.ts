@@ -1,4 +1,4 @@
-import { findPurchasable, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { Currencies, findPurchasable, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
 export class PurchasesController {
@@ -22,10 +22,11 @@ export class PurchasesController {
 	}
 
 	static async create (req: Request) {
-		const { type, id, methodId } = validate({
+		const { type, id, methodId, payWithWallet } = validate({
 			type: Schema.in(Object.values(Purchasables)),
 			id: Schema.string().min(1),
-			methodId: Schema.string().default('')
+			methodId: Schema.string().default(''),
+			payWithWallet: Schema.boolean().default(false)
 		}, req.body)
 
 		const userId = req.authUser!.id
@@ -38,7 +39,7 @@ export class PurchasesController {
 		const isFree = purchasable.price.amount === 0
 
 		const method = await MethodsUseCases.find(methodId)
-		if (!isFree && (!method || method.userId !== userId)) throw new BadRequestError('invalid method')
+		if (!isFree && !payWithWallet && (!method || method.userId !== userId)) throw new BadRequestError('invalid method')
 
 		const transaction = await TransactionsUseCases.create({
 			userId,
@@ -60,11 +61,17 @@ export class PurchasesController {
 
 		if (isFree) successful = true
 		else {
-			if (!method) throw new BadRequestError('invalid method')
-			successful = await FlutterwavePayment.chargeCard({
-				email: transaction.email, amount: Math.abs(transaction.amount), currency: transaction.currency,
-				token: method.token, id: transaction.id
+			if (payWithWallet) successful = await WalletsUseCases.updateAmount({
+				userId,
+				amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
 			})
+			else {
+				if (!method) throw new BadRequestError('invalid method')
+				successful = await FlutterwavePayment.chargeCard({
+					email: transaction.email, amount: Math.abs(transaction.amount), currency: transaction.currency,
+					token: method.token, id: transaction.id
+				})
+			}
 		}
 
 		await TransactionsUseCases.update({
