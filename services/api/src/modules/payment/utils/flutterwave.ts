@@ -2,9 +2,9 @@ import { flutterwaveConfig } from '@utils/environment'
 import axios from 'axios'
 import FlutterwaveNode from 'flutterwave-node-v3'
 import { MethodToModel } from '../data/models/methods'
-import { Currencies, MethodType } from '../domain/types'
+import { Currencies, CurrencyCountries, MethodType } from '../domain/types'
 
-const flw = () => new FlutterwaveNode(flutterwaveConfig.publicKey, flutterwaveConfig.secretKey)
+const flw = new FlutterwaveNode(flutterwaveConfig.publicKey, flutterwaveConfig.secretKey)
 
 type FwTransaction = {
 	id: number,
@@ -31,6 +31,12 @@ type TransferRate = {
 	rate: number
 	source: { currency: Currencies, amount: number }
 	destination: { currency: Currencies, amount: number }
+}
+
+type Bank = {
+	id: number
+	code: string
+	name: string
 }
 
 export class FlutterwavePayment {
@@ -72,7 +78,7 @@ export class FlutterwavePayment {
 	static async convertAmount (amount: number, from: Currencies, to: Currencies) {
 		if (from === to) return amount
 		// WARN: flutterwave expects 1000 USD to NGN to have destination as USD and source as NGN, weird right
-		const res = await flw().CustomRequest.custom(`v3/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`, { method: 'GET' })
+		const res = await flw.CustomRequest.custom(`v3/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`, { method: 'GET' })
 			.catch(() => null)
 		// TODO: figure whether to throw, and consequences of throwing in background process
 		const data = res?.body?.data as TransferRate | undefined
@@ -83,7 +89,7 @@ export class FlutterwavePayment {
 		token: string, currency: Currencies, amount: number
 		email: string, id: string
 	}) {
-		const res = await flw().Tokenized.charge({
+		const res = await flw.Tokenized.charge({
 			token: data.token,
 			currency: data.currency,
 			amount: data.amount,
@@ -91,5 +97,18 @@ export class FlutterwavePayment {
 			tx_ref: data.id
 		}).catch(() => null)
 		return (res?.data as FwTransaction | null)?.status === 'successful'
+	}
+
+	static async getBanks (country: CurrencyCountries) {
+		const res = await flw.CustomRequest.custom(`v3/banks/${country}`, { method: 'GET' }).catch(() => null)
+		return res?.body?.data as Bank[] ?? []
+	}
+
+	static async verifyAccount ({ bankNumber, bankCode }: { bankNumber: string, bankCode: string }) {
+		const res = await flw.Misc.verify_Account({
+			account_number: bankNumber,
+			account_bank: bankCode
+		}).catch(() => null)
+		return !!res?.data
 	}
 }

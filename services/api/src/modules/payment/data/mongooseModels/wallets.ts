@@ -25,6 +25,11 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 			default: Currencies.NGN
 		}
 	},
+	account: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	subscription: {
 		active: {
 			type: Boolean,
@@ -42,7 +47,7 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 			default: null
 		},
 		data: Object.fromEntries(
-			Object.keys(PlanDataType).map((key) => [key, {
+			Object.values(PlanDataType).map((key) => [key, {
 				type: Number,
 				required: false,
 				default: 0

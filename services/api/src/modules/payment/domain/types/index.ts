@@ -93,3 +93,14 @@ export type TransferData = {
 	amount: number,
 	note: string
 }
+
+export enum CurrencyCountries {
+	NG = 'NG'
+}
+
+export type AccountDetails = {
+	country: CurrencyCountries
+	bankNumber: string
+	bankCode: string
+	bankName: string
+}

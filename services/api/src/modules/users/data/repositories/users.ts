@@ -44,11 +44,11 @@ export class UserRepository implements IUserRepository {
 
 	async updateNerdScore (userId: string, amount: number) {
 		const rankings = Object.fromEntries(
-			Object.keys(UserRankings).map((key) => [`account.rankings.${key}.value`, amount])
+			Object.values(UserRankings).map((key) => [`account.rankings.${key}.value`, amount])
 		)
 		const now = Date.now()
 		const lastUpdatedAt = Object.fromEntries(
-			Object.keys(UserRankings).map((key) => [`account.rankings.${key}.lastUpdatedAt`, now])
+			Object.values(UserRankings).map((key) => [`account.rankings.${key}.lastUpdatedAt`, now])
 		)
 		const user = await User.findByIdAndUpdate(userId, {
 			$set: lastUpdatedAt, $inc: rankings

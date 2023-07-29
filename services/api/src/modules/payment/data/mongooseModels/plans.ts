@@ -26,7 +26,7 @@ const PlanSchema = new appInstance.dbs.mongo.Schema<PlanFromModel>({
 		required: true
 	},
 	data: Object.fromEntries(
-		Object.keys(PlanDataType).map((key) => [key, {
+		Object.values(PlanDataType).map((key) => [key, {
 			type: Number,
 			required: false,
 			default: 0

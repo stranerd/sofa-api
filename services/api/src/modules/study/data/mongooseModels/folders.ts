@@ -15,7 +15,7 @@ const Schema = new appInstance.dbs.mongo.Schema<FolderFromModel>({
 		default: ''
 	},
 	saved: Object.fromEntries(
-		Object.keys(FolderSaved).map((key) => [key, {
+		Object.values(FolderSaved).map((key) => [key, {
 			type: [String],
 			required: false,
 			default: []

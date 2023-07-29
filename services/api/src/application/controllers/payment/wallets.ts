@@ -1,6 +1,6 @@
-import { cancelSubscription, subscribeToPlan, WalletsUseCases } from '@modules/payment'
+import { cancelSubscription, CurrencyCountries, FlutterwavePayment, subscribeToPlan, WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, Request, Schema, validate } from 'equipped'
+import { BadRequestError, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class WalletsController {
 	static async get (req: Request) {
@@ -35,6 +35,30 @@ export class WalletsController {
 			from: authUser.id, fromEmail: authUser.email,
 			to: user.id, toEmail: user.bio.email,
 			amount, note
+		})
+	}
+
+	static async getBanks (req: Request) {
+		let country = req.params.country as any
+		country = Object.values(CurrencyCountries).includes(country) ? country : CurrencyCountries.NG
+		const banks = await FlutterwavePayment.getBanks(country)
+		return banks.sort((a, b) => a.name < b.name ? -1 : 1)
+	}
+
+	static async updateAccount (req: Request) {
+		const { country, bankCode, bankNumber } = validate({
+			country: Schema.in(Object.values(CurrencyCountries)),
+			bankNumber: Schema.string().min(1),
+			bankCode: Schema.string().min(1)
+		}, req.body)
+		const banks = await FlutterwavePayment.getBanks(country)
+		const bank = banks.find((b) => b.code === bankCode)
+		if (!bank) throw new ValidationError([{ field: 'bankCode', messages: ['is not a supported bank'] }])
+		const verified = await FlutterwavePayment.verifyAccount({ bankNumber, bankCode })
+		if (!verified) throw new BadRequestError('failed to verify account number')
+		return await WalletsUseCases.updateAccount({
+			userId: req.authUser!.id,
+			account: { country, bankNumber, bankCode: bank.code, bankName: bank.name }
 		})
 	}
 }

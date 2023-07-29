@@ -51,5 +51,28 @@ export const walletsRoutes = groupRoutes('/wallets', [
 				}
 			})
 		]
+	}, {
+		path: '/account/banks/:country',
+		method: 'get',
+		controllers: [
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.getBanks(req)
+				}
+			})
+		]
+	}, {
+		path: '/account',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.updateAccount(req)
+				}
+			})
+		]
 	}
 ])

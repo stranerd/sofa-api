@@ -13,7 +13,7 @@ const Meta = Object.fromEntries(
 )
 
 const Rankings = Object.fromEntries(
-	Object.keys(UserRankings).map((key) => [key, {
+	Object.values(UserRankings).map((key) => [key, {
 		value: {
 			type: Number,
 			required: false,

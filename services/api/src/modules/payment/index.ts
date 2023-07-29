@@ -21,7 +21,7 @@ export const TransactionsUseCases = new TransactionsUseCase(transactionRepositor
 export const MethodsUseCases = new MethodsUseCase(methodRepository)
 export const WalletsUseCases = new WalletsUseCase(walletRepository)
 
-export { Currencies, PlanDataType, Purchasables, Saleable, TransactionStatus, TransactionType } from './domain/types'
+export { Currencies, PlanDataType, Purchasables, Saleable, TransactionStatus, TransactionType, CurrencyCountries } from './domain/types'
 export { FlutterwavePayment } from './utils/flutterwave'
 export { findPurchasable } from './utils/purchases'
 export { cancelSubscription, renewSubscription, subscribeToPlan } from './utils/subscriptions'
