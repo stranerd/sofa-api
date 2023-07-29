@@ -19,7 +19,8 @@ export enum TransactionType {
 	purchase = 'purchase',
 	purchased = 'purchased',
 	sent = 'sent',
-	received = 'received'
+	received = 'received',
+	fundWallet = 'fundWallet'
 }
 
 export type TransactionData = {
@@ -45,6 +46,8 @@ export type TransactionData = {
 	type: TransactionType.received,
 	note: string
 	from: string
+} | {
+	type: TransactionType.fundWallet
 }
 
 export type SubscriptionModel = {

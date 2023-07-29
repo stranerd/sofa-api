@@ -35,6 +35,16 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 			data: { status: TransactionStatus.settled }
 		})
 	}
+	if (transaction.data.type === TransactionType.fundWallet) {
+		await WalletsUseCases.updateAmount({
+			userId: transaction.userId,
+			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
+		})
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: TransactionStatus.settled }
+		})
+	}
 }
 
 export const retryTransactions = async (timeInMs: number) => {

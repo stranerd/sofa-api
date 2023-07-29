@@ -74,5 +74,17 @@ export const walletsRoutes = groupRoutes('/wallets', [
 				}
 			})
 		]
+	}, {
+		path: '/fund',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.fund(req)
+				}
+			})
+		]
 	}
 ])

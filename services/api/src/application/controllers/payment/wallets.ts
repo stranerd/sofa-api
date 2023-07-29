@@ -1,4 +1,4 @@
-import { cancelSubscription, CurrencyCountries, FlutterwavePayment, subscribeToPlan, WalletsUseCases } from '@modules/payment'
+import { cancelSubscription, CurrencyCountries, FlutterwavePayment, MethodsUseCases, subscribeToPlan, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Request, Schema, validate, ValidationError } from 'equipped'
 
@@ -60,5 +60,40 @@ export class WalletsController {
 			userId: req.authUser!.id,
 			account: { country, bankNumber, bankCode: bank.code, bankName: bank.name }
 		})
+	}
+
+	static async fund (req: Request) {
+		const { amount, methodId } = validate({
+			amount: Schema.number().gte(100),
+			methodId: Schema.string().default(''),
+		}, req.body)
+
+		const userId = req.authUser!.id
+		const method = await MethodsUseCases.find(methodId)
+		if (!method || method.userId !== userId) throw new BadRequestError('invalid method')
+
+		const wallet = await WalletsUseCases.get(userId)
+
+		const transaction = await TransactionsUseCases.create({
+			userId,
+			email: req.authUser!.email,
+			amount,
+			currency: wallet.balance.currency,
+			status: TransactionStatus.initialized,
+			title: 'Fund wallet',
+			data: { type: TransactionType.fundWallet }
+		})
+
+		const successful = await FlutterwavePayment.chargeCard({
+			email: transaction.email, amount: Math.abs(transaction.amount), currency: transaction.currency,
+			token: method.token, id: transaction.id
+		})
+
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: successful ? TransactionStatus.fulfilled : TransactionStatus.failed }
+		})
+
+		return successful
 	}
 }
