@@ -95,4 +95,13 @@ export class WalletsController {
 
 		return successful
 	}
+
+	static async withdraw (req: Request) {
+		const { amount } = validate({ amount: Schema.number().gte(5000) }, req.body)
+		return await WalletsUseCases.withdraw({
+			userId: req.authUser!.id,
+			email: req.authUser!.email,
+			amount
+		})
+	}
 }

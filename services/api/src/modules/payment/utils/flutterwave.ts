@@ -95,11 +95,8 @@ export class FlutterwavePayment {
 			amount: data.amount,
 			email: data.email,
 			tx_ref: data.id
-		}).catch((err) => {
-			console.log(err.response.data)
-			return null
-		})
-		return (res?.data as FwTransaction | null)?.status === 'successful'
+		}).catch(() => null)
+		return (res?.data?.data as FwTransaction | null)?.status === 'successful'
 	}
 
 	static async getBanks (country: CurrencyCountries) {
@@ -113,5 +110,16 @@ export class FlutterwavePayment {
 			account_bank: bankCode
 		}).catch(() => null)
 		return !!res?.data?.data
+	}
+
+	static async transfer (data: { bankCode: string, bankNumber: string, amount: number, currency: Currencies, id: string }) {
+		const res = await axios.post('/tokenized-charges', {
+			account_bank: data.bankCode,
+			account_number: data.bankNumber,
+			currency: data.currency,
+			amount: data.amount,
+			tx_ref: data.id
+		}).catch(() => null)
+		return (res?.data?.data?.id ?? null) as number | null
 	}
 }

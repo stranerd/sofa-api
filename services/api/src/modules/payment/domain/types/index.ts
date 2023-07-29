@@ -20,7 +20,8 @@ export enum TransactionType {
 	purchased = 'purchased',
 	sent = 'sent',
 	received = 'received',
-	fundWallet = 'fundWallet'
+	fundWallet = 'fundWallet',
+	withdrawal = 'withdrawal'
 }
 
 export type TransactionData = {
@@ -48,6 +49,9 @@ export type TransactionData = {
 	from: string
 } | {
 	type: TransactionType.fundWallet
+} | {
+	type: TransactionType.withdrawal,
+	withdrawalId: string
 }
 
 export type SubscriptionModel = {
@@ -97,6 +101,12 @@ export type TransferData = {
 	note: string
 }
 
+export type WithdrawData = {
+	userId: string,
+	email: string,
+	amount: number
+}
+
 export enum CurrencyCountries {
 	NG = 'NG'
 }
@@ -106,4 +116,11 @@ export type AccountDetails = {
 	bankNumber: string
 	bankCode: string
 	bankName: string
+}
+
+export enum WithdrawalStatus {
+	created = 'created',
+	inProgress = 'inProgress',
+	failed = 'failed',
+	completed = 'completed',
 }

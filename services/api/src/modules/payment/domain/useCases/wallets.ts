@@ -1,5 +1,5 @@
 import { IWalletRepository } from '../irepositories/wallets'
-import { AccountDetails, PlanDataType, SubscriptionModel, TransferData } from '../types'
+import { AccountDetails, PlanDataType, SubscriptionModel, TransferData, WithdrawData } from '../types'
 
 export class WalletsUseCase {
 	repository: IWalletRepository
@@ -30,5 +30,9 @@ export class WalletsUseCase {
 
 	async transfer (data: TransferData) {
 		return await this.repository.transfer(data)
+	}
+
+	async withdraw (data: WithdrawData) {
+		return await this.repository.withdraw(data)
 	}
 }

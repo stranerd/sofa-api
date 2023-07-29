@@ -35,6 +35,7 @@ export const registerSockets = () => {
 		.register('payment/plans', isOpen)
 		.register('payment/transactions', isMine)
 		.register('payment/wallets', isMine)
+		.register('payment/withdrawals', isMine)
 
 		.register('plays/games', isMine)
 		.register('plays/:gameId/answers', isOpen)
