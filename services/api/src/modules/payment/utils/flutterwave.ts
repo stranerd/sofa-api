@@ -113,13 +113,24 @@ export class FlutterwavePayment {
 	}
 
 	static async transfer (data: { bankCode: string, bankNumber: string, amount: number, currency: Currencies, id: string }) {
-		const res = await axios.post('/tokenized-charges', {
+		const res = await axios.post('/transfers', {
 			account_bank: data.bankCode,
 			account_number: data.bankNumber,
 			currency: data.currency,
 			amount: data.amount,
-			tx_ref: data.id
+			reference: data.id
 		}).catch(() => null)
 		return (res?.data?.data?.id ?? null) as number | null
+	}
+
+	static async verifyTransferStatus (transferId: number) {
+		const res = await axios.get(`/transfers/${transferId}`)
+			.catch(() => null)
+		const status = res?.data?.data?.status
+		if (!status) return null
+		if (status === 'SUCCESSFUL') return 'successful'
+		if (status === 'PENDING' || status === 'NEW') return 'pending'
+		if (status === 'FAILED') return 'failed'
+		return null
 	}
 }

@@ -3,6 +3,7 @@ import { QueryParams } from 'equipped'
 import { IWithdrawalRepository } from '../../domain/irepositories/withdrawals'
 import { WithdrawalMapper } from '../mappers/withdrawals'
 import { Withdrawal } from '../mongooseModels/withdrawals'
+import { WithdrawalToModel } from '../models/withdrawals'
 
 export class WithdrawalRepository implements IWithdrawalRepository {
 	private static instance: WithdrawalRepository
@@ -31,6 +32,10 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 		return this.mapper.mapFrom(withdrawal)
 	}
 
+	async update (id: string, data: Partial<WithdrawalToModel>) {
+		const withdrawal = await Withdrawal.findByIdAndUpdate(id, { $set: data }, { new: true })
+		return this.mapper.mapFrom(withdrawal)
+	}
 
 	async delete (id: string, userId: string) {
 		const withdrawal = await Withdrawal.findOneAndDelete({ _id: id, userId })

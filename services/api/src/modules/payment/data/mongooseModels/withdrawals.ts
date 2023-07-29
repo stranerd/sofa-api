@@ -12,13 +12,30 @@ const WithdrawalSchema = new appInstance.dbs.mongo.Schema<WithdrawalFromModel>({
 		type: String,
 		required: true
 	},
+	email: {
+		type: String,
+		required: true
+	},
 	amount: {
 		type: Number,
+		required: true
+	},
+	currency: {
+		type: String,
 		required: true
 	},
 	status: {
 		type: String,
 		required: true
+	},
+	account: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
+	externalId: {
+		type: Number,
+		required: false,
+		default: null
 	},
 	createdAt: {
 		type: Number,

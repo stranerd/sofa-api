@@ -45,13 +45,23 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 			data: { status: TransactionStatus.settled }
 		})
 	}
+	if (transaction.data.type === TransactionType.withdrawalRefund) {
+		await WalletsUseCases.updateAmount({
+			userId: transaction.userId,
+			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
+		})
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: TransactionStatus.settled }
+		})
+	}
 }
 
 export const retryTransactions = async (timeInMs: number) => {
 	const { results: fulfilledTransactions } = await TransactionsUseCases.get({
 		where: [
 			{ field: 'status', value: TransactionStatus.fulfilled },
-			{ field: 'createdAt', condition: Conditions.gt, value: Date.now() - timeInMs }
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
 		],
 		all: true
 	})
@@ -60,7 +70,7 @@ export const retryTransactions = async (timeInMs: number) => {
 	const { results: initializedTransactions } = await TransactionsUseCases.get({
 		where: [
 			{ field: 'status', value: TransactionStatus.initialized },
-			{ field: 'createdAt', condition: Conditions.gt, value: Date.now() - timeInMs }
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
 		],
 		all: true
 	})

@@ -1,4 +1,4 @@
-import { WithdrawalStatus } from '../../domain/types'
+import { AccountDetails, Currencies, WithdrawalStatus } from '../../domain/types'
 
 export interface WithdrawalFromModel extends WithdrawalToModel {
 	_id: string
@@ -8,6 +8,10 @@ export interface WithdrawalFromModel extends WithdrawalToModel {
 
 export interface WithdrawalToModel {
 	userId: string
+	email: string
 	amount: number
+	currency: Currencies
 	status: WithdrawalStatus
+	account: AccountDetails
+	externalId: number | null
 }

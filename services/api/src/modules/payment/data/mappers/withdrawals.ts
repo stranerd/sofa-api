@@ -7,8 +7,12 @@ export class WithdrawalMapper extends BaseMapper<WithdrawalFromModel, Withdrawal
 		return !param ? null : new WithdrawalEntity({
 			id: param._id.toString(),
 			userId: param.userId,
+			email: param.email,
 			amount: param.amount,
+			currency: param.currency,
 			status: param.status,
+			account: param.account,
+			externalId: param.externalId,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
 		})
@@ -17,8 +21,12 @@ export class WithdrawalMapper extends BaseMapper<WithdrawalFromModel, Withdrawal
 	mapTo (param: WithdrawalEntity) {
 		return {
 			userId: param.userId,
+			email: param.email,
 			amount: param.amount,
-			status: param.status
+			currency: param.currency,
+			status: param.status,
+			account: param.account,
+			externalId: param.externalId,
 		}
 	}
 }

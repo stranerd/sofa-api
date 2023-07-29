@@ -112,12 +112,17 @@ export class WalletRepository implements IWalletRepository {
 		let res = false
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.userId, session))!
+			if (!wallet.account) throw new BadRequestError('set your account details before you withdraw')
 			const updatedBalance = wallet.balance.amount - data.amount
 			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const withdrawalModel: WithdrawalToModel = {
 				userId: data.userId,
+				email: data.email,
 				amount: data.amount,
-				status: WithdrawalStatus.created
+				currency: wallet.balance.currency,
+				status: WithdrawalStatus.created,
+				account: wallet.account,
+				externalId: null
 			}
 			const withdrawal = await new Withdrawal(withdrawalModel).save({ session })
 			const transaction: TransactionToModel = {

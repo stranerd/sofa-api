@@ -1,4 +1,5 @@
 import { QueryParams } from 'equipped'
+import { WithdrawalToModel } from '../../data/models/withdrawals'
 import { IWithdrawalRepository } from '../irepositories/withdrawals'
 
 export class WithdrawalsUseCase {
@@ -14,6 +15,10 @@ export class WithdrawalsUseCase {
 
 	async find (id: string) {
 		return await this.repository.find(id)
+	}
+
+	async update (data: { id: string, data: Partial<WithdrawalToModel> }) {
+		return await this.repository.update(data.id, data.data)
 	}
 
 	async delete (data: { id: string, userId: string }) {
