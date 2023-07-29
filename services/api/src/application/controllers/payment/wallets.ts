@@ -42,14 +42,14 @@ export class WalletsController {
 		let country = req.params.country as any
 		country = Object.values(CurrencyCountries).includes(country) ? country : CurrencyCountries.NG
 		const banks = await FlutterwavePayment.getBanks(country)
-		return banks.sort((a, b) => a.name < b.name ? -1 : 1)
+		return banks.filter((bank) => bank.code.length === 3)
 	}
 
 	static async updateAccount (req: Request) {
 		const { country, bankCode, bankNumber } = validate({
 			country: Schema.in(Object.values(CurrencyCountries)),
-			bankNumber: Schema.string().min(1),
-			bankCode: Schema.string().min(1)
+			bankNumber: Schema.string().min(1).trim(),
+			bankCode: Schema.string().min(1).trim()
 		}, req.body)
 		const banks = await FlutterwavePayment.getBanks(country)
 		const bank = banks.find((b) => b.code === bankCode)
@@ -65,7 +65,7 @@ export class WalletsController {
 	static async fund (req: Request) {
 		const { amount, methodId } = validate({
 			amount: Schema.number().gte(100),
-			methodId: Schema.string().default(''),
+			methodId: Schema.string().min(1),
 		}, req.body)
 
 		const userId = req.authUser!.id
