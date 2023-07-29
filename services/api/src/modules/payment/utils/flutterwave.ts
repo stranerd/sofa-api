@@ -1,12 +1,10 @@
 import { flutterwaveConfig } from '@utils/environment'
-import axios from 'axios'
-import FlutterwaveNode from 'flutterwave-node-v3'
+import a from 'axios'
 import { MethodToModel } from '../data/models/methods'
 import { Currencies, CurrencyCountries, MethodType } from '../domain/types'
 
-const flw = new FlutterwaveNode(flutterwaveConfig.publicKey, flutterwaveConfig.secretKey)
-const axiosInstance = axios.create({
-	baseURL: 'https://api.flutterwave.com',
+const axios = a.create({
+	baseURL: 'https://api.flutterwave.com/v3',
 	headers: { Authorization: flutterwaveConfig.secretKey }
 })
 
@@ -45,7 +43,7 @@ type Bank = {
 
 export class FlutterwavePayment {
 	private static async verifyById (transactionId: string) {
-		const res = await axiosInstance.get(`/v3/transactions/verify_by_reference?tx_ref=${transactionId}`)
+		const res = await axios.get(`/transactions/verify_by_reference?tx_ref=${transactionId}`)
 			.catch(() => null)
 		if (!res) return null
 		if (res.data.status !== 'success') return null
@@ -80,7 +78,7 @@ export class FlutterwavePayment {
 	static async convertAmount (amount: number, from: Currencies, to: Currencies) {
 		if (from === to) return amount
 		// WARN: flutterwave expects 1000 USD to NGN to have destination as USD and source as NGN, weird right
-		const res = await axiosInstance.get(`/v3/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`)
+		const res = await axios.get(`/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`)
 			.catch(() => null)
 		// TODO: figure whether to throw, and consequences of throwing in background process
 		const data = res?.data?.data as TransferRate | undefined
@@ -91,26 +89,29 @@ export class FlutterwavePayment {
 		token: string, currency: Currencies, amount: number
 		email: string, id: string
 	}) {
-		const res = await flw.Tokenized.charge({
+		const res = await axios.post('/tokenized-charges', {
 			token: data.token,
 			currency: data.currency,
 			amount: data.amount,
 			email: data.email,
 			tx_ref: data.id
-		}).catch(() => null)
+		}).catch((err) => {
+			console.log(err.response.data)
+			return null
+		})
 		return (res?.data as FwTransaction | null)?.status === 'successful'
 	}
 
 	static async getBanks (country: CurrencyCountries) {
-		const res = await flw.Bank.country({ country }).catch(() => null)
-		return res?.data as Bank[] ?? []
+		const res = await axios.get(`/banks/${country}`).catch(() => null)
+		return res?.data?.data as Bank[] ?? []
 	}
 
 	static async verifyAccount ({ bankNumber, bankCode }: { bankNumber: string, bankCode: string }) {
-		const res = await flw.Misc.verify_Account({
+		const res = await axios.post('/accounts/resolve', {
 			account_number: bankNumber,
 			account_bank: bankCode
 		}).catch(() => null)
-		return !!res?.data
+		return !!res?.data?.data
 	}
 }

@@ -41,8 +41,7 @@ export class WalletsController {
 	static async getBanks (req: Request) {
 		let country = req.params.country as any
 		country = Object.values(CurrencyCountries).includes(country) ? country : CurrencyCountries.NG
-		const banks = await FlutterwavePayment.getBanks(country)
-		return banks.filter((bank) => bank.code.length === 3)
+		return await FlutterwavePayment.getBanks(country)
 	}
 
 	static async updateAccount (req: Request) {
@@ -64,7 +63,7 @@ export class WalletsController {
 
 	static async fund (req: Request) {
 		const { amount, methodId } = validate({
-			amount: Schema.number().gte(100),
+			amount: Schema.number().gte(1000),
 			methodId: Schema.string().min(1),
 		}, req.body)
 
