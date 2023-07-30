@@ -55,4 +55,5 @@ export const registerSockets = () => {
 		.register('users/users', isOpen)
 		.register('users/verifications', isOpen)
 		.register('users/tutorRequests', isOpen)
+		.register('users/organizationMembers/:organizationId', isOpen)
 }
