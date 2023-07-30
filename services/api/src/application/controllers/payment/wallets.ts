@@ -63,7 +63,7 @@ export class WalletsController {
 
 	static async fund (req: Request) {
 		const { amount, methodId } = validate({
-			amount: Schema.number().gte(1000),
+			amount: Schema.number().gte(100),
 			methodId: Schema.string().min(1),
 		}, req.body)
 
@@ -97,7 +97,7 @@ export class WalletsController {
 	}
 
 	static async withdraw (req: Request) {
-		const { amount } = validate({ amount: Schema.number().gte(5000) }, req.body)
+		const { amount } = validate({ amount: Schema.number().gte(1000) }, req.body)
 		return await WalletsUseCases.withdraw({
 			userId: req.authUser!.id,
 			email: req.authUser!.email,

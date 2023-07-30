@@ -20,6 +20,11 @@ const WithdrawalSchema = new appInstance.dbs.mongo.Schema<WithdrawalFromModel>({
 		type: Number,
 		required: true
 	},
+	fee: {
+		type: Number,
+		required: true,
+		default: 0
+	},
 	currency: {
 		type: String,
 		required: true

@@ -1,6 +1,6 @@
 import { BadRequestError } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
-import { AccountDetails, PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
+import { AccountDetails, Currencies, PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
 import { TransactionToModel } from '../models/transactions'
 import { Transaction } from '../mongooseModels/transactions'
@@ -112,13 +112,16 @@ export class WalletRepository implements IWalletRepository {
 		let res = false
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.userId, session))!
+			const fee = WithdrawalFees[wallet.balance.currency] ?? WithdrawalFees[Currencies.NGN]
+			const deductingAmount = data.amount + fee
 			if (!wallet.account) throw new BadRequestError('set your account details before you withdraw')
-			const updatedBalance = wallet.balance.amount - data.amount
+			const updatedBalance = wallet.balance.amount - deductingAmount
 			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const withdrawalModel: WithdrawalToModel = {
 				userId: data.userId,
 				email: data.email,
 				amount: data.amount,
+				fee,
 				currency: wallet.balance.currency,
 				status: WithdrawalStatus.created,
 				account: wallet.account,
@@ -129,14 +132,14 @@ export class WalletRepository implements IWalletRepository {
 				userId: data.userId,
 				email: data.email,
 				title: 'You withdrew money',
-				amount: 0 - data.amount,
+				amount: 0 - deductingAmount,
 				currency: wallet.balance.currency,
 				status: TransactionStatus.settled,
 				data: { type: TransactionType.withdrawal, withdrawalId: withdrawal._id }
 			}
 			await new Transaction(transaction).save({ session })
 			const updatedWallet =  await Wallet.findByIdAndUpdate(wallet.id,
-				{ $inc: { 'balance.amount': 0 - data.amount } },
+				{ $inc: { 'balance.amount': transaction.amount } },
 				{ new: true, session }
 			)
 			res = !!updatedWallet
@@ -144,4 +147,8 @@ export class WalletRepository implements IWalletRepository {
 		})
 		return res
 	}
+}
+
+const WithdrawalFees = {
+	[Currencies.NGN]: 50
 }

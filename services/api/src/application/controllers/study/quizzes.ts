@@ -1,4 +1,3 @@
-import { TagsUseCases } from '@modules/interactions'
 import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
@@ -49,9 +48,6 @@ export class QuizController {
 			{ ...req.body, photo: req.files.photo?.at(0) ?? null })
 
 		const tags = await verifyTags(data.topicId, data.tagIds)
-
-		const tag = await TagsUseCases.find(data.topicId)
-		if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')

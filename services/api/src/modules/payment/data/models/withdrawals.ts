@@ -10,6 +10,7 @@ export interface WithdrawalToModel {
 	userId: string
 	email: string
 	amount: number
+	fee: number
 	currency: Currencies
 	status: WithdrawalStatus
 	account: AccountDetails
