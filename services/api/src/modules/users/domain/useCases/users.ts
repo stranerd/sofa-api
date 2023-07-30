@@ -1,6 +1,6 @@
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../irepositories/users'
-import { UserAccount, UserAi, UserBio, UserRoles, UserSocialsType, UserTypeData } from '../types'
+import { UserAccount, UserAi, UserBio, UserLocation, UserRoles, UserSocialsType, UserTypeData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -71,5 +71,9 @@ export class UsersUseCase {
 
 	async updateRatings (input: { userId: string, ratings: number, add: boolean }) {
 		return await this.repository.updateRatings(input.userId, input.ratings, input.add)
+	}
+
+	async updateLocation (params: { userId: string, location: UserLocation }) {
+		return await this.repository.updateLocation(params.userId, params.location)
 	}
 }

@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/types'
 import { IUserRepository } from '../../domain/irepositories/users'
-import { UserAccount, UserAi, UserBio, UserMeta, UserRankings, UserRoles, UserSocialsType, UserTypeData } from '../../domain/types'
+import { UserAccount, UserAi, UserBio, UserLocation, UserMeta, UserRankings, UserRoles, UserSocialsType, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
@@ -169,5 +169,10 @@ export class UserRepository implements IUserRepository {
 			return res
 		})
 		return res
+	}
+
+	async updateLocation(userId: string, location: UserLocation) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { location } }, { new: true })
+		return this.mapper.mapFrom(user)
 	}
 }

@@ -1,6 +1,6 @@
 import { BaseEntity, Validation } from 'equipped'
 import { getNextRank, getRank } from '../../utils/ranks'
-import { EmbeddedUser, UserAccount, UserAi, UserBio, UserDates, UserRoles, UserSocialsType, UserStatus, UserTutor, UserTypeData } from '../types'
+import { EmbeddedUser, UserAccount, UserAi, UserBio, UserDates, UserLocation, UserRoles, UserSocialsType, UserStatus, UserTutor, UserTypeData } from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -13,8 +13,9 @@ export class UserEntity extends BaseEntity {
 	public readonly tutor: UserTutor
 	public readonly ai: UserAi
 	public readonly socials: UserSocialsType
+	public readonly location: UserLocation | null
 
-	constructor ({ id, bio, roles, dates, status, account, type, tutor, ai, socials }: UserConstructorArgs) {
+	constructor ({ id, bio, roles, dates, status, account, type, tutor, ai, socials, location }: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = generateDefaultBio(bio ?? {})
@@ -26,6 +27,7 @@ export class UserEntity extends BaseEntity {
 		this.tutor = tutor
 		this.ai = ai
 		this.socials = socials
+		this.location = location
 	}
 
 	get rank () {
@@ -34,6 +36,10 @@ export class UserEntity extends BaseEntity {
 
 	get nextRank () {
 		return getNextRank(this.rank.id)
+	}
+
+	isBioComplete () {
+		return this.bio.photo && this.bio.description
 	}
 
 	isDeleted () {
@@ -65,6 +71,7 @@ type UserConstructorArgs = {
 	tutor: UserTutor
 	ai: UserAi
 	socials: UserSocialsType
+	location: UserLocation | null
 }
 
 const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {

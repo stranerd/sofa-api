@@ -146,6 +146,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: []
 	},
+	location: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	}
 }, { minimize: false })
 
 export const User = appInstance.dbs.mongo.use('users').model<UserFromModel>('User', UserSchema)

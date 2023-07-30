@@ -31,8 +31,8 @@ export class VerificationsController {
 		}, req.body)
 
 		const user = await UsersUseCases.find(authUser.id)
-		if (!user) throw new BadRequestError('User not found')
-		if (!user.bio.photo || !user.bio.description) throw new BadRequestError('Complete your bio before applying for verification')
+		if (!user || user.isDeleted()) throw new BadRequestError('User not found')
+		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for verification')
 		if (user.socials.length < 1) throw new BadRequestError('Add at least one social media account before applying for verification')
 
 		const validContent = await this.verifyContent(authUser.id, content)

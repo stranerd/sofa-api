@@ -4,6 +4,7 @@ import { appInstance } from '@utils/types'
 import { AuthRole, DbChangeCallbacks } from 'equipped'
 import { TutorRequestFromModel } from '../../data/models/tutorRequests'
 import { TutorRequestEntity } from '../../domain/entities/tutorRequests'
+import { publishers } from '@utils/events'
 
 export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromModel, TutorRequestEntity> = {
 	created: async ({ after }) => {
@@ -31,10 +32,19 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 				}
 			})
 		}
+
+		if (changes.verification) await publishers.DELETEFILE.publish(before.verification)
+		if (changes.qualification) {
+			const removed = before.qualification.filter((file) => !after.qualification.find((f) => f.path === file.path))
+			await Promise.all(removed.map((file) => publishers.DELETEFILE.publish(file)))
+		}
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.created([
 			'users/tutorRequests', `users/tutorRequests/${before.id}`
 		], before)
+
+		await publishers.DELETEFILE.publish(before.verification)
+		await Promise.all(before.qualification.map((file) => publishers.DELETEFILE.publish(file)))
 	}
 }

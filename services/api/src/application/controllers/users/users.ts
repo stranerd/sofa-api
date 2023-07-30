@@ -145,4 +145,17 @@ export class UsersController {
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
+
+	static async updateLocation (req: Request) {
+		const { location } = validate({
+			location: Schema.object({
+				country: Schema.string().min(1),
+				state: Schema.string().min(1),
+			})
+		}, req.body)
+
+		const updated = await UsersUseCases.updateLocation({ userId: req.authUser!.id, location })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
 }

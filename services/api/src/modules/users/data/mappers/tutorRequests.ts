@@ -7,6 +7,9 @@ export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorR
 		return !param ? null : new TutorRequestEntity({
 			id: param._id.toString(),
 			userId: param.userId,
+			topicId: param.topicId,
+			verification: param.verification,
+			qualification: param.qualification,
 			pending: param.pending,
 			accepted: param.accepted,
 			createdAt: param.createdAt,
@@ -18,7 +21,10 @@ export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorR
 		return {
 			userId: param.userId,
 			pending: param.pending,
-			accepted: param.accepted
+			accepted: param.accepted,
+			topicId: param.topicId,
+			verification: param.verification,
+			qualification: param.qualification,
 		}
 	}
 }

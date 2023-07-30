@@ -11,6 +11,11 @@ export type UserBio = {
 	phone: Phone | null
 }
 
+export type UserLocation = {
+	country: string
+	state: string
+}
+
 export type UserRoles = AuthRoles
 
 export type UserDates = {

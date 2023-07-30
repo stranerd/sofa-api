@@ -49,7 +49,7 @@ export const subscribeToPlan = async (userId: string, subscriptionId: string) =>
 	const wallet = await WalletsUseCases.get(userId)
 	if (wallet.subscription.active) return wallet
 	const user = await UsersUseCases.find(userId)
-	if (!user) throw new BadRequestError('profile not found')
+	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 	const subscription = await PlansUseCases.find(subscriptionId)
 	if (!subscription) throw new BadRequestError('subscription not found')
 	if (!subscription.active) throw new BadRequestError('you cant subscribe to this plan currently')
@@ -67,7 +67,7 @@ export const renewSubscription = async (userId: string) => {
 	const wallet = await WalletsUseCases.get(userId)
 	if (!wallet.subscription.next) return await deactivateSub(wallet.id)
 	const user = await UsersUseCases.find(userId)
-	if (!user) return await deactivateSub(wallet.id)
+	if (!user || user.isDeleted()) return await deactivateSub(wallet.id)
 	const subscription = await PlansUseCases.find(wallet.subscription.next.id)
 	if (!subscription || !subscription.active) return await deactivateSub(wallet.id)
 	const { results: methods } = await MethodsUseCases.get({

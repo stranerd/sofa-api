@@ -12,6 +12,18 @@ const TutorRequestSchema = new appInstance.dbs.mongo.Schema<TutorRequestFromMode
 		type: String,
 		required: true
 	},
+	topicId: {
+		type: String,
+		required: true
+	},
+	verification: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
+	qualification: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as TutorRequestFromModel['qualification'],
+		required: true
+	},
 	pending: {
 		type: Boolean,
 		required: false,
