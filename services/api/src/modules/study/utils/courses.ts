@@ -1,7 +1,8 @@
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
+import { UsersUseCases } from '@modules/users'
+import { AuthRole, AuthUser, Conditions } from 'equipped'
 import { FilesUseCases, QuizzesUseCases } from '..'
 import { Coursable, DraftStatus } from '../domain/types'
-import { AuthRole, AuthUser } from 'equipped'
 
 const finders = {
 	[Coursable.quiz]: QuizzesUseCases,
@@ -23,5 +24,17 @@ export const canAccessCoursable = async<T extends Coursable> (type: T, coursable
 	if (user.roles[AuthRole.isSubscribed] && coursable.user.roles[AuthRole.isOfficialAccount]) return coursable as Type<T>
 	// check if current user has purchased item
 	const purchase = await PurchasesUseCases.for({ userId: user.id, type: Purchasables.courses, itemId: coursable.courseId })
-	return purchase ? coursable as Type<T> : null
+	if (purchase) return coursable as Type<T>
+	const organizationId = coursable.user.id
+	const { results: usersArr } = await UsersUseCases.get({
+		where: [{ field: 'id', condition: Conditions.in, value: [user.id, organizationId] }]
+	})
+	const users = Object.fromEntries(usersArr.map((user) => [user.id, user]))
+	const userDet = users[user.id]
+	const organization = users[organizationId]
+	// check that the creator is an org and the user belongs in the org
+	if (!userDet || !organization || !organization.isOrg() || !userDet.account.organizationsIn.includes(organizationId)) return null
+	// allow user to access if the org is subscribed
+	if (organization.roles.isSubscribed) return coursable as Type<T>
+	return null
 }
