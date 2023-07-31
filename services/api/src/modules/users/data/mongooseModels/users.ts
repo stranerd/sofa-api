@@ -105,7 +105,12 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		rankings: Rankings,
 		meta: Meta,
 		streak: UserStreak,
-		ratings: UserRatings
+		ratings: UserRatings,
+		organizationsIn: {
+			type: [String],
+			required: false,
+			default: []
+		}
 	},
 	type: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,

@@ -147,7 +147,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async updateTutorTopics (userId: string, topicId: string, add: boolean) {
-		const user = await User.findByIdAndUpdate({
+		const user = await User.findOneAndUpdate({
 			_id: userId,
 			[`roles.${AuthRole.isTutor}`]: true
 		}, {
@@ -186,6 +186,13 @@ export class UserRepository implements IUserRepository {
 
 	async updateLocation (userId: string, location: UserLocation) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { location } }, { new: true })
+		return this.mapper.mapFrom(user)
+	}
+
+	async updateOrganizationsIn (email: string, organizationId: string, add: boolean) {
+		const user = await User.findOneAndUpdate({ 'bio.email': email }, {
+			[add ? '$addToSet' : '$pull']: { 'account.organizationsIn': organizationId }
+		}, { new: true })
 		return this.mapper.mapFrom(user)
 	}
 }

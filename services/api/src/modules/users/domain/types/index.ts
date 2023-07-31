@@ -41,6 +41,7 @@ export type UserAccount = {
 		count: number
 		avg: number
 	}
+	organizationsIn: string[]
 }
 
 export type EmbeddedUser = {
@@ -59,6 +60,8 @@ export enum UserMeta {
 	images = 'images',
 	videos = 'videos',
 	folders = 'folders',
+
+	students = 'students',
 
 	total = 'total'
 }

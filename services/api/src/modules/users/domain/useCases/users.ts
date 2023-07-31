@@ -80,4 +80,8 @@ export class UsersUseCase {
 	async updateLocation (params: { userId: string, location: UserLocation }) {
 		return await this.repository.updateLocation(params.userId, params.location)
 	}
+
+	async updateOrganizationsIn (params: { email: string, organizationId: string, add: boolean }) {
+		return await this.repository.updateOrganizationsIn(params.email, params.organizationId, params.add)
+	}
 }

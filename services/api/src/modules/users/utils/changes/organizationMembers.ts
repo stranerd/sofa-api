@@ -1,3 +1,4 @@
+import { UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { OrganizationMemberFromModel } from '../../data/models/organizationMembers'
@@ -8,15 +9,27 @@ export const OrganizationMemberDbChangeCallbacks: DbChangeCallbacks<Organization
 		await appInstance.listener.created([
 			`users/organizationMembers/${after.organizationId}`, `users/organizationMembers/${after.organizationId}/${after.id}`
 		], after)
+
+		if (!after.pending && after.accepted?.is) await updateMetas(after, true)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.created([
 			`users/organizationMembers/${after.organizationId}`, `users/organizationMembers/${after.organizationId}/${after.id}`
 		], after)
+
+		if (!after.pending && after.accepted?.is && before.pending && !after.accepted) await updateMetas(after, true)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.created([
 			`users/organizationMembers/${before.organizationId}`, `users/organizationMembers/${before.organizationId}/${before.id}`
 		], before)
+		if (!before.pending && before.accepted?.is) await updateMetas(before, false)
 	}
+}
+
+const updateMetas = async (member: OrganizationMemberEntity, add: boolean) => {
+	await Promise.all([
+		await UsersUseCases.updateOrganizationsIn({ email: member.email, organizationId: member.organizationId, add }),
+		await UsersUseCases.incrementMeta({ id: member.organizationId, property: UserMeta.students, value: add ? 1 : -1 })
+	])
 }
