@@ -9,7 +9,7 @@ export class OrganizationMemberMapper extends BaseMapper<OrganizationMemberFromM
 			email: param.email,
 			organizationId: param.organizationId,
 			pending: param.pending,
-			withPassword: param.withPassword,
+			withCode: param.withCode,
 			accepted: param.accepted,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
@@ -21,7 +21,7 @@ export class OrganizationMemberMapper extends BaseMapper<OrganizationMemberFromM
 			email: param.email,
 			organizationId: param.organizationId,
 			pending: param.pending,
-			withPassword: param.withPassword,
+			withCode: param.withCode,
 			accepted: param.accepted
 		}
 	}

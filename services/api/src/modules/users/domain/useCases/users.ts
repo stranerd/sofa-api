@@ -50,7 +50,11 @@ export class UsersUseCase {
 	}
 
 	async updateType (params: { userId: string, data: UserTypeData }) {
-		return await this.repository.updateUserType(params.userId, params.data)
+		return await this.repository.updateType(params.userId, params.data)
+	}
+
+	async updateOrgCode (params: { userId: string, code: string }) {
+		return await this.repository.updateOrgCode(params.userId, params.code)
 	}
 
 	async updateTutorConversations (params: { userId: string, conversationId: string, add: boolean }) {

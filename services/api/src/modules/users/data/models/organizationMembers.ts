@@ -6,8 +6,8 @@ export interface OrganizationMemberFromModel extends OrganizationMemberToModel {
 
 export interface OrganizationMemberToModel {
 	pending: boolean
-	withPassword: boolean
-	accepted: number | null
+	withCode: boolean
+	accepted: { is: boolean, at: number } | null
 	organizationId: string
 	email: string
 }

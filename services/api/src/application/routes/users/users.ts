@@ -16,6 +16,18 @@ export const usersRoutes = groupRoutes('/users', [
 			})
 		]
 	}, {
+		path: '/organization/code',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateOrgCode(req)
+				}
+			})
+		]
+	}, {
 		path: '/ai',
 		method: 'post',
 		controllers: [

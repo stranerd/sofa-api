@@ -45,7 +45,8 @@ export class UsersController {
 				}),
 				Schema.object({
 					type: Schema.is(UserType.organization as const),
-					name: Schema.string().min(1)
+					name: Schema.string().min(1),
+					code: Schema.string().min(6)
 				})
 			])
 		}, req.body)
@@ -85,6 +86,16 @@ export class UsersController {
 			if (updated) return updated
 		}
 		throw new NotAuthorizedError('cannot update user type')
+	}
+
+	static async updateOrgCode (req: Request) {
+		const { code } = validate({
+			code: Schema.string().min(6)
+		}, req.body)
+
+		const user = await UsersUseCases.updateOrgCode({ userId: req.authUser!.id, code })
+		if (user) return user
+		throw new NotAuthorizedError()
 	}
 
 	static async updateAi (req: Request) {

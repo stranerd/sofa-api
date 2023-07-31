@@ -21,13 +21,13 @@ const OrganizationMemberSchema = new appInstance.dbs.mongo.Schema<OrganizationMe
 		required: false,
 		default: true
 	},
-	withPassword: {
+	withCode: {
 		type: Boolean,
 		required: false,
 		default: false
 	},
 	accepted: {
-		type: Number,
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: null
 	},

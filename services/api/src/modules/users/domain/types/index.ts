@@ -114,7 +114,8 @@ export type UserTypeData = {
 	school: string
 } | {
 	type: UserType.organization,
-	name: string
+	name: string,
+	code: string
 }
 
 export type UserTutor = {

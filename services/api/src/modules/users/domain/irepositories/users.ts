@@ -23,7 +23,9 @@ export interface IUserRepository {
 
 	resetAllUsersStatus (): Promise<boolean>
 
-	updateUserType (userId: string, data: UserTypeData): Promise<UserEntity | null>
+	updateType (userId: string, data: UserTypeData): Promise<UserEntity | null>
+
+	updateOrgCode (userId: string, code: string): Promise<UserEntity | null>
 
 	updateTutorConversations (userId: string, conversationId: string, add: boolean): Promise<boolean>
 

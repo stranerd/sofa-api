@@ -1,11 +1,11 @@
 import { appInstance } from '@utils/types'
+import { AuthRole } from 'equipped'
 import { IUserRepository } from '../../domain/irepositories/users'
-import { UserAccount, UserAi, UserBio, UserLocation, UserMeta, UserRankings, UserRoles, UserSocialsType, UserTypeData } from '../../domain/types'
+import { UserAccount, UserAi, UserBio, UserLocation, UserMeta, UserRankings, UserRoles, UserSocialsType, UserType, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
-import { AuthRole } from 'equipped'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
@@ -117,10 +117,23 @@ export class UserRepository implements IUserRepository {
 		return !!res.acknowledged
 	}
 
-	async updateUserType (userId: string, data: UserTypeData) {
+	async updateType (userId: string, data: UserTypeData) {
+		const parsed = Object.fromEntries(
+			Object.entries(data)
+				.map(([key, value]) => [`type.${key}`, value])
+		)
 		const user = await User.findOneAndUpdate(
 			{ _id: userId, $or: [{ type: null }, { 'type.type': data.type }] },
-			{ $set: { type: data } },
+			{ $set: parsed },
+			{ new: true }
+		)
+		return this.mapper.mapFrom(user)
+	}
+
+	async updateOrgCode (userId: string, code: string) {
+		const user = await User.findOneAndUpdate(
+			{ _id: userId, 'type.type': UserType.organization },
+			{ $set: { 'type.code': code } },
 			{ new: true }
 		)
 		return this.mapper.mapFrom(user)
@@ -171,7 +184,7 @@ export class UserRepository implements IUserRepository {
 		return res
 	}
 
-	async updateLocation(userId: string, location: UserLocation) {
+	async updateLocation (userId: string, location: UserLocation) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { location } }, { new: true })
 		return this.mapper.mapFrom(user)
 	}

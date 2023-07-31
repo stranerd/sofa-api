@@ -20,11 +20,15 @@ export class OrganizationMembersUseCase {
 		return await this.repository.add(input)
 	}
 
-	async request (data: { email: string, organizationId: string, withPassword: boolean }) {
+	async request (data: { email: string, organizationId: string, withCode: boolean }) {
 		return await this.repository.request(data)
 	}
 
 	async accept (data: { userId: string, organizationId: string, email: string, accept: boolean }) {
 		return await this.repository.accept(data)
+	}
+
+	async remove (data: { userId: string | null, organizationId: string, email: string }) {
+		return await this.repository.remove(data)
 	}
 }

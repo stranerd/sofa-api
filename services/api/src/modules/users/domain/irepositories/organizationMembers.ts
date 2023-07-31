@@ -5,6 +5,7 @@ export interface IOrganizationMemberRepository {
 	find: (id: string) => Promise<OrganizationMemberEntity | null>
 	get: (query: QueryParams) => Promise<QueryResults<OrganizationMemberEntity>>
 	add: (data: { userId: string, organizationId: string, emails: string[] }) => Promise<OrganizationMemberEntity[]>
-	request: (data: { email: string, organizationId: string, withPassword: boolean }) => Promise<OrganizationMemberEntity>
+	request: (data: { email: string, organizationId: string, withCode: boolean }) => Promise<OrganizationMemberEntity>
 	accept: (data: { email: string, userId: string, organizationId: string, accept: boolean }) => Promise<boolean>
+	remove: (data: { userId: string | null, organizationId: string, email: string }) => Promise<boolean>
 }

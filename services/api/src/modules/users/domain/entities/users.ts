@@ -1,6 +1,6 @@
 import { BaseEntity, Validation } from 'equipped'
 import { getNextRank, getRank } from '../../utils/ranks'
-import { EmbeddedUser, UserAccount, UserAi, UserBio, UserDates, UserLocation, UserRoles, UserSocialsType, UserStatus, UserTutor, UserTypeData } from '../types'
+import { EmbeddedUser, UserAccount, UserAi, UserBio, UserDates, UserLocation, UserRoles, UserSocialsType, UserStatus, UserTutor, UserType, UserTypeData } from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -14,6 +14,7 @@ export class UserEntity extends BaseEntity {
 	public readonly ai: UserAi
 	public readonly socials: UserSocialsType
 	public readonly location: UserLocation | null
+	ignoreInJSON = ['type.code']
 
 	constructor ({ id, bio, roles, dates, status, account, type, tutor, ai, socials, location }: UserConstructorArgs) {
 		super()
@@ -44,6 +45,15 @@ export class UserEntity extends BaseEntity {
 
 	isDeleted () {
 		return this.dates.deletedAt !== null
+	}
+
+	isOrg () {
+		return this.type?.type === UserType.organization
+	}
+
+	getOrgCode () {
+		if (this.type?.type !== UserType.organization) return null
+		return this.type.code
 	}
 
 	getEmbedded (): EmbeddedUser {
