@@ -2,7 +2,7 @@ import { OrganizationMembersController } from '@application/controllers/users/or
 import { isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
-export const organizationMembersRoutes = groupRoutes('/organizations/:organizationalId/members', [
+export const organizationMembersRoutes = groupRoutes('/organizations/:organizationId/members', [
 	{
 		path: '/',
 		method: 'get',

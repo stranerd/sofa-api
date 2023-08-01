@@ -1,5 +1,5 @@
 import { OrganizationMembersUseCases, UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class OrganizationMembersController {
 	static async find (req: Request) {
@@ -39,7 +39,7 @@ export class OrganizationMembersController {
 		const orgCode = organization.getOrgCode()
 
 		const { code } = validate({
-			code: Schema.string().nullish().custom((val) => orgCode ? val === orgCode : true, 'code doesn\'t match')
+			code: Schema.force.string().nullish().custom((val) => orgCode ? val === orgCode : true, 'doesn\'t match')
 		}, req.body)
 
 		return await OrganizationMembersUseCases.request({
@@ -61,10 +61,12 @@ export class OrganizationMembersController {
 	}
 
 	static async leave (req: Request) {
-		return await OrganizationMembersUseCases.remove({
+		const deleted = await OrganizationMembersUseCases.remove({
 			email: req.authUser!.email, userId: null,
 			organizationId: req.params.organizationId
 		})
+		if (deleted) return deleted
+		throw new NotAuthorizedError()
 	}
 
 	static async remove (req: Request) {
@@ -72,9 +74,12 @@ export class OrganizationMembersController {
 			email: Schema.string().email()
 		}, req.body)
 
-		return await OrganizationMembersUseCases.remove({
+		const deleted = await OrganizationMembersUseCases.remove({
 			email, userId: req.authUser!.id,
 			organizationId: req.params.organizationId
 		})
+
+		if (deleted) return deleted
+		throw new NotAuthorizedError()
 	}
 }

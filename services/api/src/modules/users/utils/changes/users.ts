@@ -5,13 +5,21 @@ import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
-import { ConnectsUseCases } from '../../'
+import { ConnectsUseCases, OrganizationMembersUseCases, UsersUseCases } from '../../'
 import { UserFromModel } from '../../data/models/users'
 import { UserEntity } from '../../domain/entities/users'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)
+
+		const { results: members } = await OrganizationMembersUseCases.get({
+			where: [{ field: 'email', value: after.bio.email }]
+		})
+
+		await UsersUseCases.updateOrganizationsIn({
+			email: after.bio.email, organizationIds: members.map((member) => member.organizationId), add: true
+		})
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)

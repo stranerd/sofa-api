@@ -189,9 +189,9 @@ export class UserRepository implements IUserRepository {
 		return this.mapper.mapFrom(user)
 	}
 
-	async updateOrganizationsIn (email: string, organizationId: string, add: boolean) {
+	async updateOrganizationsIn (email: string, organizationIds: string[], add: boolean) {
 		const user = await User.findOneAndUpdate({ 'bio.email': email }, {
-			[add ? '$addToSet' : '$pull']: { 'account.organizationsIn': organizationId }
+			[add ? '$addToSet' : '$pull']: { 'account.organizationsIn': { [add ? '$each' : '$in']: organizationIds } }
 		}, { new: true })
 		return this.mapper.mapFrom(user)
 	}

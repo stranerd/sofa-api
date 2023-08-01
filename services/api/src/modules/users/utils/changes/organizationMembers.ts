@@ -29,7 +29,7 @@ export const OrganizationMemberDbChangeCallbacks: DbChangeCallbacks<Organization
 
 const updateMetas = async (member: OrganizationMemberEntity, add: boolean) => {
 	await Promise.all([
-		await UsersUseCases.updateOrganizationsIn({ email: member.email, organizationId: member.organizationId, add }),
+		await UsersUseCases.updateOrganizationsIn({ email: member.email, organizationIds: [member.organizationId], add }),
 		await UsersUseCases.incrementMeta({ id: member.organizationId, property: UserMeta.students, value: add ? 1 : -1 })
 	])
 }
