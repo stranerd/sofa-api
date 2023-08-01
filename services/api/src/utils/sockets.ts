@@ -21,7 +21,8 @@ export const registerSockets = () => {
 
 	appInstance.listener
 		.register('conversations/conversations', isMine)
-		.register('conversations/:conversationId/messages', conversationMessagesCb)
+		.register('conversations/conversations/:conversationId/messages', conversationMessagesCb)
+		.register('conversations/reviews', isOpen)
 
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
@@ -38,7 +39,7 @@ export const registerSockets = () => {
 		.register('payment/withdrawals', isMine)
 
 		.register('plays/games', isMine)
-		.register('plays/:gameId/answers', isOpen)
+		.register('plays/games/:gameId/answers', isOpen)
 
 		.register('school/courses', isOpen)
 		.register('school/departments', isOpen)
@@ -47,7 +48,7 @@ export const registerSockets = () => {
 
 		.register('study/folders', isMine)
 		.register('study/quizzes', isOpen)
-		.register('study/:quizId/questions', coursablesCb)
+		.register('study/quizzes/:quizId/questions', coursablesCb)
 		.register('study/courses', isOpen)
 		.register('study/files', isOpen)
 
@@ -55,5 +56,5 @@ export const registerSockets = () => {
 		.register('users/users', isOpen)
 		.register('users/verifications', isOpen)
 		.register('users/tutorRequests', isOpen)
-		.register('users/organizationMembers/:organizationId', isOpen)
+		.register('users/organizations/:organizationId/members', isOpen)
 }

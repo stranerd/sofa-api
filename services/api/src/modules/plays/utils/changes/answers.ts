@@ -6,17 +6,17 @@ import { AnswerEntity } from '../../domain/entities/answers'
 export const AnswerDbChangeCallbacks: DbChangeCallbacks<AnswerFromModel, AnswerEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created([
-			`plays/${after.gameId}/answers`, `plays/${after.gameId}/answers/${after.id}`
+			`plays/games/${after.gameId}/answers`, `plays/games/${after.gameId}/answers/${after.id}`
 		], after)
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.created([
-			`plays/${after.gameId}/answers`, `plays/${after.gameId}/answers/${after.id}`
+			`plays/games/${after.gameId}/answers`, `plays/games/${after.gameId}/answers/${after.id}`
 		], after)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.created([
-			`plays/${before.gameId}/answers`, `plays/${before.gameId}/answers/${before.id}`
+			`plays/games/${before.gameId}/answers`, `plays/games/${before.gameId}/answers/${before.id}`
 		], before)
 	}
 }

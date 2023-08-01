@@ -7,21 +7,21 @@ import { OrganizationMemberEntity } from '../../domain/entities/organizationMemb
 export const OrganizationMemberDbChangeCallbacks: DbChangeCallbacks<OrganizationMemberFromModel, OrganizationMemberEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created([
-			`users/organizationMembers/${after.organizationId}`, `users/organizationMembers/${after.organizationId}/${after.id}`
+			`users/organizations/${after.organizationId}/members`, `users/organizations/${after.organizationId}/members/${after.id}`
 		], after)
 
 		if (!after.pending && after.accepted?.is) await updateMetas(after, true)
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.created([
-			`users/organizationMembers/${after.organizationId}`, `users/organizationMembers/${after.organizationId}/${after.id}`
+			`users/organizations/${after.organizationId}/members`, `users/organizations/${after.organizationId}/members/${after.id}`
 		], after)
 
 		if (!after.pending && after.accepted?.is && before.pending && !after.accepted) await updateMetas(after, true)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.created([
-			`users/organizationMembers/${before.organizationId}`, `users/organizationMembers/${before.organizationId}/${before.id}`
+			`users/organizations/${before.organizationId}/members`, `users/organizations/${before.organizationId}/members/${before.id}`
 		], before)
 		if (!before.pending && before.accepted?.is) await updateMetas(before, false)
 	}
