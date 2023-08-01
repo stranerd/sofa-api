@@ -32,6 +32,11 @@ const PlanSchema = new appInstance.dbs.mongo.Schema<PlanFromModel>({
 			default: 0
 		}])
 	),
+	usersFor: {
+		type: [String],
+		required: false,
+		default: []
+	},
 	interval: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true

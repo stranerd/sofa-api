@@ -1,5 +1,6 @@
 import { BaseEntity, CronTypes } from 'equipped'
 import { Currencies, Interval, PlanData } from '../types'
+import { UserType } from '@modules/users'
 
 export class PlanEntity extends BaseEntity {
 	public readonly id: string
@@ -9,6 +10,7 @@ export class PlanEntity extends BaseEntity {
 	public readonly amount: number
 	public readonly currency: Currencies
 	public readonly data: PlanData
+	public readonly usersFor: UserType[]
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
@@ -20,6 +22,7 @@ export class PlanEntity extends BaseEntity {
 		interval,
 		active,
 		data,
+		usersFor,
 		createdAt,
 		updatedAt
 	}: PlanConstructorArgs) {
@@ -31,6 +34,7 @@ export class PlanEntity extends BaseEntity {
 		this.amount = amount
 		this.currency = currency
 		this.data = data
+		this.usersFor = usersFor
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -53,6 +57,7 @@ type PlanConstructorArgs = {
 	currency: Currencies
 	interval: Interval
 	data: PlanData
+	usersFor: UserType[]
 	createdAt: number
 	updatedAt: number
 }

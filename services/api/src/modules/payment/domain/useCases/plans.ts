@@ -1,5 +1,5 @@
 import { QueryParams } from 'equipped'
-import { plansList } from '../../utils/plans'
+import { getPlansList } from '../../utils/plans'
 import { IPlanRepository } from '../irepositories/plans'
 
 export class PlansUseCase {
@@ -18,6 +18,6 @@ export class PlansUseCase {
 	}
 
 	async init () {
-		return await this.repository.init(plansList)
+		return await this.repository.init(getPlansList())
 	}
 }

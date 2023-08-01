@@ -1,3 +1,4 @@
+import { UserType } from '@modules/users'
 import { Currencies, Interval, PlanData } from '../../domain/types'
 
 export interface PlanFromModel extends PlanToModel {
@@ -13,4 +14,5 @@ export interface PlanToModel {
 	interval: Interval
 	active: boolean
 	data: PlanData
+	usersFor: UserType[]
 }

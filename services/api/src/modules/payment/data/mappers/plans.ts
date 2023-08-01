@@ -12,6 +12,7 @@ export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntit
 			currency: param.currency,
 			interval: param.interval,
 			data: param.data,
+			usersFor: param.usersFor,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
 		})
@@ -25,6 +26,7 @@ export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntit
 			amount: param.amount,
 			currency: param.currency,
 			data: param.data,
+			usersFor: param.usersFor,
 			interval: param.interval
 		}
 	}
