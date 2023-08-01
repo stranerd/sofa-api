@@ -41,11 +41,15 @@ export class PlanEntity extends BaseEntity {
 
 	getNextCharge (time: number) {
 		const date = new Date(time)
-		if (this.interval === CronTypes.hourly) date.setHours(date.getHours() + 1)
-		if (this.interval === CronTypes.daily) date.setDate(date.getDate() + 1)
 		if (this.interval === CronTypes.weekly) date.setDate(date.getDate() + 7)
 		if (this.interval === CronTypes.monthly) date.setMonth(date.getMonth() + 1)
 		return date.getTime()
+	}
+
+	getLengthInDays () {
+		if (this.interval === CronTypes.weekly) return 7
+		if (this.interval === CronTypes.monthly) return 30
+		throw new Error('Not implemented')
 	}
 }
 

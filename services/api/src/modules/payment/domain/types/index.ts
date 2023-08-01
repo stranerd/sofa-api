@@ -30,6 +30,7 @@ export type TransactionData = {
 } | {
 	type: TransactionType.subscription
 	subscriptionId: string
+	multiplier: number
 } | {
 	type: TransactionType.purchase
 	purchase: PurchaseToModel
@@ -71,6 +72,7 @@ export type SubscriptionModel = {
 		renewedAt: number
 	} | null
 	data: PlanData
+	studentsDays: number
 }
 
 export enum PlanDataType {
@@ -94,7 +96,7 @@ export type MethodData = {
 	expired: boolean
 }
 
-export type Interval = Enum<typeof CronTypes>
+export type Interval = Enum<Pick<typeof CronTypes, 'monthly' | 'weekly'>>
 
 export type TransferData = {
 	from: string,

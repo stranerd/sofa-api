@@ -52,7 +52,12 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 				required: false,
 				default: 0
 			}])
-		)
+		),
+		studentsDays: {
+			type: Number,
+			required: false,
+			default: 0
+		}
 	},
 	createdAt: {
 		type: Number,
