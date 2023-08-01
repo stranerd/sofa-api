@@ -36,7 +36,7 @@ export class TutorRequestsController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('User not found')
 		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for tutorship')
-		if (user.location) throw new BadRequestError('Update your location before applying for tutorship')
+		if (!user.location) throw new BadRequestError('Update your location before applying for tutorship')
 
 		const verificationUploaded = await UploaderUseCases.upload('tutorRequests/verification', verification)
 		const qualificationUploaded = await UploaderUseCases.uploadMany('tutorRequests/qualification', qualification)
