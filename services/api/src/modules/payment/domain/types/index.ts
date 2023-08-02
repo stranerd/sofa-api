@@ -72,7 +72,7 @@ export type SubscriptionModel = {
 		renewedAt: number
 	} | null
 	data: PlanData
-	studentsDays: number
+	membersDays: number
 }
 
 export enum PlanDataType {

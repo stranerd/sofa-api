@@ -94,11 +94,11 @@ export class WalletRepository implements IWalletRepository {
 				}
 			]
 			await Transaction.insertMany(transactions, { session })
-			const updatedFromWallet =  await Wallet.findByIdAndUpdate(fromWallet.id,
+			const updatedFromWallet = await Wallet.findByIdAndUpdate(fromWallet.id,
 				{ $inc: { 'balance.amount': 0 - data.amount } },
 				{ new: true, session }
 			)
-			const updatedToWallet =  await Wallet.findByIdAndUpdate(toWallet.id,
+			const updatedToWallet = await Wallet.findByIdAndUpdate(toWallet.id,
 				{ $inc: { 'balance.amount': data.amount } },
 				{ new: true, session }
 			)
@@ -138,11 +138,26 @@ export class WalletRepository implements IWalletRepository {
 				data: { type: TransactionType.withdrawal, withdrawalId: withdrawal._id }
 			}
 			await new Transaction(transaction).save({ session })
-			const updatedWallet =  await Wallet.findByIdAndUpdate(wallet.id,
+			const updatedWallet = await Wallet.findByIdAndUpdate(wallet.id,
 				{ $inc: { 'balance.amount': transaction.amount } },
 				{ new: true, session }
 			)
 			res = !!updatedWallet
+			return res
+		})
+		return res
+	}
+
+	async updateMembersDays (data: Record<string, number>) {
+		let res = false
+		await Wallet.collection.conn.transaction(async (session) => {
+			const entries = Object.entries(data)
+			const bulk = Wallet.collection.initializeUnorderedBulkOp()
+			for (const [userId, days] of entries) {
+				bulk.find({ userId }).upsert().updateOne({ $inc: { 'subscription.data.membersDays': days }, $setOnInsert: { userId } })
+			}
+			const result = await bulk.execute({ session })
+			res = result.nModified === entries.length
 			return res
 		})
 		return res

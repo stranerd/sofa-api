@@ -1,4 +1,4 @@
-import { UserEntity, UsersUseCases } from '@modules/users'
+import { OrganizationMembersUseCases, UserEntity, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
 import { MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '../'
@@ -10,7 +10,7 @@ import { FlutterwavePayment } from './flutterwave'
 
 const getSubscriptionMultipier = async (user: UserEntity, wallet: WalletEntity, subscription: PlanEntity) => {
 	if (!user.isOrg()) return 1
-	return wallet.subscription.studentsDays / subscription.getLengthInDays()
+	return wallet.subscription.membersDays / subscription.getLengthInDays()
 }
 
 const activateSub = async (userId: string, walletId: string, plan: PlanEntity) => {
@@ -26,7 +26,7 @@ const activateSub = async (userId: string, walletId: string, plan: PlanEntity) =
 			current: { id: plan.id, activatedAt: now, expiredAt: renewedAt, jobId },
 			next: { id: plan.id, renewedAt },
 			data: plan.data,
-			studentsDays: 0
+			membersDays: 0
 		}
 	})
 }
@@ -99,4 +99,9 @@ export const cancelSubscription = async (userId: string) => {
 	return await WalletsUseCases.updateSubscription({
 		id: wallet.id, data: { next: null }
 	})
+}
+
+export const updateOrgsMembersDays = async () => {
+	const records = await OrganizationMembersUseCases.aggregateOrgMembersDays()
+	await WalletsUseCases.updateMembersDays(records)
 }

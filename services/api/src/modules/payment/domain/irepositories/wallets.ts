@@ -9,4 +9,5 @@ export interface IWalletRepository {
 	updateAccount: (userId: string, account: AccountDetails) => Promise<WalletEntity>
 	transfer: (data: TransferData) => Promise<boolean>
 	withdraw: (data: WithdrawData) => Promise<boolean>
+	updateMembersDays: (data: Record<string, number>) => Promise<boolean>
 }

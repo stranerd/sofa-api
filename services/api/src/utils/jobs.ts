@@ -1,6 +1,6 @@
 import { deleteUnverifiedUsers } from '@modules/auth'
 import { EmailErrorsUseCases, NotificationsUseCases, PhoneErrorsUseCases, sendMailAndCatchError, sendTextAndCatchError } from '@modules/notifications'
-import { MethodsUseCases, processWithdrawals, renewSubscription, retryTransactions } from '@modules/payment'
+import { MethodsUseCases, processWithdrawals, renewSubscription, retryTransactions, updateOrgsMembersDays } from '@modules/payment'
 import { GamesUseCases } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
@@ -28,21 +28,28 @@ export const startJobs = async () => {
 					retryTransactions(60 * 60 * 1000),
 					processWithdrawals(60 * 60 * 1000),
 					appInstance.job.retryAllFailedJobs(),
-					emails.map((e) => sendMailAndCatchError(e as any)),
-					texts.map((t) => sendTextAndCatchError(t))
+					...emails.map((e) => sendMailAndCatchError(e as any)),
+					...texts.map((t) => sendTextAndCatchError(t))
 				])
 			}
 			if (type === CronTypes.daily) {
-				await UsersUseCases.resetRankings(UserRankings.daily)
-				await deleteUnverifiedUsers()
+				await Promise.all([
+					UsersUseCases.resetRankings(UserRankings.daily),
+					deleteUnverifiedUsers(),
+					updateOrgsMembersDays()
+				])
 			}
 			if (type === CronTypes.weekly) {
-				await UsersUseCases.resetRankings(UserRankings.weekly)
-				await NotificationsUseCases.deleteOldSeen()
+				await Promise.all([
+					UsersUseCases.resetRankings(UserRankings.weekly),
+					NotificationsUseCases.deleteOldSeen(),
+				])
 			}
 			if (type === CronTypes.monthly) {
-				await UsersUseCases.resetRankings(UserRankings.monthly)
-				await MethodsUseCases.markExpireds()
+				await Promise.all([
+					UsersUseCases.resetRankings(UserRankings.monthly),
+					MethodsUseCases.markExpireds()
+				])
 			}
 		}
 	})

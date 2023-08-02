@@ -28,6 +28,6 @@ export const WithdrawalsUseCases = new WithdrawalsUseCase(withdrawalRepository)
 export { Currencies, PlanDataType, Purchasables, Saleable, TransactionStatus, TransactionType, CurrencyCountries } from './domain/types'
 export { FlutterwavePayment } from './utils/flutterwave'
 export { findPurchasable } from './utils/purchases'
-export { cancelSubscription, renewSubscription, subscribeToPlan } from './utils/subscriptions'
+export { cancelSubscription, renewSubscription, subscribeToPlan, updateOrgsMembersDays } from './utils/subscriptions'
 export { retryTransactions } from './utils/transactions'
 export { processWithdrawals } from './utils/withdrawals'

@@ -53,7 +53,7 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 				default: 0
 			}])
 		),
-		studentsDays: {
+		membersDays: {
 			type: Number,
 			required: false,
 			default: 0

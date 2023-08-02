@@ -31,4 +31,8 @@ export class OrganizationMembersUseCase {
 	async remove (data: { userId: string | null, organizationId: string, email: string }) {
 		return await this.repository.remove(data)
 	}
+
+	async aggregateOrgMembersDays () {
+		return await this.repository.aggregateOrgMembersDays()
+	}
 }

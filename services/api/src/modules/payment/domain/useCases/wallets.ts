@@ -35,4 +35,8 @@ export class WalletsUseCase {
 	async withdraw (data: WithdrawData) {
 		return await this.repository.withdraw(data)
 	}
+
+	async updateMembersDays (data: Record<string, number>) {
+		return await this.repository.updateMembersDays(data)
+	}
 }

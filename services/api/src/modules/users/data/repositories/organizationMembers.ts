@@ -91,6 +91,14 @@ export class OrganizationMemberRepository implements IOrganizationMemberReposito
 		return res
 	}
 
+	async aggregateOrgMembersDays () {
+		const data: { _id: string, total: number }[] = await OrganizationMember.aggregate([
+			{ $match: { 'accepted.is': true } },
+			{ $group: { _id: '$organizationId', total: { $count: {} } } }
+		])
+		return data.reduce((acc, cur) => ({ ...acc, [cur._id]: cur.total }), {} as Record<string, number>)
+	}
+
 	async #userIdHasAccessToOrg (userId: string, organizationId: string, _: ClientSession) {
 		return userId === organizationId
 	}
