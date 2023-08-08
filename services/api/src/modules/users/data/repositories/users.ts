@@ -118,13 +118,9 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async updateType (userId: string, data: UserTypeData) {
-		const parsed = Object.fromEntries(
-			Object.entries(data)
-				.map(([key, value]) => [`type.${key}`, value])
-		)
 		const user = await User.findOneAndUpdate(
 			{ _id: userId, $or: [{ type: null }, { 'type.type': data.type }] },
-			{ $set: parsed },
+			{ $set: { type: data } },
 			{ new: true }
 		)
 		return this.mapper.mapFrom(user)
