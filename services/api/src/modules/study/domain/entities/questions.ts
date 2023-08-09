@@ -7,18 +7,20 @@ export class QuestionEntity extends BaseEntity {
 	public readonly userId: string
 	public readonly quizId: string
 	public readonly question: string
+	public readonly explanation: string
 	public readonly questionMedia: Media | null
 	public readonly timeLimit: number
 	public readonly data: QuestionData
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, userId, quizId, question, questionMedia, timeLimit, data, createdAt, updatedAt }: QuestionConstructorArgs) {
+	constructor ({ id, userId, quizId, question, explanation, questionMedia, timeLimit, data, createdAt, updatedAt }: QuestionConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId
 		this.quizId = quizId
 		this.question = question
+		this.explanation = explanation
 		this.questionMedia = questionMedia
 		this.timeLimit = timeLimit
 		this.data = data
@@ -29,6 +31,7 @@ export class QuestionEntity extends BaseEntity {
 	strip () {
 		return {
 			...this.toJSON(),
+			explanation: undefined,
 			data: this.stripAnswers(this.data)
 		}
 	}
@@ -106,6 +109,7 @@ type QuestionConstructorArgs = {
 	userId: string
 	quizId: string
 	question: string
+	explanation: string
 	questionMedia: Media | null
 	timeLimit: number
 	data: QuestionData

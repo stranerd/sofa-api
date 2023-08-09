@@ -10,6 +10,7 @@ export class QuestionController {
 			if (!types.includes(body?.data?.type ?? '')) return Validation.isValid(value)
 			return value.includes(body?.data?.indicator ?? '') ? Validation.isValid(value) : Validation.isInvalid(['must contain the indicator'], value)
 		}),
+		explanation: Schema.string(),
 		questionMedia: Schema.or([Schema.file().image(), Schema.file().audio(), Schema.file().video()]).nullable(),
 		timeLimit: Schema.number().gt(0).lte(300).round(),
 		data: Schema.or([

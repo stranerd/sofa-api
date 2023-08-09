@@ -10,6 +10,7 @@ export interface QuestionToModel {
 	userId: string
 	quizId: string
 	question: string
+	explanation: string
 	questionMedia: Media | null
 	timeLimit: number
 	data: QuestionData
