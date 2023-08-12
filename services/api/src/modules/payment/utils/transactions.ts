@@ -57,6 +57,16 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	}
 }
 
+export const fulfillTransaction = async (transaction: TransactionEntity) => {
+	const successful = await FlutterwavePayment.verify(transaction.id, transaction.amount, transaction.currency)
+	if (!successful) return false
+	const txn = await TransactionsUseCases.update({
+		id: transaction.id,
+		data: { status: TransactionStatus.fulfilled }
+	})
+	return !!txn
+}
+
 export const retryTransactions = async (timeInMs: number) => {
 	const { results: fulfilledTransactions } = await TransactionsUseCases.get({
 		where: [
@@ -74,5 +84,5 @@ export const retryTransactions = async (timeInMs: number) => {
 		],
 		all: true
 	})
-	await TransactionsUseCases.delete(initializedTransactions.map((t) => t.id))
+	await Promise.all(initializedTransactions.map(fulfillTransaction))
 }

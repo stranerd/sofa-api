@@ -1,4 +1,4 @@
-import { Currencies, FlutterwavePayment, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { Currencies, fulfillTransaction, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -46,12 +46,8 @@ export class TransactionsController {
 	static async fulfill (req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
 		if (!transaction || transaction.userId !== req.authUser!.id) throw new NotAuthorizedError()
-		const successful = await FlutterwavePayment.verify(transaction.id, transaction.amount, transaction.currency)
+		const successful = await fulfillTransaction(transaction)
 		if (!successful) throw new BadRequestError('transaction unsuccessful')
-		const updatedTxn = await TransactionsUseCases.update({
-			id: transaction.id,
-			data: { status: TransactionStatus.fulfilled }
-		})
-		return !!updatedTxn
+		return successful
 	}
 }
