@@ -6,3 +6,7 @@ export enum GameStatus {
 	ended = 'ended',
 	scored = 'scored'
 }
+
+export enum AnswerTypes {
+	games = 'games'
+}

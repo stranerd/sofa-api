@@ -4,7 +4,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { AnswersUseCases } from '../..'
 import { GameFromModel } from '../../data/models/games'
 import { GameEntity } from '../../domain/entities/games'
-import { GameStatus } from '../../domain/types'
+import { AnswerTypes, GameStatus } from '../../domain/types'
 import { calculateGameResults, startGameTimer } from '../games'
 
 export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity> = {
@@ -32,6 +32,6 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 			]).flat(), before)
 
 		await QuizzesUseCases.updateMeta({ id: before.quizId, property: QuizMetaType.games, value: -1 })
-		await AnswersUseCases.deleteGameAnswers(before.id)
+		await AnswersUseCases.deleteTypeAnswers({ type: AnswerTypes.games, typeId: before.id })
 	}
 }

@@ -8,3 +8,5 @@ const answerRepository = AnswerRepository.getInstance()
 
 export const GamesUseCases = new GamesUseCase(gameRepository)
 export const AnswersUseCases = new AnswersUseCase(answerRepository)
+
+export { AnswerTypes } from './domain/types'

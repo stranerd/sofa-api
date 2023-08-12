@@ -1,4 +1,5 @@
 import { canAccessConversation } from '@modules/conversations'
+import { AnswerTypes } from '@modules/plays'
 import { canAccessCoursable, Coursable } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { OnJoinFn } from 'equipped'
@@ -39,7 +40,6 @@ export const registerSockets = () => {
 		.register('payment/withdrawals', isMine)
 
 		.register('plays/games', isMine)
-		.register('plays/games/:gameId/answers', isOpen)
 
 		.register('school/courses', isOpen)
 		.register('school/departments', isOpen)
@@ -57,4 +57,7 @@ export const registerSockets = () => {
 		.register('users/verifications', isOpen)
 		.register('users/tutorRequests', isOpen)
 		.register('users/organizations/:organizationId/members', isOpen)
+
+	Object.values(AnswerTypes)
+		.forEach((type) => appInstance.listener.register(`plays/${type}/:typeId/answers`, isOpen))
 }

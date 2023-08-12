@@ -8,7 +8,11 @@ const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>({
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
 	},
-	gameId: {
+	type: {
+		type: String,
+		required: true
+	},
+	typeId: {
 		type: String,
 		required: true
 	},
@@ -33,6 +37,6 @@ const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Answer = appInstance.dbs.mongo.use('plays').model<AnswerFromModel>('Game-Answer', Schema)
+export const Answer = appInstance.dbs.mongo.use('plays').model<AnswerFromModel>('Answer', Schema)
 
 export const AnswerChange = appInstance.dbs.mongo.change(Answer, AnswerDbChangeCallbacks, new AnswerMapper().mapFrom)

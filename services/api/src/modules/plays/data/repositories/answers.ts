@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
+import { ClientSession } from 'mongodb'
 import { IAnswerRepository } from '../../domain/irepositories/answers'
-import { GameStatus } from '../../domain/types'
+import { AnswerTypes, GameStatus } from '../../domain/types'
 import { AnswerMapper } from '../mappers/answers'
 import { AnswerFromModel, AnswerToModel } from '../models/answers'
 import { Answer } from '../mongooseModels/answers'
@@ -29,18 +30,15 @@ export class AnswerRepository implements IAnswerRepository {
 		}
 	}
 
-	async answer ({ gameId, userId, questionId, answer }: AnswerToModel & { questionId: string, answer: any }) {
+	async answer ({ type, typeId, userId, questionId, answer }: AnswerToModel & { questionId: string, answer: any }) {
 		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
-			const game = await Game.findById(gameId, {}, { session })
-			if (!game) return false
-			if (!game.questions.includes(questionId)) return false
-			if (!game.participants.includes(userId)) return false
-			if (game.status !== GameStatus.started) return false
+			const verified = await this.#verifyType(type, typeId, { questionId, userId }, session)
+			if (!verified) return false
 			const newAnswer = await Answer.findOneAndUpdate(
-				{ gameId, userId },
+				{ type, typeId, userId },
 				{
-					$setOnInsert: { gameId, userId },
+					$setOnInsert: { type, typeId, userId },
 					$set: { [`data.${questionId}`]: answer }
 				},
 				{ upsert: true, new: true, session })
@@ -55,8 +53,20 @@ export class AnswerRepository implements IAnswerRepository {
 		return this.mapper.mapFrom(answer)
 	}
 
-	async deleteGameAnswers (gameId: string) {
-		const answers = await Answer.deleteMany({ gameId })
+	async deleteTypeAnswers (type: AnswerTypes, typeId: string) {
+		const answers = await Answer.deleteMany({ type, typeId })
 		return answers.acknowledged
+	}
+
+	async #verifyType (type: AnswerTypes, typeId: string, data: { questionId: string, userId: string }, session: ClientSession) {
+		if (type === AnswerTypes.games) {
+			const game = await Game.findById(typeId, {}, { session })
+			if (!game) return false
+			if (!game.questions.includes(data.questionId)) return false
+			if (!game.participants.includes(data.userId)) return false
+			if (game.status !== GameStatus.started) return false
+			return true
+		}
+		return false
 	}
 }

@@ -1,16 +1,17 @@
-import { AnswersUseCases } from '@modules/plays'
-import { QueryParams, Request, Schema, validate } from 'equipped'
+import { AnswerTypes, AnswersUseCases } from '@modules/plays'
+import { QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class AnswerController {
 	static async find (req: Request) {
 		const answer = await AnswersUseCases.find(req.params.id)
-		if (!answer || answer.gameId !== req.params.gameId) return null
+		if (!answer || answer.type !== req.params.type || answer.typeId !== req.params.typeId) return null
 		return answer
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'gameId', value: req.params.gameId }]
+		query.authType = QueryKeys.and
+		query.auth = [{ field: 'type', value: req.params.type }, { field: 'typeId', value: req.params.typeId }]
 		return await AnswersUseCases.get(query)
 	}
 
@@ -24,6 +25,6 @@ export class AnswerController {
 				Schema.array(Schema.string())
 			])
 		}, req.body)
-		return await AnswersUseCases.answer({ ...data, gameId: req.params.gameId, userId: req.authUser!.id })
+		return await AnswersUseCases.answer({ ...data, type: req.params.type as AnswerTypes, typeId: req.params.typeId, userId: req.authUser!.id })
 	}
 }

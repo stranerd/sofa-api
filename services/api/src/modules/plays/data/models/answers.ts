@@ -1,3 +1,4 @@
+import { AnswerTypes } from '../../domain/types'
 
 export interface AnswerFromModel extends AnswerToModel {
 	_id: string
@@ -7,6 +8,7 @@ export interface AnswerFromModel extends AnswerToModel {
 }
 
 export interface AnswerToModel {
-	gameId: string
+	type: AnswerTypes
+	typeId: string
 	userId: string
 }
