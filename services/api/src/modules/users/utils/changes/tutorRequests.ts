@@ -1,10 +1,10 @@
-import { AuthUsersUseCases } from '@modules/auth'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/types'
-import { AuthRole, DbChangeCallbacks } from 'equipped'
+import { DbChangeCallbacks } from 'equipped'
 import { TutorRequestFromModel } from '../../data/models/tutorRequests'
 import { TutorRequestEntity } from '../../domain/entities/tutorRequests'
 import { publishers } from '@utils/events'
+import { UsersUseCases } from '@modules/users'
 
 export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromModel, TutorRequestEntity> = {
 	created: async ({ after }) => {
@@ -18,8 +18,8 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 		], after)
 
 		if (changes.pending && before.pending && !after.pending) {
-			if (after.accepted) await AuthUsersUseCases.updateUserRole({
-				userId: after.userId, roles: { [AuthRole.isTutor]: true }
+			if (after.accepted) await UsersUseCases.updateTutorTopics({
+				userId: after.userId, topicId: after.topicId, add: true
 			})
 
 			await sendNotification([after.userId], {

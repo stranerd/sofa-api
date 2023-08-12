@@ -4,10 +4,11 @@ import { GamesUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+import { AuthRole, DbChangeCallbacks } from 'equipped'
 import { ConnectsUseCases, OrganizationMembersUseCases, UsersUseCases } from '../../'
 import { UserFromModel } from '../../data/models/users'
 import { UserEntity } from '../../domain/entities/users'
+import { AuthUsersUseCases } from '@modules/auth'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {
@@ -23,6 +24,13 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)
+
+		const justBecameTutor = before.tutor.topics.length === 0 && after.tutor.topics.length > 0
+		const justLostTutor = before.tutor.topics.length > 0 && after.tutor.topics.length === 0
+		if (justBecameTutor || justLostTutor) await AuthUsersUseCases.updateUserRole({
+			userId: after.id, roles: { [AuthRole.isTutor]: justBecameTutor ? true : false }
+		})
+
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
 		if (updatedBioOrRoles) await Promise.all([
 			ConversationsUseCases, ReviewsUseCases,
