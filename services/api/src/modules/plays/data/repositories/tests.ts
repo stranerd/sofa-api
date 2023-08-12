@@ -44,25 +44,16 @@ export class TestRepository implements ITestRepository {
 		return this.mapper.mapFrom(test)
 	}
 
-	async join (id: string, userId: string, join: boolean) {
-		const test = await Test.findOneAndUpdate({
-			_id: id, status: PlayStatus.created
-		}, {
-			[join ? '$addToSet' : '$pull']: { 'participants': userId }
-		}, { new: true })
-		return this.mapper.mapFrom(test)
-	}
-
-	async end (id: string) {
+	async end (id: string, userId: string) {
 		const test = await Test.findOneAndUpdate(
-			{ _id: id, status: PlayStatus.started },
+			{ _id: id, userId, status: PlayStatus.started },
 			{ $set: { status: PlayStatus.ended } }, { new: true })
 		return this.mapper.mapFrom(test)
 	}
 
-	async score (id: string, scores: Record<string, number>) {
+	async score (id: string, userId: string, scores: Record<string, number>) {
 		const test = await Test.findOneAndUpdate(
-			{ _id: id, status: PlayStatus.ended },
+			{ _id: id, userId, status: PlayStatus.ended },
 			{ $set: { scores, status: PlayStatus.scored } }, { new: true })
 		return this.mapper.mapFrom(test)
 	}

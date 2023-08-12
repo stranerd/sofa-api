@@ -8,7 +8,7 @@ import { TestEntity } from '../domain/entities/tests'
 
 export const endPlay = async (type: PlayTypes, typeId: string, userId) => {
 	if (type === PlayTypes.games) await GamesUseCases.end({ id: typeId, userId })
-	if (type === PlayTypes.tests) await TestsUseCases.end({ id: typeId })
+	if (type === PlayTypes.tests) await TestsUseCases.end({ id: typeId, userId })
 }
 
 const calculateResults = async (type: PlayTypes, typeId: string, questionIds: string[], participants: string[]) => {
@@ -58,7 +58,7 @@ export const startGameTimer = async (game: GameEntity) => startTimer(PlayTypes.g
 
 export const calculateTestResults = async (test: TestEntity) => {
 	const scores = await calculateResults(PlayTypes.tests, test.id, test.questions, [test.userId])
-	return await TestsUseCases.score({ id: test.id, scores })
+	return await TestsUseCases.score({ id: test.id, userId: test.userId, scores })
 }
 
 export const startTestTimer = async (test: TestEntity) => startTimer(PlayTypes.tests, test.id, test.userId, test.endedAt ?? 0)

@@ -1,6 +1,6 @@
 import { TestsUseCases } from '@modules/plays'
 import { QuestionsUseCases } from '@modules/study'
-import { Conditions, NotFoundError, QueryParams, Request } from 'equipped'
+import { Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request } from 'equipped'
 
 export class TestController {
 	static async find (req: Request) {
@@ -22,5 +22,11 @@ export class TestController {
 		return test.questions.map((id) => questions.find((q) => q.id === id)!)
 			.filter((q) => !!q)
 			.map((q) => q.strip())
+	}
+
+	static async end (req: Request) {
+		const ended = await TestsUseCases.end({ id: req.params.id, userId: req.authUser!.id })
+		if (ended) return ended
+		throw new NotAuthorizedError()
 	}
 }
