@@ -18,10 +18,9 @@ const Schema = new appInstance.dbs.mongo.Schema<TestFromModel>({
 		required: true,
 		default: PlayStatus.started
 	},
-	participants: {
-		type: [String],
-		required: false,
-		default: []
+	userId: {
+		type: String,
+		required: true
 	},
 	questions: {
 		type: [String],

@@ -9,27 +9,24 @@ import { calculateTestResults, startTestTimer } from '../plays'
 
 export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created(
-			after.participants.map((uid) => [
-				`plays/tests/${uid}`, `plays/tests/${after.id}/${uid}`
-			]).flat(), after)
+		await appInstance.listener.created([
+			`plays/tests/${after.userId}`, `plays/tests/${after.id}/${after.userId}`
+		], after)
 
 		await QuizzesUseCases.updateMeta({ id: after.quizId, property: QuizMetaType.tests, value: 1 })
 	},
 	updated: async ({ after, before }) => {
-		await appInstance.listener.updated(
-			after.participants.map((uid) => [
-				`plays/tests/${uid}`, `plays/tests/${after.id}/${uid}`
-			]).flat(), after)
+		await appInstance.listener.updated([
+			`plays/tests/${after.userId}`, `plays/tests/${after.id}/${after.userId}`
+		], after)
 
 		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startTestTimer(after)
 		if (before.status === PlayStatus.started && after.status === PlayStatus.ended) await calculateTestResults(after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted(
-			before.participants.map((uid) => [
-				`plays/tests/${uid}`, `plays/tests/${before.id}/${uid}`
-			]).flat(), before)
+		await appInstance.listener.deleted([
+			`plays/tests/${before.userId}`, `plays/tests/${before.id}/${before.userId}`
+		], before)
 
 		await QuizzesUseCases.updateMeta({ id: before.quizId, property: QuizMetaType.tests, value: -1 })
 		await AnswersUseCases.deleteTypeAnswers({ type: PlayTypes.tests, typeId: before.id })

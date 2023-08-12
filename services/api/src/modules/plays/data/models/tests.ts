@@ -12,6 +12,6 @@ export interface TestFromModel extends TestToModel {
 
 export interface TestToModel {
 	quizId: string
-	participants: string[]
+	userId: string
 	questions: string[]
 }

@@ -33,7 +33,8 @@ export class TestRepository implements ITestRepository {
 		const endedAt = startedAt + (data.totalTimeInSec + 5) * 1000
 		const test = await new Test({
 			...data,
-			startedAt, endedAt, status: PlayStatus.started
+			startedAt, endedAt, status: PlayStatus.started,
+			createdAt: startedAt, updatedAt: startedAt
 		}).save()
 		return this.mapper.mapFrom(test)!
 	}

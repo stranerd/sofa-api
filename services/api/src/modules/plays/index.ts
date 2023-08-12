@@ -15,3 +15,4 @@ export const AnswersUseCases = new AnswersUseCase(answerRepository)
 
 export { PlayTypes } from './domain/types'
 export { endPlay } from './utils/plays'
+export { createTest } from './utils/tests'

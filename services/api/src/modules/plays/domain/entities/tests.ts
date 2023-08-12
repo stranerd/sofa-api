@@ -5,7 +5,7 @@ export class TestEntity extends BaseEntity {
 	public readonly id: string
 	public readonly quizId: string
 	public readonly status: PlayStatus
-	public readonly participants: string[]
+	public readonly userId: string
 	public readonly questions: string[]
 	public readonly scores: Record<string, number>
 	public readonly startedAt: number | null
@@ -13,12 +13,12 @@ export class TestEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, quizId, status, participants, questions, scores, startedAt, endedAt, createdAt, updatedAt }: TestConstructorArgs) {
+	constructor ({ id, quizId, status, userId, questions, scores, startedAt, endedAt, createdAt, updatedAt }: TestConstructorArgs) {
 		super()
 		this.id = id
 		this.quizId = quizId
 		this.status = status
-		this.participants = participants
+		this.userId = userId
 		this.questions = questions
 		this.scores = scores
 		this.startedAt = startedAt
@@ -32,7 +32,7 @@ type TestConstructorArgs = {
 	id: string
 	quizId: string
 	status: PlayStatus
-	participants: string[]
+	userId: string
 	questions: string[]
 	scores: Record<string, number>
 	startedAt: number | null

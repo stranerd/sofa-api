@@ -5,9 +5,9 @@ import { TestFromModel, TestToModel } from '../models/tests'
 export class TestMapper extends BaseMapper<TestFromModel, TestToModel, TestEntity> {
 	mapFrom (model: TestFromModel | null) {
 		if (!model) return null
-		const { _id, quizId, status, participants, questions, scores, startedAt, endedAt, createdAt, updatedAt } = model
+		const { _id, quizId, status, userId, questions, scores, startedAt, endedAt, createdAt, updatedAt } = model
 		return new TestEntity({
-			id: _id.toString(), quizId, status, participants, questions,
+			id: _id.toString(), quizId, status, userId, questions,
 			scores, startedAt, endedAt, createdAt, updatedAt
 		})
 	}
@@ -15,7 +15,7 @@ export class TestMapper extends BaseMapper<TestFromModel, TestToModel, TestEntit
 	mapTo (entity: TestEntity) {
 		return {
 			quizId: entity.quizId,
-			participants: entity.participants,
+			userId: entity.userId,
 			questions: entity.questions
 		}
 	}
