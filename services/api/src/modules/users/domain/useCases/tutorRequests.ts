@@ -24,4 +24,8 @@ export class TutorRequestsUseCase {
 	async accept (data: { id: string, accept: boolean }) {
 		return await this.repository.accept(data)
 	}
+
+	async markTestFinished (testId: string) {
+		return await this.repository.markTestFinished(testId)
+	}
 }

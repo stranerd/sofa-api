@@ -8,10 +8,12 @@ export class TutorRequestEntity extends BaseEntity {
 	public readonly qualification: MediaOutput[]
 	public readonly pending: boolean
 	public readonly accepted: boolean
+	public readonly testId: string
+	public readonly testFinished: boolean
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, userId, topicId, verification, qualification, pending, accepted, createdAt, updatedAt }: TutorRequestConstructorArgs) {
+	constructor ({ id, userId, topicId, verification, qualification, pending, accepted, testId, testFinished, createdAt, updatedAt }: TutorRequestConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId
@@ -20,6 +22,8 @@ export class TutorRequestEntity extends BaseEntity {
 		this.qualification = qualification
 		this.pending = pending
 		this.accepted = accepted
+		this.testId = testId
+		this.testFinished = testFinished
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -33,6 +37,8 @@ type TutorRequestConstructorArgs = {
 	qualification: MediaOutput[]
 	pending: boolean
 	accepted: boolean
+	testId: string
+	testFinished: boolean
 	createdAt: number
 	updatedAt: number
 }

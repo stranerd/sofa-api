@@ -12,6 +12,8 @@ export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorR
 			qualification: param.qualification,
 			pending: param.pending,
 			accepted: param.accepted,
+			testId: param.testId,
+			testFinished: param.testFinished,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
 		})
@@ -20,9 +22,8 @@ export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorR
 	mapTo (param: TutorRequestEntity) {
 		return {
 			userId: param.userId,
-			pending: param.pending,
-			accepted: param.accepted,
 			topicId: param.topicId,
+			testId: param.testId,
 			verification: param.verification,
 			qualification: param.qualification,
 		}

@@ -18,9 +18,7 @@ export class VerificationMapper extends BaseMapper<VerificationFromModel, Verifi
 	mapTo (param: VerificationEntity) {
 		return {
 			userId: param.userId,
-			content: param.content,
-			pending: param.pending,
-			accepted: param.accepted
+			content: param.content
 		}
 	}
 }

@@ -35,8 +35,7 @@ export class VerificationRepository implements IVerificationRepository {
 	}
 
 	async accept ({ id, accept }: { id: string, accept: boolean }) {
-		const filter = { _id: id, pending: true }
-		const verification = await Verification.findOneAndUpdate(filter, { $set: { accepted: accept, pending: false } })
+		const verification = await Verification.findOneAndUpdate({ _id: id, pending: true }, { $set: { accepted: accept, pending: false } })
 		return !!verification
 	}
 }

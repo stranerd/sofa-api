@@ -34,6 +34,15 @@ const TutorRequestSchema = new appInstance.dbs.mongo.Schema<TutorRequestFromMode
 		required: false,
 		default: false
 	},
+	testId: {
+		type: String,
+		required: true
+	},
+	testFinished: {
+		type: Boolean,
+		required: false,
+		default: false
+	},
 	createdAt: {
 		type: Number,
 		required: false,

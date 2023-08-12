@@ -35,8 +35,12 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 	}
 
 	async accept ({ id, accept }: { id: string, accept: boolean }) {
-		const filter = { _id: id, pending: true }
-		const tutorRequest = await TutorRequest.findOneAndUpdate(filter, { $set: { accepted: accept, pending: false } })
+		const tutorRequest = await TutorRequest.findOneAndUpdate({ _id: id, pending: true }, { $set: { accepted: accept, pending: false } })
+		return !!tutorRequest
+	}
+
+	async markTestFinished (testId: string) {
+		const tutorRequest = await TutorRequest.findOneAndUpdate({ testId }, { $set: { testFinished: true } })
 		return !!tutorRequest
 	}
 }

@@ -1,7 +1,9 @@
 import { TagsUseCases } from '@modules/interactions'
+import { createTest } from '@modules/plays'
 import { UploaderUseCases } from '@modules/storage'
+import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { TutorRequestsUseCases, UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, Validation, validate } from 'equipped'
 
 export class TutorRequestsController {
 	static async find (req: Request) {
@@ -39,13 +41,24 @@ export class TutorRequestsController {
 		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for tutorship')
 		if (!user.location) throw new BadRequestError('Update your location before applying for tutorship')
 
+		const { results: quizzes } = await QuizzesUseCases.get({
+			where: [
+				{ field: 'topicId', value: topicId },
+				{ field: 'isForTutors', value: true },
+				{ field: 'status', value: DraftStatus.published }
+			],
+			all: true
+		})
+		const quiz = Validation.getRandomSample(quizzes, 1).at(0)
+		if (!quiz) throw new BadRequestError('Quiz not found for choosen topic')
+
 		const verificationUploaded = await UploaderUseCases.upload('tutorRequests/verification', verification)
 		const qualificationUploaded = await UploaderUseCases.uploadMany('tutorRequests/qualification', qualification)
+		const test = await createTest(user.id, quiz)
 
 		return await TutorRequestsUseCases.create({
-			userId: user.id, topicId,
-			verification: verificationUploaded, qualification: qualificationUploaded,
-			pending: true, accepted: false
+			userId: user.id, topicId, testId: test.id,
+			verification: verificationUploaded, qualification: qualificationUploaded
 		})
 	}
 

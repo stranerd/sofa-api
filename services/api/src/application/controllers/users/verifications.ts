@@ -38,10 +38,7 @@ export class VerificationsController {
 		const validContent = await this.verifyContent(authUser.id, content)
 		if (!validContent) throw new BadRequestError('Make sure all content provided belong to you and are published')
 
-		return await VerificationsUseCases.create({
-			userId: authUser.id, content,
-			pending: true, accepted: false
-		})
+		return await VerificationsUseCases.create({ userId: authUser.id, content })
 	}
 
 	static async accept (req: Request) {
