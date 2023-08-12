@@ -13,6 +13,10 @@ declare module 'equipped/lib/events' {
         [EventTypes.SENDTEXT]: {
             topic: typeof EventTypes.SENDTEXT,
             data: PhoneText
+        },
+        [EventTypes.TESTENDED]: {
+            topic: typeof EventTypes.TESTENDED,
+            data: { testId: string }
         }
     }
 }

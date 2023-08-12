@@ -1,4 +1,3 @@
-import { PlayTypes } from '@modules/plays'
 import { DelayedJobs } from 'equipped'
 
 declare module 'equipped/lib/bull' {
@@ -9,7 +8,7 @@ declare module 'equipped/lib/bull' {
 		},
 		[DelayedJobs.PlayTimer]: {
 			type: typeof DelayedJobs.PlayTimer,
-			data: { type: PlayTypes, typeId: string, userId: string }
+			data: { type: string, typeId: string, userId: string }
 		}
 	}
 

@@ -5,7 +5,8 @@ const Ar = makeEnum('AuthRole', {
 	isTutor: 'isTutor',
 	isVerified: 'isVerified',
 	isSuperAdmin: 'isSuperAdmin',
-	isSubscribed: 'isSubscribed'
+	isSubscribed: 'isSubscribed',
+	isOfficialAccount: 'isOfficialAccount'
 } as const)
 
 const El = makeEnum('EmailsList', {
@@ -15,12 +16,13 @@ const El = makeEnum('EmailsList', {
 const Ev = makeEnum('EventTypes', {
 	SENDMAIL: 'SENDMAIL',
 	SENDTEXT:'SENDTEXT',
-	DELETEFILE: 'DELETEFILE'
+	DELETEFILE: 'DELETEFILE',
+	TESTENDED: 'TESTENDED',
 } as const)
 
 const Dj = makeEnum('DelayedJobs', {
 	RenewSubscription: 'RenewSubscription',
-	GameTimer: 'GameTimer',
+	PlayTimer: 'PlayTimer',
 } as const)
 
 const Clj = makeEnum('CronLikeJobs', {} as const)

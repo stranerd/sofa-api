@@ -6,9 +6,9 @@ declare module 'equipped/lib/bull' {
 			type: typeof DelayedJobs.RenewSubscription,
 			data: { userId: string }
 		},
-		[DelayedJobs.GameTimer]: {
-			type: typeof DelayedJobs.GameTimer,
-			data: { gameId: string, userId: string }
+		[DelayedJobs.PlayTimer]: {
+			type: typeof DelayedJobs.PlayTimer,
+			data: { type: string, typeId: string, userId: string }
 		}
 	}
 

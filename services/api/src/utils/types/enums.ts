@@ -16,7 +16,8 @@ const El = makeEnum('EmailsList', {
 const Ev = makeEnum('EventTypes', {
 	SENDMAIL: 'SENDMAIL',
 	SENDTEXT:'SENDTEXT',
-	DELETEFILE: 'DELETEFILE'
+	DELETEFILE: 'DELETEFILE',
+	TESTENDED: 'TESTENDED',
 } as const)
 
 const Dj = makeEnum('DelayedJobs', {

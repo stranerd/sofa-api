@@ -6,6 +6,7 @@ import { TestFromModel } from '../../data/models/tests'
 import { TestEntity } from '../../domain/entities/tests'
 import { PlayTypes, PlayStatus } from '../../domain/types'
 import { calculateTestResults, startTestTimer } from '../plays'
+import { publishers } from '@utils/events'
 
 export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity> = {
 	created: async ({ after }) => {
@@ -21,7 +22,10 @@ export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity>
 		], after)
 
 		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startTestTimer(after)
-		if (before.status === PlayStatus.started && after.status === PlayStatus.ended) await calculateTestResults(after)
+		if (before.status === PlayStatus.started && after.status === PlayStatus.ended) await Promise.all([
+			calculateTestResults(after),
+			publishers.TESTENDED.publish({ testId: after.id })
+		])
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
