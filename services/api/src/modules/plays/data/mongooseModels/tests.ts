@@ -1,10 +1,10 @@
 import { appInstance } from '@utils/types'
 import { PlayStatus } from '../../domain/types'
-import { GameDbChangeCallbacks } from '../../utils/changes/games'
-import { GameMapper } from '../mappers/games'
-import { GameFromModel } from '../models/games'
+import { TestDbChangeCallbacks } from '../../utils/changes/tests'
+import { TestMapper } from '../mappers/tests'
+import { TestFromModel } from '../models/tests'
 
-const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
+const Schema = new appInstance.dbs.mongo.Schema<TestFromModel>({
 	_id: {
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
@@ -13,14 +13,10 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 		type: String,
 		required: true
 	},
-	user: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
-	},
 	status: {
 		type: String,
 		required: true,
-		default: PlayStatus.created
+		default: PlayStatus.started
 	},
 	participants: {
 		type: [String],
@@ -59,6 +55,6 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Game = appInstance.dbs.mongo.use('plays').model<GameFromModel>('Game', Schema)
+export const Test = appInstance.dbs.mongo.use('plays').model<TestFromModel>('Test', Schema)
 
-export const GameChange = appInstance.dbs.mongo.change(Game, GameDbChangeCallbacks, new GameMapper().mapFrom)
+export const TestChange = appInstance.dbs.mongo.change(Test, TestDbChangeCallbacks, new TestMapper().mapFrom)

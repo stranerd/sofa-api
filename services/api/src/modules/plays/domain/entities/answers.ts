@@ -1,9 +1,9 @@
 import { BaseEntity } from 'equipped'
-import { AnswerTypes } from '../types'
+import { PlayTypes } from '../types'
 
 export class AnswerEntity extends BaseEntity {
 	public readonly id: string
-	public readonly type: AnswerTypes
+	public readonly type: PlayTypes
 	public readonly typeId: string
 	public readonly userId: string
 	public readonly data: Record<string, any>
@@ -24,7 +24,7 @@ export class AnswerEntity extends BaseEntity {
 
 type AnswerConstructorArgs = {
 	id: string
-	type: AnswerTypes
+	type: PlayTypes
 	typeId: string
 	userId: string
 	data: Record<string, any>

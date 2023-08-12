@@ -4,8 +4,8 @@ import { DbChangeCallbacks } from 'equipped'
 import { AnswersUseCases } from '../..'
 import { GameFromModel } from '../../data/models/games'
 import { GameEntity } from '../../domain/entities/games'
-import { AnswerTypes, GameStatus } from '../../domain/types'
-import { calculateGameResults, startGameTimer } from '../games'
+import { PlayTypes, PlayStatus } from '../../domain/types'
+import { calculateGameResults, startGameTimer } from '../plays'
 
 export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity> = {
 	created: async ({ after }) => {
@@ -22,8 +22,8 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 				`plays/games/${uid}`, `plays/games/${after.id}/${uid}`
 			]).flat(), after)
 
-		if (before.status === GameStatus.created && after.status === GameStatus.started) await startGameTimer(after)
-		if (before.status === GameStatus.started && after.status === GameStatus.ended) await calculateGameResults(after)
+		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startGameTimer(after)
+		if (before.status === PlayStatus.started && after.status === PlayStatus.ended) await calculateGameResults(after)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
@@ -32,6 +32,6 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 			]).flat(), before)
 
 		await QuizzesUseCases.updateMeta({ id: before.quizId, property: QuizMetaType.games, value: -1 })
-		await AnswersUseCases.deleteTypeAnswers({ type: AnswerTypes.games, typeId: before.id })
+		await AnswersUseCases.deleteTypeAnswers({ type: PlayTypes.games, typeId: before.id })
 	}
 }

@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { AnswerToModel } from '../../data/models/answers'
 import { IAnswerRepository } from '../irepositories/answers'
-import { AnswerTypes } from '../types'
+import { PlayTypes } from '../types'
 
 export class AnswersUseCase {
 	private repository: IAnswerRepository
@@ -22,7 +22,7 @@ export class AnswersUseCase {
 		return await this.repository.get(query)
 	}
 
-	async deleteTypeAnswers (data: { type: AnswerTypes, typeId: string }) {
+	async deleteTypeAnswers (data: { type: PlayTypes, typeId: string }) {
 		return await this.repository.deleteTypeAnswers(data.type, data.typeId)
 	}
 }

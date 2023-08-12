@@ -16,7 +16,6 @@ export class GameMapper extends BaseMapper<GameFromModel, GameToModel, GameEntit
 		return {
 			quizId: entity.quizId,
 			user: entity.user,
-			status: entity.status,
 			questions: entity.questions
 		}
 	}

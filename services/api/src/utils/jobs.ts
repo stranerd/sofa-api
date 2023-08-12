@@ -1,7 +1,7 @@
 import { deleteUnverifiedUsers } from '@modules/auth'
 import { EmailErrorsUseCases, NotificationsUseCases, PhoneErrorsUseCases, sendMailAndCatchError, sendTextAndCatchError } from '@modules/notifications'
 import { MethodsUseCases, processWithdrawals, renewSubscription, retryTransactions, updateOrgsMembersDays } from '@modules/payment'
-import { GamesUseCases } from '@modules/plays'
+import { endPlay } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { CronTypes, DelayedJobs } from 'equipped'
@@ -15,7 +15,7 @@ export const startJobs = async () => {
 	], {
 		onDelayed: async (data) => {
 			if (data.type === DelayedJobs.RenewSubscription) await renewSubscription(data.data.userId)
-			if (data.type === DelayedJobs.GameTimer) await GamesUseCases.end({ id: data.data.gameId, userId: data.data.userId })
+			if (data.type === DelayedJobs.PlayTimer) await endPlay(data.data.type, data.data.typeId, data.data.userId)
 		},
 		onCronLike: async () => { },
 		onCron: async (type) => {

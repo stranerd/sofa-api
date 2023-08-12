@@ -1,9 +1,8 @@
-import { EmbeddedUser, PlayStatus } from '../../domain/types'
+import { PlayStatus } from '../../domain/types'
 
-export interface GameFromModel extends GameToModel {
+export interface TestFromModel extends TestToModel {
 	_id: string
 	status: PlayStatus
-	participants: string[]
 	scores: Record<string, number>
 	startedAt: number | null
 	endedAt: number | null
@@ -11,8 +10,8 @@ export interface GameFromModel extends GameToModel {
 	updatedAt: number
 }
 
-export interface GameToModel {
+export interface TestToModel {
 	quizId: string
-	user: EmbeddedUser
+	participants: string[]
 	questions: string[]
 }

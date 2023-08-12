@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IGameRepository } from '../../domain/irepositories/games'
-import { EmbeddedUser, GameStatus } from '../../domain/types'
+import { EmbeddedUser, PlayStatus } from '../../domain/types'
 import { GameMapper } from '../mappers/games'
 import { GameToModel } from '../models/games'
 import { Game } from '../mongooseModels/games'
@@ -44,7 +44,7 @@ export class GameRepository implements IGameRepository {
 	}
 
 	async delete (id: string, userId: string) {
-		const game = await Game.findOneAndDelete({ _id: id, 'user.id': userId, status: GameStatus.created })
+		const game = await Game.findOneAndDelete({ _id: id, 'user.id': userId, status: PlayStatus.created })
 		return !!game
 	}
 
@@ -52,14 +52,14 @@ export class GameRepository implements IGameRepository {
 		const startedAt = Date.now()
 		const endedAt = startedAt + (totalTimeInSec + 5) * 1000
 		const game = await Game.findOneAndUpdate(
-			{ _id: id, 'user.id': userId, status: GameStatus.created },
-			{ $set: { startedAt, endedAt, status: GameStatus.started } }, { new: true })
+			{ _id: id, 'user.id': userId, status: PlayStatus.created },
+			{ $set: { startedAt, endedAt, status: PlayStatus.started } }, { new: true })
 		return this.mapper.mapFrom(game)
 	}
 
 	async join (id: string, userId: string, join: boolean) {
 		const game = await Game.findOneAndUpdate({
-			_id: id, status: GameStatus.created
+			_id: id, status: PlayStatus.created
 		}, {
 			[join ? '$addToSet' : '$pull']: { 'participants': userId }
 		}, { new: true })
@@ -68,15 +68,15 @@ export class GameRepository implements IGameRepository {
 
 	async end (id: string, userId: string) {
 		const game = await Game.findOneAndUpdate(
-			{ _id: id, 'user.id': userId, status: GameStatus.started },
-			{ $set: { status: GameStatus.ended } }, { new: true })
+			{ _id: id, 'user.id': userId, status: PlayStatus.started },
+			{ $set: { status: PlayStatus.ended } }, { new: true })
 		return this.mapper.mapFrom(game)
 	}
 
 	async score (id: string, userId: string, scores: Record<string, number>) {
 		const game = await Game.findOneAndUpdate(
-			{ _id: id, 'user.id': userId, status: GameStatus.ended },
-			{ $set: { scores, status: GameStatus.scored } }, { new: true })
+			{ _id: id, 'user.id': userId, status: PlayStatus.ended },
+			{ $set: { scores, status: PlayStatus.scored } }, { new: true })
 		return this.mapper.mapFrom(game)
 	}
 }

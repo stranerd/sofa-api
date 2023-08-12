@@ -1,9 +1,9 @@
 import { AnswerController } from '@application/controllers/plays/answers'
 import { isAuthenticated } from '@application/middlewares'
-import { AnswerTypes } from '@modules/plays'
+import { PlayTypes } from '@modules/plays'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
-const types = Object.values(AnswerTypes).join('|')
+const types = Object.values(PlayTypes).join('|')
 export const answersRoutes = groupRoutes(`/:type(${types})/:typeId/answers`, [
 	{
 		path: '/',

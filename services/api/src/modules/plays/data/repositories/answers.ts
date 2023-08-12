@@ -2,11 +2,12 @@ import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ClientSession } from 'mongodb'
 import { IAnswerRepository } from '../../domain/irepositories/answers'
-import { AnswerTypes, GameStatus } from '../../domain/types'
+import { PlayTypes, PlayStatus } from '../../domain/types'
 import { AnswerMapper } from '../mappers/answers'
 import { AnswerFromModel, AnswerToModel } from '../models/answers'
 import { Answer } from '../mongooseModels/answers'
 import { Game } from '../mongooseModels/games'
+import { Test } from '../mongooseModels/tests'
 
 export class AnswerRepository implements IAnswerRepository {
 	private static instance: AnswerRepository
@@ -53,18 +54,26 @@ export class AnswerRepository implements IAnswerRepository {
 		return this.mapper.mapFrom(answer)
 	}
 
-	async deleteTypeAnswers (type: AnswerTypes, typeId: string) {
+	async deleteTypeAnswers (type: PlayTypes, typeId: string) {
 		const answers = await Answer.deleteMany({ type, typeId })
 		return answers.acknowledged
 	}
 
-	async #verifyType (type: AnswerTypes, typeId: string, data: { questionId: string, userId: string }, session: ClientSession) {
-		if (type === AnswerTypes.games) {
+	async #verifyType (type: PlayTypes, typeId: string, data: { questionId: string, userId: string }, session: ClientSession) {
+		if (type === PlayTypes.games) {
 			const game = await Game.findById(typeId, {}, { session })
 			if (!game) return false
 			if (!game.questions.includes(data.questionId)) return false
 			if (!game.participants.includes(data.userId)) return false
-			if (game.status !== GameStatus.started) return false
+			if (game.status !== PlayStatus.started) return false
+			return true
+		}
+		if (type === PlayTypes.tests) {
+			const test = await Test.findById(typeId, {}, { session })
+			if (!test) return false
+			if (!test.questions.includes(data.questionId)) return false
+			if (!test.participants.includes(data.userId)) return false
+			if (test.status !== PlayStatus.started) return false
 			return true
 		}
 		return false

@@ -1,4 +1,4 @@
-import { AnswerTypes, AnswersUseCases } from '@modules/plays'
+import { AnswersUseCases, PlayTypes } from '@modules/plays'
 import { QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class AnswerController {
@@ -25,6 +25,6 @@ export class AnswerController {
 				Schema.array(Schema.string())
 			])
 		}, req.body)
-		return await AnswersUseCases.answer({ ...data, type: req.params.type as AnswerTypes, typeId: req.params.typeId, userId: req.authUser!.id })
+		return await AnswersUseCases.answer({ ...data, type: req.params.type as PlayTypes, typeId: req.params.typeId, userId: req.authUser!.id })
 	}
 }
