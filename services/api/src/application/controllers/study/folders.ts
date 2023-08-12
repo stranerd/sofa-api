@@ -1,4 +1,4 @@
-import { FolderSaved, FoldersUseCases } from '@modules/study'
+import { FolderSaved, FoldersUseCases, verifyToBeSaved } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -43,6 +43,11 @@ export class FolderController {
 			propIds: Schema.array(Schema.string().min(1)),
 			add: Schema.boolean()
 		}, req.body)
+
+		if (data.add) {
+			const verified = await verifyToBeSaved(data.type, data.propIds)
+			if (!verified) throw new BadRequestError(`some of the ${data.type} were not available to be saved`)
+		}
 
 		const updated = await FoldersUseCases.updateProp({
 			id: req.params.id,
