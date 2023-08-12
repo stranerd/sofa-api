@@ -14,8 +14,8 @@ export class QuizzesUseCase {
 		return await this.repository.add(data)
 	}
 
-	async delete (input: { id: string, userId: string }) {
-		return await this.repository.delete(input.id, input.userId)
+	async delete (input: { id: string, userId: string, isAdmin: boolean }) {
+		return await this.repository.delete(input.id, input.userId, input.isAdmin)
 	}
 
 	async find (id: string) {

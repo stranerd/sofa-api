@@ -17,7 +17,12 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
 			required: false,
 			default: 0
 		}])
-	)
+	),
+	isForTutors: {
+		type: Boolean,
+		required: false,
+		default: false
+	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
 export const Quiz = appInstance.dbs.mongo.use('study').model<QuizFromModel>('Quiz', Schema)

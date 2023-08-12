@@ -8,7 +8,7 @@ export interface IQuizRepository {
 	get: (condition: QueryParams) => Promise<QueryResults<QuizEntity>>
 	find: (id: string) => Promise<QuizEntity | null>
 	update: (id: string, userId: string, data: Partial<QuizToModel>) => Promise<QuizEntity | null>
-	delete: (id: string, userId: string) => Promise<boolean>
+	delete: (id: string, userId: string, isAdmin: boolean) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	publish: (id: string, userId: string) => Promise<QuizEntity | null>
 	toggleQuestion: (id: string, userId: string, questionId: string, add: boolean) => Promise<QuizEntity | null>

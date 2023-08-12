@@ -8,4 +8,6 @@ export interface QuizFromModel extends QuizToModel {
 	updatedAt: number
 }
 
-export interface QuizToModel extends CoursableData { }
+export interface QuizToModel extends CoursableData {
+	isForTutors: boolean
+}

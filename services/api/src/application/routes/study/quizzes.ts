@@ -1,5 +1,5 @@
 import { QuizController } from '@application/controllers/study/quizzes'
-import { isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
 export const quizzesRoutes = groupRoutes('/quizzes', [
@@ -11,6 +11,18 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 				return {
 					status: StatusCodes.Ok,
 					result: await QuizController.get(req)
+				}
+			})
+		]
+	}, {
+		path: '/tutors',
+		method: 'get',
+		controllers: [
+			isAdmin,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.getForTutors(req)
 				}
 			})
 		]

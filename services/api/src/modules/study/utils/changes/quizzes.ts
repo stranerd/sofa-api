@@ -10,7 +10,8 @@ import { Coursable, FolderSaved } from '../../domain/types'
 
 export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created(['study/quizzes', `study/quizzes/${after.id}`], after)
+		const paths = after.isForTutors ? ['study/quizzes/tutors', `study/quizzes/tutors/${after.id}`] : ['study/quizzes', `study/quizzes/${after.id}`]
+		await appInstance.listener.created(paths, after)
 
 		await UsersUseCases.updateNerdScore({
 			userId: after.user.id,
@@ -20,7 +21,8 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 		await TagsUseCases.updateMeta({ ids: [after.topicId], property: TagMeta.quizzes, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['study/quizzes', `study/quizzes/${after.id}`], after)
+		const paths = after.isForTutors ? ['study/quizzes/tutors', `study/quizzes/tutors/${after.id}`] : ['study/quizzes', `study/quizzes/${after.id}`]
+		await appInstance.listener.updated(paths, after)
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 
 		if (changes.topicId || changes.tagIds) {
@@ -35,7 +37,8 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted(['study/quizzes', `study/quizzes/${before.id}`], before)
+		const paths = before.isForTutors ? ['study/quizzes/tutors', `study/quizzes/tutors/${before.id}`] : ['study/quizzes', `study/quizzes/${before.id}`]
+		await appInstance.listener.deleted(paths, before)
 
 		if (before.courseId) await CoursesUseCases.remove({ id: before.courseId, type: Coursable.quiz, coursableId: before.id })
 		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })

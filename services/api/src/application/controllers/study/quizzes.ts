@@ -1,32 +1,45 @@
 import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthRole, BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from '.'
 
 export class QuizController {
-	private static schema = () => ({
+	private static schema = (isAdmin: boolean) => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
 		topicId: Schema.string().min(1),
 		tagIds: Schema.array(Schema.string().min(1)).set(),
+		isForTutors: Schema.boolean().default(false).custom((value) => isAdmin ? true : value === false)
 	})
 
 	static async find (req: Request) {
-		return await QuizzesUseCases.find(req.params.id)
+		const quiz = await QuizzesUseCases.find(req.params.id)
+		if (!quiz) return null
+		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
+		if (!isAdmin && quiz.isForTutors) return null
+		return quiz
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
+		query.auth = [{ field: 'isForTutors', value: false }]
+		return await QuizzesUseCases.get(query)
+	}
+
+	static async getForTutors (req: Request) {
+		const query = req.query as QueryParams
+		query.auth = [{ field: 'isForTutors', value: true }]
 		return await QuizzesUseCases.get(query)
 	}
 
 	static async update (req: Request) {
+		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, topicId, tagIds } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, topicId, tagIds } = validate(this.schema(isAdmin), { ...req.body, photo: uploadedPhoto })
 
 		const utags = await verifyTags(topicId, tagIds)
 
@@ -44,7 +57,8 @@ export class QuizController {
 	}
 
 	static async create (req: Request) {
-		const data = validate(this.schema(),
+		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
+		const data = validate(this.schema(isAdmin),
 			{ ...req.body, photo: req.files.photo?.at(0) ?? null })
 
 		const tags = await verifyTags(data.topicId, data.tagIds)
@@ -62,7 +76,8 @@ export class QuizController {
 	}
 
 	static async delete (req: Request) {
-		const isDeleted = await QuizzesUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
+		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
+		const isDeleted = await QuizzesUseCases.delete({ id: req.params.id, userId: req.authUser!.id, isAdmin })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}

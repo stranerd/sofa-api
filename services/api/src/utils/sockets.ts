@@ -2,10 +2,10 @@ import { canAccessConversation } from '@modules/conversations'
 import { PlayTypes } from '@modules/plays'
 import { canAccessCoursable, Coursable } from '@modules/study'
 import { appInstance } from '@utils/types'
-import { OnJoinFn } from 'equipped'
+import { AuthRole, OnJoinFn } from 'equipped'
 
 export const registerSockets = () => {
-	// const isAdmin: OnJoinFn = async ({ channel, user }) => user?.roles?.[AuthRole.isAdmin] ? channel : null
+	const isAdmin: OnJoinFn = async ({ channel, user }) => user?.roles?.[AuthRole.isAdmin] ? channel : null
 	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
 	// const isSubbed: OnJoinFn = async ({ channel, user }) => user?.roles[AuthRole.isSubscribed] ? channel : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
@@ -48,6 +48,7 @@ export const registerSockets = () => {
 		.register('school/institutions', isOpen)
 
 		.register('study/folders', isMine)
+		.register('study/quizzes/tutors', isAdmin)
 		.register('study/quizzes', isOpen)
 		.register('study/quizzes/:quizId/questions', coursablesCb)
 		.register('study/courses', isOpen)
