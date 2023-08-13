@@ -1,7 +1,7 @@
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, MediaOutput, NotAuthenticatedError, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
+import { BadRequestError, NotAuthenticatedError, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
 import { verifyTags } from '.'
 
 const allowedDocumentTypes = ['application/pdf', 'text/plain']
@@ -30,11 +30,7 @@ export class FileController {
 			media: Schema.or([
 				Schema.file().video(),
 				Schema.file().image(),
-				Schema.file().addRule((val) => {
-					const value = val as MediaOutput
-					if (value.type && allowedDocumentTypes.includes(value.type)) return Validation.isValid(value)
-					return Validation.isInvalid(['invalid file type'], value)
-				})
+				Schema.file().custom((val) => allowedDocumentTypes.includes(val?.type), 'invalid file type')
 			])
 		}, {
 			...req.body,
