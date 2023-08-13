@@ -26,6 +26,9 @@ export class TutorRequestsUseCase {
 		return await this.repository.accept(data)
 	}
 
+	async delete (data: { id: string, userId: string }) {
+		return await this.repository.delete(data)
+	}
 
 	async updateUserBio (user: EmbeddedUser) {
 		return await this.repository.updateUserBio(user)

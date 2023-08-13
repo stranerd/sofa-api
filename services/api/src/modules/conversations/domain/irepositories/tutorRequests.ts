@@ -8,6 +8,6 @@ export interface ITutorRequestRepository {
 	get: (query: QueryParams) => Promise<QueryResults<TutorRequestEntity>>
 	create: (data: TutorRequestToModel) => Promise<TutorRequestEntity>
 	accept: (data: { id: string, tutorId: string, accept: boolean }) => Promise<boolean>
-	delete: (data: { id: string }) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
+	delete: (data: { id: string, userId: string }) => Promise<boolean>
 }

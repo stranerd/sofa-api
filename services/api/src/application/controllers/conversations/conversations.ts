@@ -1,18 +1,20 @@
 import { ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
 import { UsersUseCases } from '@modules/users'
 import { AI } from '@utils/ai'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ConversationController {
 	static async find (req: Request) {
 		const conversation = await ConversationsUseCases.find(req.params.id)
-		if (!conversation || conversation.user.id !== req.authUser!.id) return null
+		if (!conversation) return null
+		if (![conversation.user.id, conversation.tutor?.id ?? ''].includes(req.authUser!.id)) return null
 		return conversation
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'user.id', value: req.authUser!.id }]
+		query.authType = QueryKeys.or
+		query.auth = [{ field: 'user.id', value: req.authUser!.id }, { field: 'tutor.id', value: req.authUser!.id }]
 		return await ConversationsUseCases.get(query)
 	}
 

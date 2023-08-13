@@ -69,8 +69,8 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 		return res
 	}
 
-	async delete (data: { id: string }) {
-		const tutorRequest = await TutorRequest.findByIdAndDelete(data.id)
+	async delete (data: { id: string, userId: string }) {
+		const tutorRequest = await TutorRequest.findOneAndDelete({ _id: data.id, userId: data.userId, pending: true })
 		return !!tutorRequest
 	}
 }
