@@ -1,4 +1,4 @@
-import { ConversationsUseCases, ReviewsUseCases } from '@modules/conversations'
+import { ConversationsUseCases, ReviewsUseCases, TutorRequestsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ViewsUseCases } from '@modules/interactions'
 import { GamesUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
@@ -33,7 +33,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
 		if (updatedBioOrRoles) await Promise.all([
-			ConversationsUseCases, ReviewsUseCases,
+			ConversationsUseCases, ReviewsUseCases, TutorRequestsUseCases,
 			CommentsUseCases, LikesUseCases, ViewsUseCases,
 			GamesUseCases,
 			CoursesUseCases, FoldersUseCases, QuizzesUseCases, FilesUseCases,

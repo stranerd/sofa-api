@@ -29,7 +29,7 @@ export class VerificationRepository implements IVerificationRepository {
 	async create (data: VerificationToModel) {
 		const verification = await Verification.findOneAndUpdate(
 			{ userId: data.userId, pending: true },
-			{ $set: { ...data } },
+			{ $set: { ...data }, $setOnInsert: { pending: true, accepted: false } },
 			{ upsert: true, new: true })
 		return this.mapper.mapFrom(verification)!
 	}

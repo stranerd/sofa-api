@@ -9,7 +9,7 @@ export const registerSockets = () => {
 	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
 	// const isSubbed: OnJoinFn = async ({ channel, user }) => user?.roles[AuthRole.isSubscribed] ? channel : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
-	const conversationMessagesCb: OnJoinFn = async (data, params) => {
+	const conversationsCb: OnJoinFn = async (data, params) => {
 		const { conversationId = null } = params
 		if (!conversationId || !data.user) return null
 		return (await canAccessConversation(conversationId, data.user.id)) ? await isOpen(data, params) : null
@@ -22,7 +22,8 @@ export const registerSockets = () => {
 
 	appInstance.listener
 		.register('conversations/conversations', isMine)
-		.register('conversations/conversations/:conversationId/messages', conversationMessagesCb)
+		.register('conversations/conversations/:conversationId/messages', conversationsCb)
+		.register('conversations/conversations/:conversationId/tutorRequests', conversationsCb)
 		.register('conversations/reviews', isOpen)
 
 		.register('interactions/comments', isOpen)

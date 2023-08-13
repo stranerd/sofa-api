@@ -29,7 +29,7 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 	async create (data: TutorRequestToModel) {
 		const tutorRequest = await TutorRequest.findOneAndUpdate(
 			{ userId: data.userId, pending: true, topicId: data.topicId },
-			{ $set: { ...data } },
+			{ $set: { ...data }, $setOnInsert: { pending: true, accepted: false } },
 			{ upsert: true, new: true })
 		return this.mapper.mapFrom(tutorRequest)!
 	}
