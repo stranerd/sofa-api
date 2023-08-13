@@ -1,6 +1,7 @@
 import { TutorRequestsUseCases } from '@modules/conversations'
+import { WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
-import { AuthRole, BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TutorRequestController {
 	static async find (req: Request) {
@@ -24,7 +25,11 @@ export class TutorRequestController {
 		}, req.body)
 
 		const tutor = await UsersUseCases.find(tutorId)
-		if (!tutor || tutor.isDeleted() || !tutor.roles[AuthRole.isTutor]) throw new BadRequestError('tutor not found')
+		if (!tutor || tutor.isDeleted()) throw new BadRequestError('tutor not found')
+		if (!tutor.canJoinConversations()) throw new BadRequestError('tutor can\'t join conversations right now')
+
+		const wallet = await WalletsUseCases.get(req.authUser!.id)
+		if (!wallet.canAddTutorToConversation()) throw new BadRequestError('you can\'t add a tutor to your conversations')
 
 		return await TutorRequestsUseCases.create({ userId: req.authUser!.id, conversationId, tutor: tutor.getEmbedded() })
 	}
