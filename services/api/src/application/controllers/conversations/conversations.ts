@@ -1,5 +1,4 @@
 import { ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
-import { WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { AI } from '@utils/ai'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
@@ -55,28 +54,6 @@ export class ConversationController {
 	static async delete (req: Request) {
 		const isDeleted = await ConversationsUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
 		if (isDeleted) return isDeleted
-		throw new NotAuthorizedError()
-	}
-
-	static async addTutor (req: Request) {
-		const { tutorId } = validate({
-			tutorId: Schema.string().min(1)
-		}, req.body)
-
-		const tutor = await UsersUseCases.find(tutorId)
-		if (!tutor || tutor.isDeleted()) throw new BadRequestError('tutor not found')
-		if (!tutor.canJoinConversations()) throw new BadRequestError('tutor can\'t join conversations right now')
-
-		const wallet = await WalletsUseCases.get(req.authUser!.id)
-		if (!wallet.canAddTutorToConversation()) throw new BadRequestError('you can\'t add a tutor to your conversations')
-
-		const updatedConversation = await ConversationsUseCases.addTutor({
-			id: req.params.id,
-			userId: req.authUser!.id,
-			tutor: tutor.getEmbedded()
-		})
-
-		if (updatedConversation) return updatedConversation
 		throw new NotAuthorizedError()
 	}
 

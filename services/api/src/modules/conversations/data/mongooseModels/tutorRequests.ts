@@ -12,6 +12,10 @@ const TutorRequestSchema = new appInstance.dbs.mongo.Schema<TutorRequestFromMode
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
+	userId: {
+		type: String,
+		required: true
+	},
 	conversationId: {
 		type: String,
 		required: true

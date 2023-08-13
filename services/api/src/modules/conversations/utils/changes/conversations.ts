@@ -1,4 +1,3 @@
-import { PlanDataType, WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
@@ -26,7 +25,6 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 			const removedTutor = before.tutor && !after.tutor
 
 			if (addedTutor) {
-				await WalletsUseCases.updateSubscriptionData({ userId: after.user.id, key: PlanDataType.tutorAidedConversations, value: -1 })
 				await UsersUseCases.updateTutorConversations({
 					userId: after.tutor.id,
 					conversationId: after.id,

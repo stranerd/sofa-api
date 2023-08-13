@@ -35,7 +35,7 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 		let res = null as TutorRequestFromModel | null
 		await TutorRequest.collection.conn.transaction(async (session) => {
 			const conversation = this.conversationMapper.mapFrom(await Conversation.findById(data.conversationId, { session }))
-			if (!conversation) throw new BadRequestError('Conversation not found')
+			if (!conversation || conversation.user.id !== data.userId) throw new BadRequestError('Conversation not found')
 			if (conversation.tutor) throw new BadRequestError('Conversation already has a tutor')
 			const tutorRequest = await TutorRequest.findOneAndUpdate(
 				{ conversationId: data.conversationId, pending: true },
@@ -53,8 +53,20 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 	}
 
 	async accept ({ id, tutorId, accept }: { id: string, tutorId, accept: boolean }) {
-		const tutorRequest = await TutorRequest.findOneAndUpdate({ _id: id, 'tutor.id': tutorId, pending: true }, { $set: { accepted: accept, pending: false } })
-		return !!tutorRequest
+		let res = false
+		await TutorRequest.collection.conn.transaction(async (session) => {
+			const tutorRequest = await TutorRequest.findOneAndUpdate({ _id: id, 'tutor.id': tutorId, pending: true }, { $set: { accepted: accept, pending: false } }, { session })
+			if (!tutorRequest) throw new BadRequestError('Request not found')
+			const conversation = this.conversationMapper.mapFrom(await Conversation.findById(tutorRequest.conversationId, { session }))
+			if (!conversation) throw new BadRequestError('Conversation not found')
+			if (accept) {
+				if (conversation.tutor && conversation.tutor.id !== tutorId) throw new Error('Conversation already has a tutor')
+				await Conversation.findByIdAndUpdate(tutorRequest.conversationId, { $set: { tutor: tutorRequest.tutor } }, { new: true, session })
+			}
+			res = !!tutorRequest
+			return res
+		})
+		return res
 	}
 
 	async delete (data: { id: string }) {

@@ -36,10 +36,6 @@ export class ConversationsUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async addTutor (input: { id: string, userId: string, tutor: EmbeddedUser }) {
-		return await this.repository.addTutor(input.id, input.userId, input.tutor)
-	}
-
 	async removeTutor (data: Omit<ReviewToModel, 'to'>) {
 		return await this.repository.removeTutor(data)
 	}

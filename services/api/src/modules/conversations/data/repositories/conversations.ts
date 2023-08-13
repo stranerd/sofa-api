@@ -59,13 +59,6 @@ export class ConversationRepository implements IConversationRepository {
 		return !!conversation
 	}
 
-	async addTutor (id: string, userId: string, tutor: EmbeddedUser) {
-		const conversation = await Conversation.findOneAndUpdate({
-			_id: id, 'user.id': userId, tutor: null
-		}, { $set: { tutor } }, { new: true })
-		return this.mapper.mapFrom(conversation)
-	}
-
 	async removeTutor (data: Omit<ReviewToModel, 'to'>) {
 		let res = null as ConversationFromModel | null
 		await Conversation.collection.conn.transaction(async (session) => {
