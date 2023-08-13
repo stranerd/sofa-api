@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
+import { BadRequestError, QueryParams } from 'equipped'
 import { IConversationRepository } from '../../domain/irepositories/conversations'
 import { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
@@ -8,6 +8,8 @@ import { MessageFromModel } from '../models/messages'
 import { ReviewToModel } from '../models/reviews'
 import { Conversation } from '../mongooseModels/conversations'
 import { Review } from '../mongooseModels/reviews'
+import { TutorRequest } from '../mongooseModels/tutorRequests'
+import { Message } from '../mongooseModels/messages'
 
 export class ConversationRepository implements IConversationRepository {
 	private static instance: ConversationRepository
@@ -55,8 +57,17 @@ export class ConversationRepository implements IConversationRepository {
 	}
 
 	async delete (id: string, userId: string) {
-		const conversation = await Conversation.findOneAndDelete({ _id: id, 'user.id': userId })
-		return !!conversation
+		let res = false
+		await Conversation.collection.conn.transaction(async (session) => {
+			const conversation = await Conversation.findOneAndDelete({ _id: id, 'user.id': userId }, { session })
+			if (!conversation) throw new BadRequestError('conversation not found')
+			await TutorRequest.deleteMany({ conversationId: conversation.id }, { session })
+			await Message.deleteMany({ conversationId: conversation.id }, { session })
+			res = !!conversation
+			return res
+		})
+
+		return res
 	}
 
 	async removeTutor (data: Omit<ReviewToModel, 'to'>) {
