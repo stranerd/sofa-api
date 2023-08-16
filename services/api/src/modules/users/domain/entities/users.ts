@@ -14,7 +14,7 @@ export class UserEntity extends BaseEntity {
 	public readonly ai: UserAi
 	public readonly socials: UserSocialsType
 	public readonly location: UserLocation | null
-	ignoreInJSON = ['type.code']
+	ignoreInJSON = ['type.code', 'bio.email', 'bio.phone']
 
 	constructor ({ id, bio, roles, dates, status, account, type, tutor, ai, socials, location }: UserConstructorArgs) {
 		super()
