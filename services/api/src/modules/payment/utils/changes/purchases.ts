@@ -5,6 +5,9 @@ import { TransactionsUseCases } from '../../'
 import { PurchaseFromModel } from '../../data/models/purchases'
 import { PurchaseEntity } from '../../domain/entities/purchases'
 import { TransactionStatus, TransactionType } from '../../domain/types'
+import { NotificationType, sendNotification } from '@modules/notifications'
+
+const serviceCharge = 0.2
 
 export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, PurchaseEntity> = {
 	created: async ({ after }) => {
@@ -16,23 +19,34 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 		], after)
 
 		const user = await UsersUseCases.find(after.data.userId)
-		if (!user) return
-
-		const serviceCharge = 0.2
-		await TransactionsUseCases.create({
-			title: `Purchase of one of your ${after.data.type}: ${after.data.id}`,
-			userId: user.id, email: user.bio.email,
-			amount: Math.ceil((1 - serviceCharge) * after.price.amount), currency: after.price.currency,
-			status: TransactionStatus.fulfilled,
-			data: {
-				type: TransactionType.purchased,
-				purchaseId: after.id,
-				userId: after.userId,
-				serviceCharge,
-				purchasedType: after.data.type,
-				purchasedId: after.data.id
-			}
-		})
+		await Promise.all([
+			user ? TransactionsUseCases.create({
+				title: `Purchase of one of your ${after.data.type}: ${after.data.id}`,
+				userId: user.id, email: user.bio.email,
+				amount: Math.ceil((1 - serviceCharge) * after.price.amount), currency: after.price.currency,
+				status: TransactionStatus.fulfilled,
+				data: {
+					type: TransactionType.purchased,
+					purchaseId: after.id,
+					userId: after.userId,
+					serviceCharge,
+					purchasedType: after.data.type,
+					purchasedId: after.data.id
+				}
+			}): null,
+			sendNotification([after.data.userId], {
+				title: 'New Purchase',
+				body: `Someone just purchased one of your ${after.data.type} #${after.data.id}`,
+				sendEmail: true,
+				data: { type: NotificationType.NewPurchase, purchaseId: after.id, userId: after.userId }
+			}),
+			sendNotification([after.userId], {
+				title: 'Successful Purchase',
+				body: `Your puchase of ${after.data.type} #${after.data.id} was successful`,
+				sendEmail: true,
+				data: { type: NotificationType.NewPurchased, purchaseId: after.id, userId: after.data.userId }
+			})
+		])
 	},
 	updated: async ({ after }) => {
 		await purchases.listener.updated([

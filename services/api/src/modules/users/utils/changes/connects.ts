@@ -1,4 +1,3 @@
-import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { UsersUseCases } from '../../'
@@ -12,12 +11,6 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 			`users/connects/${after.from.id}`, `users/connects/${after.to.id}`,
 			`users/connects/${after.id}/${after.from.id}`, `users/connects/${after.id}/${after.to.id}`,
 		], after)
-		await sendNotification([after.to.id], {
-			title: `${after.from.bio.name.full} is requesting to connect`,
-			sendEmail: false,
-			body: 'Check out their profile',
-			data: { type: NotificationType.ConnectRequested, connectId: after.id, userId: after.from.id }
-		})
 	},
 	updated: async ({ after, changes }) => {
 		await appInstance.listener.created([
@@ -31,17 +24,6 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 			}),
 			after.accepted && UsersUseCases.incrementMeta({
 				id: after.to.id, property: UserMeta.connects, value: after.accepted ? 1 : -1
-			}),
-			after.accepted ? sendNotification([after.from.id], {
-				title: `${after.from.bio.name.full} accepted your request`,
-				sendEmail: false,
-				body: 'Go message them!',
-				data: { type: NotificationType.ConnectAccepted, connectId: after.id, userId: after.to.id }
-			}) : sendNotification([after.from.id], {
-				title: `${after.from.bio.name.full} declined your request`,
-				sendEmail: false,
-				body: 'Try connecting later!',
-				data: { type: NotificationType.ConnectDeclined, connectId: after.id, userId: after.to.id }
 			})
 		])
 	},
