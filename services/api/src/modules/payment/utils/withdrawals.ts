@@ -3,6 +3,7 @@ import { TransactionsUseCases, WithdrawalsUseCases } from '..'
 import { WithdrawalEntity } from '../domain/entities/withdrawals'
 import { TransactionStatus, TransactionType, WithdrawalStatus } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
+import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const processCreatedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	if (withdrawal.externalId || withdrawal.status !== WithdrawalStatus.created) return
@@ -46,6 +47,21 @@ export const processFailedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	await WithdrawalsUseCases.update({
 		id: withdrawal.id,
 		data: {	status: WithdrawalStatus.refunded }
+	})
+	await sendNotification([withdrawal.userId], {
+		title: 'Withdrawal failed',
+		body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} failed. Amount has been refunded to your wallet`,
+		sendEmail: true,
+		data: { type: NotificationType.WithdrawalFailed, withdrawalId: withdrawal.id }
+	})
+}
+
+export const processCompletedWithdrawal = async (withdrawal: WithdrawalEntity) => {
+	await sendNotification([withdrawal.userId], {
+		title: 'Withdrawal successful',
+		body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} was successful!`,
+		sendEmail: true,
+		data: { type: NotificationType.WithdrawalSuccessful, withdrawalId: withdrawal.id }
 	})
 }
 

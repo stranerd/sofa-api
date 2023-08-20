@@ -2,7 +2,7 @@ import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { WithdrawalFromModel } from '../../data/models/withdrawals'
 import { WithdrawalEntity } from '../../domain/entities/withdrawals'
-import { processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
+import { processCompletedWithdrawal, processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
 import { WithdrawalStatus } from '@modules/payment/domain/types'
 
 export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel, WithdrawalEntity> = {
@@ -23,6 +23,7 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 		if (changes.status) {
 			if (before.status === WithdrawalStatus.created && after.status === WithdrawalStatus.inProgress) await processInProgressWithdrawal(after)
 			if (before.status === WithdrawalStatus.inProgress && after.status === WithdrawalStatus.failed) await processFailedWithdrawal(after)
+			if (before.status === WithdrawalStatus.inProgress && after.status === WithdrawalStatus.completed) await processCompletedWithdrawal(after)
 		}
 	},
 	deleted: async ({ before }) => {

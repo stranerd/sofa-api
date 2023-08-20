@@ -7,6 +7,8 @@ export enum NotificationType {
 	UserJoinedGame = 'UserJoinedGame',
 	NewPurchase = 'NewPurchase',
 	NewPurchased = 'NewPurchased',
+	WithdrawalSuccessful = 'WithdrawalSuccessful',
+	WithdrawalFailed = 'WithdrawalFailed',
 }
 
 export type NotificationData =
@@ -18,3 +20,5 @@ export type NotificationData =
 	| { type: NotificationType.UserJoinedGame, gameId: string, userId: string }
 	| { type: NotificationType.NewPurchase, purchaseId: string, userId: string }
 	| { type: NotificationType.NewPurchased, purchaseId: string, userId: string }
+	| { type: NotificationType.WithdrawalSuccessful, withdrawalId: string }
+	| { type: NotificationType.WithdrawalFailed, withdrawalId: string }
