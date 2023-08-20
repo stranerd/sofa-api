@@ -10,6 +10,8 @@ export enum NotificationType {
 	WithdrawalSuccessful = 'WithdrawalSuccessful',
 	WithdrawalFailed = 'WithdrawalFailed',
 	WalletFundSuccessful = 'WalletFundSuccessful',
+	SubscriptionSuccessful = 'SubscriptionSuccessful',
+	SubscriptionFailed = 'SubscriptionFailed',
 }
 
 export type NotificationData =
@@ -24,3 +26,5 @@ export type NotificationData =
 	| { type: NotificationType.WithdrawalSuccessful, withdrawalId: string, amount: number, currency: string  }
 	| { type: NotificationType.WithdrawalFailed, withdrawalId: string, amount: number, currency: string  }
 	| { type: NotificationType.WalletFundSuccessful, amount: number, currency: string }
+	| { type: NotificationType.SubscriptionSuccessful, planId: string }
+	| { type: NotificationType.SubscriptionFailed, planId: string }
