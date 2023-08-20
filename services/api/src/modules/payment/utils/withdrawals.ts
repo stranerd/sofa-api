@@ -52,7 +52,7 @@ export const processFailedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 		title: 'Withdrawal failed',
 		body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} failed. Amount has been refunded to your wallet`,
 		sendEmail: true,
-		data: { type: NotificationType.WithdrawalFailed, withdrawalId: withdrawal.id }
+		data: { type: NotificationType.WithdrawalFailed, withdrawalId: withdrawal.id, amount: withdrawal.amount, currency: withdrawal.currency }
 	})
 }
 
@@ -61,7 +61,7 @@ export const processCompletedWithdrawal = async (withdrawal: WithdrawalEntity) =
 		title: 'Withdrawal successful',
 		body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} was successful!`,
 		sendEmail: true,
-		data: { type: NotificationType.WithdrawalSuccessful, withdrawalId: withdrawal.id }
+		data: { type: NotificationType.WithdrawalSuccessful, withdrawalId: withdrawal.id, amount: withdrawal.amount, currency: withdrawal.currency }
 	})
 }
 

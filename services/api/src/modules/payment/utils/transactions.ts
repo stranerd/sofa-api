@@ -3,6 +3,7 @@ import { MethodsUseCases, PurchasesUseCases, TransactionsUseCases, WalletsUseCas
 import { TransactionEntity } from '../domain/entities/transactions'
 import { Currencies, TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
+import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.newCard) {
@@ -43,6 +44,12 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 		await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: TransactionStatus.settled }
+		})
+		await sendNotification([transaction.userId], {
+			title: 'Wallet Funded',
+			body: `Your wallet has been funded with ${transaction.amount} ${transaction.currency}`,
+			sendEmail: true,
+			data: { type: NotificationType.WalletFundSuccessful, amount: transaction.amount, currency: transaction.currency }
 		})
 	}
 	if (transaction.data.type === TransactionType.withdrawalRefund) {
