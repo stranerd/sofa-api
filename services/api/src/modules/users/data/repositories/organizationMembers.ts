@@ -4,10 +4,13 @@ import { IOrganizationMemberRepository } from '../../domain/irepositories/organi
 import { OrganizationMemberMapper } from '../mappers/organizationMembers'
 import { OrganizationMemberFromModel, OrganizationMemberToModel } from '../models/organizationMembers'
 import { OrganizationMember } from '../mongooseModels/organizationMembers'
+import { User } from '../mongooseModels/users'
+import { UserMapper } from '../mappers/users'
 
 export class OrganizationMemberRepository implements IOrganizationMemberRepository {
 	private static instance: OrganizationMemberRepository
 	private mapper = new OrganizationMemberMapper()
+	private userMapper = new UserMapper()
 
 	static getInstance (): OrganizationMemberRepository {
 		if (!OrganizationMemberRepository.instance) OrganizationMemberRepository.instance = new OrganizationMemberRepository()
@@ -99,7 +102,10 @@ export class OrganizationMemberRepository implements IOrganizationMemberReposito
 		return data.reduce((acc, cur) => ({ ...acc, [cur._id]: cur.total }), {} as Record<string, number>)
 	}
 
-	async #userIdHasAccessToOrg (userId: string, organizationId: string, _: ClientSession) {
-		return userId === organizationId
+	async #userIdHasAccessToOrg (userId: string, organizationId: string, session: ClientSession) {
+		if (userId !== organizationId) return false
+		const user = this.userMapper.mapFrom(await User.findById(organizationId, {}, { session }))
+		if (!user || user.isDeleted() || !user.isOrg()) return false
+		return true
 	}
 }

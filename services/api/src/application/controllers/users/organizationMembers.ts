@@ -21,9 +21,6 @@ export class OrganizationMembersController {
 	}
 
 	static async add (req: Request) {
-		const organization = await UsersUseCases.find(req.params.organizationId)
-		if (!organization || !organization.isOrg()) throw new BadRequestError('organization not found')
-
 		const { emails } = validate({
 			emails: Schema.array(Schema.string().email())
 		}, req.body)
