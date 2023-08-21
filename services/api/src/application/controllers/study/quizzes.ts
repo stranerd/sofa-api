@@ -39,7 +39,7 @@ export class QuizController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, topicId, tagIds } = validate(this.schema(isAdmin), { ...req.body, photo: uploadedPhoto })
+		const { title, description, topicId, tagIds, isForTutors } = validate(this.schema(isAdmin), { ...req.body, photo: uploadedPhoto })
 
 		const utags = await verifyTags(topicId, tagIds)
 
@@ -48,7 +48,7 @@ export class QuizController {
 		const updatedQuiz = await QuizzesUseCases.update({
 			id: req.params.id, userId: req.authUser!.id,
 			data: {
-				...utags, title, description,
+				...utags, title, description, isForTutors,
 				...(changedPhoto ? { photo } : {})
 			}
 		})
