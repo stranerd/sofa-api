@@ -1,4 +1,5 @@
 import { BadRequestError } from 'equipped'
+import { ClientSession } from 'mongodb'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import { AccountDetails, Currencies, PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
@@ -21,7 +22,7 @@ export class WalletRepository implements IWalletRepository {
 		return WalletRepository.instance
 	}
 
-	private static async getUserWallet (userId: string, session?: any) {
+	private static async getUserWallet (userId: string, session?: ClientSession) {
 		const wallet = await Wallet.findOneAndUpdate(
 			{ userId },
 			{ $setOnInsert: { userId } },
@@ -150,11 +151,12 @@ export class WalletRepository implements IWalletRepository {
 
 	async updateMembersDays (data: Record<string, number>) {
 		let res = false
+		const now = Date.now()
 		await Wallet.collection.conn.transaction(async (session) => {
 			const entries = Object.entries(data)
 			const bulk = Wallet.collection.initializeUnorderedBulkOp()
 			for (const [userId, days] of entries) {
-				bulk.find({ userId }).upsert().updateOne({ $inc: { 'subscription.data.membersDays': days }, $setOnInsert: { userId } })
+				bulk.find({ userId }).upsert().updateOne({ $inc: { 'subscription.data.membersDays': days }, $setOnInsert: { userId, createdAt: now, updatedAt: now } })
 			}
 			const result = await bulk.execute({ session })
 			res = result.nModified === entries.length

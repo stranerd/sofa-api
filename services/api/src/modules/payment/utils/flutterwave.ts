@@ -15,7 +15,7 @@ type FwTransaction = {
 	currency: string,
 	status: 'successful' | 'failed',
 	created_at: string,
-	card: {
+	card?: {
 		first_6digits: string,
 		last_4digits: string,
 		country: string,
@@ -59,7 +59,7 @@ export class FlutterwavePayment {
 
 	static async saveCard (userId: string, transactionId: string): Promise<MethodToModel | null> {
 		const transaction = await this.verifyById(transactionId)
-		if (!transaction) return null
+		if (!transaction || !transaction.card) return null
 		const [month, year] = transaction.card.expiry.split('/').map((x) => parseInt(x))
 		const expireTime = new Date(2000 + year, month).getTime()
 		return {
