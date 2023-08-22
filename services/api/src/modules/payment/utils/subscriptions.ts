@@ -48,7 +48,7 @@ const chargeForSubscription = async (user: UserEntity, plan: PlanEntity, method:
 			data: { type: TransactionType.subscription, subscriptionId: plan.id, multiplier }
 		})
 		const successful = await FlutterwavePayment.chargeCard({
-			email: transaction.email, amount: Math.abs(transaction.amount), currency: transaction.currency,
+			email: transaction.email, amount: transaction.amount, currency: transaction.currency,
 			token: method.token, id: transaction.id
 		})
 		await TransactionsUseCases.update({

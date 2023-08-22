@@ -92,7 +92,7 @@ export class FlutterwavePayment {
 		const res = await axios.post('/tokenized-charges', {
 			token: data.token,
 			currency: data.currency,
-			amount: data.amount,
+			amount: Math.abs(data.amount),
 			email: data.email,
 			tx_ref: data.id
 		}).catch(() => null)
