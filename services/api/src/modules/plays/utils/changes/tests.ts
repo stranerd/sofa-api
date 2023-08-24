@@ -1,4 +1,5 @@
 import { QuizMetaType, QuizzesUseCases } from '@modules/study'
+import { TutorRequestsUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { AnswersUseCases } from '../..'
@@ -6,7 +7,6 @@ import { TestFromModel } from '../../data/models/tests'
 import { TestEntity } from '../../domain/entities/tests'
 import { PlayTypes, PlayStatus } from '../../domain/types'
 import { calculateTestResults, startTestTimer } from '../plays'
-import { publishers } from '@utils/events'
 
 export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity> = {
 	created: async ({ after }) => {
@@ -24,7 +24,7 @@ export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity>
 		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startTestTimer(after)
 		if (before.status === PlayStatus.started && after.status === PlayStatus.ended) await Promise.all([
 			calculateTestResults(after),
-			publishers.TESTENDED.publish({ testId: after.id })
+			TutorRequestsUseCases.markTestFinished(after.id)
 		])
 	},
 	deleted: async ({ before }) => {
