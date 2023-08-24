@@ -28,6 +28,10 @@ export class TestEntity extends BaseEntity {
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
+
+	getEndsAt () {
+		return (this.startedAt ?? 0) + (this.totalTimeInSec * 1000)
+	}
 }
 
 type TestConstructorArgs = {

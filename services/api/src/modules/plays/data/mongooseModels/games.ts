@@ -32,6 +32,11 @@ const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
 		required: false,
 		default: []
 	},
+	totalTimeInSec: {
+		type: Number,
+		required: false,
+		default: 0
+	},
 	scores: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,

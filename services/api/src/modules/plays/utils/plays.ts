@@ -54,11 +54,11 @@ export const calculateGameResults = async (game: GameEntity) => {
 	return await GamesUseCases.score({ id: game.id, userId: game.user.id, scores })
 }
 
-export const startGameTimer = async (game: GameEntity) => startTimer(PlayTypes.games, game.id, game.user.id,  game.endedAt ?? 0)
+export const startGameTimer = async (game: GameEntity) => startTimer(PlayTypes.games, game.id, game.user.id,  game.getEndsAt())
 
 export const calculateTestResults = async (test: TestEntity) => {
 	const scores = await calculateResults(PlayTypes.tests, test.id, test.questions, [test.userId])
 	return await TestsUseCases.score({ id: test.id, userId: test.userId, scores })
 }
 
-export const startTestTimer = async (test: TestEntity) => startTimer(PlayTypes.tests, test.id, test.userId, test.endedAt ?? 0)
+export const startTestTimer = async (test: TestEntity) => startTimer(PlayTypes.tests, test.id, test.userId, test.getEndsAt())

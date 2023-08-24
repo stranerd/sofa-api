@@ -48,12 +48,11 @@ export class GameRepository implements IGameRepository {
 		return !!game
 	}
 
-	async start (id: string, userId: string, totalTimeInSec: number) {
-		const startedAt = Date.now()
-		const endedAt = startedAt + (totalTimeInSec + 5) * 1000
+	async start (id: string, userId: string) {
 		const game = await Game.findOneAndUpdate(
 			{ _id: id, 'user.id': userId, status: PlayStatus.created },
-			{ $set: { startedAt, endedAt, status: PlayStatus.started } }, { new: true })
+			{ $set: { startedAt: Date.now(), status: PlayStatus.started } },
+			{ new: true })
 		return this.mapper.mapFrom(game)
 	}
 
@@ -69,7 +68,7 @@ export class GameRepository implements IGameRepository {
 	async end (id: string, userId: string) {
 		const game = await Game.findOneAndUpdate(
 			{ _id: id, 'user.id': userId, status: PlayStatus.started },
-			{ $set: { status: PlayStatus.ended } }, { new: true })
+			{ $set: { endedAt: Date.now(), status: PlayStatus.ended } }, { new: true })
 		return this.mapper.mapFrom(game)
 	}
 

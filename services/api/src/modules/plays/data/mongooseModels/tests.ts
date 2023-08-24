@@ -29,7 +29,7 @@ const Schema = new appInstance.dbs.mongo.Schema<TestFromModel>({
 	},
 	totalTimeInSec: {
 		type: Number,
-		required: true,
+		required: false,
 		default: 0
 	},
 	scores: {

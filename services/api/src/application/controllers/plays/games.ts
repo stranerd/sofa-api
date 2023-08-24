@@ -24,10 +24,20 @@ export class GameController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
+		const { results: questions } = await QuestionsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: hasAccess.questions }],
+			all: true
+		})
+		const questionIds = hasAccess.questions.map((id) => questions.find((q) => q.id === id)?.id)
+			.filter((q) => !!q) as string[]
+		const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
+
+
 		return await GamesUseCases.add({
 			quizId: data.quizId,
 			user: user.getEmbedded(),
-			questions: hasAccess.questions
+			questions: questionIds,
+			totalTimeInSec
 		})
 	}
 
@@ -45,14 +55,7 @@ export class GameController {
 	}
 
 	static async start (req: Request) {
-		const game = await GamesUseCases.find(req.params.id)
-		if (!game) throw new NotAuthorizedError()
-		const { results: questions } = await QuestionsUseCases.get({
-			where: [{ field: 'id', condition: Conditions.in, value: game.questions }],
-			all: true
-		})
-		const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
-		const updated = await GamesUseCases.start({ id: req.params.id, userId: req.authUser!.id, totalTimeInSec })
+		const updated = await GamesUseCases.start({ id: req.params.id, userId: req.authUser!.id })
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}

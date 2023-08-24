@@ -15,4 +15,5 @@ export interface GameToModel {
 	quizId: string
 	user: EmbeddedUser
 	questions: string[]
+	totalTimeInSec: number
 }
