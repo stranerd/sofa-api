@@ -21,6 +21,10 @@ export class TestsUseCase {
 		return await this.repository.get(query)
 	}
 
+	async start (input: { id: string, userId: string }) {
+		return await this.repository.start(input.id, input.userId)
+	}
+
 	async end (input: { id: string, userId: string }) {
 		return await this.repository.end(input.id, input.userId)
 	}

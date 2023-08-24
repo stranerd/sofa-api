@@ -52,6 +52,18 @@ export const testsRoutes = groupRoutes('/tests', [
 			})
 		]
 	}, {
+		path: '/:id/start',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TestController.start(req)
+				}
+			})
+		]
+	}, {
 		path: '/:id/end',
 		method: 'post',
 		controllers: [

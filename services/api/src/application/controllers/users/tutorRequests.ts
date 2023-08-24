@@ -41,6 +41,13 @@ export class TutorRequestsController {
 		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for tutorship')
 		if (!user.location) throw new BadRequestError('Update your location before applying for tutorship')
 
+		const { results: pendingRequests } = await TutorRequestsUseCases.get({
+			where: [{ field: 'userId', value: user.id }, { field: 'pending', value: false }],
+			all: true
+		})
+		const request = pendingRequests.at(0)
+		if (request) return request
+
 		const { results: quizzes } = await QuizzesUseCases.get({
 			where: [
 				{ field: 'topicId', value: topicId },

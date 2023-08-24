@@ -60,7 +60,7 @@ export class GameController {
 	static async getQuestions (req: Request) {
 		const game = await GamesUseCases.find(req.params.id)
 		if (!game) throw new NotFoundError()
-		if (game.status === PlayStatus.ended || game.status === PlayStatus.scored) throw new BadRequestError('game has ended already')
+		if (game.status !== PlayStatus.started) throw new BadRequestError('game has not started')
 		const { results: questions } = await QuestionsUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: game.questions }],
 			all: true

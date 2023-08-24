@@ -21,7 +21,7 @@ export class TestController {
 	static async getQuestions (req: Request) {
 		const test = await TestsUseCases.find(req.params.id)
 		if (!test) throw new NotFoundError()
-		if (test.status === PlayStatus.ended || test.status === PlayStatus.scored) throw new BadRequestError('test has ended already')
+		if (test.status !== PlayStatus.started) throw new BadRequestError('test has not started')
 		const { results: questions } = await QuestionsUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: test.questions }],
 			all: true
@@ -40,6 +40,12 @@ export class TestController {
 		if (!hasAccess) throw new NotAuthorizedError('cannot access this quiz')
 
 		return await createTest(req.authUser!.id, hasAccess)
+	}
+
+	static async start (req: Request) {
+		const updated = await TestsUseCases.start({ id: req.params.id, userId: req.authUser!.id })
+		if (updated) return updated
+		throw new NotAuthorizedError()
 	}
 
 	static async end (req: Request) {

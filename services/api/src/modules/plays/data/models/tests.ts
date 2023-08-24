@@ -14,4 +14,5 @@ export interface TestToModel {
 	quizId: string
 	userId: string
 	questions: string[]
+	totalTimeInSec: number
 }

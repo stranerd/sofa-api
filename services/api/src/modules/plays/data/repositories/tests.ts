@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { ITestRepository } from '../../domain/irepositories/tests'
 import { PlayStatus } from '../../domain/types'
 import { TestMapper } from '../mappers/tests'
-import { TestToModel } from '../models/tests'
+import { TestFromModel, TestToModel } from '../models/tests'
 import { Test } from '../mongooseModels/tests'
 
 export class TestRepository implements ITestRepository {
@@ -29,14 +29,21 @@ export class TestRepository implements ITestRepository {
 	}
 
 	async add (data: TestToModel & { totalTimeInSec: number }) {
-		const startedAt = Date.now()
-		const endedAt = startedAt + (data.totalTimeInSec + 5) * 1000
-		const test = await new Test({
-			...data,
-			startedAt, endedAt, status: PlayStatus.started,
-			createdAt: startedAt, updatedAt: startedAt
-		}).save()
+		const test = await new Test({ ...data, status: PlayStatus.created }).save()
 		return this.mapper.mapFrom(test)!
+	}
+
+	async start (id: string, userId: string) {
+		let res = null as TestFromModel | null
+		await Test.collection.conn.transaction(async (session) => {
+			const test = this.mapper.mapFrom(await Test.findById(id, {}, { session }))
+			if (!test || test.userId !== userId || test.status !== PlayStatus.created) return false
+			const startedAt = Date.now()
+			const endedAt = startedAt + (test.totalTimeInSec + 5) * 1000
+			res = await Test.findByIdAndUpdate(id, { $set: { startedAt, endedAt, status: PlayStatus.started } }, { new: true, session })
+			return res
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async find (id: string) {
