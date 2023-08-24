@@ -13,6 +13,6 @@ export const GamesUseCases = new GamesUseCase(gameRepository)
 export const TestsUseCases = new TestsUseCase(testRepository)
 export const AnswersUseCases = new AnswersUseCase(answerRepository)
 
-export { PlayTypes } from './domain/types'
+export { PlayStatus, PlayTypes } from './domain/types'
 export { endPlay } from './utils/plays'
 export { createTest } from './utils/tests'

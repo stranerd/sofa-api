@@ -1,6 +1,6 @@
-import { TestsUseCases, createTest } from '@modules/plays'
+import { createTest, PlayStatus, TestsUseCases } from '@modules/plays'
 import { Coursable, QuestionsUseCases, canAccessCoursable } from '@modules/study'
-import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TestController {
 	static async find (req: Request) {
@@ -21,6 +21,7 @@ export class TestController {
 	static async getQuestions (req: Request) {
 		const test = await TestsUseCases.find(req.params.id)
 		if (!test) throw new NotFoundError()
+		if (test.status === PlayStatus.ended || test.status === PlayStatus.scored) throw new BadRequestError('test has ended already')
 		const { results: questions } = await QuestionsUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: test.questions }],
 			all: true
