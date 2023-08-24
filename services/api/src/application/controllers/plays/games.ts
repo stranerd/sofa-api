@@ -60,6 +60,12 @@ export class GameController {
 		throw new NotAuthorizedError()
 	}
 
+	static async end (req: Request) {
+		const ended = await GamesUseCases.end({ id: req.params.id, userId: req.authUser!.id })
+		if (ended) return ended
+		throw new NotAuthorizedError()
+	}
+
 	static async getQuestions (req: Request) {
 		const game = await GamesUseCases.find(req.params.id)
 		if (!game) throw new NotFoundError()
