@@ -1,18 +1,18 @@
 import { openAIKey } from '@utils/environment'
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 
 type Message = { role: 'system' | 'user' | 'assistant', content: string }
 
 export class AI {
-	static #client = new OpenAIApi(new Configuration({ apiKey: openAIKey }))
+	static #client = new OpenAI({ apiKey: openAIKey })
 
 	static async #getResponse (messages: Message[]) {
 		try {
-			const response = await this.#client.createChatCompletion({
+			const response = await this.#client.chat.completions.create({
 				model: 'gpt-3.5-turbo', temperature: 0.3, max_tokens: 1000,
 				messages
 			})
-			return response.data.choices.at(0)?.message?.content ?? ''
+			return response.choices.at(0)?.message?.content?.trim() ?? ''
 		} catch (err) {
 			throw new Error('failed to generate response')
 		}
@@ -23,7 +23,6 @@ export class AI {
 			{ role: 'system', content: 'You are a helpful assistant that always summarizes the question into a one phrase title, making it as short as possible' },
 			{ role: 'user', content: message }
 		])
-		title = title.trim()
 		if (title.startsWith('"')) title = title.slice(1)
 		if (title.endsWith('"')) title = title.slice(0, -1)
 		return title
@@ -37,6 +36,6 @@ export class AI {
 			{ role: 'user', content: message }
 		])
 		if (!reply) return null
-		return reply.trim()
+		return reply
 	}
 }
