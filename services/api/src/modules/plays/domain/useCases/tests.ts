@@ -9,7 +9,7 @@ export class TestsUseCase {
 		this.repository = repository
 	}
 
-	async add (data: TestToModel & { totalTimeInSec: number }) {
+	async add (data: TestToModel) {
 		return await this.repository.add(data)
 	}
 

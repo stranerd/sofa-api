@@ -57,11 +57,10 @@ export class GameRepository implements IGameRepository {
 	}
 
 	async join (id: string, userId: string, join: boolean) {
-		const game = await Game.findOneAndUpdate({
-			_id: id, status: PlayStatus.created
-		}, {
-			[join ? '$addToSet' : '$pull']: { 'participants': userId }
-		}, { new: true })
+		const game = await Game.findOneAndUpdate(
+			{ _id: id, status: PlayStatus.created },
+			{ [join ? '$addToSet' : '$pull']: { participants: userId } },
+			{ new: true })
 		return this.mapper.mapFrom(game)
 	}
 

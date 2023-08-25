@@ -28,7 +28,7 @@ export class TestRepository implements ITestRepository {
 		}
 	}
 
-	async add (data: TestToModel & { totalTimeInSec: number }) {
+	async add (data: TestToModel) {
 		const test = await new Test({ ...data, status: PlayStatus.created }).save()
 		return this.mapper.mapFrom(test)!
 	}
