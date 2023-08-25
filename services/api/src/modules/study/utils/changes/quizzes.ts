@@ -18,7 +18,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			amount: ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.quizzes })
-		await TagsUseCases.updateMeta({ ids: [after.topicId], property: TagMeta.quizzes, value: 1 })
+		await TagsUseCases.updateMeta({ ids: after.tagIds.concat(after.topicId), property: TagMeta.quizzes, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
 		const paths = after.isForTutors ? ['study/quizzes/tutors', `study/quizzes/tutors/${after.id}`] : ['study/quizzes', `study/quizzes/${after.id}`]
@@ -31,8 +31,8 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			const removed = previousTags.filter((t) => !currentTags.includes(t))
 			const added = currentTags.filter((t) => !previousTags.includes(t))
 			await Promise.all([
-				await TagsUseCases.updateMeta({ ids: removed, property: TagMeta.quizzes, value: -1 }),
-				await TagsUseCases.updateMeta({ ids: added, property: TagMeta.quizzes, value: 1 })
+				TagsUseCases.updateMeta({ ids: removed, property: TagMeta.quizzes, value: -1 }),
+				TagsUseCases.updateMeta({ ids: added, property: TagMeta.quizzes, value: 1 })
 			])
 		}
 	},
@@ -47,7 +47,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			amount: -ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
-		await TagsUseCases.updateMeta({ ids: [before.topicId], property: TagMeta.quizzes, value: -1 })
+		await TagsUseCases.updateMeta({ ids: before.tagIds.concat(before.topicId), property: TagMeta.quizzes, value: -1 })
 		await QuestionsUseCases.deleteQuizQuestions(before.id)
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}

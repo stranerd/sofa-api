@@ -24,7 +24,7 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 		})
 		const [userType, tagType] = getProp(after.type)
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: userType })
-		await TagsUseCases.updateMeta({ ids: [after.topicId], property: tagType, value: 1 })
+		await TagsUseCases.updateMeta({ ids: after.tagIds.concat(after.topicId), property: tagType, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['study/files', `study/files/${after.id}`], after)
@@ -38,8 +38,8 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 			const removed = previousTags.filter((t) => !currentTags.includes(t))
 			const added = currentTags.filter((t) => !previousTags.includes(t))
 			await Promise.all([
-				await TagsUseCases.updateMeta({ ids: removed, property: tagType, value: -1 }),
-				await TagsUseCases.updateMeta({ ids: added, property: tagType, value: 1 })
+				TagsUseCases.updateMeta({ ids: removed, property: tagType, value: -1 }),
+				TagsUseCases.updateMeta({ ids: added, property: tagType, value: 1 })
 			])
 		}
 	},
@@ -54,7 +54,7 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 		})
 		const [userType, tagType] = getProp(before.type)
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: userType })
-		await TagsUseCases.updateMeta({ ids: [before.topicId], property: tagType, value: -1 })
+		await TagsUseCases.updateMeta({ ids: before.tagIds.concat(before.topicId), property: tagType, value: -1 })
 		await publishers.DELETEFILE.publish(before.media)
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}

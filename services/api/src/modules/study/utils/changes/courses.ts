@@ -17,7 +17,7 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 			amount: ScoreRewards.newCourse
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.courses })
-		await TagsUseCases.updateMeta({ ids: [after.topicId], property: TagMeta.courses, value: 1 })
+		await TagsUseCases.updateMeta({ ids: after.tagIds.concat(after.topicId), property: TagMeta.courses, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['study/courses', `study/courses/${after.id}`], after)
@@ -29,8 +29,8 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 			const removed = previousTags.filter((t) => !currentTags.includes(t))
 			const added = currentTags.filter((t) => !previousTags.includes(t))
 			await Promise.all([
-				await TagsUseCases.updateMeta({ ids: removed, property: TagMeta.courses, value: -1 }),
-				await TagsUseCases.updateMeta({ ids: added, property: TagMeta.courses, value: 1 })
+				TagsUseCases.updateMeta({ ids: removed, property: TagMeta.courses, value: -1 }),
+				TagsUseCases.updateMeta({ ids: added, property: TagMeta.courses, value: 1 })
 			])
 		}
 	},
@@ -45,7 +45,7 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 			amount: -ScoreRewards.newCourse
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.courses })
-		await TagsUseCases.updateMeta({ ids: [before.topicId], property: TagMeta.courses, value: -1 })
+		await TagsUseCases.updateMeta({ ids: before.tagIds.concat(before.topicId), property: TagMeta.courses, value: -1 })
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}
 }
