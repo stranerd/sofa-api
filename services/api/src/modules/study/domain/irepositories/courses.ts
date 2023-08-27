@@ -16,4 +16,5 @@ export interface ICourseRepository {
 	remove: (id: string, coursableId: string, type: Coursable) => Promise<boolean>
 	updateSections: (id: string, userId: string, sections: CourseSections) => Promise<CourseEntity | null>
 	updateMeta: (id: string, property: CourseMeta, value: 1 | -1) => Promise<void>
+	updateRatings (id: string, ratings: number, add: boolean): Promise<boolean>
 }

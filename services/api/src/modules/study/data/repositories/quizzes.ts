@@ -97,4 +97,18 @@ export class QuizRepository implements IQuizRepository {
 			$inc: { [`meta.${property}`]: value, [`meta.${QuizMeta.total}`]: value }
 		})
 	}
+
+	async updateRatings (id: string, ratings: number, add: boolean) {
+		let res = false
+		await Quiz.collection.conn.transaction(async (session) => {
+			const quiz = await Quiz.findById(id, {}, { session })
+			if (!quiz) return res
+			quiz.ratings.total += (add ? 1 : -1) * ratings
+			quiz.ratings.count += add ? 1 : -1
+			quiz.ratings.avg = Number((quiz.ratings.total / quiz.ratings.count).toFixed(2))
+			res = !!(await quiz.save({ session }))
+			return res
+		})
+		return res
+	}
 }

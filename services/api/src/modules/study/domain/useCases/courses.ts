@@ -57,4 +57,8 @@ export class CoursesUseCase {
 	async updateMeta (data: { id: string, property: CourseMeta, value: 1 | -1 }) {
 		return this.repository.updateMeta(data.id, data.property, data.value)
 	}
+
+	async updateRatings (input: { id: string, ratings: number, add: boolean }) {
+		return await this.repository.updateRatings(input.id, input.ratings, input.add)
+	}
 }

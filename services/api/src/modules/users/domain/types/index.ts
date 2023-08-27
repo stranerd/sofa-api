@@ -1,4 +1,5 @@
 import { Phone } from '@modules/auth'
+import { Ratings } from '@utils/commons'
 import { AuthRoles, MediaOutput } from 'equipped'
 
 export * from './verifications'
@@ -36,11 +37,7 @@ export type UserAccount = {
 		longestStreak: number
 		lastEvaluatedAt: number
 	}
-	ratings: {
-		total: number
-		count: number
-		avg: number
-	}
+	ratings: Ratings
 	organizationsIn: string[]
 }
 

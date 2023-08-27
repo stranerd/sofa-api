@@ -36,6 +36,23 @@ export const PublishableSchema = {
 		required: true,
 		default: []
 	},
+	ratings: {
+		total: {
+			type: Number,
+			required: false,
+			default: 0
+		},
+		count: {
+			type: Number,
+			required: false,
+			default: 0
+		},
+		avg: {
+			type: Number,
+			required: false,
+			default: 0
+		}
+	},
 	createdAt: {
 		type: Number,
 		required: false,

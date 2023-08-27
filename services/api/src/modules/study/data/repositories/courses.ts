@@ -163,4 +163,18 @@ export class CourseRepository implements ICourseRepository {
 			$inc: { [`meta.${property}`]: value, [`meta.${CourseMeta.total}`]: value }
 		})
 	}
+
+	async updateRatings (id: string, ratings: number, add: boolean) {
+		let res = false
+		await Course.collection.conn.transaction(async (session) => {
+			const course = await Course.findById(id, {}, { session })
+			if (!course) return res
+			course.ratings.total += (add ? 1 : -1) * ratings
+			course.ratings.count += add ? 1 : -1
+			course.ratings.avg = Number((course.ratings.total / course.ratings.count).toFixed(2))
+			res = !!(await course.save({ session }))
+			return res
+		})
+		return res
+	}
 }

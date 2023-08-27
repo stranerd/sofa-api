@@ -5,8 +5,9 @@ export interface CourseFromModel extends CourseToModel {
 	coursables: { id: string, type: Coursable }[]
 	sections: CourseSections
 	meta: Record<CourseMeta, number>
+	ratings: Publishable['ratings']
 	createdAt: number
 	updatedAt: number
 }
 
-export interface CourseToModel extends Publishable, Saleable { }
+export interface CourseToModel extends Omit<Publishable, 'ratings'>, Saleable { }

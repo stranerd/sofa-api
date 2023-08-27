@@ -2,6 +2,7 @@ export { Saleable } from '@modules/payment'
 export * from './questions'
 export { EmbeddedUser, Media }
 import { EmbeddedUser } from '@modules/users'
+import { Ratings } from '@utils/commons'
 import { MediaOutput as Media } from 'equipped'
 
 export enum FileType {
@@ -28,6 +29,7 @@ export type Publishable = {
 	user: EmbeddedUser
 	topicId: string
 	tagIds: string[]
+	ratings: Ratings
 	status: DraftStatus
 }
 

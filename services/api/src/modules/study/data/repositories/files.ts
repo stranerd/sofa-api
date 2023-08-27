@@ -72,4 +72,18 @@ export class FileRepository implements IFileRepository {
 		const files = await File.deleteMany({ courseId })
 		return files.acknowledged
 	}
+
+	async updateRatings (id: string, ratings: number, add: boolean) {
+		let res = false
+		await File.collection.conn.transaction(async (session) => {
+			const file = await File.findById(id, {}, { session })
+			if (!file) return res
+			file.ratings.total += (add ? 1 : -1) * ratings
+			file.ratings.count += add ? 1 : -1
+			file.ratings.avg = Number((file.ratings.total / file.ratings.count).toFixed(2))
+			res = !!(await file.save({ session }))
+			return res
+		})
+		return res
+	}
 }

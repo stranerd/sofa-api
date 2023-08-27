@@ -15,4 +15,5 @@ export interface IQuizRepository {
 	reorder: (id: string, userId: string, questionIds: string[]) => Promise<QuizEntity | null>
 	deleteCourseQuizzes: (courseId: string) => Promise<boolean>
 	updateMeta: (id: string, property: QuizMeta, value: 1 | -1) => Promise<void>
+	updateRatings (id: string, ratings: number, add: boolean): Promise<boolean>
 }
