@@ -37,6 +37,7 @@ export class TutorRequestsController {
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('User not found')
+		if (!user.isTeacher()) throw new BadRequestError('Only teachers can apply for tutorship')
 		if (user.tutor.topics.includes(topicId)) throw new BadRequestError('You are already a tutor for this topic')
 		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for tutorship')
 		if (!user.location) throw new BadRequestError('Update your location before applying for tutorship')

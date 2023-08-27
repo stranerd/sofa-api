@@ -1,5 +1,4 @@
 import { appInstance } from '@utils/types'
-import { AuthRole } from 'equipped'
 import { IUserRepository } from '../../domain/irepositories/users'
 import { UserAccount, UserAi, UserBio, UserLocation, UserMeta, UserRankings, UserRoles, UserSocialsType, UserType, UserTypeData } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
@@ -145,7 +144,7 @@ export class UserRepository implements IUserRepository {
 	async updateTutorTopics (userId: string, topicId: string, add: boolean) {
 		const user = await User.findOneAndUpdate({
 			_id: userId,
-			[`roles.${AuthRole.isTutor}`]: true
+			'type.type': UserType.teacher
 		}, {
 			[add ? '$addToSet' : '$pull']: { 'tutor.topics': topicId }
 		}, { new: true })

@@ -47,6 +47,10 @@ export class UserEntity extends BaseEntity {
 		return this.dates.deletedAt !== null
 	}
 
+	isTeacher () {
+		return this.type?.type === UserType.teacher
+	}
+
 	isOrg () {
 		return this.type?.type === UserType.organization
 	}
@@ -66,7 +70,7 @@ export class UserEntity extends BaseEntity {
 	}
 
 	canJoinConversations () {
-		return this.roles.isTutor && this.tutor.conversations.length < 5
+		return this.isTeacher() && this.tutor.conversations.length < 5
 	}
 }
 
