@@ -75,6 +75,17 @@ export const walletsRoutes = groupRoutes('/wallets', [
 			})
 		]
 	}, {
+		path: '/account/verify',
+		method: 'post',
+		controllers: [
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.verifyAccount(req)
+				}
+			})
+		]
+	}, {
 		path: '/fund',
 		method: 'post',
 		controllers: [

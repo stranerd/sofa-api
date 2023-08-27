@@ -47,8 +47,8 @@ export class WalletsController {
 	static async updateAccount (req: Request) {
 		const { country, bankCode, bankNumber } = validate({
 			country: Schema.in(Object.values(CurrencyCountries)),
-			bankNumber: Schema.string().min(1).trim(),
-			bankCode: Schema.string().min(1).trim()
+			bankNumber: Schema.force.string().min(1).trim(),
+			bankCode: Schema.force.string().min(1).trim()
 		}, req.body)
 		const banks = await FlutterwavePayment.getBanks(country)
 		const bank = banks.find((b) => b.code === bankCode)
@@ -59,6 +59,18 @@ export class WalletsController {
 			userId: req.authUser!.id,
 			account: { country, bankNumber, bankCode: bank.code, bankName: bank.name }
 		})
+	}
+
+	static async verifyAccount (req: Request) {
+		const { country, bankCode, bankNumber } = validate({
+			country: Schema.in(Object.values(CurrencyCountries)),
+			bankNumber: Schema.force.string().min(1).trim(),
+			bankCode: Schema.force.string().min(1).trim()
+		}, req.body)
+		const banks = await FlutterwavePayment.getBanks(country)
+		const bank = banks.find((b) => b.code === bankCode)
+		if (!bank) throw new ValidationError([{ field: 'bankCode', messages: ['is not a supported bank'] }])
+		return await FlutterwavePayment.verifyAccount({ bankNumber, bankCode })
 	}
 
 	static async fund (req: Request) {
@@ -97,11 +109,26 @@ export class WalletsController {
 	}
 
 	static async withdraw (req: Request) {
-		const { amount } = validate({ amount: Schema.number().gte(1000) }, req.body)
+		const { amount, account } = validate({
+			amount: Schema.number().gte(1000),
+			account: Schema.object({
+				country: Schema.in(Object.values(CurrencyCountries)),
+				bankNumber: Schema.force.string().min(1).trim(),
+				bankCode: Schema.force.string().min(1).trim()
+			}),
+		}, req.body)
+
+		const banks = await FlutterwavePayment.getBanks(account.country)
+		const bank = banks.find((b) => b.code === account.bankCode)
+		if (!bank) throw new ValidationError([{ field: 'bankCode', messages: ['is not a supported bank'] }])
+		const verified = await FlutterwavePayment.verifyAccount(account)
+		if (!verified) throw new BadRequestError('failed to verify account number')
+
 		return await WalletsUseCases.withdraw({
 			userId: req.authUser!.id,
 			email: req.authUser!.email,
-			amount
+			amount,
+			account: { ...account, bankCode: bank.code, bankName: bank.name }
 		})
 	}
 }

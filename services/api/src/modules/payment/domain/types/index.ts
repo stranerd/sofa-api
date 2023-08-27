@@ -110,7 +110,8 @@ export type TransferData = {
 export type WithdrawData = {
 	userId: string,
 	email: string,
-	amount: number
+	amount: number,
+	account: AccountDetails
 }
 
 export enum CurrencyCountries {

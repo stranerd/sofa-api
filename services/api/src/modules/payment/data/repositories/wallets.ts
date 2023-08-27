@@ -115,17 +115,16 @@ export class WalletRepository implements IWalletRepository {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.userId, session))!
 			const fee = WithdrawalFees[wallet.balance.currency] ?? WithdrawalFees[Currencies.NGN]
 			const deductingAmount = data.amount + fee
-			if (!wallet.account) throw new BadRequestError('set your account details before you withdraw')
 			const updatedBalance = wallet.balance.amount - deductingAmount
 			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const withdrawalModel: WithdrawalToModel = {
 				userId: data.userId,
 				email: data.email,
 				amount: data.amount,
+				account: data.account,
 				fee,
 				currency: wallet.balance.currency,
 				status: WithdrawalStatus.created,
-				account: wallet.account,
 				externalId: null
 			}
 			const withdrawal = await new Withdrawal(withdrawalModel).save({ session })

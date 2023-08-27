@@ -109,7 +109,7 @@ export class FlutterwavePayment {
 			account_number: bankNumber,
 			account_bank: bankCode
 		}).catch(() => null)
-		return !!res?.data?.data
+		return res?.data?.data?.account_name as string | undefined ?? null
 	}
 
 	static async transfer (data: { bankCode: string, bankNumber: string, amount: number, currency: Currencies, id: string }) {
