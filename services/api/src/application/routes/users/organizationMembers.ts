@@ -7,6 +7,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 		path: '/',
 		method: 'get',
 		controllers: [
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -18,6 +19,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 		path: '/:email',
 		method: 'get',
 		controllers: [
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,

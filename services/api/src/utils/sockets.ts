@@ -19,6 +19,11 @@ export const registerSockets = () => {
 		if (!quizId || !data.user) return null
 		return (await canAccessCoursable(Coursable.quiz, quizId, data.user)) ? await isOpen(data, params) : null
 	}
+	const organizationsCb: OnJoinFn = async (data, params) => {
+		const { organizationId = null } = params
+		if (!organizationId || !data.user) return null
+		return organizationId === data.user.id ? await isOpen(data, params) : `${data.channel}/${data.user.email}}`
+	}
 
 	appInstance.listener
 		.register('conversations/conversations', isMine)
@@ -59,7 +64,7 @@ export const registerSockets = () => {
 		.register('users/users', isOpen)
 		.register('users/verifications', isOpen)
 		.register('users/tutorRequests', isOpen)
-		.register('users/organizations/:organizationId/members', isOpen)
+		.register('users/organizations/:organizationId/members', organizationsCb)
 
 	Object.values(PlayTypes)
 		.forEach((type) => appInstance.listener.register(`plays/${type}/:typeId/answers`, isOpen))
