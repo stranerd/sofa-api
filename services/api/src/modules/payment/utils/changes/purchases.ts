@@ -4,8 +4,9 @@ import { DbChangeCallbacks } from 'equipped'
 import { TransactionsUseCases } from '../../'
 import { PurchaseFromModel } from '../../data/models/purchases'
 import { PurchaseEntity } from '../../domain/entities/purchases'
-import { TransactionStatus, TransactionType } from '../../domain/types'
+import { Purchasables, TransactionStatus, TransactionType } from '../../domain/types'
 import { NotificationType, sendNotification } from '@modules/notifications'
+import { CourseMetaType, CoursesUseCases } from '@modules/study'
 
 const serviceCharge = 0.2
 
@@ -33,7 +34,8 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 					purchasedType: after.data.type,
 					purchasedId: after.data.id
 				}
-			}): null,
+			}) : null,
+			after.data.type === Purchasables.courses ? CoursesUseCases.updateMeta({ id: after.data.id, property: CourseMetaType.purchases, value: 1 }) : null,
 			sendNotification([after.data.userId], {
 				title: 'New Purchase',
 				body: `Someone just purchased one of your ${after.data.type} #${after.data.id}`,
@@ -63,5 +65,9 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 			`payment/purchases/${before.id}/${before.userId}`,
 			`payment/purchases/${before.id}/${before.data.userId}`
 		], before)
+
+		await Promise.all([
+			before.data.type === Purchasables.courses ? CoursesUseCases.updateMeta({ id: before.data.id, property: CourseMetaType.purchases, value: -1 }) : null,
+		])
 	}
 }

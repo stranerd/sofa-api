@@ -1,4 +1,4 @@
-import { DraftStatus } from '@modules/study/domain/types'
+import { DraftStatus } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IQuestionRepository } from '../../domain/irepositories/questions'

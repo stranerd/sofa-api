@@ -50,3 +50,8 @@ export enum QuizMeta {
 	tests = 'tests',
 	total = 'total'
 }
+
+export enum CourseMeta {
+	purchases = 'purchases',
+	total = 'total'
+}

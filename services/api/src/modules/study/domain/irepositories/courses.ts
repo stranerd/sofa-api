@@ -1,7 +1,7 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { CourseToModel } from '../../data/models/courses'
 import { CourseEntity } from '../entities/courses'
-import { Coursable, CourseSections, EmbeddedUser } from '../types'
+import { Coursable, CourseMeta, CourseSections, EmbeddedUser } from '../types'
 
 export interface ICourseRepository {
 	add: (data: CourseToModel) => Promise<CourseEntity>
@@ -15,4 +15,5 @@ export interface ICourseRepository {
 	move: (id: string, coursableId: string, type: Coursable, userId: string, add: boolean) => Promise<CourseEntity | null>
 	remove: (id: string, coursableId: string, type: Coursable) => Promise<boolean>
 	updateSections: (id: string, userId: string, sections: CourseSections) => Promise<CourseEntity | null>
+	updateMeta: (id: string, property: CourseMeta, value: 1 | -1) => Promise<void>
 }

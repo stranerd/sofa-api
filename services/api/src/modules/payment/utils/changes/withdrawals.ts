@@ -3,7 +3,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { WithdrawalFromModel } from '../../data/models/withdrawals'
 import { WithdrawalEntity } from '../../domain/entities/withdrawals'
 import { processCompletedWithdrawal, processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
-import { WithdrawalStatus } from '@modules/payment/domain/types'
+import { WithdrawalStatus } from '../../domain/types'
 
 export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel, WithdrawalEntity> = {
 	created: async ({ after }) => {

@@ -3,6 +3,7 @@ import { PublishableSchema, SaleableSchema } from '.'
 import { CourseDbChangeCallbacks } from '../../utils/changes/courses'
 import { CourseMapper } from '../mappers/courses'
 import { CourseFromModel } from '../models/courses'
+import { CourseMeta } from '../../domain/types'
 
 const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>({
 	coursables: {
@@ -15,6 +16,13 @@ const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>({
 		required: false,
 		default: []
 	},
+	meta: Object.fromEntries(
+		Object.values(CourseMeta).map((meta) => [meta, {
+			type: Number,
+			required: false,
+			default: 0
+		}])
+	),
 	...PublishableSchema,
 	...SaleableSchema
 }, { timestamps: { currentTime: Date.now }, minimize: false })

@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ICourseRepository } from '../../domain/irepositories/courses'
-import { Coursable, CourseSections, DraftStatus, EmbeddedUser } from '../../domain/types'
+import { Coursable, CourseMeta, CourseSections, DraftStatus, EmbeddedUser } from '../../domain/types'
 import { compareArrayContents } from '../../utils'
 import { CourseMapper } from '../mappers/courses'
 import { CourseFromModel, CourseToModel } from '../models/courses'
@@ -156,5 +156,11 @@ export class CourseRepository implements ICourseRepository {
 			res = await Course.findByIdAndUpdate(course.id, { $set: { sections } }, { session, new: true })
 		})
 		return this.mapper.mapFrom(res)
+	}
+
+	async updateMeta (commentId: string, property: CourseMeta, value: 1 | -1) {
+		await Course.findByIdAndUpdate(commentId, {
+			$inc: { [`meta.${property}`]: value, [`meta.${CourseMeta.total}`]: value }
+		})
 	}
 }

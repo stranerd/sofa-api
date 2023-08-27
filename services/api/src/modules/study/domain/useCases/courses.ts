@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { CourseToModel } from '../../data/models/courses'
 import { ICourseRepository } from '../irepositories/courses'
-import { Coursable, CourseSections, EmbeddedUser } from '../types'
+import { Coursable, CourseMeta, CourseSections, EmbeddedUser } from '../types'
 
 export class CoursesUseCase {
 	private repository: ICourseRepository
@@ -52,5 +52,9 @@ export class CoursesUseCase {
 
 	async updateSections (input: { id: string, userId: string, sections: CourseSections }) {
 		return await this.repository.updateSections(input.id, input.userId, input.sections)
+	}
+
+	async updateMeta (data: { id: string, property: CourseMeta, value: 1 | -1 }) {
+		return this.repository.updateMeta(data.id, data.property, data.value)
 	}
 }

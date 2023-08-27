@@ -1,6 +1,6 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { Coursable, CourseSections, Publishable, Saleable } from '../types'
+import { Coursable, CourseMeta, CourseSections, Publishable, Saleable } from '../types'
 
 export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 	public readonly id: string
@@ -15,10 +15,11 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 	public readonly status: Publishable['status']
 	public readonly frozen: Saleable['frozen']
 	public readonly price: Saleable['price']
+	public readonly meta: Record<CourseMeta, number>
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, coursables, sections, title, description, photo, user, topicId, tagIds, status, frozen, price, createdAt, updatedAt }: CourseConstructorArgs) {
+	constructor ({ id, coursables, sections, title, description, photo, user, topicId, tagIds, status, frozen, price, meta, createdAt, updatedAt }: CourseConstructorArgs) {
 		super()
 		this.id = id
 		this.coursables = coursables
@@ -32,6 +33,7 @@ export class CourseEntity extends BaseEntity implements Publishable, Saleable {
 		this.status = status
 		this.frozen = frozen
 		this.price = price
+		this.meta = meta
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -49,6 +51,7 @@ type CourseConstructorArgs = Publishable & Saleable & {
 	id: string
 	coursables: { id: string, type: Coursable }[]
 	sections: CourseSections
+	meta: Record<CourseMeta, number>
 	createdAt: number
 	updatedAt: number
 }
