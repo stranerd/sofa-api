@@ -65,7 +65,7 @@ export type SubscriptionModel = {
 		id: string
 		activatedAt: number
 		expiredAt: number
-		jobId: string
+		jobId: string | null
 	} | null
 	next: {
 		id: string

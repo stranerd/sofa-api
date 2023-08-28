@@ -1,4 +1,4 @@
-import { cancelSubscription, CurrencyCountries, FlutterwavePayment, MethodsUseCases, subscribeToPlan, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
+import { CurrencyCountries, FlutterwavePayment, MethodsUseCases, subscribeToPlan, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Request, Schema, validate, ValidationError } from 'equipped'
 
@@ -14,8 +14,9 @@ export class WalletsController {
 		return await subscribeToPlan(req.authUser!.id, planId)
 	}
 
-	static async cancelSubscription (req: Request) {
-		return await cancelSubscription(req.authUser!.id)
+	static async toggleRenewSubscription (req: Request) {
+		const { renew } = validate({ renew: Schema.boolean() }, req.body)
+		return await WalletsUseCases.toggleRenewSubscription({ userId: req.authUser!.id, renew })
 	}
 
 	static async transfer (req: Request) {

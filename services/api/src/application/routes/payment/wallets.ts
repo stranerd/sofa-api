@@ -28,14 +28,14 @@ export const walletsRoutes = groupRoutes('/wallets', [
 			})
 		]
 	}, {
-		path: '/subscriptions',
-		method: 'delete',
+		path: '/subscriptions/renewal/toggle',
+		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await WalletsController.cancelSubscription(req)
+					result: await WalletsController.toggleRenewSubscription(req)
 				}
 			})
 		]

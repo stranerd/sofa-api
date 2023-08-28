@@ -109,13 +109,6 @@ export const renewSubscription = async (userId: string) => {
 	return successful ? activateSub(userId, wallet.id, plan) : await deactivateSub(userId, wallet.id, plan)
 }
 
-export const cancelSubscription = async (userId: string) => {
-	const wallet = await WalletsUseCases.get(userId)
-	return await WalletsUseCases.updateSubscription({
-		id: wallet.id, data: { next: null }
-	})
-}
-
 export const updateOrgsMembersDays = async () => {
 	const records = await OrganizationMembersUseCases.aggregateOrgMembersDays()
 	await WalletsUseCases.updateMembersDays(records)

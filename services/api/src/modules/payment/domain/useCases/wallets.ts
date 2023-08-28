@@ -20,6 +20,10 @@ export class WalletsUseCase {
 		return await this.repository.updateSubscription(data.id, data.data)
 	}
 
+	async toggleRenewSubscription (data: { userId: string, renew: boolean }) {
+		return await this.repository.toggleRenewSubscription(data.userId, data.renew)
+	}
+
 	async updateSubscriptionData (data: { userId: string, key: PlanDataType, value: 1 | -1 }) {
 		return await this.repository.updateSubscriptionData(data.userId, data.key, data.value)
 	}

@@ -1,4 +1,4 @@
-import { BadRequestError } from 'equipped'
+import { BadRequestError, DelayedJobs } from 'equipped'
 import { ClientSession } from 'mongodb'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import { AccountDetails, Currencies, PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
@@ -8,6 +8,8 @@ import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
 import { WithdrawalToModel } from '../models/withdrawals'
 import { Withdrawal } from '../mongooseModels/withdrawals'
+import { WalletFromModel } from '../models/wallets'
+import { appInstance } from '@utils/types'
 
 export class WalletRepository implements IWalletRepository {
 	private static instance: WalletRepository
@@ -54,6 +56,32 @@ export class WalletRepository implements IWalletRepository {
 		data = Object.fromEntries(Object.entries(data).map(([key, val]) => [`subscription.${key}`, val]))
 		const wallet = await Wallet.findByIdAndUpdate(id, { $set: data }, { new: true })
 		return this.mapper.mapFrom(wallet)!
+	}
+
+	async toggleRenewSubscription (userId: string, renew: boolean) {
+		let res = null as WalletFromModel | null
+		await Wallet.collection.conn.transaction(async (session) => {
+			const walletModel = await WalletRepository.getUserWallet(userId, session)
+			const wallet = this.mapper.mapFrom(walletModel)!
+			if (!wallet.subscription.current) return res = walletModel
+			if (renew && wallet.subscription.next) return res = walletModel
+			if (!renew && !wallet.subscription.next) return res = walletModel
+
+			const { id, expiredAt: renewedAt, jobId } = wallet.subscription.current
+			if (renew && renewedAt <= Date.now()) return res = walletModel
+			if (!renew && jobId) await appInstance.job.removeDelayedJob(jobId)
+
+			const data = renew ? {
+				'subscription.current.jobId': await appInstance.job.addDelayedJob({ type: DelayedJobs.RenewSubscription, data: { userId } }, renewedAt - Date.now()),
+				'subscription.next': { id, renewedAt }
+			} : {
+				'subscription.current.jobId': null,
+				'subscription.next': null
+			}
+			const updatedWallet = await Wallet.findByIdAndUpdate(wallet.id, { $set: data }, { session, new: true })
+			return res = updatedWallet
+		})
+		return this.mapper.mapFrom(res)!
 	}
 
 	async updateSubscriptionData (userId: string, key: PlanDataType, value: number) {
