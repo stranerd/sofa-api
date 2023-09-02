@@ -11,5 +11,6 @@ export interface TutorRequestFromModel extends TutorRequestToModel {
 export interface TutorRequestToModel {
 	tutor: EmbeddedUser
 	conversationId: string
+	message: string
 	userId: string
 }

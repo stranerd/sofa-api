@@ -20,6 +20,11 @@ const TutorRequestSchema = new appInstance.dbs.mongo.Schema<TutorRequestFromMode
 		type: String,
 		required: true
 	},
+	message: {
+		type: String,
+		required: false,
+		default: ''
+	},
 	pending: {
 		type: Boolean,
 		required: false,

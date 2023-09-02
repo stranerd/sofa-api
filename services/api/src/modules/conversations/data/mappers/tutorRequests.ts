@@ -9,6 +9,7 @@ export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorR
 			tutor: param.tutor,
 			userId: param.userId,
 			conversationId: param.conversationId,
+			message: param.message,
 			pending: param.pending,
 			accepted: param.accepted,
 			createdAt: param.createdAt,
@@ -21,6 +22,7 @@ export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorR
 			tutor: param.tutor,
 			userId: param.userId,
 			conversationId: param.conversationId,
+			message: param.message,
 		}
 	}
 }

@@ -19,8 +19,9 @@ export class TutorRequestController {
 	}
 
 	static async create (req: Request) {
-		const { conversationId, tutorId } = validate({
+		const { conversationId, message, tutorId } = validate({
 			conversationId: Schema.string().min(1),
+			message: Schema.string().min(1),
 			tutorId: Schema.string().min(1),
 		}, req.body)
 
@@ -31,7 +32,7 @@ export class TutorRequestController {
 		const wallet = await WalletsUseCases.get(req.authUser!.id)
 		if (!wallet.canAddTutorToConversation()) throw new BadRequestError('you can\'t add a tutor to your conversations')
 
-		return await TutorRequestsUseCases.create({ userId: req.authUser!.id, conversationId, tutor: tutor.getEmbedded() })
+		return await TutorRequestsUseCases.create({ userId: req.authUser!.id, conversationId, message, tutor: tutor.getEmbedded() })
 	}
 
 	static async delete (req: Request) {
