@@ -33,6 +33,7 @@ export const registerSockets = () => {
 
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
+		.register('interactions/reviews', isOpen)
 		.register('interactions/tags', isOpen)
 		.register('interactions/views', isOpen)
 

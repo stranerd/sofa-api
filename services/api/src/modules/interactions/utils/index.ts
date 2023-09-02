@@ -3,7 +3,7 @@ import { CommentsUseCases } from '../'
 import { InteractionEntities } from '../domain/types'
 import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
 
-type Interactions = 'comments' | 'likes' | 'dislikes' | 'views'
+type Interactions = 'comments' | 'likes' | 'dislikes' | 'reviews' | 'views'
 
 const finders = {
 	[InteractionEntities.comments]: async (id: string) => {
@@ -25,6 +25,7 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 	const types = (() => {
 		if (interaction === 'comments') return [InteractionEntities.comments]
 		if (interaction === 'views') return [InteractionEntities.courses, InteractionEntities.quizzes]
+		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes]
 		return []
 	})().reduce((acc, cur) => {
 		acc[cur] = finders[cur]
