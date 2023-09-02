@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { ReviewToModel } from '../../data/models/reviews'
 import { IReviewRepository } from '../irepositories/reviews'
-import { EmbeddedUser } from '../types'
+import { EmbeddedUser, Interaction } from '../types'
 
 export class ReviewsUseCase {
 	private repository: IReviewRepository
@@ -22,7 +22,11 @@ export class ReviewsUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async update (data: { id: string, userId: string, data: Partial<ReviewToModel> }) {
-		return await this.repository.update(data.id, data.userId, data.data)
+	async add (data: ReviewToModel) {
+		return await this.repository.add(data)
+	}
+
+	async deleteEntityReviews (entity: Interaction) {
+		return await this.repository.deleteEntityReviews(entity)
 	}
 }

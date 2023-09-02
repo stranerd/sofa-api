@@ -1,4 +1,4 @@
-import { TagMeta, TagsUseCases } from '@modules/interactions'
+import { InteractionEntities, ReviewsUseCases, TagMeta, TagsUseCases, ViewsUseCases } from '@modules/interactions'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
@@ -46,6 +46,8 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.courses })
 		await TagsUseCases.updateMeta({ ids: before.tagIds.concat(before.topicId), property: TagMeta.courses, value: -1 })
+		await ReviewsUseCases.deleteEntityReviews({ type: InteractionEntities.courses, id: before.id })
+		await ViewsUseCases.deleteEntityViews({ type: InteractionEntities.courses, id: before.id })
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}
 }

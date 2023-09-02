@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IReviewRepository } from '../../domain/irepositories/reviews'
-import { EmbeddedUser } from '../../domain/types'
+import { EmbeddedUser, Interaction } from '../../domain/types'
 import { ReviewMapper } from '../mappers/reviews'
 import { ReviewToModel } from '../models/reviews'
 import { Review } from '../mongooseModels/reviews'
@@ -33,13 +33,21 @@ export class ReviewRepository implements IReviewRepository {
 		return this.mapper.mapFrom(review)
 	}
 
-	async update (id: string, userId: string, data: Partial<ReviewToModel>) {
-		const review = await Review.findOneAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
-		return this.mapper.mapFrom(review)
+	async add (data: ReviewToModel) {
+		const review = await await Review.findOneAndUpdate(
+			{ entity: data.entity, 'user.id': data.user.id },
+			{ $set: data },
+			{ new: true, upsert: true })
+		return this.mapper.mapFrom(review)!
 	}
 
 	async updateUserBio (user: EmbeddedUser) {
 		const res = await Review.updateMany({ 'user.id': user.id }, { $set: { user } })
 		return res.acknowledged
+	}
+
+	async deleteEntityReviews ({ type, id }: Interaction) {
+		const reviews = await Review.deleteMany({ 'entity.type': type, 'entity.id': id })
+		return !!reviews.acknowledged
 	}
 }

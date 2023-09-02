@@ -1,4 +1,4 @@
-import { TagMeta, TagsUseCases } from '@modules/interactions'
+import { InteractionEntities, ReviewsUseCases, TagMeta, TagsUseCases, ViewsUseCases } from '@modules/interactions'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
@@ -49,6 +49,8 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
 		await TagsUseCases.updateMeta({ ids: before.tagIds.concat(before.topicId), property: TagMeta.quizzes, value: -1 })
 		await QuestionsUseCases.deleteQuizQuestions(before.id)
+		await ReviewsUseCases.deleteEntityReviews({ type: InteractionEntities.quizzes, id: before.id })
+		await ViewsUseCases.deleteEntityViews({ type: InteractionEntities.quizzes, id: before.id })
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
 	}
 }
