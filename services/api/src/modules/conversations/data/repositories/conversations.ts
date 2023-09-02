@@ -5,18 +5,20 @@ import { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
 import { ConversationFromModel, ConversationToModel } from '../models/conversations'
 import { MessageFromModel } from '../models/messages'
-import { ReviewToModel } from '../models/reviews'
 import { Conversation } from '../mongooseModels/conversations'
-import { Review } from '../mongooseModels/reviews'
 import { TutorRequest } from '../mongooseModels/tutorRequests'
 import { Message } from '../mongooseModels/messages'
+import { TutorRequestFromModel } from '../models/tutorRequests'
+import { TutorRequestMapper } from '../mappers/tutorRequests'
 
 export class ConversationRepository implements IConversationRepository {
 	private static instance: ConversationRepository
 	private mapper: ConversationMapper
+	private tutorRequestMapper: TutorRequestMapper
 
 	private constructor () {
 		this.mapper = new ConversationMapper()
+		this.tutorRequestMapper = new TutorRequestMapper()
 	}
 
 	static getInstance () {
@@ -70,23 +72,28 @@ export class ConversationRepository implements IConversationRepository {
 		return res
 	}
 
-	async removeTutor (data: Omit<ReviewToModel, 'to'>) {
-		let res = null as ConversationFromModel | null
+	async removeTutor (data: { conversationId: string, userId: string }) {
+		const res = {
+			conversation: null as ConversationFromModel | null,
+			tutorRequest: null as TutorRequestFromModel | null
+		}
 		await Conversation.collection.conn.transaction(async (session) => {
 			const conversation = await Conversation.findById(data.conversationId, {}, { session })
 			if (!conversation) return
-			if (conversation.user.id !== data.user.id) return
+			if (conversation.user.id !== data.userId) return
 			if (!conversation.tutor) return
-			const updatedConversation = await Conversation.findByIdAndUpdate(data.conversationId, {
+			res.conversation = await Conversation.findByIdAndUpdate(data.conversationId, {
 				$set: { tutor: null }
 			}, { new: true, session })
-			await Review.findOneAndUpdate({
-				conversationId: data.conversationId, to: conversation.tutor.id
-			}, { $set: { ...data, to: conversation.tutor.id } }, { new: true, upsert: true, session })
-			res = updatedConversation
+			res.tutorRequest = await TutorRequest.findOne({
+				conversationId: conversation.id, 'tutor.id': conversation.tutor.id, accepted: true,
+			}, {}, { session }).sort({ createdAt: -1 })
 			return res
 		})
-		return this.mapper.mapFrom(res)
+		return {
+			conversation: this.mapper.mapFrom(res.conversation),
+			tutorRequest: this.tutorRequestMapper.mapFrom(res.tutorRequest)
+		}
 	}
 
 	async updateLastMessage (message: MessageFromModel) {

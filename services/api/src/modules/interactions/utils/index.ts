@@ -1,7 +1,8 @@
 import { BadRequestError } from 'equipped'
+import { TutorRequestsUseCases } from '@modules/conversations'
+import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
 import { CommentsUseCases } from '../'
 import { InteractionEntities } from '../domain/types'
-import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
 
 type Interactions = 'comments' | 'likes' | 'dislikes' | 'reviews' | 'views'
 
@@ -19,13 +20,17 @@ const finders = {
 		const quiz = await QuizzesUseCases.find(id)
 		return quiz?.user.id ?? undefined
 	},
+	[InteractionEntities.tutorConversations]: async (id: string) => {
+		const request = await TutorRequestsUseCases.find(id)
+		return request?.tutor.id ?? undefined
+	}
 }
 
 export const verifyInteractionAndGetUserId = async (type: InteractionEntities, id: string, interaction: Interactions) => {
 	const types = (() => {
 		if (interaction === 'comments') return [InteractionEntities.comments]
 		if (interaction === 'views') return [InteractionEntities.courses, InteractionEntities.quizzes]
-		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes]
+		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, InteractionEntities.tutorConversations]
 		return []
 	})().reduce((acc, cur) => {
 		acc[cur] = finders[cur]

@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
+import { InteractionEntities, ReviewsUseCases } from '@modules/interactions'
 import { ConversationToModel } from '../../data/models/conversations'
 import { MessageFromModel } from '../../data/models/messages'
-import { ReviewToModel } from '../../data/models/reviews'
 import { IConversationRepository } from '../irepositories/conversations'
 import { EmbeddedUser } from '../types'
 
@@ -36,8 +36,13 @@ export class ConversationsUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async removeTutor (data: Omit<ReviewToModel, 'to'>) {
-		return await this.repository.removeTutor(data)
+	async removeTutor (data: { conversationId: string, user: EmbeddedUser, rating: number, message: string }) {
+		const { conversation, tutorRequest } = await this.repository.removeTutor({ conversationId: data.conversationId, userId: data.user.id })
+		if (conversation && tutorRequest) await ReviewsUseCases.add({
+			user: data.user, rating: data.rating, message: data.message,
+			entity: { type: InteractionEntities.tutorConversations, id: tutorRequest.id, userId: tutorRequest.tutor.id }
+		})
+		return conversation
 	}
 
 	async updateLastMessage (message: MessageFromModel) {

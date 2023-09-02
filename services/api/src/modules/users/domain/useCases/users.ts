@@ -73,8 +73,8 @@ export class UsersUseCase {
 		return await this.repository.updateSocials(params.userId, params.socials)
 	}
 
-	async updateRatings (input: { userId: string, ratings: number, add: boolean }) {
-		return await this.repository.updateRatings(input.userId, input.ratings, input.add)
+	async updateRatings (input: { id: string, ratings: number, add: boolean }) {
+		return await this.repository.updateRatings(input.id, input.ratings, input.add)
 	}
 
 	async updateLocation (params: { userId: string, location: UserLocation }) {

@@ -29,7 +29,6 @@ export const registerSockets = () => {
 		.register('conversations/conversations', isMine)
 		.register('conversations/conversations/:conversationId/messages', conversationsCb)
 		.register('conversations/tutorRequests', isMine)
-		.register('conversations/reviews', isOpen)
 
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)

@@ -1,9 +1,9 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { ConversationToModel } from '../../data/models/conversations'
 import { MessageFromModel } from '../../data/models/messages'
-import { ReviewToModel } from '../../data/models/reviews'
 import { ConversationEntity } from '../entities/conversations'
 import { EmbeddedUser } from '../types'
+import { TutorRequestEntity } from '../entities/tutorRequests'
 
 export interface IConversationRepository {
 	add: (data: ConversationToModel) => Promise<ConversationEntity>
@@ -12,6 +12,6 @@ export interface IConversationRepository {
 	delete: (id: string, userId: string) => Promise<boolean>
 	update: (id: string, userId: string, data: Partial<ConversationToModel>) => Promise<ConversationEntity | null>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
-	removeTutor: (data: Omit<ReviewToModel, 'to'>) => Promise<ConversationEntity | null>
+	removeTutor: (data: { conversationId: string, userId: string }) => Promise<{ conversation: ConversationEntity | null, tutorRequest: TutorRequestEntity | null }>
 	updateLastMessage: (message: MessageFromModel) => Promise<void>
 }
