@@ -2,7 +2,7 @@ import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
-import { verifyTags } from '.'
+import { verifyTags } from './tags'
 
 export class QuizController {
 	private static schema = (isAdmin: boolean) => ({

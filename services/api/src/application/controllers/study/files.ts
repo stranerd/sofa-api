@@ -2,7 +2,7 @@ import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthenticatedError, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
-import { verifyTags } from '.'
+import { verifyTags } from './tags'
 
 const allowedDocumentTypes = ['application/pdf', 'text/plain']
 

@@ -3,7 +3,7 @@ import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthUser, BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
-import { verifyTags } from '.'
+import { verifyTags } from './tags'
 
 export class CourseController {
 	private static schema = (user: AuthUser | null) => ({
