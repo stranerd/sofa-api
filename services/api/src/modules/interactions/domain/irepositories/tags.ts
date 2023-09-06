@@ -1,7 +1,7 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { TagToModel } from '../../data/models/tags'
 import { TagEntity } from '../entities/tags'
-import { TagMeta } from '../types'
+import { TagMeta, TagTypes } from '../types'
 
 export interface ITagRepository {
 	add: (data: TagToModel) => Promise<TagEntity>
@@ -10,4 +10,5 @@ export interface ITagRepository {
 	update: (id: string, data: Partial<TagToModel>) => Promise<TagEntity | null>
 	delete: (id: string) => Promise<boolean>
 	updateMeta: (ids: string[], property: TagMeta, value: 1 | -1) => Promise<void>
+	autoCreate: (type: TagTypes, titles: string[]) => Promise<TagEntity[]>
 }

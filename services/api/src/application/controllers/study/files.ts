@@ -12,7 +12,7 @@ export class FileController {
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
 		topicId: Schema.string().min(1),
-		tagIds: Schema.array(Schema.string().min(1)).set(),
+		tagIds: Schema.array(Schema.string().min(1).lower().trim()).set(),
 	})
 
 	static async find (req: Request) {

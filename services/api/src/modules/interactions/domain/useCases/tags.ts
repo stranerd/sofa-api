@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { TagToModel } from '../../data/models/tags'
 import { ITagRepository } from '../irepositories/tags'
-import { TagMeta } from '../types'
+import { TagMeta, TagTypes } from '../types'
 
 export class TagsUseCase {
 	private repository: ITagRepository
@@ -31,6 +31,10 @@ export class TagsUseCase {
 	}
 
 	async updateMeta (data: { ids: string[], property: TagMeta, value: 1 | -1 }) {
-		return this.repository.updateMeta(data.ids, data.property, data.value)
+		return await this.repository.updateMeta(data.ids, data.property, data.value)
+	}
+
+	async autoCreate (data: { type: TagTypes, titles: string[] }) {
+		return await this.repository.autoCreate(data.type, data.titles)
 	}
 }

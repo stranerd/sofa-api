@@ -1,17 +1,13 @@
-import { TagsUseCases } from '@modules/interactions'
-import { BadRequestError, Conditions } from 'equipped'
+import { TagTypes, TagsUseCases } from '@modules/interactions'
+import { BadRequestError } from 'equipped'
 
-export const verifyTags = async (topicId: string, tagIds: string[]) => {
-	const tag = await TagsUseCases.find(topicId)
-	if (!tag || !tag.isTopic()) throw new BadRequestError('invalid tag')
+export const verifyTags = async (topic: string, genericTagTitles: string[]) => {
+	const [tag] = await TagsUseCases.autoCreate({ type: TagTypes.topics, titles: [topic] })
+	if (!tag || !tag.isTopic()) throw new BadRequestError('invalid topic')
 
-	const { results: tags } = await TagsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: tagIds }],
-		all: true
-	})
-
+	const tags = await TagsUseCases.autoCreate({ type: TagTypes.generic, titles: genericTagTitles })
 	const filteredTagIds = tags.filter((tag) => tag.isGeneric())
 		.map((tag) => tag.id)
 
-	return { topicId, tagIds: filteredTagIds }
+	return { topicId: tag.id, tagIds: filteredTagIds }
 }

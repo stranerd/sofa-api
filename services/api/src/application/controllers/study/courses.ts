@@ -10,8 +10,8 @@ export class CourseController {
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
-		topicId: Schema.string().min(1),
-		tagIds: Schema.array(Schema.string().min(1)).set(),
+		topic: Schema.string().min(1),
+		tags: Schema.array(Schema.string().min(1).lower().trim()).set(),
 		price: Schema.object({
 			amount: Schema.number().gte(0).lte(user?.roles.isVerified ? Number.POSITIVE_INFINITY : 0).default(0),
 			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
@@ -31,9 +31,9 @@ export class CourseController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, price, topicId, tagIds } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
+		const { title, description, price, topic, tags } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
 
-		const utags = await verifyTags(topicId, tagIds)
+		const utags = await verifyTags(topic, tags)
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/courses', uploadedPhoto) : undefined
 
@@ -53,7 +53,7 @@ export class CourseController {
 			...this.schema(req.authUser)
 		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
-		const tags = await verifyTags(data.topicId, data.tagIds)
+		const tags = await verifyTags(data.topic, data.tags)
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')

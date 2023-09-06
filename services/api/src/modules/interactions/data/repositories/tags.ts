@@ -1,9 +1,9 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ITagRepository } from '../../domain/irepositories/tags'
-import { TagMeta } from '../../domain/types'
+import { TagMeta, TagTypes } from '../../domain/types'
 import { TagMapper } from '../mappers/tags'
-import { TagToModel } from '../models/tags'
+import { TagFromModel, TagToModel } from '../models/tags'
 import { Tag } from '../mongooseModels/tags'
 
 export class TagRepository implements ITagRepository {
@@ -29,6 +29,7 @@ export class TagRepository implements ITagRepository {
 	}
 
 	async add (data: TagToModel) {
+		data.title = data.title.toLowerCase().trim()
 		const tag = await new Tag(data).save()
 		return this.mapper.mapFrom(tag)!
 	}
@@ -39,6 +40,7 @@ export class TagRepository implements ITagRepository {
 	}
 
 	async update (id: string, data: Partial<TagToModel>) {
+		if (data.title) data.title = data.title.toLowerCase().trim()
 		const tag = await Tag.findOneAndUpdate({ _id: id }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(tag)
 	}
@@ -52,5 +54,17 @@ export class TagRepository implements ITagRepository {
 		await Tag.updateMany({ _id: { $in: ids } }, {
 			$inc: { [`meta.${property}`]: value, [`meta.${TagMeta.total}`]: value }
 		})
+	}
+
+	async autoCreate (type: TagTypes, titles: string[]) {
+		let res: TagFromModel[] = []
+		await Tag.collection.conn.transaction(async (session) => {
+			res = await Promise.all(titles.map(async (title) => {
+				title = title.toLowerCase().trim()
+				return await Tag.findOneAndUpdate({ type, title }, { $setOnInsert: { type, title, parent: null } }, { session, upsert: true, new: true })
+			}))
+			return res
+		})
+		return res.map((r) => this.mapper.mapFrom(r)!)
 	}
 }
