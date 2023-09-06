@@ -1,4 +1,3 @@
-import { BadRequestError } from 'equipped'
 import { TutorRequestsUseCases } from '@modules/conversations'
 import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
 import { CommentsUseCases } from '../'
@@ -38,8 +37,8 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 	}, {} as Record<InteractionEntities, (id: string) => Promise<string | undefined>>)
 
 	const finder = types[type]
-	if (!finder) throw new BadRequestError(`${interaction} not supported for ${type}`)
+	if (!finder) throw new Error(`${interaction} not supported for ${type}`)
 	const res = await finder(id)
-	if (!res) throw new BadRequestError(`no ${type} with id ${id} found`)
+	if (!res) throw new Error(`no ${type} with id ${id} found`)
 	return res
 }

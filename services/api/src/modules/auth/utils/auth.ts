@@ -1,5 +1,4 @@
 import {
-	BadRequestError,
 	deleteCachedAccessToken,
 	deleteCachedRefreshToken,
 	exchangeOldForNewTokens,
@@ -31,7 +30,7 @@ export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { u
 	let user = null as null | AuthUserEntity
 	const newTokens = await exchangeOldForNewTokens(tokens, async (id: string) => {
 		user = await AuthUsersUseCases.findUser(id)
-		if (!user) throw new BadRequestError('No account with such id exists')
+		if (!user) throw new Error('No account with such id exists')
 		const { accessToken, refreshToken } = await generateAuthOutput(user)
 		return { accessToken, refreshToken }
 	})

@@ -35,7 +35,7 @@ export class AnswerRepository implements IAnswerRepository {
 		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
 			const verified = await this.#verifyType(type, typeId, { questionId, userId }, session)
-			if (!verified) return false
+			if (!verified) throw new Error('cannot answer this question')
 			const newAnswer = await Answer.findOneAndUpdate(
 				{ type, typeId, userId },
 				{

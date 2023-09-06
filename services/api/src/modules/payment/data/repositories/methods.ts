@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
+import { QueryParams } from 'equipped'
 import { IMethodRepository } from '../../domain/irepositories/methods'
 import { MethodMapper } from '../mappers/methods'
 import { MethodToModel } from '../models/methods'
@@ -61,9 +61,14 @@ export class MethodRepository implements IMethodRepository {
 	}
 
 	async delete (id: string, userId: string) {
-		let method = await Method.findOne({ _id: id, userId, primary: true })
-		if (method) throw new BadRequestError('You can\'t delete your primary method')
-		method = await Method.findOneAndDelete({ _id: id, userId })
-		return !!method
+		let res = false
+		await Method.collection.conn.transaction(async (session) => {
+			let method = await Method.findOne({ _id: id, userId, primary: true }, {}, { session })
+			if (method) throw new Error('You can\'t delete your primary method')
+			method = await Method.findOneAndDelete({ _id: id, userId }, { session })
+			return res = !!method
+		})
+
+		return res
 	}
 }

@@ -80,7 +80,7 @@ export class QuizRepository implements IQuizRepository {
 		let res = null as QuizFromModel | null
 		await Quiz.collection.conn.transaction(async (session) => {
 			const quiz = await Quiz.findOne({ _id: id, 'user.id': userId }, null, { session })
-			if (!quiz) return
+			if (!quiz) throw new Error('quiz not found')
 			if (!compareArrayContents(quiz.questions, questionIds)) return
 			res = await Quiz.findByIdAndUpdate(id, { $set: { questions: questionIds } }, { new: true, session })
 		})
