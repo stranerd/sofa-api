@@ -1,5 +1,5 @@
 import { InteractionEntities, ViewsUseCases } from '@modules/interactions'
-import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
+import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { Conditions, QueryParams, Request } from 'equipped'
 
@@ -29,7 +29,10 @@ export class MyStudyController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user) return []
 		const query: QueryParams = {
-			where: [{ field: 'user.id', condition: Conditions.in, value: user.account.organizationsIn }],
+			where: [
+				{ field: 'user.id', condition: Conditions.in, value: user.account.organizationsIn },
+				{ field: 'status', value: DraftStatus.published }
+			],
 			sort: [{ field: 'createdAt', desc: true }],
 			limit: 15,
 		}
@@ -42,7 +45,10 @@ export class MyStudyController {
 
 	static async suggested (req: Request) {
 		const query: QueryParams = {
-			where: [{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id }],
+			where: [
+				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
+				{ field: 'status', value: DraftStatus.published }
+			],
 			sort: [{ field: 'ratings.avg', desc: true }],
 			limit: 15,
 		}
@@ -55,7 +61,10 @@ export class MyStudyController {
 
 	static async latest (req: Request) {
 		const query: QueryParams = {
-			where: [{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id }],
+			where: [
+				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
+				{ field: 'status', value: DraftStatus.published }
+			],
 			sort: [{ field: 'createdAt', desc: true }],
 			limit: 15,
 		}
@@ -68,7 +77,10 @@ export class MyStudyController {
 
 	static async rated (req: Request) {
 		const query: QueryParams = {
-			where: [{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id }],
+			where: [
+				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
+				{ field: 'status', value: DraftStatus.published }
+			],
 			sort: [{ field: 'ratings.avg', desc: true }],
 			limit: 15,
 		}
@@ -81,7 +93,10 @@ export class MyStudyController {
 
 	static async popular (req: Request) {
 		const query: QueryParams = {
-			where: [{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id }],
+			where: [
+				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
+				{ field: 'status', value: DraftStatus.published }
+			],
 			sort: [{ field: 'meta.total', desc: true }],
 			limit: 15,
 		}
