@@ -2,7 +2,7 @@ import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { AuthUser, BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthUser, BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
 
 export class CourseController {
@@ -19,11 +19,17 @@ export class CourseController {
 	})
 
 	static async find (req: Request) {
-		return await CoursesUseCases.find(req.params.id)
+		const course = await CoursesUseCases.find(req.params.id)
+		if (!course) return null
+		if (course.user.id !== req.authUser?.id && course.status !== DraftStatus.published) return null
+		return course
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
+		query.auth = [
+			{ condition: QueryKeys.or, value: [{ field: 'status', value: DraftStatus.published }, ...(req.authUser ? [{ field: 'user.id', value: req.authUser.id }] : []) ] }
+		]
 		return await CoursesUseCases.get(query)
 	}
 

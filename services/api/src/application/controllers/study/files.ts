@@ -1,7 +1,7 @@
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthenticatedError, NotAuthorizedError, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
+import { BadRequestError, NotAuthenticatedError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
 import { verifyTags } from './tags'
 
 const allowedDocumentTypes = ['application/pdf', 'text/plain']
@@ -16,11 +16,17 @@ export class FileController {
 	})
 
 	static async find (req: Request) {
-		return await FilesUseCases.find(req.params.id)
+		const file = await FilesUseCases.find(req.params.id)
+		if (!file) return null
+		if (file.user.id !== req.authUser?.id && file.status !== DraftStatus.published) return null
+		return file
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
+		query.auth = [
+			{ condition: QueryKeys.or, value: [{ field: 'status', value: DraftStatus.published }, ...(req.authUser ? [{ field: 'user.id', value: req.authUser.id }] : []) ] }
+		]
 		return await FilesUseCases.get(query)
 	}
 
