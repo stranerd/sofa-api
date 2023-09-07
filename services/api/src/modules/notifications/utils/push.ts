@@ -2,11 +2,14 @@ import { appInstance, PushNotification } from '@utils/types'
 import { messaging } from 'firebase-admin'
 import { TokensUseCases } from '../'
 import { Validation } from 'equipped'
+import { UsersUseCases } from '@modules/users'
 
 export const sendPushNotification = async (notification: PushNotification) => {
 	try {
 		const { userIds, data, title, body } = notification
 		await Promise.all(userIds.map(async (userId) => {
+			const user = await UsersUseCases.find(userId)
+			if (!user || user.isDeleted() || !user.account.settings.notifications) return
 			const userTokens = await TokensUseCases.find({ userId })
 			const chunks = Validation.chunkArray(userTokens.tokens, 500)
 			const invalidTokens = [] as string[]

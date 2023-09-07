@@ -39,6 +39,9 @@ export type UserAccount = {
 	}
 	ratings: Ratings
 	organizationsIn: string[]
+	settings: {
+		notifications: boolean
+	}
 }
 
 export type EmbeddedUser = {

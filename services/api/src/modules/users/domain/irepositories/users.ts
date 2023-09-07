@@ -40,4 +40,6 @@ export interface IUserRepository {
 	updateRatings (userId: string, ratings: number, add: boolean): Promise<boolean>
 
 	updateLocation (userId: string, location: UserLocation): Promise<UserEntity | null>
+
+	updateSettings (userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 }
