@@ -4,6 +4,8 @@ export enum InteractionEntities {
 	comments = 'comments',
 	courses = 'courses',
 	quizzes = 'quizzes',
+	users = 'users',
+	quizQuestions = 'quizQuestions',
 	tutorConversations = 'tutorConversations',
 }
 
