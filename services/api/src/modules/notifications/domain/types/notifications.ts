@@ -1,3 +1,5 @@
+import { Purchasables } from '@modules/payment'
+
 export enum NotificationType {
 	VerificationAccepted = 'VerificationAccepted',
 	VerificationRejected = 'VerificationRejected',
@@ -21,8 +23,8 @@ export type NotificationData =
 	| { type: NotificationType.TutorRequestRejected, tutorRequestId: string }
 	| { type: NotificationType.TutorAddedToConversation, conversationId: string, tutorId: string }
 	| { type: NotificationType.UserJoinedGame, gameId: string, userId: string }
-	| { type: NotificationType.NewPurchase, purchaseId: string, userId: string }
-	| { type: NotificationType.NewPurchased, purchaseId: string, userId: string }
+	| { type: NotificationType.NewPurchase, id: string, purchasedType: Purchasables, purchasedId: string, userId: string }
+	| { type: NotificationType.NewPurchased, id: string, purchasedType: Purchasables, purchasedId: string, userId: string }
 	| { type: NotificationType.WithdrawalSuccessful, withdrawalId: string, amount: number, currency: string  }
 	| { type: NotificationType.WithdrawalFailed, withdrawalId: string, amount: number, currency: string  }
 	| { type: NotificationType.WalletFundSuccessful, amount: number, currency: string }

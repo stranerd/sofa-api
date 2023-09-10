@@ -40,13 +40,13 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 				title: 'New Purchase',
 				body: `Someone just purchased one of your ${after.data.type} #${after.data.id}`,
 				sendEmail: true,
-				data: { type: NotificationType.NewPurchase, purchaseId: after.id, userId: after.userId }
+				data: { type: NotificationType.NewPurchase, id: after.id, purchasedType: after.data.type, purchasedId: after.data.id, userId: after.userId }
 			}),
 			sendNotification([after.userId], {
 				title: 'Successful Purchase',
 				body: `Your puchase of ${after.data.type} #${after.data.id} was successful`,
 				sendEmail: true,
-				data: { type: NotificationType.NewPurchased, purchaseId: after.id, userId: after.data.userId }
+				data: { type: NotificationType.NewPurchased, id: after.id, purchasedType: after.data.type, purchasedId: after.data.id, userId: after.data.userId }
 			})
 		])
 	},
