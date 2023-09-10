@@ -18,7 +18,7 @@ export class ReviewsController {
 			message: Schema.string(),
 			entity: Schema.object({
 				id: Schema.string().min(1),
-				type: Schema.in([InteractionEntities.quizzes, InteractionEntities.courses])
+				type: Schema.in(Object.values(InteractionEntities))
 			})
 		}, req.body)
 

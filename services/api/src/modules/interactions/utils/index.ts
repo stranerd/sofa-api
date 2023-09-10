@@ -29,7 +29,7 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 	const types = (() => {
 		if (interaction === 'comments') return [InteractionEntities.comments]
 		if (interaction === 'views') return [InteractionEntities.courses, InteractionEntities.quizzes]
-		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, InteractionEntities.tutorConversations]
+		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, /* InteractionEntities.tutorConversations // hidden so users cannot create this externally */]
 		return []
 	})().reduce((acc, cur) => {
 		acc[cur] = finders[cur]
