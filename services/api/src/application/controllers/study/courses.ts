@@ -2,7 +2,7 @@ import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { AuthUser, BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthUser, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
 
 export class CourseController {
@@ -23,6 +23,20 @@ export class CourseController {
 		if (!course) return null
 		if (course.user.id !== req.authUser?.id && course.status !== DraftStatus.published) return null
 		return course
+	}
+
+	static async similar (req: Request) {
+		const course = await CoursesUseCases.find(req.params.id)
+		if (!course) return []
+		const { results } = await CoursesUseCases.get({
+			authType: QueryKeys.or,
+			auth: [
+				{ field: 'topicId', value: course.topicId },
+				{ field: 'tagIds', condition: Conditions.in, value: course.tagIds }
+			],
+			limit: 10
+		})
+		return results
 	}
 
 	static async get (req: Request) {

@@ -1,7 +1,7 @@
 import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { AuthRole, BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
 
 export class QuizController {
@@ -21,6 +21,20 @@ export class QuizController {
 		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
 		if (!isAdmin && quiz.isForTutors) return null
 		return quiz
+	}
+
+	static async similar (req: Request) {
+		const quiz = await QuizzesUseCases.find(req.params.id)
+		if (!quiz) return []
+		const { results } = await QuizzesUseCases.get({
+			authType: QueryKeys.or,
+			auth: [
+				{ field: 'topicId', value: quiz.topicId },
+				{ field: 'tagIds', condition: Conditions.in, value: quiz.tagIds }
+			],
+			limit: 10
+		})
+		return results
 	}
 
 	static async get (req: Request) {
