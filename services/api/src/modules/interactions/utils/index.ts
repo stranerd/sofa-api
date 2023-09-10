@@ -1,9 +1,10 @@
 import { TutorRequestsUseCases } from '@modules/conversations'
-import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
+import { CoursesUseCases, QuestionsUseCases, QuizzesUseCases } from '@modules/study'
+import { UsersUseCases } from '@modules/users'
 import { CommentsUseCases } from '../'
 import { InteractionEntities } from '../domain/types'
 
-type Interactions = 'comments' | 'likes' | 'dislikes' | 'reviews' | 'views'
+type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views'
 
 const finders = {
 	[InteractionEntities.comments]: async (id: string) => {
@@ -13,15 +14,23 @@ const finders = {
 	},
 	[InteractionEntities.courses]: async (id: string) => {
 		const course = await CoursesUseCases.find(id)
-		return course?.user.id ?? undefined
+		return course?.user.id
 	},
 	[InteractionEntities.quizzes]: async (id: string) => {
 		const quiz = await QuizzesUseCases.find(id)
-		return quiz?.user.id ?? undefined
+		return quiz?.user.id
 	},
 	[InteractionEntities.tutorConversations]: async (id: string) => {
 		const request = await TutorRequestsUseCases.find(id)
-		return request?.tutor.id ?? undefined
+		return request?.tutor.id
+	},
+	[InteractionEntities.users]: async (id: string) => {
+		const user = await UsersUseCases.find(id)
+		return user?.id
+	},
+	[InteractionEntities.quizQuestions]: async (id: string) => {
+		const question = await QuestionsUseCases.find(id)
+		return question?.id
 	}
 }
 
@@ -29,6 +38,7 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 	const types = (() => {
 		if (interaction === 'comments') return [InteractionEntities.comments]
 		if (interaction === 'views') return [InteractionEntities.courses, InteractionEntities.quizzes]
+		if (interaction === 'reports') return [InteractionEntities.courses, InteractionEntities.quizzes, InteractionEntities.users, InteractionEntities.quizQuestions]
 		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, /* InteractionEntities.tutorConversations // hidden so users cannot create this externally */]
 		return []
 	})().reduce((acc, cur) => {
