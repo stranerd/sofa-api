@@ -38,6 +38,17 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 			})
 		]
 	}, {
+		path: '/:id/similar',
+		method: 'get',
+		controllers: [
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.similar(req)
+				}
+			})
+		]
+	}, {
 		path: '/:id',
 		method: 'put',
 		controllers: [

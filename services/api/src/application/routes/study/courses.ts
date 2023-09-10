@@ -26,6 +26,17 @@ export const coursesRoutes = groupRoutes('/courses', [
 			})
 		]
 	}, {
+		path: '/:id/similar',
+		method: 'get',
+		controllers: [
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await CourseController.similar(req)
+				}
+			})
+		]
+	}, {
 		path: '/:id',
 		method: 'put',
 		controllers: [
