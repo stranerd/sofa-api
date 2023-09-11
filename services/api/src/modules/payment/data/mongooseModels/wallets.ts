@@ -25,10 +25,10 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 			default: Currencies.NGN
 		}
 	},
-	account: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+	accounts: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed as any],
 		required: false,
-		default: null
+		default: []
 	},
 	subscription: {
 		active: {

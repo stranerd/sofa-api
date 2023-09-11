@@ -123,6 +123,7 @@ export type AccountDetails = {
 	bankNumber: string
 	bankCode: string
 	bankName: string
+	ownerName: string
 }
 
 export enum WithdrawalStatus {

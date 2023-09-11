@@ -90,9 +90,9 @@ export class WalletRepository implements IWalletRepository {
 		return this.mapper.mapFrom(wallet)!
 	}
 
-	async updateAccount (userId: string, account: AccountDetails) {
+	async updateAccounts (userId: string, accounts: AccountDetails[]) {
 		let wallet = await WalletRepository.getUserWallet(userId)
-		wallet = (await Wallet.findByIdAndUpdate(wallet._id, { $set: { account } }, { new: true }))!
+		wallet = (await Wallet.findByIdAndUpdate(wallet._id, { $set: { accounts } }, { new: true }))!
 		return this.mapper.mapFrom(wallet)!
 	}
 

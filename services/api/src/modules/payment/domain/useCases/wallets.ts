@@ -28,8 +28,8 @@ export class WalletsUseCase {
 		return await this.repository.updateSubscriptionData(data.userId, data.key, data.value)
 	}
 
-	async updateAccount (data: { userId: string, account: AccountDetails }) {
-		return await this.repository.updateAccount(data.userId, data.account)
+	async updateAccounts (data: { userId: string, accounts: AccountDetails[] }) {
+		return await this.repository.updateAccounts(data.userId, data.accounts)
 	}
 
 	async transfer (data: TransferData) {

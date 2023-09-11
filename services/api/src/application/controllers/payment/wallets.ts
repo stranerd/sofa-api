@@ -46,19 +46,27 @@ export class WalletsController {
 	}
 
 	static async updateAccount (req: Request) {
-		const { country, bankCode, bankNumber } = validate({
-			country: Schema.in(Object.values(CurrencyCountries)),
-			bankNumber: Schema.force.string().min(1).trim(),
-			bankCode: Schema.force.string().min(1).trim()
+		const { accounts } = validate({
+			accounts: Schema.array(Schema.object({
+				country: Schema.in(Object.values(CurrencyCountries)),
+				bankNumber: Schema.force.string().min(1).trim(),
+				bankCode: Schema.force.string().min(1).trim()
+			}))
 		}, req.body)
-		const banks = await FlutterwavePayment.getBanks(country)
-		const bank = banks.find((b) => b.code === bankCode)
-		if (!bank) throw new ValidationError([{ field: 'bankCode', messages: ['is not a supported bank'] }])
-		const verified = await FlutterwavePayment.verifyAccount({ bankNumber, bankCode })
-		if (!verified) throw new BadRequestError('failed to verify account number')
-		return await WalletsUseCases.updateAccount({
+		const countries = [...new Set(accounts.map((a) => a.country))]
+		const banksArrays = await Promise.all(countries.map(async (country) => ({ banks: await FlutterwavePayment.getBanks(country), country })))
+		const fullAccounts = await Promise.all(accounts.map(async (account) => {
+			const banks = banksArrays.find((b) => b.country === account.country)?.banks ?? []
+			const bank = banks.find((b) => b.code === account.bankCode)
+			if (!bank) throw new BadRequestError(`failed to verify account number: ${account.bankNumber}`)
+			const verified = await FlutterwavePayment.verifyAccount(account)
+			if (!verified) throw new BadRequestError(`failed to verify account number: ${account.bankNumber}`)
+			return { ...account, bankCode: bank.code, bankName: bank.name, ownerName: verified }
+		}))
+
+		return await WalletsUseCases.updateAccounts({
 			userId: req.authUser!.id,
-			account: { country, bankNumber, bankCode: bank.code, bankName: bank.name }
+			accounts: fullAccounts
 		})
 	}
 
@@ -129,7 +137,7 @@ export class WalletsController {
 			userId: req.authUser!.id,
 			email: req.authUser!.email,
 			amount,
-			account: { ...account, bankCode: bank.code, bankName: bank.name }
+			account: { ...account, bankCode: bank.code, bankName: bank.name, ownerName: verified }
 		})
 	}
 }
