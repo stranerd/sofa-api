@@ -68,11 +68,6 @@ export class FileRepository implements IFileRepository {
 		return this.mapper.mapFrom(file)
 	}
 
-	async deleteCourseFiles (courseId: string) {
-		const files = await File.deleteMany({ courseId })
-		return files.acknowledged
-	}
-
 	async updateRatings (id: string, ratings: number, add: boolean) {
 		let res = false
 		await File.collection.conn.transaction(async (session) => {

@@ -1,10 +1,10 @@
 import { UploaderUseCases } from '@modules/storage'
-import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
+import { canAccessCoursable, Coursable, CoursesUseCases, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthenticatedError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
 import { verifyTags } from './tags'
 
-const allowedDocumentTypes = ['application/pdf', 'text/plain']
+const allowedDocumentTypes = ['application/pdf']
 
 export class FileController {
 	private static schema = () => ({
@@ -33,6 +33,7 @@ export class FileController {
 	static async create (req: Request) {
 		const data = validate({
 			...this.schema(),
+			courseId: Schema.string().min(1).nullable().default(null),
 			media: Schema.or([
 				Schema.file().video(),
 				Schema.file().image(),
@@ -55,11 +56,16 @@ export class FileController {
 		const type = Validation.isImage()(data.media).valid ? FileType.image :
 			Validation.isVideo()(data.media).valid ? FileType.video : FileType.document
 
-		return await FilesUseCases.add({
+		const file = await FilesUseCases.add({
 			...data, ...tags, user: user.getEmbedded(),
 			photo, media, type, status: DraftStatus.draft,
 			courseId: null
 		})
+
+		if (data.courseId) await CoursesUseCases.move({ id: data.courseId, userId: file.user.id, coursableId: file.id, type: Coursable.file, add: true })
+			.catch()
+
+		return file
 	}
 
 	static async update (req: Request) {

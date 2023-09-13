@@ -40,7 +40,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 		const paths = before.isForTutors ? ['study/quizzes/tutors', `study/quizzes/tutors/${before.id}`] : ['study/quizzes', `study/quizzes/${before.id}`]
 		await appInstance.listener.deleted(paths, before)
 
-		if (before.courseId) await CoursesUseCases.remove({ id: before.courseId, type: Coursable.quiz, coursableId: before.id })
+		if (before.courseId) await CoursesUseCases.move({ id: before.courseId, type: Coursable.quiz, coursableId: before.id, userId: before.user.id, add: false }).catch()
 		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,

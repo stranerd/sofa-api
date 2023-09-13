@@ -87,11 +87,6 @@ export class QuizRepository implements IQuizRepository {
 		return this.mapper.mapFrom(res)
 	}
 
-	async deleteCourseQuizzes (courseId: string) {
-		const quizzes = await Quiz.deleteMany({ courseId })
-		return quizzes.acknowledged
-	}
-
 	async updateMeta (commentId: string, property: QuizMeta, value: 1 | -1) {
 		await Quiz.findByIdAndUpdate(commentId, {
 			$inc: { [`meta.${property}`]: value, [`meta.${QuizMeta.total}`]: value }

@@ -67,8 +67,16 @@ export class CourseRepository implements ICourseRepository {
 	}
 
 	async delete (id: string, userId: string) {
-		const course = await Course.findOneAndDelete({ _id: id, 'user.id': userId, status: DraftStatus.draft })
-		return !!course
+		let res = false
+		await Course.collection.conn.transaction(async (session) => {
+			const course = await Course.findOneAndDelete({ _id: id, 'user.id': userId, status: DraftStatus.draft }, { session })
+			if (course) await Promise.all([
+				Quiz.deleteMany({ courseId: id }, { session }),
+				File.deleteMany({ courseId: id }, { session }),
+			])
+			return res = !!course
+		})
+		return res
 	}
 
 	async publish (id: string, userId: string) {
@@ -109,39 +117,31 @@ export class CourseRepository implements ICourseRepository {
 				Course.findById(id, null, { session }),
 				finder.findById(coursableId, null, { session })
 			])
-			if (!course) throw new Error('course not found')
-			if (!coursable) throw new Error(`${type} not found`)
-			if (course.user.id !== userId || coursable.user.id !== userId) return
-			if (add && coursable.courseId !== null) throw new Error(`${type} already in a course`)
-			if (!add && course.status !== DraftStatus.draft) throw new Error(`cannot remove ${type} from published course`)
-			await finder.findByIdAndUpdate(coursable.id, {
+			if (!course || course.user.id !== userId) return
+			let sections = course.sections
+			if (add) {
+				if (!coursable) throw new Error(`${type} not found`)
+				if (coursable.user.id !== userId) return
+				if (coursable.courseId !== null) throw new Error(`${type} already in a course`)
+			} else {
+				if (course.status !== DraftStatus.draft) throw new Error(`cannot remove ${type} from published course`)
+				sections = sections.map((s) => {
+					s.items = s.items.filter((i) => !(i.id === coursableId && i.type === type))
+					return s
+				})
+			}
+			if (coursable) await finder.findByIdAndUpdate(coursableId, {
 				$set: {
 					...(add ? { topicId: course.topicId, courseId: course.id } : { courseId: null }),
 					status: course.status
 				}
 			}, { session })
 			res = await Course.findByIdAndUpdate(course.id, {
-				[add ? '$addToSet' : '$pull']: { coursables: { id: coursable.id, type } }
+				$set: { sections },
+				[add ? '$addToSet' : '$pull']: { coursables: { id: coursableId, type } }
 			}, { session, new: true })
 		})
 		return this.mapper.mapFrom(res)
-	}
-
-	async remove (id: string, coursableId: string, type: Coursable) {
-		let res = false
-		await Course.collection.conn.transaction(async (session) => {
-			const course = await Course.findById(id, null, { session })
-			if (!course) throw new Error('course not found')
-			course.coursables = course.coursables.filter((c) => !(c.id === coursableId && c.type === type))
-			course.sections = course.sections.map((s) => ({
-				...s,
-				items: s.items.filter((i) => !(i.id === coursableId && i.type === type))
-			}))
-			const updatedCourse = await course.save({ session })
-			res = !!updatedCourse
-			return res
-		})
-		return res
 	}
 
 	async updateSections (id: string, userId: string, sections: CourseSections) {
@@ -149,9 +149,9 @@ export class CourseRepository implements ICourseRepository {
 		await Course.collection.conn.transaction(async (session) => {
 			const course = await Course.findById(id, null, { session })
 			if (!course || course.user.id !== userId) return
-			const secs = sections.map((s) => s.items)
+			const secs = [...new Set(sections.map((s) => s.items)
 				.flat()
-				.map((s) => `${s.type}:${s.id}`)
+				.map((s) => `${s.type}:${s.id}`))]
 			const coursables = course.coursables.map((c) => `${c.type}:${c.id}`)
 			if (!compareArrayContents(secs, coursables)) throw new Error('all items in the coursables list must appear in a section')
 			res = await Course.findByIdAndUpdate(course.id, { $set: { sections } }, { session, new: true })

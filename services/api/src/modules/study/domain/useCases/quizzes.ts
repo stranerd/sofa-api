@@ -46,10 +46,6 @@ export class QuizzesUseCase {
 		return await this.repository.reorder(input.id, input.userId, input.questionIds)
 	}
 
-	async deleteCourseQuizzes (courseId: string) {
-		return await this.repository.deleteCourseQuizzes(courseId)
-	}
-
 	async updateMeta (data: { id: string, property: QuizMeta, value: 1 | -1 }) {
 		return this.repository.updateMeta(data.id, data.property, data.value)
 	}

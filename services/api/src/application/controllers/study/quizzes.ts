@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { DraftStatus, QuizzesUseCases } from '@modules/study'
+import { Coursable, CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
@@ -81,8 +81,10 @@ export class QuizController {
 
 	static async create (req: Request) {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
-		const data = validate(this.schema(isAdmin),
-			{ ...req.body, photo: req.files.photo?.at(0) ?? null })
+		const data = validate({
+			...this.schema(isAdmin),
+			courseId: Schema.string().min(1).nullable().default(null)
+		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
 		const tags = await verifyTags(data.topic, data.tags)
 
@@ -91,11 +93,16 @@ export class QuizController {
 
 		const photo = data.photo ? await UploaderUseCases.upload('study/quizzes', data.photo) : null
 
-		return await QuizzesUseCases.add({
+		const quiz = await QuizzesUseCases.add({
 			...data, ...tags, user: user.getEmbedded(),
 			photo, status: DraftStatus.draft,
 			courseId: null
 		})
+
+		if (data.courseId) await CoursesUseCases.move({ id: data.courseId, userId: quiz.user.id, coursableId: quiz.id, type: Coursable.file, add: true })
+			.catch()
+
+		return quiz
 	}
 
 	static async delete (req: Request) {

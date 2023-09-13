@@ -38,10 +38,6 @@ export class FilesUseCase {
 		return await this.repository.publish(input.id, input.userId)
 	}
 
-	async deleteCourseFiles (courseId: string) {
-		return await this.repository.deleteCourseFiles(courseId)
-	}
-
 	async updateRatings (input: { id: string, ratings: number, add: boolean }) {
 		return await this.repository.updateRatings(input.id, input.ratings, input.add)
 	}
