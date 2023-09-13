@@ -1,5 +1,7 @@
+import { ViewsUseCases, InteractionEntities } from '@modules/interactions'
 import { createTest, PlayStatus, TestsUseCases } from '@modules/plays'
 import { Coursable, QuestionsUseCases, canAccessCoursable } from '@modules/study'
+import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TestController {
@@ -37,9 +39,19 @@ export class TestController {
 		}, req.body)
 
 		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!)
-		if (!hasAccess) throw new NotAuthorizedError('cannot access this quiz')
+		if (!hasAccess || hasAccess.isForTutors) throw new NotAuthorizedError('cannot access this quiz')
 
-		return await createTest(req.authUser!.id, hasAccess)
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+
+		const test = await createTest(req.authUser!.id, hasAccess)
+
+		await ViewsUseCases.create({
+			user: user.getEmbedded(),
+			entity: { id: hasAccess.id, type: InteractionEntities.quizzes, userId: hasAccess.user.id }
+		})
+
+		return test
 	}
 
 	static async start (req: Request) {

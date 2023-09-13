@@ -1,3 +1,4 @@
+import { InteractionEntities, ViewsUseCases } from '@modules/interactions'
 import { GamesUseCases, PlayStatus } from '@modules/plays'
 import { canAccessCoursable, Coursable, QuestionsUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
@@ -16,10 +17,11 @@ export class GameController {
 	static async create (req: Request) {
 		const data = validate({
 			quizId: Schema.string().min(1),
+			join: Schema.boolean().default(false)
 		}, req.body)
 
 		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!)
-		if (!hasAccess) throw new NotAuthorizedError('cannot access this quiz')
+		if (!hasAccess || hasAccess.isForTutors) throw new NotAuthorizedError('cannot access this quiz')
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
@@ -32,13 +34,22 @@ export class GameController {
 			.filter((q) => !!q) as string[]
 		const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
 
-
-		return await GamesUseCases.add({
+		const game = await GamesUseCases.add({
 			quizId: data.quizId,
 			user: user.getEmbedded(),
 			questions: questionIds,
 			totalTimeInSec
 		})
+
+		if (data.join) await GamesUseCases.join({ id: game.id, userId: game.user.id, join: true })
+			.then(() => game.participants.push(game.user.id))
+
+		await ViewsUseCases.create({
+			user: user.getEmbedded(),
+			entity: { id: hasAccess.id, type: InteractionEntities.quizzes, userId: hasAccess.user.id }
+		})
+
+		return game
 	}
 
 	static async delete (req: Request) {
