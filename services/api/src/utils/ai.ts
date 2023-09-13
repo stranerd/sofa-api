@@ -28,12 +28,12 @@ export class AI {
 		return title
 	}
 
-	static async replyMessage (message: string) {
+	static async replyMessage (messages: Message[]) {
 		const reply = await this.#getResponse([
 			{ role: 'system', content: 'You are a helpful, creative, clever, and very friendly assistant that always provides all logic behind its answers.' },
 			{ role: 'user', content: 'Hello, who are you' },
 			{ role: 'assistant', content: 'I am an AI created by OpenAI. How can I help you today?' },
-			{ role: 'user', content: message }
+			...messages
 		])
 		if (!reply) return null
 		return reply
