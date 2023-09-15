@@ -5,6 +5,7 @@ import { PlayTypes } from '../domain/types'
 import { AnswersUseCases, GamesUseCases, TestsUseCases } from '..'
 import { GameEntity } from '../domain/entities/games'
 import { TestEntity } from '../domain/entities/tests'
+import { UserMeta, UsersUseCases } from '@modules/users'
 
 export const endPlay = async (type: PlayTypes, typeId: string, userId) => {
 	if (type === PlayTypes.games) await GamesUseCases.end({ id: typeId, userId })
@@ -49,6 +50,12 @@ const startTimer = async (type: PlayTypes, typeId: string, userId: string, ended
 	await appInstance.cache.set(cacheKey, jobId, Math.ceil(endsIn / 1000))
 }
 
+const postScorePlays = async (_type: PlayTypes, _typeId: string, participants: string[], metaType: UserMeta) => {
+	await Promise.all(
+		participants.map((p) => UsersUseCases.incrementMeta({ id: p, value: 1, property: metaType }))
+	)
+}
+
 export const calculateGameResults = async (game: GameEntity) => {
 	const scores = await calculateResults(PlayTypes.games, game.id, game.questions, game.participants)
 	return await GamesUseCases.score({ id: game.id, userId: game.user.id, scores })
@@ -56,9 +63,16 @@ export const calculateGameResults = async (game: GameEntity) => {
 
 export const startGameTimer = async (game: GameEntity) => startTimer(PlayTypes.games, game.id, game.user.id,  game.getEndsAt())
 
+export const postScoreGame = async (game: GameEntity) => await Promise.all([
+	postScorePlays(PlayTypes.games, game.id, game.participants, UserMeta.playedGames),
+	UsersUseCases.incrementMeta({ id: game.user.id, value: 1, property: UserMeta.hostedGames })
+])
+
 export const calculateTestResults = async (test: TestEntity) => {
 	const scores = await calculateResults(PlayTypes.tests, test.id, test.questions, [test.userId])
 	return await TestsUseCases.score({ id: test.id, userId: test.userId, scores })
 }
 
 export const startTestTimer = async (test: TestEntity) => startTimer(PlayTypes.tests, test.id, test.userId, test.getEndsAt())
+
+export const postScoreTest = async (test: TestEntity) => postScorePlays(PlayTypes.tests, test.id, [test.userId], UserMeta.playedTests)

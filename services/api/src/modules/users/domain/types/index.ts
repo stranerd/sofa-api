@@ -61,6 +61,10 @@ export enum UserMeta {
 	videos = 'videos',
 	folders = 'folders',
 
+	hostedGames = 'hostedGames',
+	playedGames = 'playedGames',
+	playedTests = 'playedTests',
+
 	students = 'students',
 
 	total = 'total'

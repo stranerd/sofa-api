@@ -5,7 +5,7 @@ import { AnswersUseCases } from '../..'
 import { GameFromModel } from '../../data/models/games'
 import { GameEntity } from '../../domain/entities/games'
 import { PlayTypes, PlayStatus } from '../../domain/types'
-import { calculateGameResults, startGameTimer } from '../plays'
+import { calculateGameResults, postScoreGame, startGameTimer } from '../plays'
 import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity> = {
@@ -25,6 +25,7 @@ export const GameDbChangeCallbacks: DbChangeCallbacks<GameFromModel, GameEntity>
 
 		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startGameTimer(after)
 		if (before.status === PlayStatus.started && after.status === PlayStatus.ended) await calculateGameResults(after)
+		if (before.status === PlayStatus.ended && after.status === PlayStatus.scored) await postScoreGame(after)
 
 		const joined = after.participants.filter((uid) => !before.participants.includes(uid) && uid !== after.user.id)
 		await Promise.all(

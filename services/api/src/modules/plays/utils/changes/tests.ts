@@ -6,7 +6,7 @@ import { AnswersUseCases } from '../..'
 import { TestFromModel } from '../../data/models/tests'
 import { TestEntity } from '../../domain/entities/tests'
 import { PlayTypes, PlayStatus } from '../../domain/types'
-import { calculateTestResults, startTestTimer } from '../plays'
+import { calculateTestResults, postScoreTest, startTestTimer } from '../plays'
 
 export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity> = {
 	created: async ({ after }) => {
@@ -26,6 +26,7 @@ export const TestDbChangeCallbacks: DbChangeCallbacks<TestFromModel, TestEntity>
 			calculateTestResults(after),
 			TutorRequestsUseCases.markTestFinished(after.id)
 		])
+		if (before.status === PlayStatus.ended && after.status === PlayStatus.scored) await postScoreTest(after)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
