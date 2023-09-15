@@ -6,7 +6,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { CoursesUseCases, FoldersUseCases, QuestionsUseCases } from '../..'
 import { QuizFromModel } from '../../data/models/quizzes'
 import { QuizEntity } from '../../domain/entities/quizzes'
-import { Coursable, FolderSaved } from '../../domain/types'
+import { Coursable, DraftStatus, FolderSaved } from '../../domain/types'
 
 export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity> = {
 	created: async ({ after }) => {
@@ -35,6 +35,12 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 				TagsUseCases.updateMeta({ ids: added, property: TagMeta.quizzes, value: 1 })
 			])
 		}
+
+		if (changes.status && (before.status === DraftStatus.published || after.status === DraftStatus.published)) await UsersUseCases.incrementMeta({
+			id: after.user.id,
+			value: after.status === DraftStatus.published ? 1 : -1,
+			property: UserMeta.publishedQuizzes
+		})
 	},
 	deleted: async ({ before }) => {
 		const paths = before.isForTutors ? ['study/quizzes/tutors', `study/quizzes/tutors/${before.id}`] : ['study/quizzes', `study/quizzes/${before.id}`]
@@ -47,6 +53,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			amount: -ScoreRewards.newQuiz
 		})
 		await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.quizzes })
+		if (before.status === DraftStatus.published) await UsersUseCases.incrementMeta({ id: before.user.id, value: -1, property: UserMeta.publishedQuizzes })
 		await TagsUseCases.updateMeta({ ids: before.tagIds.concat(before.topicId), property: TagMeta.quizzes, value: -1 })
 		await QuestionsUseCases.deleteQuizQuestions(before.id)
 		await ReviewsUseCases.deleteEntityReviews({ type: InteractionEntities.quizzes, id: before.id })

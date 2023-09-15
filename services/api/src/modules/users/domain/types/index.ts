@@ -55,10 +55,15 @@ export enum UserMeta {
 	connects = 'connects',
 
 	courses = 'courses',
+	publishedCourses = 'publishedCourses',
 	quizzes = 'quizzes',
+	publishedQuizzes = 'publishedQuizzes',
 	documents = 'documents',
+	publishedDocuments = 'publishedDocuments',
 	images = 'images',
+	publishedImages = 'publishedImages',
 	videos = 'videos',
+	publishedVideos = 'publishedVideos',
 	folders = 'folders',
 
 	hostedGames = 'hostedGames',
