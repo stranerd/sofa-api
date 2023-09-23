@@ -1,4 +1,4 @@
-name: Publish to Digital Ocean
+name: Publish
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - production
 
 jobs:
-  publish-do:
+  publish:
     environment: production
     runs-on: production
     steps:
