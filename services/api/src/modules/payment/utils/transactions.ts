@@ -74,7 +74,7 @@ export const fulfillTransaction = async (transaction: TransactionEntity) => {
 	return !!txn
 }
 
-export const retryTransactions = async (timeInMs: number) => {
+export const processTransactions = async (timeInMs: number) => {
 	const { results: fulfilledTransactions } = await TransactionsUseCases.get({
 		where: [
 			{ field: 'status', value: TransactionStatus.fulfilled },

@@ -27,17 +27,5 @@ export const withdrawalsRoutes = groupRoutes('/withdrawals', [
 				}
 			})
 		]
-	}, {
-		path: '/:id',
-		method: 'delete',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WithdrawalsController.delete(req)
-				}
-			})
-		]
 	}
 ])

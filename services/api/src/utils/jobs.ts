@@ -1,7 +1,7 @@
 import { deleteUnverifiedUsers } from '@modules/auth'
 import { EmailErrorsUseCases, NotificationsUseCases, PhoneErrorsUseCases, sendMailAndCatchError, sendTextAndCatchError } from '@modules/notifications'
-import { MethodsUseCases, processWithdrawals, renewSubscription, retryTransactions, updateOrgsMembersDays } from '@modules/payment'
-import { endPlay, PlayTypes } from '@modules/plays'
+import { MethodsUseCases, processTransactions, processWithdrawals, renewSubscription, updateOrgsMembersDays } from '@modules/payment'
+import { PlayTypes, endPlay } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { CronTypes, DelayedJobs } from 'equipped'
@@ -25,7 +25,7 @@ export const startJobs = async () => {
 					PhoneErrorsUseCases.getAndDeleteAll()
 				])
 				await Promise.all([
-					retryTransactions(60 * 60 * 1000),
+					processTransactions(60 * 60 * 1000),
 					processWithdrawals(60 * 60 * 1000),
 					appInstance.job.retryAllFailedJobs(),
 					...emails.map((e) => sendMailAndCatchError(e as any)),

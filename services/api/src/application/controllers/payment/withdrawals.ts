@@ -1,5 +1,5 @@
 import { WithdrawalsUseCases } from '@modules/payment'
-import { NotAuthorizedError, QueryParams, Request } from 'equipped'
+import { QueryParams, Request } from 'equipped'
 
 export class WithdrawalsController {
 	static async find (req: Request) {
@@ -12,11 +12,5 @@ export class WithdrawalsController {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'userId', value: req.authUser!.id }]
 		return await WithdrawalsUseCases.get(query)
-	}
-
-	static async delete (req: Request) {
-		const isDeleted = await WithdrawalsUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
-		if (isDeleted) return isDeleted
-		throw new NotAuthorizedError()
 	}
 }

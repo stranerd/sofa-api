@@ -20,8 +20,4 @@ export class WithdrawalsUseCase {
 	async update (data: { id: string, data: Partial<WithdrawalToModel> }) {
 		return await this.repository.update(data.id, data.data)
 	}
-
-	async delete (data: { id: string, userId: string }) {
-		return await this.repository.delete(data.id, data.userId)
-	}
 }
