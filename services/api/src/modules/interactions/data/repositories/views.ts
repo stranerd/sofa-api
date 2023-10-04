@@ -30,7 +30,7 @@ export class ViewRepository implements IViewRepository {
 
 	async add ({ entity, user }: ViewToModel) {
 		const view = await View.findOneAndUpdate(
-			{ entity, 'user.id': user },
+			{ entity, 'user.id': user.id },
 			{ $setOnInsert: { entity, user }, $set: { createdAt: Date.now(), updatedAt: Date.now() } },
 			{ new: true, upsert: true }
 		)
