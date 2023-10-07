@@ -21,7 +21,7 @@ export type NotificationData =
 	| { type: NotificationType.VerificationRejected, verificationId: string }
 	| { type: NotificationType.TutorRequestAccepted, tutorRequestId: string }
 	| { type: NotificationType.TutorRequestRejected, tutorRequestId: string }
-	| { type: NotificationType.TutorAddedToConversation, conversationId: string, tutorId: string }
+	| { type: NotificationType.TutorAddedToConversation, conversationId: string, tutorId: string, accepted: boolean }
 	| { type: NotificationType.UserJoinedGame, gameId: string, userId: string }
 	| { type: NotificationType.NewPurchase, id: string, purchasedType: Purchasables, purchasedId: string, userId: string }
 	| { type: NotificationType.NewPurchased, id: string, purchasedType: Purchasables, purchasedId: string, userId: string }

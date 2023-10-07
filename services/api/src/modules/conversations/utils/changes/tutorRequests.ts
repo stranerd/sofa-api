@@ -3,6 +3,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { PlanDataType, WalletsUseCases } from '@modules/payment'
 import { TutorRequestFromModel } from '../../data/models/tutorRequests'
 import { TutorRequestEntity } from '../../domain/entities/tutorRequests'
+import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromModel, TutorRequestEntity> = {
 	created: async ({ after }) => {
@@ -19,6 +20,17 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 
 		if (changes.pending && before.pending && !after.pending) {
 			if (!after.accepted) await WalletsUseCases.updateSubscriptionData({ userId: after.userId, key: PlanDataType.tutorAidedConversations, value: 1 })
+			await sendNotification([after.userId], {
+				title: `Tutor request ${after.accepted ? 'accepted' : 'declined'}`,
+				body: after.accepted ? `Your tutor request has been accepted by ${after.tutor.bio.name}` : `Your tutor request has been declined by ${after.tutor.bio.name}. You can send a new request to a different tutor`,
+				sendEmail: true,
+				data: {
+					type: NotificationType.TutorAddedToConversation,
+					accepted: after.accepted,
+					tutorId: after.tutor.id,
+					conversationId: after.conversationId
+				}
+			})
 		}
 	},
 	deleted: async ({ before }) => {

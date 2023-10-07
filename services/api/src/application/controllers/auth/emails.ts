@@ -5,10 +5,8 @@ import { AuthTypes, BadRequestError, Request, Schema, validate, Validation } fro
 export class EmailsController {
 	static async signup (req: Request) {
 		const userCredential = {
+			...req.body,
 			email: req.body.email ?? '',
-			name: req.body.name,
-			description: req.body.description,
-			password: req.body.password,
 			photo: req.files.photo?.at(0) ?? null
 		}
 
