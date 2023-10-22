@@ -38,7 +38,7 @@ export class MyStudyController {
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }] })
+			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.createdAt - a.createdAt)
 	}
@@ -54,7 +54,7 @@ export class MyStudyController {
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }] })
+			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.ratings.avg - a.ratings.avg)
 	}
@@ -70,7 +70,7 @@ export class MyStudyController {
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }] })
+			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.createdAt - a.createdAt)
 	}
@@ -86,7 +86,7 @@ export class MyStudyController {
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }] })
+			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.ratings.avg - a.ratings.avg)
 	}
@@ -102,7 +102,7 @@ export class MyStudyController {
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }] })
+			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.meta.total - a.meta.total)
 	}
