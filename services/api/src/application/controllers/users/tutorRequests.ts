@@ -39,8 +39,8 @@ export class TutorRequestsController {
 		if (!user || user.isDeleted()) throw new BadRequestError('User not found')
 		if (!user.isTeacher()) throw new BadRequestError('Only teachers can apply for tutorship')
 		if (user.tutor.topics.includes(topicId)) throw new BadRequestError('You are already a tutor for this topic')
-		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for tutorship')
-		if (!user.location) throw new BadRequestError('Update your location before applying for tutorship')
+		if (!user.isBioComplete()) throw new BadRequestError('Complete your bio before applying for tutoring')
+		if (!user.location) throw new BadRequestError('Update your location before applying for tutoring')
 
 		const { results: pendingRequests } = await TutorRequestsUseCases.get({
 			where: [{ field: 'userId', value: user.id }, { field: 'pending', value: false }],
@@ -58,7 +58,7 @@ export class TutorRequestsController {
 			all: true
 		})
 		const quiz = Validation.getRandomSample(quizzes, 1).at(0)
-		if (!quiz) throw new BadRequestError('Quiz not found for choosen topic')
+		if (!quiz) throw new BadRequestError('Quiz not found for chosen topic')
 
 		const verificationUploaded = await UploaderUseCases.upload('tutorRequests/verification', verification)
 		const qualificationUploaded = await UploaderUseCases.uploadMany('tutorRequests/qualification', qualification)
