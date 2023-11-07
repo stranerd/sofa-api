@@ -1,7 +1,7 @@
+import { Bucket, Storage } from '@google-cloud/storage'
+import { environment } from '@utils/environment'
 import { IUploaderRepository } from '../../domain/irepositories/uploader'
 import { MediaInput } from '../models/media'
-import { environment } from '@utils/environment'
-import { Bucket, Storage } from '@google-cloud/storage'
 
 export class CloudUploaderRepository implements IUploaderRepository {
 	private bucket: Bucket

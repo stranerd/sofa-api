@@ -43,7 +43,7 @@ export class TutorRequestsController {
 		if (!user.location) throw new BadRequestError('Update your location before applying for tutoring')
 
 		const { results: pendingRequests } = await TutorRequestsUseCases.get({
-			where: [{ field: 'userId', value: user.id }, { field: 'pending', value: false }],
+			where: [{ field: 'userId', value: user.id }, { field: 'topicId', value: topicId }, { field: 'pending', value: false }],
 			all: true
 		})
 		const request = pendingRequests.at(0)
