@@ -19,6 +19,7 @@ export class CloudUploaderRepository implements IUploaderRepository {
 	}
 
 	async upload (path: string, media: MediaInput) {
+		media.data = Buffer.from(media.data)
 		const timestamp = Date.now()
 		media.name = media.name.toLowerCase()
 		path = `storage/${environment}/${path}/${timestamp}-${media.name}`
