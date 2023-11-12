@@ -25,7 +25,7 @@ export class EmailsController {
 			photo: Schema.file().image().nullable(),
 			name: Schema.object({
 				first: Schema.string().min(1),
-				last: Schema.string().min(1),
+				last: Schema.string(),
 			})
 		}, userCredential)
 

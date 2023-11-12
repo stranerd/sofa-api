@@ -16,7 +16,7 @@ export class UserController {
 		const data = validate({
 			name: Schema.object({
 				first: Schema.string().min(1),
-				last: Schema.string().min(1),
+				last: Schema.string(),
 			}),
 			description: Schema.string(),
 			photo: Schema.file().image().nullable()
