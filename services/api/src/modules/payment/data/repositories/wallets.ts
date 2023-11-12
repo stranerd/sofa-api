@@ -186,7 +186,7 @@ export class WalletRepository implements IWalletRepository {
 				bulk.find({ userId }).upsert().updateOne({ $inc: { 'subscription.data.membersDays': days }, $setOnInsert: { userId, createdAt: now, updatedAt: now } })
 			}
 			const result = await bulk.execute({ session })
-			res = result.nModified === entries.length
+			res = result.modifiedCount === entries.length
 			return res
 		})
 		return res
