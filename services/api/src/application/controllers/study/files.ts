@@ -37,8 +37,8 @@ export class FileController {
 			media: Schema.or([
 				Schema.file().video(),
 				Schema.file().image(),
-				Schema.file().custom((val) => allowedDocumentTypes.includes(val?.type), 'invalid file type')
-			])
+				Schema.file().custom((val) => allowedDocumentTypes.includes(val?.type))
+			], 'unsupported file type')
 		}, {
 			...req.body,
 			media: req.files.media?.at(0) ?? null,

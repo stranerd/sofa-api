@@ -18,15 +18,15 @@ export class UsersController {
 
 	static async updateType (req: Request) {
 		const { data } = validate({
-			data: Schema.or([
-				Schema.object({
+			data: Schema.discriminate((d) => d.type, {
+				[UserType.student]: Schema.object({
 					type: Schema.is(UserType.student as const),
-					school: Schema.or([
-						Schema.object({
+					school: Schema.discriminate((s) => s.type, {
+						[UserSchoolType.college]: Schema.object({
 							type: Schema.is(UserSchoolType.college as const),
 							departmentId: Schema.string().min(1)
 						}),
-						Schema.object({
+						[UserSchoolType.aspirant]: Schema.object({
 							type: Schema.is(UserSchoolType.aspirant as const),
 							exams: Schema.array(
 								Schema.object({
@@ -37,18 +37,18 @@ export class UsersController {
 								}).custom((exam) => exam.endDate >= exam.startDate, 'end date cannot be less than start date')
 							)
 						})
-					])
+					})
 				}),
-				Schema.object({
+				[UserType.teacher]: Schema.object({
 					type: Schema.is(UserType.teacher as const),
 					school: Schema.string().min(1)
 				}),
-				Schema.object({
+				[UserType.organization]: Schema.object({
 					type: Schema.is(UserType.organization as const),
 					name: Schema.string().min(1),
 					code: Schema.string().min(6)
 				})
-			])
+			})
 		}, req.body)
 
 		if (data.type === UserType.student) {
