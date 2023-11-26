@@ -59,10 +59,9 @@ export class MyStudyController {
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.ratings.avg - a.ratings.avg)
 	}
 
-	static async latest (req: Request) {
+	static async latest (_req: Request) {
 		const query: QueryParams = {
 			where: [
-				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
 				{ field: 'status', value: DraftStatus.published }
 			],
 			sort: [{ field: 'createdAt', desc: true }],
@@ -75,10 +74,9 @@ export class MyStudyController {
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.createdAt - a.createdAt)
 	}
 
-	static async rated (req: Request) {
+	static async rated (_req: Request) {
 		const query: QueryParams = {
 			where: [
-				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
 				{ field: 'status', value: DraftStatus.published }
 			],
 			sort: [{ field: 'ratings.avg', desc: true }],
@@ -91,10 +89,9 @@ export class MyStudyController {
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.ratings.avg - a.ratings.avg)
 	}
 
-	static async popular (req: Request) {
+	static async popular (_req: Request) {
 		const query: QueryParams = {
 			where: [
-				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
 				{ field: 'status', value: DraftStatus.published }
 			],
 			sort: [{ field: 'meta.total', desc: true }],
