@@ -28,11 +28,16 @@ export class QuestionEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
+	get strippedData () {
+		return this.stripAnswers(this.data)
+	}
+
 	strip () {
 		return {
 			...this.toJSON(),
 			explanation: undefined,
-			data: this.stripAnswers(this.data)
+			data: this.strippedData,
+			strippedData: this.strippedData,
 		}
 	}
 
