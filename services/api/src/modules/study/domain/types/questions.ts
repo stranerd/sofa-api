@@ -36,7 +36,6 @@ export type QuestionData = {
 
 export type StrippedQuestionData = {
 	type: QuestionTypes.multipleChoice
-	allowsMoreThanOneAnswer: boolean
 	options: string[]
 } | {
 	type: QuestionTypes.trueOrFalse

@@ -37,7 +37,6 @@ export class QuestionEntity extends BaseEntity {
 			...this.toJSON(),
 			explanation: undefined,
 			data: this.strippedData,
-			strippedData: this.strippedData,
 		}
 	}
 
@@ -81,7 +80,7 @@ export class QuestionEntity extends BaseEntity {
 
 	private stripAnswers (data: QuestionData): StrippedQuestionData {
 		if (data.type === QuestionTypes.multipleChoice) {
-			return { type: data.type, options: data.options, allowsMoreThanOneAnswer: data.answers.length > 1 }
+			return { type: data.type, options: data.options }
 		} else if (data.type === QuestionTypes.trueOrFalse) {
 			return { type: data.type }
 		} else if (data.type === QuestionTypes.writeAnswer) {

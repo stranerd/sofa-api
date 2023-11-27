@@ -1,5 +1,5 @@
 import { ViewsUseCases, InteractionEntities } from '@modules/interactions'
-import { createTest, PlayStatus, TestsUseCases } from '@modules/plays'
+import { createTest, TestsUseCases } from '@modules/plays'
 import { Coursable, QuestionsUseCases, canAccessCoursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
@@ -23,7 +23,6 @@ export class TestController {
 	static async getQuestions (req: Request) {
 		const test = await TestsUseCases.find(req.params.id)
 		if (!test) throw new NotFoundError()
-		if (test.status !== PlayStatus.started) throw new BadRequestError('test has not started')
 		const { results: questions } = await QuestionsUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: test.questions }],
 			all: true

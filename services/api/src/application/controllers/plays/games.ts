@@ -1,5 +1,5 @@
 import { InteractionEntities, ViewsUseCases } from '@modules/interactions'
-import { GamesUseCases, PlayStatus } from '@modules/plays'
+import { GamesUseCases } from '@modules/plays'
 import { canAccessCoursable, Coursable, QuestionsUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
@@ -80,7 +80,6 @@ export class GameController {
 	static async getQuestions (req: Request) {
 		const game = await GamesUseCases.find(req.params.id)
 		if (!game) throw new NotFoundError()
-		if (game.status !== PlayStatus.started) throw new BadRequestError('game has not started')
 		const { results: questions } = await QuestionsUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: game.questions }],
 			all: true
