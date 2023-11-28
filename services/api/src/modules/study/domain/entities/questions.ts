@@ -40,11 +40,11 @@ export class QuestionEntity extends BaseEntity {
 		}
 	}
 
-	private compare (a: string, b: string) {
+	private compare (a: string, b: string, quality = 0.95) {
 		return stringSimilarity.compareTwoStrings(
-			a.toLowerCase().replaceAll(' ', '').trim(),
-			b.toLowerCase().replaceAll(' ', '').trim()
-		) > 0.95
+			Validation.stripHTML(a).toLowerCase().replaceAll(' ', '').trim(),
+			Validation.stripHTML(b).toLowerCase().replaceAll(' ', '').trim()
+		) >= quality
 	}
 
 	checkAnswer (answer: any): boolean {
@@ -63,17 +63,17 @@ export class QuestionEntity extends BaseEntity {
 			const answers = this.data.answers
 			return Array.isArray(answer) &&
 				answer.length === answers.length &&
-				answer.every((a, i) => this.compare(a, answers[i]))
+				answer.every((a, i) => this.compare(a, answers[i], 1))
 		} else if (this.data.type === QuestionTypes.sequence) {
 			const answers = this.data.answers
 			return Array.isArray(answer) &&
 				answer.length === answers.length &&
-				answer.every((a, i) => this.compare(a, answers[i]))
+				answer.every((a, i) => this.compare(a, answers[i], 1))
 		} else if (this.data.type === QuestionTypes.match) {
 			const questions = this.data.set
 			return Array.isArray(answer) &&
 				answer.length === questions.length &&
-				answer.every((a, i) => this.compare(a, questions[i].a))
+				answer.every((a, i) => this.compare(a, questions[i].a, 1))
 		}
 		return false
 	}
