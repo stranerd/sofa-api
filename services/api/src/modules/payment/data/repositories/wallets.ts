@@ -1,4 +1,4 @@
-import { DelayedJobs } from 'equipped'
+import { BadRequestError, DelayedJobs } from 'equipped'
 import { ClientSession } from 'mongodb'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import { AccountDetails, Currencies, PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
@@ -102,7 +102,7 @@ export class WalletRepository implements IWalletRepository {
 			const fromWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
 			const toWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.to, session))!
 			const updatedBalance = fromWallet.balance.amount - data.amount
-			if (updatedBalance < 0) throw new Error('insufficient balance')
+			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const transactions: TransactionToModel[] = [
 				{
 					userId: data.from,
@@ -144,7 +144,7 @@ export class WalletRepository implements IWalletRepository {
 			const fee = WithdrawalFees[wallet.balance.currency] ?? WithdrawalFees[Currencies.NGN]
 			const deductingAmount = data.amount + fee
 			const updatedBalance = wallet.balance.amount - deductingAmount
-			if (updatedBalance < 0) throw new Error('insufficient balance')
+			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const withdrawalModel: WithdrawalToModel = {
 				userId: data.userId,
 				email: data.email,

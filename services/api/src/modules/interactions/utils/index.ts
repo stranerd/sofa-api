@@ -3,6 +3,7 @@ import { CoursesUseCases, QuestionsUseCases, QuizzesUseCases } from '@modules/st
 import { UsersUseCases } from '@modules/users'
 import { CommentsUseCases } from '../'
 import { InteractionEntities } from '../domain/types'
+import { BadRequestError } from 'equipped'
 
 type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views'
 
@@ -47,8 +48,8 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 	}, {} as Record<InteractionEntities, (id: string) => Promise<string | undefined>>)
 
 	const finder = types[type]
-	if (!finder) throw new Error(`${interaction} not supported for ${type}`)
+	if (!finder) throw new BadRequestError(`${interaction} not supported for ${type}`)
 	const res = await finder(id)
-	if (!res) throw new Error(`no ${type} with id ${id} found`)
+	if (!res) throw new BadRequestError(`no ${type} with id ${id} found`)
 	return res
 }

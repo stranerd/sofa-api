@@ -6,6 +6,7 @@ import { TutorRequest } from '../mongooseModels/tutorRequests'
 import { Conversation } from '../mongooseModels/conversations'
 import { ConversationMapper } from '../mappers/conversations'
 import { EmbeddedUser } from '../../domain/types'
+import { BadRequestError } from 'equipped'
 
 export class TutorRequestRepository implements ITutorRequestRepository {
 	private static instance: TutorRequestRepository
@@ -34,8 +35,8 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 		let res = null as TutorRequestFromModel | null
 		await TutorRequest.collection.conn.transaction(async (session) => {
 			const conversation = this.conversationMapper.mapFrom(await Conversation.findById(data.conversationId, {}, { session }))
-			if (!conversation || conversation.user.id !== data.userId) throw new Error('Conversation not found')
-			if (conversation.tutor) throw new Error('Conversation already has a tutor')
+			if (!conversation || conversation.user.id !== data.userId) throw new BadRequestError('Conversation not found')
+			if (conversation.tutor) throw new BadRequestError('Conversation already has a tutor')
 			const tutorRequest = await TutorRequest.findOneAndUpdate(
 				{ conversationId: data.conversationId, pending: true },
 				{ $setOnInsert: { ...data, pending: true, accepted: false } },
@@ -55,11 +56,11 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 		let res = false
 		await TutorRequest.collection.conn.transaction(async (session) => {
 			const tutorRequest = await TutorRequest.findOneAndUpdate({ _id: id, 'tutor.id': tutorId, pending: true }, { $set: { accepted: accept, pending: false } }, { session })
-			if (!tutorRequest) throw new Error('Request not found')
+			if (!tutorRequest) throw new BadRequestError('Request not found')
 			const conversation = this.conversationMapper.mapFrom(await Conversation.findById(tutorRequest.conversationId, {}, { session }))
-			if (!conversation) throw new Error('Conversation not found')
+			if (!conversation) throw new BadRequestError('Conversation not found')
 			if (accept) {
-				if (conversation.tutor && conversation.tutor.id !== tutorId) throw new Error('Conversation already has a tutor')
+				if (conversation.tutor && conversation.tutor.id !== tutorId) throw new BadRequestError('Conversation already has a tutor')
 				await Conversation.findByIdAndUpdate(tutorRequest.conversationId, { $set: { tutor: tutorRequest.tutor } }, { new: true, session })
 			}
 			res = !!tutorRequest

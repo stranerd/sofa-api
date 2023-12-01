@@ -1,4 +1,4 @@
-import { BaseEntity, CronTypes } from 'equipped'
+import { BadRequestError, BaseEntity, CronTypes } from 'equipped'
 import { Currencies, Interval, PlanData } from '../types'
 import { UserType } from '@modules/users'
 
@@ -49,7 +49,7 @@ export class PlanEntity extends BaseEntity {
 	getLengthInDays () {
 		if (this.interval === CronTypes.weekly) return 7
 		if (this.interval === CronTypes.monthly) return 30
-		throw new Error('Not implemented')
+		throw new BadRequestError('Not implemented')
 	}
 }
 

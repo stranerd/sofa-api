@@ -2,6 +2,7 @@ import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
 import {
 	AuthTypes,
+	BadRequestError,
 	EmailsList,
 	Enum,
 	Hash,
@@ -80,11 +81,11 @@ export class AuthRepository implements IAuthRepository {
 	async verifyEmail (token: string) {
 		// check token in cache
 		const userEmail = await appInstance.cache.get('email-verification-token-' + token)
-		if (!userEmail) throw new Error('Invalid token')
+		if (!userEmail) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('email-verification-token-' + token)
 
 		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { isEmailVerified: true } }, { new: true })
-		if (!user) throw new Error('No account with saved email exists')
+		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!
 	}
@@ -109,12 +110,12 @@ export class AuthRepository implements IAuthRepository {
 	async verifyPhone (token: string) {
 		// check token in cache
 		const userPhone = await appInstance.cache.get('phone-verification-token-' + token)
-		if (!userPhone) throw new Error('Invalid token')
+		if (!userPhone) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('phone-verification-token-' + token)
 		const [code, number, id] = userPhone.split('|')
 
 		const user = await User.findByIdAndUpdate(id, { $set: { phone: { code, number } } }, { new: true })
-		if (!user) throw new Error('No user found')
+		if (!user) throw new BadRequestError('No user found')
 
 		return this.mapper.mapFrom(user)!
 	}
@@ -142,14 +143,14 @@ export class AuthRepository implements IAuthRepository {
 	async resetPassword (input: PasswordResetInput) {
 		// check token in cache
 		const userEmail = await appInstance.cache.get('password-reset-token-' + input.token)
-		if (!userEmail) throw new Error('Invalid token')
+		if (!userEmail) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('password-reset-token-' + input.token)
 
 		const user = await User.findOneAndUpdate({ email: userEmail }, {
 			$set: { password: await Hash.hash(input.password) },
 			$addToSet: { authTypes: AuthTypes.email }
 		}, { new: true })
-		if (!user) throw new Error('No account with saved email exists')
+		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!
 	}
@@ -171,10 +172,10 @@ export class AuthRepository implements IAuthRepository {
 
 	async appleSignIn ({ idToken, firstName, lastName }) {
 		const data = await signinWithApple(idToken).catch((e: any) => {
-			throw new Error(e.message)
+			throw new BadRequestError(e.message)
 		})
 		const email = data.email?.toLowerCase()
-		if (!email) throw new Error('can\'t access your email. Signin another way')
+		if (!email) throw new BadRequestError('can\'t access your email. Signin another way')
 
 		return this.authorizeSocial(AuthTypes.apple, {
 			email, photo: null,

@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
+import { BadRequestError, QueryParams } from 'equipped'
 import { ICourseRepository } from '../../domain/irepositories/courses'
 import { Coursable, CourseMeta, CourseSections, DraftStatus, EmbeddedUser } from '../../domain/types'
 import { compareArrayContents } from '../../utils'
@@ -47,7 +47,7 @@ export class CourseRepository implements ICourseRepository {
 			const course = await Course.findOneAndUpdate({
 				_id: id, 'user.id': userId
 			}, { $set: data }, { new: true, session })
-			if (!course) throw new Error('course not found')
+			if (!course) throw new BadRequestError('course not found')
 
 			const updatedData = { topicId: course.topicId, tagIds: course.tagIds }
 			await Promise.all([
@@ -85,7 +85,7 @@ export class CourseRepository implements ICourseRepository {
 			const course = await Course.findOneAndUpdate({
 				_id: id, 'user.id': userId, status: DraftStatus.draft
 			}, { $set: { status: DraftStatus.published } }, { new: true, session })
-			if (!course) throw new Error('course not found')
+			if (!course) throw new BadRequestError('course not found')
 
 			await Promise.all([
 				Quiz.updateMany({ courseId: id }, { $set: { status: DraftStatus.published } }, { session }),
@@ -112,7 +112,7 @@ export class CourseRepository implements ICourseRepository {
 			[Coursable.file]: File
 		}[type as Coursable.file]
 		await Course.collection.conn.transaction(async (session) => {
-			if (!finder) throw new Error(`unknown type: ${type}`)
+			if (!finder) throw new BadRequestError(`unknown type: ${type}`)
 			const [course, coursable] = await Promise.all([
 				Course.findById(id, null, { session }),
 				finder.findById(coursableId, null, { session })
@@ -120,11 +120,11 @@ export class CourseRepository implements ICourseRepository {
 			if (!course || course.user.id !== userId) return
 			let sections = course.sections
 			if (add) {
-				if (!coursable) throw new Error(`${type} not found`)
+				if (!coursable) throw new BadRequestError(`${type} not found`)
 				if (coursable.user.id !== userId) return
-				if (coursable.courseId !== null) throw new Error(`${type} already in a course`)
+				if (coursable.courseId !== null) throw new BadRequestError(`${type} already in a course`)
 			} else {
-				if (course.status !== DraftStatus.draft) throw new Error(`cannot remove ${type} from published course`)
+				if (course.status !== DraftStatus.draft) throw new BadRequestError(`cannot remove ${type} from published course`)
 				sections = sections.map((s) => {
 					s.items = s.items.filter((i) => !(i.id === coursableId && i.type === type))
 					return s
@@ -153,7 +153,7 @@ export class CourseRepository implements ICourseRepository {
 				.flat()
 				.map((s) => `${s.type}:${s.id}`))]
 			const coursables = course.coursables.map((c) => `${c.type}:${c.id}`)
-			if (!compareArrayContents(secs, coursables)) throw new Error('all items in the coursables list must appear in a section')
+			if (!compareArrayContents(secs, coursables)) throw new BadRequestError('all items in the coursables list must appear in a section')
 			res = await Course.findByIdAndUpdate(course.id, { $set: { sections } }, { session, new: true })
 		})
 		return this.mapper.mapFrom(res)

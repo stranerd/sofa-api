@@ -1,6 +1,6 @@
 import { OrganizationMembersUseCases, UserEntity, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DelayedJobs } from 'equipped'
+import { BadRequestError, DelayedJobs } from 'equipped'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '../'
 import { MethodEntity } from '../domain/entities/methods'
@@ -77,19 +77,19 @@ export const subscribeToPlan = async (userId: string, subscriptionId: string) =>
 	const wallet = await WalletsUseCases.get(userId)
 	if (wallet.subscription.active) return wallet
 	const user = await UsersUseCases.find(userId)
-	if (!user || user.isDeleted()) throw new Error('profile not found')
-	if (!user.type) throw new Error('complete your profile before you subscribe')
+	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+	if (!user.type) throw new BadRequestError('complete your profile before you subscribe')
 	const plan = await PlansUseCases.find(subscriptionId)
-	if (!plan) throw new Error('subscription not found')
-	if (!plan.active) throw new Error('you can\'t subscribe to this plan currently')
-	if (!plan.usersFor.includes(user.type.type)) throw new Error('you can\'t subscribe to this plan')
+	if (!plan) throw new BadRequestError('subscription not found')
+	if (!plan.active) throw new BadRequestError('you can\'t subscribe to this plan currently')
+	if (!plan.usersFor.includes(user.type.type)) throw new BadRequestError('you can\'t subscribe to this plan')
 	const { results: methods } = await MethodsUseCases.get({
 		where: [{ field: 'userId', value: userId }, { field: 'primary', value: true }]
 	})
 	const method = methods.at(0)
-	if (!method) throw new Error('no method found')
+	if (!method) throw new BadRequestError('no method found')
 	const successful = await chargeForSubscription(user, plan, method, wallet)
-	if (!successful) throw new Error('charge failed')
+	if (!successful) throw new BadRequestError('charge failed')
 	return activateSub(userId, wallet.id, plan)
 }
 

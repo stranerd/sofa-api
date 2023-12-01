@@ -1,4 +1,5 @@
 import { openAIKey } from '@utils/environment'
+import { BadRequestError } from 'equipped'
 import OpenAI from 'openai'
 
 type Message = { role: 'system' | 'user' | 'assistant', content: string }
@@ -14,7 +15,7 @@ export class AI {
 			})
 			return response.choices.at(0)?.message?.content?.trim() ?? ''
 		} catch (err) {
-			throw new Error('failed to generate response')
+			throw new BadRequestError('failed to generate response')
 		}
 	}
 

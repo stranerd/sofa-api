@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
+import { BadRequestError, QueryParams } from 'equipped'
 import { ClientSession } from 'mongodb'
 import { IAnswerRepository } from '../../domain/irepositories/answers'
 import { PlayTypes, PlayStatus } from '../../domain/types'
@@ -35,7 +35,7 @@ export class AnswerRepository implements IAnswerRepository {
 		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
 			const verified = await this.#verifyType(type, typeId, { questionId, userId }, session)
-			if (!verified) throw new Error('cannot answer this question')
+			if (!verified) throw new BadRequestError('cannot answer this question')
 			const newAnswer = await Answer.findOneAndUpdate(
 				{ type, typeId, userId },
 				{

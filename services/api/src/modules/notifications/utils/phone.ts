@@ -1,7 +1,7 @@
 import { isDev, termiiAPIKey } from '@utils/environment'
 import { appInstance } from '@utils/types'
 import axios from 'axios'
-import { PhoneText } from 'equipped'
+import { BadRequestError, PhoneText } from 'equipped'
 import { PhoneErrorsUseCases } from '../'
 
 const sendText = async (text: PhoneText) => {
@@ -13,7 +13,7 @@ const sendText = async (text: PhoneText) => {
 		channel: 'generic',
 		api_key: termiiAPIKey
 	}).catch((err) => {
-		throw new Error(`Failed to send text: ${err.response.data.message}`)
+		throw new BadRequestError(`Failed to send text: ${err.response.data.message}`)
 	})
 }
 

@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
+import { BadRequestError, QueryParams } from 'equipped'
 import { IConversationRepository } from '../../domain/irepositories/conversations'
 import { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
@@ -62,7 +62,7 @@ export class ConversationRepository implements IConversationRepository {
 		let res = false
 		await Conversation.collection.conn.transaction(async (session) => {
 			const conversation = await Conversation.findOneAndDelete({ _id: id, 'user.id': userId }, { session })
-			if (!conversation) throw new Error('conversation not found')
+			if (!conversation) throw new BadRequestError('conversation not found')
 			await TutorRequest.deleteMany({ conversationId: conversation.id }, { session })
 			await Message.deleteMany({ conversationId: conversation.id }, { session })
 			res = !!conversation
@@ -81,7 +81,7 @@ export class ConversationRepository implements IConversationRepository {
 			const conversation = await Conversation.findById(data.conversationId, {}, { session })
 			if (!conversation) return
 			if (conversation.user.id !== data.userId) return
-			if (!conversation.tutor) throw new Error('conversation has no tutor')
+			if (!conversation.tutor) throw new BadRequestError('conversation has no tutor')
 			res.conversation = await Conversation.findByIdAndUpdate(data.conversationId, {
 				$set: { tutor: null }
 			}, { new: true, session })

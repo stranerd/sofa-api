@@ -1,6 +1,6 @@
 import { DraftStatus } from '@modules/study'
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
+import { BadRequestError, QueryParams } from 'equipped'
 import { IQuestionRepository } from '../../domain/irepositories/questions'
 import { QuestionMapper } from '../mappers/questions'
 import { QuestionToModel } from '../models/questions'
@@ -51,7 +51,7 @@ export class QuestionRepository implements IQuestionRepository {
 		await Question.collection.conn.transaction(async (session) => {
 			const quiz = await Quiz.findById(quizId, {}, { session })
 			if (!quiz || quiz.user.id !== userId) return false
-			if (quiz.status !== DraftStatus.draft) throw new Error('cannot delete question from published quiz')
+			if (quiz.status !== DraftStatus.draft) throw new BadRequestError('cannot delete question from published quiz')
 			const question = await Question.findOneAndDelete({ _id: id, userId, quizId }, { session })
 			res = !!question
 			return res
