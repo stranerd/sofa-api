@@ -1,41 +1,18 @@
-import { generateDefaultUser } from '@modules/users'
-import { BaseEntity } from 'equipped'
-import { CoursableData, QuizMeta } from '../types'
+import { CoursableData, QuizAccess, QuizMeta } from '../types'
+import { CoursableEntity } from './coursables'
 
-export class QuizEntity extends BaseEntity implements CoursableData {
-	public readonly id: string
+export class QuizEntity extends CoursableEntity implements CoursableData {
 	public readonly questions: string[]
-	public readonly title: CoursableData['title']
-	public readonly description: CoursableData['description']
-	public readonly photo: CoursableData['photo']
-	public readonly courseId: CoursableData['courseId']
-	public readonly user: CoursableData['user']
-	public readonly topicId: CoursableData['topicId']
-	public readonly tagIds: CoursableData['tagIds']
-	public readonly status: CoursableData['status']
-	public readonly ratings: CoursableData['ratings']
 	public readonly meta: Record<QuizMeta, number>
+	public readonly access: QuizAccess
 	public readonly isForTutors: boolean
-	public readonly createdAt: number
-	public readonly updatedAt: number
 
-	constructor ({ id, title, description, photo, questions, courseId, user, topicId, tagIds, ratings, status, meta, isForTutors, createdAt, updatedAt }: QuizConstructorArgs) {
-		super()
-		this.id = id
-		this.title = title
-		this.description = description
-		this.photo = photo
-		this.questions = questions
-		this.courseId = courseId
-		this.user = generateDefaultUser(user)
-		this.topicId = topicId
-		this.tagIds = tagIds
-		this.ratings = ratings
-		this.status = status
-		this.meta = meta
-		this.isForTutors = isForTutors
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+	constructor (data: QuizConstructorArgs) {
+		super(data)
+		this.questions = data.questions
+		this.meta = data.meta
+		this.access = data.access
+		this.isForTutors = data.isForTutors
 	}
 }
 
@@ -43,6 +20,7 @@ type QuizConstructorArgs = CoursableData & {
 	id: string
 	questions: string[]
 	meta: Record<QuizMeta, number>
+	access: QuizAccess
 	isForTutors: boolean
 	createdAt: number
 	updatedAt: number

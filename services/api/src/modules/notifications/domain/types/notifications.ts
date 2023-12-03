@@ -14,6 +14,9 @@ export enum NotificationType {
 	WalletFundSuccessful = 'WalletFundSuccessful',
 	SubscriptionSuccessful = 'SubscriptionSuccessful',
 	SubscriptionFailed = 'SubscriptionFailed',
+	NewQuizAccessRequest = 'NewQuizAccessRequest',
+	QuizAccessRequestGranted = 'QuizAccessRequestGranted',
+	QuizAccessRequestRejected = 'QuizAccessRequestRejected',
 }
 
 export type NotificationData =
@@ -30,3 +33,6 @@ export type NotificationData =
 	| { type: NotificationType.WalletFundSuccessful, amount: number, currency: string }
 	| { type: NotificationType.SubscriptionSuccessful, planId: string }
 	| { type: NotificationType.SubscriptionFailed, planId: string }
+	| { type: NotificationType.NewQuizAccessRequest, userIds: string[] }
+	| { type: NotificationType.QuizAccessRequestGranted, quizId: string }
+	| { type: NotificationType.QuizAccessRequestRejected, quizId: string }

@@ -53,4 +53,12 @@ export class QuizzesUseCase {
 	async updateRatings (input: { id: string, ratings: number, add: boolean }) {
 		return await this.repository.updateRatings(input.id, input.ratings, input.add)
 	}
+
+	async requestAccess (data: { id: string, userId: string, add: boolean }) {
+		return await this.repository.requestAccess(data.id, data.userId, data.add)
+	}
+
+	async grantAccess (data: { id: string, ownerId: string, userId: string, grant: boolean }) {
+		return await this.repository.grantAccess(data.id, data.ownerId, data.userId, data.grant)
+	}
 }

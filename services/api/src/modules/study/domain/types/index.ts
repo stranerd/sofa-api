@@ -57,3 +57,8 @@ export enum CourseMeta {
 	purchases = 'purchases',
 	total = 'total'
 }
+
+export type QuizAccess = {
+	requests: string[]
+	members: string[]
+}

@@ -1,43 +1,20 @@
-import { generateDefaultUser } from '@modules/users'
-import { BaseEntity } from 'equipped'
 import { Coursable, CourseMeta, CourseSections, Publishable, Saleable } from '../types'
+import { PublishableEntity } from './coursables'
 
-export class CourseEntity extends BaseEntity implements Publishable, Saleable {
-	public readonly id: string
+export class CourseEntity extends PublishableEntity implements Publishable, Saleable {
 	public readonly coursables: { id: string, type: Coursable }[]
 	public readonly sections: CourseSections
-	public readonly title: Publishable['title']
-	public readonly description: Publishable['description']
-	public readonly photo: Publishable['photo']
-	public readonly user: Publishable['user']
-	public readonly topicId: Publishable['topicId']
-	public readonly tagIds: Publishable['tagIds']
-	public readonly ratings: Publishable['ratings']
-	public readonly status: Publishable['status']
 	public readonly frozen: Saleable['frozen']
 	public readonly price: Saleable['price']
 	public readonly meta: Record<CourseMeta, number>
-	public readonly createdAt: number
-	public readonly updatedAt: number
 
-	constructor ({ id, coursables, sections, title, description, photo, user, topicId, tagIds, ratings, status, frozen, price, meta, createdAt, updatedAt }: CourseConstructorArgs) {
-		super()
-		this.id = id
-		this.coursables = coursables
-		this.sections = sections
-		this.title = title
-		this.description = description
-		this.photo = photo
-		this.user = generateDefaultUser(user)
-		this.topicId = topicId
-		this.tagIds = tagIds
-		this.ratings = ratings
-		this.status = status
-		this.frozen = frozen
-		this.price = price
-		this.meta = meta
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+	constructor (data: CourseConstructorArgs) {
+		super(data)
+		this.coursables = data.coursables
+		this.sections = data.sections
+		this.frozen = data.frozen
+		this.price = data.price
+		this.meta = data.meta
 	}
 
 	getCoursables () {

@@ -106,4 +106,23 @@ export class QuizRepository implements IQuizRepository {
 		})
 		return res
 	}
+
+	async requestAccess(id: string, userId: string, add: boolean) {
+		const quiz = await Quiz.findOneAndUpdate({
+			_id: id, 'access.requests': { [add ? '$nin' : '$in']: userId }, 'user.id': { $ne: userId }
+		}, {
+			[add ? '$addToSet' : '$pull']: { 'access.requests': userId }
+		})
+		return !!quiz
+	}
+
+	async grantAccess(id: string, ownerId: string, userId: string, grant: boolean) {
+		const quiz = await Quiz.findByIdAndUpdate({
+			_id: id, 'user.id': ownerId, 'access.requests': { $in: userId }
+		}, {
+			$pull: { 'access.requests': userId },
+			...(grant ? { $addToSet: { 'access.members': userId } } : {})
+		})
+		return !!quiz
+	}
 }

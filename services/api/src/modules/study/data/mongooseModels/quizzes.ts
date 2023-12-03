@@ -11,6 +11,18 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>({
 		type: [String],
 		required: true
 	},
+	access: {
+		members: {
+			type: [String],
+			required: false,
+			default: () => []
+		},
+		requests: {
+			type: [String],
+			required: false,
+			default: () => []
+		}
+	},
 	meta: Object.fromEntries(
 		Object.values(QuizMeta).map((meta) => [meta, {
 			type: Number,

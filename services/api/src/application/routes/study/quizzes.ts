@@ -108,5 +108,29 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/access/request',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.requestAccess(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/access/grant',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.grantAccess(req)
+				}
+			})
+		]
 	}
 ])

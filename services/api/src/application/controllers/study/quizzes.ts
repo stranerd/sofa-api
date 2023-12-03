@@ -127,4 +127,23 @@ export class QuizController {
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
+
+	static async requestAccess (req: Request) {
+		const { add } = validate({ add: Schema.boolean() }, req.body)
+
+		const updatedQuiz = await QuizzesUseCases.requestAccess({ id: req.params.id, userId: req.authUser!.id, add })
+		if (updatedQuiz) return updatedQuiz
+		throw new NotAuthorizedError()
+	}
+
+	static async grantAccess (req: Request) {
+		const { userId, grant } = validate({
+			userId: Schema.string().min(1),
+			grant: Schema.boolean()
+		}, req.body)
+
+		const updatedQuiz = await QuizzesUseCases.grantAccess({ id: req.params.id, ownerId: req.authUser!.id, userId, grant })
+		if (updatedQuiz) return updatedQuiz
+		throw new NotAuthorizedError()
+	}
 }
