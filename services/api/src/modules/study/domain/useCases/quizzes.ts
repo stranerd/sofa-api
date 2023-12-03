@@ -61,4 +61,8 @@ export class QuizzesUseCase {
 	async grantAccess (data: { id: string, ownerId: string, userId: string, grant: boolean }) {
 		return await this.repository.grantAccess(data.id, data.ownerId, data.userId, data.grant)
 	}
+
+	async addMembers (data: { id: string, ownerId: string, userIds: string[], grant: boolean }) {
+		return await this.repository.addMembers(data.id, data.ownerId, data.userIds, data.grant)
+	}
 }

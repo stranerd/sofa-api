@@ -17,4 +17,5 @@ export interface IQuizRepository {
 	updateRatings (id: string, ratings: number, add: boolean): Promise<boolean>
 	requestAccess (id: string, userId: string, add: boolean): Promise<boolean>
 	grantAccess (id: string, ownerId: string, userId: string, grant: boolean): Promise<boolean>
+	addMembers (id: string, ownerId: string, userIds: string[], grant: boolean): Promise<boolean>
 }

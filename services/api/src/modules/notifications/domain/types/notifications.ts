@@ -17,6 +17,8 @@ export enum NotificationType {
 	NewQuizAccessRequest = 'NewQuizAccessRequest',
 	QuizAccessRequestGranted = 'QuizAccessRequestGranted',
 	QuizAccessRequestRejected = 'QuizAccessRequestRejected',
+	QuizAccessMemberGranted = 'QuizAccessMemberGranted',
+	QuizAccessMemberRebuked = 'QuizAccessMemberRebuked',
 }
 
 export type NotificationData =
@@ -36,3 +38,5 @@ export type NotificationData =
 	| { type: NotificationType.NewQuizAccessRequest, userIds: string[] }
 	| { type: NotificationType.QuizAccessRequestGranted, quizId: string }
 	| { type: NotificationType.QuizAccessRequestRejected, quizId: string }
+	| { type: NotificationType.QuizAccessMemberGranted, quizId: string }
+	| { type: NotificationType.QuizAccessMemberRebuked, quizId: string }

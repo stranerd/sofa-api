@@ -146,4 +146,23 @@ export class QuizController {
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
+
+	static async addMembers (req: Request) {
+		const { userIds, grant } = validate({
+			userIds: Schema.array(Schema.string().min(1)).min(1),
+			grant: Schema.boolean()
+		}, req.body)
+
+		if (grant) {
+			const users = await UsersUseCases.get({
+				where: [{ field: 'id', value: userIds, condition: Conditions.in }]
+			})
+			const activeUsers = users.results.filter((u) => !u.isDeleted())
+			if (userIds.length !== activeUsers.length) throw new BadRequestError('some users not found')
+		}
+
+		const updatedQuiz = await QuizzesUseCases.addMembers({ id: req.params.id, ownerId: req.authUser!.id, userIds, grant })
+		if (updatedQuiz) return updatedQuiz
+		throw new NotAuthorizedError()
+	}
 }

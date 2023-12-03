@@ -132,5 +132,17 @@ export const quizzesRoutes = groupRoutes('/quizzes', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/access/members/manage',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await QuizController.addMembers(req)
+				}
+			})
+		]
 	}
 ])

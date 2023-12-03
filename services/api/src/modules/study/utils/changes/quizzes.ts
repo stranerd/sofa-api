@@ -43,11 +43,14 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			property: UserMeta.publishedQuizzes
 		})
 
-		if (changes.access?.requests) {
+		if (changes.access) {
 			const newRequests = after.access.requests.filter((r) => !before.access.requests.includes(r))
 			const oldRequests = before.access.requests.filter((r) => !after.access.requests.includes(r))
 			const accepted = oldRequests.filter((r) => after.access.members.includes(r))
 			const rejected = oldRequests.filter((r) => !after.access.members.includes(r))
+			const added = after.access.members.filter((m) => !before.access.members.includes(m))
+				.filter((m) => !accepted.includes(m))
+			const removed = before.access.members.filter((m) => !after.access.members.includes(m))
 			if (newRequests.length) await sendNotification([after.user.id], {
 				title: 'New Quiz Edit Request',
 				body: `Someone just requested access to edit your quiz: ${after.title}`,
@@ -65,6 +68,18 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 				body: `Your request to edit ${after.title} has been rejected`,
 				sendEmail: true,
 				data: { type: NotificationType.QuizAccessRequestRejected, quizId: after.id }
+			})
+			if (added.length) await sendNotification(added, {
+				title: 'Quiz Edit Request Granted',
+				body: `You have been granted access to edit ${after.title}`,
+				sendEmail: true,
+				data: { type: NotificationType.QuizAccessMemberGranted, quizId: after.id }
+			})
+			if (removed.length) await sendNotification(removed, {
+				title: 'Quiz Edit Request Rebuked',
+				body: `Your access to edit ${after.title} has been rebuked`,
+				sendEmail: true,
+				data: { type: NotificationType.QuizAccessMemberRebuked, quizId: after.id }
 			})
 		}
 	},
