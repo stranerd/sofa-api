@@ -4,7 +4,7 @@ import { NotAuthorizedError, QueryParams, Request, Schema, validate, Validation 
 
 export class QuestionController {
 	private static schema = (body: Record<string, any>) => ({
-		question: Schema.string().min(1).addRule((val) => {
+		question: Schema.string().min(1, true).addRule((val) => {
 			const value = val as string
 			const types = [QuestionTypes.fillInBlanks, QuestionTypes.dragAnswers]
 			if (!types.includes(body?.data?.type ?? '')) return Validation.isValid(value)
@@ -16,7 +16,7 @@ export class QuestionController {
 		data: Schema.discriminate((d) => d.type, {
 			[QuestionTypes.multipleChoice]: Schema.object({
 				type: Schema.is(QuestionTypes.multipleChoice as const),
-				options: Schema.array(Schema.string().min(1)).min(2).max(6),
+				options: Schema.array(Schema.string().min(1, true)).min(2).max(6),
 				answers: Schema.array(Schema.number().gte(0).round()).min(1).set()
 			}).custom((value) => {
 				const length = value?.options?.length ?? 1
@@ -28,25 +28,33 @@ export class QuestionController {
 			}),
 			[QuestionTypes.writeAnswer]: Schema.object({
 				type: Schema.is(QuestionTypes.writeAnswer as const),
-				answers: Schema.array(Schema.string().min(1)).min(1).max(6)
+				answers: Schema.array(Schema.string().min(1, true)).min(1).max(6)
 			}),
 			[QuestionTypes.fillInBlanks]: Schema.object({
-				type: Schema.in([QuestionTypes.fillInBlanks, QuestionTypes.dragAnswers] as const),
+				type: Schema.is(QuestionTypes.fillInBlanks as const),
 				indicator: Schema.string().min(1),
-				answers: Schema.array(Schema.string().min(1)).min(1)
+				answers: Schema.array(Schema.string().min(1, true)).min(1)
+			}).custom((value) => {
+				const length = body?.question?.split(value.indicator).length ?? 1
+				return Schema.array(Schema.any()).has(length - 1).parse(value.answers).valid
+			}),
+			[QuestionTypes.dragAnswers]: Schema.object({
+				type: Schema.is(QuestionTypes.dragAnswers as const),
+				indicator: Schema.string().min(1),
+				answers: Schema.array(Schema.string().min(1, true)).min(1)
 			}).custom((value) => {
 				const length = body?.question?.split(value.indicator).length ?? 1
 				return Schema.array(Schema.any()).has(length - 1).parse(value.answers).valid
 			}),
 			[QuestionTypes.sequence]: Schema.object({
 				type: Schema.is(QuestionTypes.sequence as const),
-				answers: Schema.array(Schema.string().min(1)).min(2).max(6)
+				answers: Schema.array(Schema.string().min(1, true)).min(2).max(6)
 			}),
 			[QuestionTypes.match]: Schema.object({
 				type: Schema.is(QuestionTypes.match as const),
 				set: Schema.array(Schema.object({
-					q: Schema.string().min(1),
-					a: Schema.string().min(1)
+					q: Schema.string().min(1, true),
+					a: Schema.string().min(1, true)
 				})).min(2).max(10)
 			})
 		})
