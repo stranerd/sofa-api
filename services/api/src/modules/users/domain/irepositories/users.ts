@@ -42,4 +42,6 @@ export interface IUserRepository {
 	updateLocation (userId: string, location: UserLocation): Promise<UserEntity | null>
 
 	updateSettings (userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
+
+	updateEditing (userId: string, editing: Partial<UserAccount['editing']>): Promise<UserEntity | null>
 }

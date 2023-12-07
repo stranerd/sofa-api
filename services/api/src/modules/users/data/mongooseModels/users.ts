@@ -117,6 +117,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 				required: false,
 				default: true
 			}
+		},
+		editing: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: () => ({})
 		}
 	},
 	type: {

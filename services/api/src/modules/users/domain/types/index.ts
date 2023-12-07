@@ -42,6 +42,9 @@ export type UserAccount = {
 	settings: {
 		notifications: boolean
 	}
+	editing: {
+		quizzes: { id: string, questionId: string } | null
+	}
 }
 
 export type EmbeddedUser = {

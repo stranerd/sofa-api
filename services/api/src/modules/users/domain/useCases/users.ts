@@ -88,4 +88,8 @@ export class UsersUseCase {
 	async updateSettings (params: { userId: string, settings: Partial<UserAccount['settings']>; }) {
 		return await this.repository.updateSettings(params.userId, params.settings)
 	}
+
+	async updateEditing (params: { userId: string, editing: Partial<UserAccount['editing']> }) {
+		return await this.repository.updateEditing(params.userId, params.editing)
+	}
 }

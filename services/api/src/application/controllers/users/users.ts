@@ -1,5 +1,6 @@
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UploaderUseCases } from '@modules/storage'
+import { Coursable, canAccessCoursable } from '@modules/study'
 import { UserSchoolType, UserSocials, UserType, UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -145,6 +146,24 @@ export class UsersController {
 		}, req.body)
 
 		const updated = await UsersUseCases.updateLocation({ userId: req.authUser!.id, location })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async updateEditingQuizzes (req: Request) {
+		const { quizzes } = validate({
+			quizzes: Schema.object({
+				id: Schema.string().min(1),
+				questionId: Schema.string().min(1),
+			}).nullable()
+		}, req.body)
+
+		if (quizzes) {
+			const hasAccess = await canAccessCoursable(Coursable.quiz, quizzes.id, req.authUser!)
+			if (!hasAccess) throw new NotAuthorizedError('cannot access this quiz')
+		}
+
+		const updated = await UsersUseCases.updateEditing({ userId: req.authUser!.id, editing: { quizzes } })
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}

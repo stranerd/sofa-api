@@ -96,9 +96,10 @@ export class UserRepository implements IUserRepository {
 
 	async updateUserStatus (userId: string, socketId: string, add: boolean) {
 		let res = false
+		const data = add ? {} : { 'account.editing.quizzes': null }
 		await User.collection.conn.transaction(async (session) => {
 			const user = await User.findByIdAndUpdate(userId, {
-				$set: { 'status.lastUpdatedAt': Date.now() },
+				$set: { 'status.lastUpdatedAt': Date.now(), ...data },
 				[add ? '$addToSet' : '$pull']: { 'status.connections': socketId }
 			}, { session, new: true })
 			if (!user) return false
@@ -111,7 +112,7 @@ export class UserRepository implements IUserRepository {
 
 	async resetAllUsersStatus () {
 		const res = await User.updateMany({}, {
-			$set: { 'status.connections': [] }
+			$set: { 'status.connections': [], 'account.editing.quizzes': null }
 		})
 		return !!res.acknowledged
 	}
@@ -197,6 +198,15 @@ export class UserRepository implements IUserRepository {
 				.map(([key, value]) => [`account.settings.${key}`, value])
 		)
 		const user = await User.findByIdAndUpdate(userId, { $set: settings }, { new: true })
+		return this.mapper.mapFrom(user)
+	}
+
+	async updateEditing (userId: string, editing: Partial<UserAccount['editing']>) {
+		editing = Object.fromEntries(
+			Object.entries(editing)
+				.map(([key, value]) => [`account.editing.${key}`, value])
+		)
+		const user = await User.findByIdAndUpdate(userId, { $set: editing }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
 }
