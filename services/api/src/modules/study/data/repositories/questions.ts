@@ -55,7 +55,7 @@ export class QuestionRepository implements IQuestionRepository {
 		let res = false
 		await Question.collection.conn.transaction(async (session) => {
 			const quiz = await Quiz.findById(quizId, {}, { session })
-			if (!quiz || quiz.user.id !== userId) return false
+			if (!quiz|| !quiz.access.members.concat(quiz.user.id).includes(userId)) return false
 			if (quiz.status !== DraftStatus.draft) throw new BadRequestError('cannot delete question from published quiz')
 			const question = await Question.findOneAndDelete({ _id: id, userId, quizId }, { session })
 			res = !!question

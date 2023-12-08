@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { canAccessCoursable, Coursable, QuestionsUseCases, QuestionTypes, QuizzesUseCases } from '@modules/study'
+import { canAccessCoursable, Coursable, QuestionsUseCases, QuestionTypes } from '@modules/study'
 import { NotAuthorizedError, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
 export class QuestionController {
@@ -101,12 +101,12 @@ export class QuestionController {
 			quizId: Schema.string().min(1)
 		}, { ...req.body, quizId: req.params.quizId, questionMedia: req.files.photo?.at(0) ?? null })
 
-		const quiz = await QuizzesUseCases.find(data.quizId)
-		if (!quiz || quiz.user.id !== req.authUser!.id) throw new NotAuthorizedError()
+		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)
+		if (!hasAccess) throw new NotAuthorizedError()
 
 		const questionMedia = data.questionMedia ? await UploaderUseCases.upload('study/questions', data.questionMedia) : null
 
-		return await QuestionsUseCases.add({ ...data, questionMedia, userId: quiz.user.id, quizId: quiz.id })
+		return await QuestionsUseCases.add({ ...data, questionMedia, userId: hasAccess.user.id, quizId: hasAccess.id })
 	}
 
 	static async delete (req: Request) {
