@@ -17,7 +17,6 @@ export class QuizController {
 	static async find (req: Request) {
 		const quiz = await QuizzesUseCases.find(req.params.id)
 		if (!quiz) return null
-		if (quiz.user.id !== req.authUser?.id && quiz.status !== DraftStatus.published) return null
 		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
 		if (!isAdmin && quiz.isForTutors) return null
 		return quiz
@@ -30,6 +29,7 @@ export class QuizController {
 			authType: QueryKeys.or,
 			auth: [
 				{ field: 'topicId', value: quiz.topicId },
+				{ field: 'status', value: DraftStatus.published },
 				{ field: 'tagIds', condition: Conditions.in, value: quiz.tagIds }
 			],
 			limit: 10
@@ -40,20 +40,14 @@ export class QuizController {
 	static async get (req: Request) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
-		query.auth = [
-			{ field: 'isForTutors', value: false },
-			{ condition: QueryKeys.or, value: [{ field: 'status', value: DraftStatus.published }, ...(req.authUser ? [{ field: 'user.id', value: req.authUser.id }] : []) ] }
-		]
+		query.auth = [{ field: 'isForTutors', value: false }]
 		return await QuizzesUseCases.get(query)
 	}
 
 	static async getForTutors (req: Request) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
-		query.auth = [
-			{ field: 'isForTutors', value: true },
-			{ condition: QueryKeys.or, value: [{ field: 'status', value: DraftStatus.published }, ...(req.authUser ? [{ field: 'user.id', value: req.authUser.id }] : []) ] }
-		]
+		query.auth = [{ field: 'isForTutors', value: true }]
 		return await QuizzesUseCases.get(query)
 	}
 

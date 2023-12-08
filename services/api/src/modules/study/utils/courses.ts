@@ -14,10 +14,10 @@ type Type<T extends Coursable> = Awaited<ReturnType<typeof finders[T]['find']>>
 export const canAccessCoursable = async<T extends Coursable> (type: T, coursableId: string, user: AuthUser): Promise<Type<T> | null> => {
 	const coursable = await finders[type]?.find(coursableId) ?? null
 	if (!coursable) return null
-	// current user as an admin can access tutor quizzes
-	if (coursable instanceof QuizEntity && coursable.isForTutors && user.roles[AuthRole.isAdmin]) return coursable as Type<T>
 	// current user owns the item
 	if (coursable.user.id === user.id) return coursable as Type<T>
+	// current user as an admin can access tutor quizzes
+	if (coursable instanceof QuizEntity && coursable.isForTutors && user.roles[AuthRole.isAdmin]) return coursable as Type<T>
 	// current user has been granted access
 	if (coursable instanceof QuizEntity && coursable.access.members.includes(user.id)) return coursable as Type<T>
 	// owner of the item has not published yet

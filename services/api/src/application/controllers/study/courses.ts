@@ -20,8 +20,6 @@ export class CourseController {
 
 	static async find (req: Request) {
 		const course = await CoursesUseCases.find(req.params.id)
-		if (!course) return null
-		if (course.user.id !== req.authUser?.id && course.status !== DraftStatus.published) return null
 		return course
 	}
 
@@ -32,7 +30,8 @@ export class CourseController {
 			authType: QueryKeys.or,
 			auth: [
 				{ field: 'topicId', value: course.topicId },
-				{ field: 'tagIds', condition: Conditions.in, value: course.tagIds }
+				{ field: 'status',  value: DraftStatus.published },
+				{ field: 'tagIds', condition: Conditions.in, value: course.tagIds },
 			],
 			limit: 10
 		})
@@ -41,9 +40,6 @@ export class CourseController {
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [
-			{ condition: QueryKeys.or, value: [{ field: 'status', value: DraftStatus.published }, ...(req.authUser ? [{ field: 'user.id', value: req.authUser.id }] : []) ] }
-		]
 		return await CoursesUseCases.get(query)
 	}
 
