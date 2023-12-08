@@ -27,7 +27,7 @@ export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromMo
 			const user = await UsersUseCases.find(after.userId)
 			if (user) {
 				const content = await readEmailFromPug('emails/newNotification.pug', {
-					notification: after, meta: { link: clientDomain }
+					notification: after, meta: { link: `${clientDomain}${after.link}` }
 				})
 				await publishers.SENDMAIL.publish({
 					from: EmailsList.NO_REPLY, to: user.bio.email, subject: after.title,

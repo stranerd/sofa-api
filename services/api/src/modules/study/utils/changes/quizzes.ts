@@ -55,7 +55,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 				title: 'New Quiz Edit Request',
 				body: `Someone just requested access to edit your quiz: ${after.title}`,
 				sendEmail: true,
-				data: { type: NotificationType.NewQuizAccessRequest, userIds: newRequests }
+				data: { type: NotificationType.NewQuizAccessRequest, quizId: after.id, userIds: newRequests }
 			})
 			if (accepted.length) await sendNotification(accepted, {
 				title: 'Quiz Edit Request Granted',

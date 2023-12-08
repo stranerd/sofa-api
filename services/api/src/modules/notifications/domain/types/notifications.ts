@@ -35,7 +35,7 @@ export type NotificationData =
 	| { type: NotificationType.WalletFundSuccessful, amount: number, currency: string }
 	| { type: NotificationType.SubscriptionSuccessful, planId: string }
 	| { type: NotificationType.SubscriptionFailed, planId: string }
-	| { type: NotificationType.NewQuizAccessRequest, userIds: string[] }
+	| { type: NotificationType.NewQuizAccessRequest, quizId: string, userIds: string[] }
 	| { type: NotificationType.QuizAccessRequestGranted, quizId: string }
 	| { type: NotificationType.QuizAccessRequestRejected, quizId: string }
 	| { type: NotificationType.QuizAccessMemberGranted, quizId: string }

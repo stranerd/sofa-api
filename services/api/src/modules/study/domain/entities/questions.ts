@@ -35,7 +35,7 @@ export class QuestionEntity extends BaseEntity {
 	strip () {
 		return {
 			...this.toJSON(),
-			explanation: undefined,
+			explanation: '',
 			data: this.strippedData,
 		}
 	}
