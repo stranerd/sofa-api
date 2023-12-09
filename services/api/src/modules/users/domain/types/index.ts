@@ -76,6 +76,8 @@ export enum UserMeta {
 
 	students = 'students',
 	teachers = 'teachers',
+	classes = 'classes',
+	lessons = 'lessons',
 
 	total = 'total'
 }
