@@ -1,15 +1,15 @@
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, QuestionsUseCases, QuestionTypes } from '@modules/study'
-import { NotAuthorizedError, QueryParams, Request, Schema, validate, Validation } from 'equipped'
+import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class QuestionController {
 	private static schema = (body: Record<string, any>) => ({
-		question: Schema.string().min(1, true).addRule((val) => {
+		question: Schema.string().min(1, true).custom((val) => {
 			const value = val as string
 			const types = [QuestionTypes.fillInBlanks, QuestionTypes.dragAnswers]
-			if (!types.includes(body?.data?.type ?? '')) return Validation.isValid(value)
-			return value.includes(body?.data?.indicator ?? '') ? Validation.isValid(value) : Validation.isInvalid(['must contain the indicator'], value)
-		}),
+			if (!types.includes(body?.data?.type ?? '')) return true
+			return value.includes(body?.data?.indicator ?? '')
+		}, 'must contain the indicator'),
 		explanation: Schema.string(),
 		questionMedia: Schema.file().image().nullable(),
 		timeLimit: Schema.number().gt(0).lte(300).round(),

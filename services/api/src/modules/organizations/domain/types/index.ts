@@ -11,3 +11,8 @@ export type AnnouncementFilter = {
 	lessonId: string | null
 	userType: MemberTypes | null
 }
+
+export type ScheduleTime = {
+	start: number
+	end: number
+}

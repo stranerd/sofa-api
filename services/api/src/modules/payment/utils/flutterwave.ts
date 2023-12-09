@@ -77,7 +77,7 @@ export class FlutterwavePayment {
 
 	static async convertAmount (amount: number, from: Currencies, to: Currencies) {
 		if (from === to) return amount
-		// WARN: flutterwave expects 1000 USD to NGN to have destination as USD and source as NGN, weird right
+		// flutterwave expects 1000 USD to NGN to have destination as USD and source as NGN, weird right
 		const res = await axios.get(`/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`)
 			.catch(() => null)
 		// TODO: figure whether to throw, and consequences of throwing in background process

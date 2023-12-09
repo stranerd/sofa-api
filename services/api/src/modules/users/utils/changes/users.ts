@@ -1,6 +1,6 @@
 import { ConversationsUseCases, TutorRequestsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases } from '@modules/interactions'
-import { AnnouncementsUseCases, ClassesUseCases, MembersUseCases } from '@modules/organizations'
+import { AnnouncementsUseCases, ClassesUseCases, MembersUseCases, SchedulesUseCases } from '@modules/organizations'
 import { GamesUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { publishers } from '@utils/events'
@@ -36,7 +36,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			GamesUseCases,
 			CoursesUseCases, FoldersUseCases, QuizzesUseCases, FilesUseCases,
 			ConnectsUseCases,
-			AnnouncementsUseCases, ClassesUseCases, MembersUseCases,
+			AnnouncementsUseCases, ClassesUseCases, MembersUseCases, SchedulesUseCases
 		].map(async (useCase) => await useCase.updateUserBio(after.getEmbedded())))
 
 		if (changes.dates?.deletedAt && after.dates.deletedAt && !before.dates.deletedAt) await MembersUseCases.deleteByEmail(after.bio.email)
