@@ -14,8 +14,8 @@ export class ClassesUseCase {
 		return await this.repository.add(data)
 	}
 
-	async delete (data: { id: string, userId: string }) {
-		return await this.repository.delete(data.id, data.userId)
+	async delete (data: { id: string, organizationId: string }) {
+		return await this.repository.delete(data.id, data.organizationId)
 	}
 
 	async find (classId: string) {
@@ -26,8 +26,8 @@ export class ClassesUseCase {
 		return await this.repository.get(query)
 	}
 
-	async update (input: { id: string, userId: string, data: Partial<ClassToModel> }) {
-		return await this.repository.update(input.id, input.userId, input.data)
+	async update (input: { id: string, organizationId: string, data: Partial<ClassToModel> }) {
+		return await this.repository.update(input.id, input.organizationId, input.data)
 	}
 
 	async updateUserBio (user: EmbeddedUser) {

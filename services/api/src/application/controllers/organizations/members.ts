@@ -1,4 +1,4 @@
-import { MemberTypes, MembersUseCases, canAccessOrg } from '@modules/organizations'
+import { MemberTypes, MembersUseCases, canAccessOrgMembers } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -36,6 +36,9 @@ export class MembersController {
 			all: true
 		})
 
+		const hasAccess = await canAccessOrgMembers(req.authUser!, req.params.organizationId)
+		if (!hasAccess) throw new NotAuthorizedError()
+
 		return await MembersUseCases.add({
 			organizationId: req.params.organizationId,
 			members: emails.map((email) => ({
@@ -71,10 +74,10 @@ export class MembersController {
 			type: Schema.in(Object.values(MemberTypes))
 		}, req.body)
 
-		const hasAccess = await canAccessOrg(req.authUser!.id, req.params.organizationId)
+		const hasAccess = await canAccessOrgMembers(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()
 
-		return await MembersUseCases.accept({ organizationId: hasAccess.id, email, accept, type })
+		return await MembersUseCases.accept({ organizationId: req.params.organizationId, email, accept, type })
 	}
 
 	static async leave (req: Request) {
@@ -93,11 +96,10 @@ export class MembersController {
 			type: Schema.in(Object.values(MemberTypes))
 		}, req.body)
 
-		const hasAccess = await canAccessOrg(req.authUser!.id, req.params.organizationId)
+		const hasAccess = await canAccessOrgMembers(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()
 
-		const deleted = await MembersUseCases.remove({ email, type, organizationId: hasAccess.id })
-
+		const deleted = await MembersUseCases.remove({ email, type, organizationId: req.params.organizationId })
 		if (deleted) return deleted
 		throw new NotAuthorizedError()
 	}

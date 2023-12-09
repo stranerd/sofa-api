@@ -25,6 +25,10 @@ const ClassSchema = new appInstance.dbs.mongo.Schema<ClassFromModel>({
 		required: false,
 		default: null
 	},
+	user: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
 	frozen: {
 		type: Boolean,
 		required: false,

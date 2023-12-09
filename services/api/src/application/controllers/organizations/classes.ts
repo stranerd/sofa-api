@@ -1,7 +1,8 @@
-import { ClassesUseCases, canAccessOrg } from '@modules/organizations'
+import { ClassesUseCases, canModOrgs } from '@modules/organizations'
 import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
-import { NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { UsersUseCases } from '@modules/users'
+import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ClassController {
 	private static schema = () => ({
@@ -33,10 +34,13 @@ export class ClassController {
 
 		const { title, description } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
+		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
+		if (!hasAccess) throw new NotAuthorizedError()
+
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('organizations/classes', uploadedPhoto) : undefined
 
 		const updatedClass = await ClassesUseCases.update({
-			id: req.params.id, userId: req.authUser!.id,
+			id: req.params.id, organizationId: req.params.organizationId,
 			data: {
 				title, description,
 				...(changedPhoto ? { photo } : {})
@@ -49,21 +53,23 @@ export class ClassController {
 	static async create (req: Request) {
 		const data = validate(this.schema(), { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
-		const hasAccess = await canAccessOrg(req.authUser!.id, req.params.organizationId)
+		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		const photo = data.photo ? await UploaderUseCases.upload('organizations/classes', data.photo) : null
 
-		const classIns = await ClassesUseCases.add({
-			...data, photo, user: hasAccess.getEmbedded(), frozen: false,
-			organizationId: hasAccess.id,
+		return await ClassesUseCases.add({
+			...data, photo, user: user.getEmbedded(), frozen: false,
+			organizationId: req.params.organizationId,
 		})
-
-		return classIns
 	}
 
 	static async delete (req: Request) {
-		const isDeleted = await ClassesUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
+		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
+		if (!hasAccess) throw new NotAuthorizedError()
+		const isDeleted = await ClassesUseCases.delete({ id: req.params.id, organizationId: req.params.organizationId })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}

@@ -1,6 +1,7 @@
 import { canAccessConversation } from '@modules/conversations'
+import { canAccessOrgClasses, canAccessOrgMembers } from '@modules/organizations'
 import { PlayTypes } from '@modules/plays'
-import { canAccessCoursable, Coursable } from '@modules/study'
+import { Coursable, canAccessCoursable } from '@modules/study'
 import { appInstance } from '@utils/types'
 import { AuthRole, OnJoinFn } from 'equipped'
 
@@ -19,10 +20,15 @@ export const registerSockets = () => {
 		if (!quizId || !data.user) return null
 		return (await canAccessCoursable(Coursable.quiz, quizId, data.user)) ? await isOpen(data, params) : null
 	}
-	const organizationsCb: OnJoinFn = async (data, params) => {
+	const orgMembersCb: OnJoinFn = async (data, params) => {
 		const { organizationId = null } = params
 		if (!organizationId || !data.user) return null
-		return organizationId === data.user.id ? await isOpen(data, params) : `${data.channel}/${data.user.email}}`
+		return (await canAccessOrgMembers(data.user, organizationId)) ? await isOpen(data, params) : `${data.channel}/${data.user.email}}`
+	}
+	const orgClassesCb: OnJoinFn = async (data, params) => {
+		const { organizationId = null, classId = null } = params
+		if (!organizationId || !classId || !data.user) return null
+		return (await canAccessOrgClasses(data.user, organizationId, classId)) ? await isOpen(data, params) : null
 	}
 
 	appInstance.listener
@@ -39,8 +45,9 @@ export const registerSockets = () => {
 
 		.register('notifications/notifications', isMine)
 
+		.register('organizations/:organizationId/members', orgMembersCb)
 		.register('organizations/:organizationId/classes', isOpen)
-		.register('organizations/:organizationId/members', organizationsCb)
+		.register('organizations/:organizationId/classes/:classId/announcements', orgClassesCb)
 
 		.register('payment/methods', isMine)
 		.register('payment/purchases', isMine)
