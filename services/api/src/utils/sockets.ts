@@ -39,6 +39,8 @@ export const registerSockets = () => {
 
 		.register('notifications/notifications', isMine)
 
+		.register('organizations/:organizationId/members', organizationsCb)
+
 		.register('payment/methods', isMine)
 		.register('payment/purchases', isMine)
 		.register('payment/plans', isOpen)
@@ -65,7 +67,7 @@ export const registerSockets = () => {
 		.register('users/users', isOpen)
 		.register('users/verifications', isOpen)
 		.register('users/tutorRequests', isOpen)
-		.register('users/organizations/:organizationId/members', organizationsCb)
+
 
 	Object.values(PlayTypes)
 		.forEach((type) => appInstance.listener.register(`plays/${type}/:typeId/answers`, isOpen))

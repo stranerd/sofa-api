@@ -1,25 +1,21 @@
 import { ConnectRepository } from './data/repositories/connects'
+import { TutorRequestRepository } from './data/repositories/tutorRequests'
 import { UserRepository } from './data/repositories/users'
 import { VerificationRepository } from './data/repositories/verifications'
-import { TutorRequestRepository } from './data/repositories/tutorRequests'
-import { OrganizationMemberRepository } from './data/repositories/organizationMembers'
 import { ConnectsUseCase } from './domain/useCases/connects'
+import { TutorRequestsUseCase } from './domain/useCases/tutorRequests'
 import { UsersUseCase } from './domain/useCases/users'
 import { VerificationsUseCase } from './domain/useCases/verifications'
-import { TutorRequestsUseCase } from './domain/useCases/tutorRequests'
-import { OrganizationMembersUseCase } from './domain/useCases/organizationMembers'
 
 const userRepository = UserRepository.getInstance()
 const connectRepository = ConnectRepository.getInstance()
 const verificationRepository = VerificationRepository.getInstance()
 const tutorRequestRepository = TutorRequestRepository.getInstance()
-const organizationMemberRepository = OrganizationMemberRepository.getInstance()
 
 export const UsersUseCases = new UsersUseCase(userRepository)
 export const ConnectsUseCases = new ConnectsUseCase(connectRepository)
 export const VerificationsUseCases = new VerificationsUseCase(verificationRepository)
 export const TutorRequestsUseCases = new TutorRequestsUseCase(tutorRequestRepository)
-export const OrganizationMembersUseCases = new OrganizationMembersUseCase(organizationMemberRepository)
 
-export { generateDefaultUser, UserEntity } from './domain/entities/users'
-export { EmbeddedUser, ScoreRewards, UserMeta, UserRankings, UserSchoolType, UserType, UserSocials } from './domain/types'
+export { UserEntity, generateDefaultUser } from './domain/entities/users'
+export { EmbeddedUser, ScoreRewards, UserMeta, UserRankings, UserSchoolType, UserSocials, UserType } from './domain/types'

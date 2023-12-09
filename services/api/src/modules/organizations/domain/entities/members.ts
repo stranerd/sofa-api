@@ -1,8 +1,11 @@
 import { BaseEntity } from 'equipped'
+import { MemberTypes } from '../types'
 
-export class OrganizationMemberEntity extends BaseEntity {
+export class MemberEntity extends BaseEntity {
 	public readonly id: string
 	public readonly email: string
+	public readonly userId: string | null
+	public readonly type: MemberTypes
 	public readonly organizationId: string
 	public readonly pending: boolean
 	public readonly withCode: boolean
@@ -10,10 +13,12 @@ export class OrganizationMemberEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, email, organizationId, pending, withCode, accepted, createdAt, updatedAt }: OrganizationMemberConstructorArgs) {
+	constructor ({ id, email, userId, type, organizationId, pending, withCode, accepted, createdAt, updatedAt }: MemberConstructorArgs) {
 		super()
 		this.id = id
 		this.email = email
+		this.userId = userId
+		this.type = type
 		this.organizationId = organizationId
 		this.pending = pending
 		this.withCode = withCode
@@ -23,9 +28,11 @@ export class OrganizationMemberEntity extends BaseEntity {
 	}
 }
 
-type OrganizationMemberConstructorArgs = {
+type MemberConstructorArgs = {
 	id: string
 	email: string
+	userId: string | null
+	type: MemberTypes
 	organizationId: string
 	pending: boolean
 	withCode: boolean

@@ -3,12 +3,10 @@ import { connectsRoutes } from './connects'
 import { usersRoutes } from './users'
 import { tutorRequestsRoutes } from './tutorRequests'
 import { verificationsRoutes } from './verifications'
-import { organizationMembersRoutes } from './organizationMembers'
 
 export const userRoutes = groupRoutes('/users', [
 	...connectsRoutes,
 	...usersRoutes,
 	...tutorRequestsRoutes,
 	...verificationsRoutes,
-	...organizationMembersRoutes,
 ])

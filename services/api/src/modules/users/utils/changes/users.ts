@@ -1,11 +1,12 @@
 import { ConversationsUseCases, TutorRequestsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases } from '@modules/interactions'
+import { MembersUseCases } from '@modules/organizations'
 import { GamesUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
-import { ConnectsUseCases, OrganizationMembersUseCases, UsersUseCases } from '../../'
+import { ConnectsUseCases, UsersUseCases } from '../../'
 import { UserFromModel } from '../../data/models/users'
 import { UserEntity } from '../../domain/entities/users'
 
@@ -13,7 +14,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 	created: async ({ after }) => {
 		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)
 
-		const { results: members } = await OrganizationMembersUseCases.get({
+		const { results: members } = await MembersUseCases.get({
 			where: [{ field: 'email', value: after.bio.email }]
 		})
 

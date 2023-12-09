@@ -1,4 +1,5 @@
-import { OrganizationMembersUseCases, UserEntity, UsersUseCases } from '@modules/users'
+import { MembersUseCases } from '@modules/organizations'
+import { UserEntity, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
 import { NotificationType, sendNotification } from '@modules/notifications'
@@ -110,6 +111,6 @@ export const renewSubscription = async (userId: string) => {
 }
 
 export const updateOrgsMembersDays = async () => {
-	const records = await OrganizationMembersUseCases.aggregateOrgMembersDays()
+	const records = await MembersUseCases.aggregateMembersDays()
 	await WalletsUseCases.updateMembersDays(records)
 }

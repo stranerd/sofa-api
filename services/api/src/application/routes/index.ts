@@ -3,6 +3,7 @@ import { conversationRoutes } from './conversations'
 import { interactionRoutes } from './interactions'
 import { metaRoutes } from './meta'
 import { notificationRoutes } from './notifications'
+import { organizationsRoutes } from './organizations'
 import { paymentRoutes } from './payment'
 import { playRoutes } from './plays'
 import { schoolRoutes } from './school'
@@ -15,6 +16,7 @@ export const routes = [
 	...interactionRoutes,
 	...metaRoutes,
 	...notificationRoutes,
+	...organizationsRoutes,
 	...paymentRoutes,
 	...playRoutes,
 	...schoolRoutes,

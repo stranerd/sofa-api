@@ -1,9 +1,10 @@
 import { appInstance } from '@utils/types'
-import { OrganizationMemberDbChangeCallbacks } from '../../utils/changes/organizationMembers'
-import { OrganizationMemberMapper } from '../mappers/organizationMembers'
-import { OrganizationMemberFromModel } from '../models/organizationMembers'
+import { MemberTypes } from '../../domain/types'
+import { MemberDbChangeCallbacks } from '../../utils/changes/members'
+import { MemberMapper } from '../mappers/members'
+import { MemberFromModel } from '../models/members'
 
-const OrganizationMemberSchema = new appInstance.dbs.mongo.Schema<OrganizationMemberFromModel>({
+const MemberSchema = new appInstance.dbs.mongo.Schema<MemberFromModel>({
 	_id: {
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
@@ -11,6 +12,16 @@ const OrganizationMemberSchema = new appInstance.dbs.mongo.Schema<OrganizationMe
 	email: {
 		type: String,
 		required: true
+	},
+	userId: {
+		type: String,
+		required: false,
+		default: null
+	},
+	type: {
+		type: String,
+		required: true,
+		default: MemberTypes.student
 	},
 	organizationId: {
 		type: String,
@@ -43,6 +54,6 @@ const OrganizationMemberSchema = new appInstance.dbs.mongo.Schema<OrganizationMe
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const OrganizationMember = appInstance.dbs.mongo.use('users').model<OrganizationMemberFromModel>('OrganizationMember', OrganizationMemberSchema)
+export const Member = appInstance.dbs.mongo.use('organizations').model<MemberFromModel>('Member', MemberSchema)
 
-export const OrganizationMemberChange = appInstance.dbs.mongo.change(OrganizationMember, OrganizationMemberDbChangeCallbacks, new OrganizationMemberMapper().mapFrom)
+export const MemberChange = appInstance.dbs.mongo.change(Member, MemberDbChangeCallbacks, new MemberMapper().mapFrom)

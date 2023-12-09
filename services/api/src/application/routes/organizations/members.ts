@@ -1,8 +1,8 @@
-import { OrganizationMembersController } from '@application/controllers/users/organizationMembers'
+import { MembersController } from '@application/controllers/organizations/members'
 import { isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
-export const organizationMembersRoutes = groupRoutes('/organizations/:organizationId/members', [
+export const membersRoutes = groupRoutes('/members', [
 	{
 		path: '/',
 		method: 'get',
@@ -11,7 +11,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.get(req)
+					result: await MembersController.get(req)
 				}
 			})
 		]
@@ -23,7 +23,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.find(req)
+					result: await MembersController.find(req)
 				}
 			})
 		]
@@ -35,7 +35,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.add(req)
+					result: await MembersController.add(req)
 				}
 			})
 		]
@@ -47,7 +47,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.request(req)
+					result: await MembersController.request(req)
 				}
 			})
 		]
@@ -59,7 +59,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.accept(req)
+					result: await MembersController.accept(req)
 				}
 			})
 		]
@@ -71,7 +71,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.leave(req)
+					result: await MembersController.leave(req)
 				}
 			})
 		]
@@ -83,7 +83,7 @@ export const organizationMembersRoutes = groupRoutes('/organizations/:organizati
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await OrganizationMembersController.remove(req)
+					result: await MembersController.remove(req)
 				}
 			})
 		]
