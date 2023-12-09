@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { LessonToModel } from '../../data/models/lessons'
 import { ILessonRepository } from '../irepositories/lessons'
+import { LessonMembers } from '../types'
 
 export class LessonsUseCase {
 	private repository: ILessonRepository
@@ -31,5 +32,11 @@ export class LessonsUseCase {
 
 	async update (input: { organizationId: string, classId: string, id: string, data: Partial<LessonToModel> }) {
 		return await this.repository.update(input.organizationId, input.classId, input.id, input.data)
+	}
+
+	async manageUsers (input: {
+		organizationId: string, classId: string, id: string, userIds: string[], type: keyof LessonMembers, add: boolean
+	}) {
+		return await this.repository.manageUsers(input)
 	}
 }

@@ -4,7 +4,7 @@ import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class ClassController {
+export class ClassesController {
 	private static schema = () => ({
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),

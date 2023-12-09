@@ -1,6 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ILessonRepository } from '../../domain/irepositories/lessons'
+import { LessonMembers } from '../../domain/types'
 import { LessonMapper } from '../mappers/lessons'
 import { LessonToModel } from '../models/lessons'
 import { Lesson } from '../mongooseModels/lessons'
@@ -50,5 +51,16 @@ export class LessonRepository implements ILessonRepository {
 	async deleteClassLessons (organizationId: string, classId: string) {
 		const lessons = await Lesson.deleteMany({ organizationId, classId })
 		return lessons.acknowledged
+	}
+
+	async manageUsers ({ organizationId, classId, id, userIds, type, add }: {
+		organizationId: string, classId: string, id: string, userIds: string[], type: keyof LessonMembers, add: boolean
+	}) {
+		const lesson = await Lesson.findOneAndUpdate(
+			{ _id: id, organizationId, classId },
+			{ [add ? '$addToSet' : '$pull']: { [`users.${type}`]: { [add ? '$each' : '$in']: userIds } } },
+			{ new: true }
+		)
+		return this.mapper.mapFrom(lesson)
 	}
 }

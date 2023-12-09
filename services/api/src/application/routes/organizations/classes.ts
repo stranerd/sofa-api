@@ -1,4 +1,4 @@
-import { ClassController } from '@application/controllers/organizations/classes'
+import { ClassesController } from '@application/controllers/organizations/classes'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
@@ -10,7 +10,7 @@ export const classesRoutes = groupRoutes('/classes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ClassController.get(req)
+					result: await ClassesController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const classesRoutes = groupRoutes('/classes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ClassController.find(req)
+					result: await ClassesController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const classesRoutes = groupRoutes('/classes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ClassController.update(req)
+					result: await ClassesController.update(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const classesRoutes = groupRoutes('/classes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ClassController.create(req)
+					result: await ClassesController.create(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const classesRoutes = groupRoutes('/classes', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ClassController.delete(req)
+					result: await ClassesController.delete(req)
 				}
 			})
 		]

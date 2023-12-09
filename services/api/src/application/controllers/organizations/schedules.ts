@@ -2,7 +2,7 @@ import { SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class ScheduleController {
+export class SchedulesController {
 	private static schema = () => ({
 		title: Schema.string().min(1),
 		time: Schema.object({ start: Schema.number(), end: Schema.number() })
@@ -42,12 +42,10 @@ export class ScheduleController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		const schedule = await SchedulesUseCases.add({
+		return await SchedulesUseCases.add({
 			...data, user: user.getEmbedded(),
 			organizationId: req.params.organizationId, classId: req.params.classId
 		})
-
-		return schedule
 	}
 
 	static async update (req: Request) {

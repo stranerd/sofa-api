@@ -1,8 +1,8 @@
-import { AnnouncementsController } from '@application/controllers/organizations/announcements'
+import { LessonsController } from '@application/controllers/organizations/lessons'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
-export const announcementsRoutes = groupRoutes('/announcements', [
+export const lessonsRoutes = groupRoutes('/lessons', [
 	{
 		path: '/',
 		method: 'get',
@@ -10,7 +10,7 @@ export const announcementsRoutes = groupRoutes('/announcements', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await AnnouncementsController.get(req)
+					result: await LessonsController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const announcementsRoutes = groupRoutes('/announcements', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await AnnouncementsController.find(req)
+					result: await LessonsController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,19 @@ export const announcementsRoutes = groupRoutes('/announcements', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await AnnouncementsController.create(req)
+					result: await LessonsController.create(req)
+				}
+			})
+		]
+	},  {
+		path: '/:id',
+		method: 'put',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await LessonsController.update(req)
 				}
 			})
 		]
@@ -45,21 +57,33 @@ export const announcementsRoutes = groupRoutes('/announcements', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await AnnouncementsController.delete(req)
+					result: await LessonsController.delete(req)
 				}
 			})
 		]
-	}, {
-		path: '/read',
+	},  {
+		path: '/:id/members/join',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await AnnouncementsController.markRead(req)
+					result: await LessonsController.join(req)
 				}
 			})
 		]
-	}
+	},  {
+		path: '/:id/members/teachers',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await LessonsController.manageTeachers(req)
+				}
+			})
+		]
+	},
 ])

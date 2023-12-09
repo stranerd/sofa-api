@@ -2,7 +2,7 @@ import { AnnouncementsUseCases, MemberTypes, canAccessOrgClasses } from '@module
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class AnnouncementController {
+export class AnnouncementsController {
 	private static schema = () => ({
 		body: Schema.string().min(1),
 		filter: Schema.object({
@@ -40,12 +40,10 @@ export class AnnouncementController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		const announcement = await AnnouncementsUseCases.add({
+		return await AnnouncementsUseCases.add({
 			...data, user: user.getEmbedded(),
 			organizationId: req.params.organizationId, classId: req.params.classId
 		})
-
-		return announcement
 	}
 
 	static async delete (req: Request) {

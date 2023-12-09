@@ -1,4 +1,4 @@
-import { ScheduleController } from '@application/controllers/organizations/schedules'
+import { SchedulesController } from '@application/controllers/organizations/schedules'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
@@ -10,7 +10,7 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ScheduleController.get(req)
+					result: await SchedulesController.get(req)
 				}
 			})
 		]
@@ -21,7 +21,7 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ScheduleController.find(req)
+					result: await SchedulesController.find(req)
 				}
 			})
 		]
@@ -33,7 +33,7 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ScheduleController.create(req)
+					result: await SchedulesController.create(req)
 				}
 			})
 		]
@@ -45,7 +45,7 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ScheduleController.update(req)
+					result: await SchedulesController.update(req)
 				}
 			})
 		]
@@ -57,7 +57,7 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ScheduleController.delete(req)
+					result: await SchedulesController.delete(req)
 				}
 			})
 		]
