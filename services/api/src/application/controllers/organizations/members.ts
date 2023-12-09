@@ -1,4 +1,4 @@
-import { MemberTypes, MembersUseCases } from '@modules/organizations'
+import { MemberTypes, MembersUseCases, canAccessOrg } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -37,17 +37,17 @@ export class MembersController {
 		})
 
 		return await MembersUseCases.add({
-			userId: req.authUser!.id, organizationId: req.params.organizationId,
+			organizationId: req.params.organizationId,
 			members: emails.map((email) => ({
 				email, type,
-				userId: users.find((u) => u.bio.email === email)?.id ?? null,
+				user: users.find((u) => u.bio.email === email && !u.isDeleted())?.getEmbedded() ?? null,
 			}))
 		})
 	}
 
 	static async request (req: Request) {
 		const organization = await UsersUseCases.find(req.params.organizationId)
-		if (!organization || !organization.isOrg()) throw new BadRequestError('organization not found')
+		if (!organization || !organization.isOrg() || organization.isDeleted()) throw new BadRequestError('organization not found')
 		const orgCode = organization.getOrgCode()
 
 		const { code, type } = validate({
@@ -55,9 +55,12 @@ export class MembersController {
 			type: Schema.in(Object.values(MemberTypes))
 		}, req.body)
 
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+
 		return await MembersUseCases.request({
 			email: req.authUser!.email, organizationId: req.params.organizationId,
-			withCode: !!code, userId: req.authUser!.id, type
+			withCode: !!code, user: user.getEmbedded(), type
 		})
 	}
 
@@ -68,10 +71,10 @@ export class MembersController {
 			type: Schema.in(Object.values(MemberTypes))
 		}, req.body)
 
-		return await MembersUseCases.accept({
-			userId: req.authUser!.id, organizationId: req.params.organizationId,
-			email, accept, type
-		})
+		const hasAccess = await canAccessOrg(req.authUser!.id, req.params.organizationId)
+		if (!hasAccess) throw new NotAuthorizedError()
+
+		return await MembersUseCases.accept({ organizationId: hasAccess.id, email, accept, type })
 	}
 
 	static async leave (req: Request) {
@@ -79,10 +82,7 @@ export class MembersController {
 			type: Schema.in(Object.values(MemberTypes))
 		}, req.body)
 
-		const deleted = await MembersUseCases.remove({
-			email: req.authUser!.email, type, userId: null,
-			organizationId: req.params.organizationId,
-		})
+		const deleted = await MembersUseCases.remove({ email: req.authUser!.email, type, organizationId: req.params.organizationId })
 		if (deleted) return deleted
 		throw new NotAuthorizedError()
 	}
@@ -93,10 +93,10 @@ export class MembersController {
 			type: Schema.in(Object.values(MemberTypes))
 		}, req.body)
 
-		const deleted = await MembersUseCases.remove({
-			email, type, userId: req.authUser!.id,
-			organizationId: req.params.organizationId,
-		})
+		const hasAccess = await canAccessOrg(req.authUser!.id, req.params.organizationId)
+		if (!hasAccess) throw new NotAuthorizedError()
+
+		const deleted = await MembersUseCases.remove({ email, type, organizationId: hasAccess.id })
 
 		if (deleted) return deleted
 		throw new NotAuthorizedError()

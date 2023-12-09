@@ -1,9 +1,6 @@
 import { appInstance } from '@utils/types'
-import { ClientSession } from 'mongodb'
-import { UserMapper } from '../../../users/data/mappers/users'
-import { User } from '../../../users/data/mongooseModels/users'
 import { IMemberRepository } from '../../domain/irepositories/members'
-import { MemberTypes } from '../../domain/types'
+import { EmbeddedUser, MemberTypes } from '../../domain/types'
 import { MemberMapper } from '../mappers/members'
 import { MemberFromModel, MemberToModel } from '../models/members'
 import { Member } from '../mongooseModels/members'
@@ -11,7 +8,6 @@ import { Member } from '../mongooseModels/members'
 export class MemberRepository implements IMemberRepository {
 	private static instance: MemberRepository
 	private mapper = new MemberMapper()
-	private userMapper = new UserMapper()
 
 	static getInstance (): MemberRepository {
 		if (!MemberRepository.instance) MemberRepository.instance = new MemberRepository()
@@ -31,16 +27,14 @@ export class MemberRepository implements IMemberRepository {
 		}
 	}
 
-	async add (data: { userId: string, organizationId: string, members: { email: string, userId: string | null, type: MemberTypes }[] }) {
+	async add (data: { organizationId: string, members: { email: string, user: EmbeddedUser | null, type: MemberTypes }[] }) {
 		const members: MemberFromModel[] = []
 		await Member.collection.conn.transaction(async (session) => {
-			const hasAccess = await this.#userIdHasAccessToOrg(data.userId, data.organizationId, session)
-			if (!hasAccess) return false
-			await Promise.all(data.members.map(async ({ email, userId, type}) => {
+			await Promise.all(data.members.map(async ({ email, user, type}) => {
 				const member = await Member.findOneAndUpdate(
 					{ email, type, organizationId: data.organizationId },
 					{
-						$setOnInsert: { email, type, userId, organizationId: data.organizationId },
+						$setOnInsert: { email, type, user, organizationId: data.organizationId },
 						$set: { accepted: { is: true, at: Date.now() }, pending: false }
 					},
 					{ upsert: true, new: true, session })
@@ -52,7 +46,7 @@ export class MemberRepository implements IMemberRepository {
 		return members.map((member) => this.mapper.mapFrom(member)!)
 	}
 
-	async request (data: { email: string, userId: string | null, type: MemberTypes, organizationId: string, withCode: boolean }) {
+	async request (data: { email: string, user: EmbeddedUser | null, type: MemberTypes, organizationId: string, withCode: boolean }) {
 		const updateData: MemberToModel = { ...data, pending: true, accepted: null }
 		const organizationMember = await Member.findOneAndUpdate(
 			{ email: data.email, organizationId: data.organizationId },
@@ -61,38 +55,16 @@ export class MemberRepository implements IMemberRepository {
 		return this.mapper.mapFrom(organizationMember)!
 	}
 
-	async accept (data: { email: string, type: MemberTypes, userId: string, organizationId: string, accept: boolean }) {
-		let res = false
-		await Member.collection.conn.transaction(async (session) => {
-			const hasAccess = await this.#userIdHasAccessToOrg(data.userId, data.organizationId, session)
-			if (!hasAccess) return false
-			const organizationMember = await Member.findOneAndUpdate(
-				{ email: data.email, type: data.type, organizationId: data.organizationId, pending: true },
-				{ $set: { accepted: { is: data.accept, at: Date.now() }, pending: data.accept } },
-				{ session, new: true }
-			)
-			res = !!organizationMember
-			return res
-		})
-		return res
+	async accept (data: { email: string, type: MemberTypes, organizationId: string, accept: boolean }) {
+		const member = await Member.findOneAndUpdate(
+			{ email: data.email, type: data.type, organizationId: data.organizationId, pending: true },
+			{ $set: { accepted: { is: data.accept, at: Date.now() }, pending: data.accept } })
+		return !!member
 	}
 
-	async remove (data: { userId: string | null, organizationId: string, email: string, type: MemberTypes }) {
-		let res = false
-		await Member.collection.conn.transaction(async (session) => {
-			const byAdmin = !!data.userId
-			if (byAdmin) {
-				const hasAccess = await this.#userIdHasAccessToOrg(data.userId!, data.organizationId, session)
-				if (!hasAccess) return false
-			}
-			const organizationMember = await Member.findOneAndDelete(
-				{ email: data.email, type: data.type, organizationId: data.organizationId },
-				{ session }
-			)
-			res = !!organizationMember
-			return res
-		})
-		return res
+	async remove (data: { organizationId: string, email: string, type: MemberTypes }) {
+		const member = await Member.findOneAndDelete({ email: data.email, type: data.type, organizationId: data.organizationId })
+		return !!member
 	}
 
 	async aggregateMembersDays () {
@@ -108,10 +80,8 @@ export class MemberRepository implements IMemberRepository {
 		return res.acknowledged
 	}
 
-	async #userIdHasAccessToOrg (userId: string, organizationId: string, session: ClientSession) {
-		if (userId !== organizationId) return false
-		const user = this.userMapper.mapFrom(await User.findById(organizationId, {}, { session }))
-		if (!user || user.isDeleted() || !user.isOrg()) return false
-		return true
+	async updateUserBio (user: EmbeddedUser) {
+		const members = await Member.updateMany({ 'user.id': user.id }, { $set: { user } })
+		return members.acknowledged
 	}
 }

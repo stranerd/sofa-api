@@ -1,6 +1,6 @@
 import { ConversationsUseCases, TutorRequestsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases } from '@modules/interactions'
-import { MembersUseCases } from '@modules/organizations'
+import { ClassesUseCases, MembersUseCases } from '@modules/organizations'
 import { GamesUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { publishers } from '@utils/events'
@@ -32,6 +32,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			GamesUseCases,
 			CoursesUseCases, FoldersUseCases, QuizzesUseCases, FilesUseCases,
 			ConnectsUseCases,
+			ClassesUseCases, MembersUseCases,
 		].map(async (useCase) => await useCase.updateUserBio(after.getEmbedded())))
 		if (changes.ai?.photo && before.ai.photo) await publishers.DELETEFILE.publish(before.ai.photo)
 	},

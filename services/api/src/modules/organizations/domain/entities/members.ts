@@ -1,10 +1,10 @@
 import { BaseEntity } from 'equipped'
-import { MemberTypes } from '../types'
+import { EmbeddedUser, MemberTypes } from '../types'
 
 export class MemberEntity extends BaseEntity {
 	public readonly id: string
 	public readonly email: string
-	public readonly userId: string | null
+	public readonly user: EmbeddedUser | null
 	public readonly type: MemberTypes
 	public readonly organizationId: string
 	public readonly pending: boolean
@@ -13,11 +13,11 @@ export class MemberEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, email, userId, type, organizationId, pending, withCode, accepted, createdAt, updatedAt }: MemberConstructorArgs) {
+	constructor ({ id, email, user, type, organizationId, pending, withCode, accepted, createdAt, updatedAt }: MemberConstructorArgs) {
 		super()
 		this.id = id
 		this.email = email
-		this.userId = userId
+		this.user = user
 		this.type = type
 		this.organizationId = organizationId
 		this.pending = pending
@@ -31,7 +31,7 @@ export class MemberEntity extends BaseEntity {
 type MemberConstructorArgs = {
 	id: string
 	email: string
-	userId: string | null
+	user: EmbeddedUser | null
 	type: MemberTypes
 	organizationId: string
 	pending: boolean

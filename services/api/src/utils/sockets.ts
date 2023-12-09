@@ -39,6 +39,7 @@ export const registerSockets = () => {
 
 		.register('notifications/notifications', isMine)
 
+		.register('organizations/:organizationId/classes', isOpen)
 		.register('organizations/:organizationId/members', organizationsCb)
 
 		.register('payment/methods', isMine)

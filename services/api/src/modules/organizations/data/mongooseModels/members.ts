@@ -13,8 +13,8 @@ const MemberSchema = new appInstance.dbs.mongo.Schema<MemberFromModel>({
 		type: String,
 		required: true
 	},
-	userId: {
-		type: String,
+	user: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: null
 	},

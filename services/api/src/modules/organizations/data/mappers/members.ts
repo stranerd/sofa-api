@@ -7,7 +7,7 @@ export class MemberMapper extends BaseMapper<MemberFromModel, MemberToModel, Mem
 		return !param ? null : new MemberEntity({
 			id: param._id.toString(),
 			email: param.email,
-			userId: param.userId,
+			user: param.user,
 			type: param.type,
 			organizationId: param.organizationId,
 			pending: param.pending,
@@ -21,7 +21,7 @@ export class MemberMapper extends BaseMapper<MemberFromModel, MemberToModel, Mem
 	mapTo (param: MemberEntity) {
 		return {
 			email: param.email,
-			userId: param.userId,
+			user: param.user,
 			type: param.type,
 			organizationId: param.organizationId,
 			pending: param.pending,

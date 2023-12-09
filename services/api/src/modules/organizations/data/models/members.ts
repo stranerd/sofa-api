@@ -1,4 +1,4 @@
-import { MemberTypes } from '../../domain/types'
+import { EmbeddedUser, MemberTypes } from '../../domain/types'
 
 export interface MemberFromModel extends MemberToModel {
 	_id: string
@@ -12,6 +12,6 @@ export interface MemberToModel {
 	accepted: { is: boolean, at: number } | null
 	organizationId: string
 	email: string
-	userId: string | null
+	user: EmbeddedUser | null
 	type: MemberTypes
 }
