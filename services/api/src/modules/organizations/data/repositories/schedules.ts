@@ -34,8 +34,8 @@ export class ScheduleRepository implements IScheduleRepository {
 	}
 
 	async find (id: string) {
-		const scheduleIns = await Schedule.findById(id)
-		return this.mapper.mapFrom(scheduleIns)
+		const schedule = await Schedule.findById(id)
+		return this.mapper.mapFrom(schedule)
 	}
 
 	async update (id: string, organizationId: string, classId: string, data: Partial<ScheduleToModel>) {

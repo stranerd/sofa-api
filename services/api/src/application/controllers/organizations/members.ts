@@ -3,19 +3,6 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class MembersController {
-	static async find (req: Request) {
-		const { results: members } = await MembersUseCases.get({
-			auth: [
-				{ field: 'organizationId', value: req.params.organizationId },
-				{ field: 'email', value: req.params.email }
-			]
-		})
-		const member = members.at(0) ?? null
-		if (!member) return null
-		if (member.email === req.authUser!.email || member.organizationId === req.authUser!.id) return member
-		return null
-	}
-
 	static async get (req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [

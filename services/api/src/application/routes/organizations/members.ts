@@ -16,18 +16,6 @@ export const membersRoutes = groupRoutes('/members', [
 			})
 		]
 	}, {
-		path: '/:email',
-		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MembersController.find(req)
-				}
-			})
-		]
-	}, {
 		path: '/',
 		method: 'post',
 		controllers: [

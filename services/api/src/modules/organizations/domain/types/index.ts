@@ -16,3 +16,8 @@ export type ScheduleTime = {
 	start: number
 	end: number
 }
+
+export type LessonMembers = {
+	students: string[]
+	teachers: string[]
+}
