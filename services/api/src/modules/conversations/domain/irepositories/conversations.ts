@@ -3,7 +3,6 @@ import { ConversationToModel } from '../../data/models/conversations'
 import { MessageFromModel } from '../../data/models/messages'
 import { ConversationEntity } from '../entities/conversations'
 import { EmbeddedUser } from '../types'
-import { TutorRequestEntity } from '../entities/tutorRequests'
 
 export interface IConversationRepository {
 	add: (data: ConversationToModel) => Promise<ConversationEntity>
@@ -11,7 +10,8 @@ export interface IConversationRepository {
 	find: (id: string) => Promise<ConversationEntity | null>
 	delete: (id: string, userId: string) => Promise<boolean>
 	update: (id: string, userId: string, data: Partial<ConversationToModel>) => Promise<ConversationEntity | null>
+	accept: (data: { id: string, tutorId: string, accept: boolean }) => Promise<ConversationEntity | null>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
-	removeTutor: (data: { conversationId: string, userId: string }) => Promise<{ conversation: ConversationEntity | null, tutorRequest: TutorRequestEntity | null }>
+	end: (data: { conversationId: string, userId: string, rating: number, message: string }) => Promise<ConversationEntity | null>
 	updateLastMessage: (message: MessageFromModel) => Promise<void>
 }

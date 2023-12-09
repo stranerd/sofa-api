@@ -1,4 +1,4 @@
-import { TutorRequestsUseCases } from '@modules/conversations'
+import { ConversationsUseCases } from '@modules/conversations'
 import { CoursesUseCases, QuestionsUseCases, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { CommentsUseCases } from '../'
@@ -21,9 +21,9 @@ const finders = {
 		const quiz = await QuizzesUseCases.find(id)
 		return quiz?.user.id
 	},
-	[InteractionEntities.tutorConversations]: async (id: string) => {
-		const request = await TutorRequestsUseCases.find(id)
-		return request?.tutor.id
+	[InteractionEntities.conversations]: async (id: string) => {
+		const conversation = await ConversationsUseCases.find(id)
+		return conversation?.id
 	},
 	[InteractionEntities.users]: async (id: string) => {
 		const user = await UsersUseCases.find(id)
@@ -40,7 +40,7 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 		if (interaction === 'comments') return [InteractionEntities.comments]
 		if (interaction === 'views') return [InteractionEntities.courses, InteractionEntities.quizzes]
 		if (interaction === 'reports') return [InteractionEntities.courses, InteractionEntities.quizzes, InteractionEntities.users, InteractionEntities.quizQuestions]
-		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, /* InteractionEntities.tutorConversations // hidden so users cannot create this externally */]
+		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, /* InteractionEntities.conversations // hidden so users cannot create this externally */]
 		return []
 	})().reduce((acc, cur) => {
 		acc[cur] = finders[cur]

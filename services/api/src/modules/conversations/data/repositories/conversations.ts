@@ -3,22 +3,17 @@ import { BadRequestError, QueryParams } from 'equipped'
 import { IConversationRepository } from '../../domain/irepositories/conversations'
 import { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
-import { ConversationFromModel, ConversationToModel } from '../models/conversations'
+import { ConversationToModel } from '../models/conversations'
 import { MessageFromModel } from '../models/messages'
 import { Conversation } from '../mongooseModels/conversations'
-import { TutorRequest } from '../mongooseModels/tutorRequests'
 import { Message } from '../mongooseModels/messages'
-import { TutorRequestFromModel } from '../models/tutorRequests'
-import { TutorRequestMapper } from '../mappers/tutorRequests'
 
 export class ConversationRepository implements IConversationRepository {
 	private static instance: ConversationRepository
 	private mapper: ConversationMapper
-	private tutorRequestMapper: TutorRequestMapper
 
 	private constructor () {
 		this.mapper = new ConversationMapper()
-		this.tutorRequestMapper = new TutorRequestMapper()
 	}
 
 	static getInstance () {
@@ -63,7 +58,6 @@ export class ConversationRepository implements IConversationRepository {
 		await Conversation.collection.conn.transaction(async (session) => {
 			const conversation = await Conversation.findOneAndDelete({ _id: id, 'user.id': userId }, { session })
 			if (!conversation) throw new BadRequestError('conversation not found')
-			await TutorRequest.deleteMany({ conversationId: conversation.id }, { session })
 			await Message.deleteMany({ conversationId: conversation.id }, { session })
 			res = !!conversation
 			return res
@@ -72,28 +66,20 @@ export class ConversationRepository implements IConversationRepository {
 		return res
 	}
 
-	async removeTutor (data: { conversationId: string, userId: string }) {
-		const res = {
-			conversation: null as ConversationFromModel | null,
-			tutorRequest: null as TutorRequestFromModel | null
-		}
-		await Conversation.collection.conn.transaction(async (session) => {
-			const conversation = await Conversation.findById(data.conversationId, {}, { session })
-			if (!conversation) return
-			if (conversation.user.id !== data.userId) return
-			if (!conversation.tutor) throw new BadRequestError('conversation has no tutor')
-			res.conversation = await Conversation.findByIdAndUpdate(data.conversationId, {
-				$set: { tutor: null }
-			}, { new: true, session })
-			res.tutorRequest = await TutorRequest.findOne({
-				conversationId: conversation.id, 'tutor.id': conversation.tutor.id, accepted: true,
-			}, {}, { session }).sort({ createdAt: -1 })
-			return res
-		})
-		return {
-			conversation: this.mapper.mapFrom(res.conversation),
-			tutorRequest: this.tutorRequestMapper.mapFrom(res.tutorRequest)
-		}
+	async accept ({ id, tutorId, accept }: { id: string, tutorId, accept: boolean }) {
+		const conversation = await Conversation.findOneAndUpdate(
+			{ _id: id, 'tutor.id': tutorId, pending: true, accepted: null },
+			{ $set: { pending: false, accepted: { is: accept, at: Date.now() } } },
+			{ new: true })
+		return this.mapper.mapFrom(conversation)
+	}
+
+	async end (data: { conversationId: string, userId: string, rating: number, message: string }) {
+		const conversation = await Conversation.findOneAndUpdate(
+			{ _id: data.conversationId, 'user.id': data.userId, ended: null },
+			{ $set: { ended: { at: Date.now(), rating: data.rating, message: data.message } } },
+			{ new: true })
+		return this.mapper.mapFrom(conversation)
 	}
 
 	async updateLastMessage (message: MessageFromModel) {
