@@ -1,5 +1,6 @@
 import {
 	BadRequestError,
+	Conditions,
 	deleteCachedAccessToken,
 	deleteCachedRefreshToken,
 	exchangeOldForNewTokens,
@@ -40,16 +41,10 @@ export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { u
 }
 
 export const deleteUnverifiedUsers = async () => {
-	const unverifiedUsers = await getUnverifiedUsers()
-	const sevenDays = 7 * 24 * 60 * 60 * 1000
-	const olderUsers = unverifiedUsers.filter((u) => u.signedUpAt <= (Date.now() - sevenDays))
-	await AuthUsersUseCases.deleteUsers(olderUsers.map((u) => u.id))
-}
-
-const getUnverifiedUsers = async () => {
-	const { results: users } = await AuthUsersUseCases.getUsers({
-		where: [{ field: 'isEmailVerified', value: false }],
+	const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
+	const { results: unverifiedUsers } = await AuthUsersUseCases.getUsers({
+		where: [{ field: 'isEmailVerified', value: false }, { field: 'signedUpAt', condition: Conditions.lte, value: sevenDaysAgo }],
 		all: true
 	})
-	return users
+	await AuthUsersUseCases.deleteUsers(unverifiedUsers.map((u) => u.id))
 }
