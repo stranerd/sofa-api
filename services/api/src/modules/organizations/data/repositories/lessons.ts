@@ -38,12 +38,12 @@ export class LessonRepository implements ILessonRepository {
 		return this.mapper.mapFrom(lesson)
 	}
 
-	async update (id: string, organizationId: string, classId: string, data: Partial<LessonToModel>) {
+	async update (organizationId: string, classId: string, id: string, data: Partial<LessonToModel>) {
 		const lesson = await Lesson.findOneAndUpdate({ _id: id, organizationId, classId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(lesson)
 	}
 
-	async delete (id: string, organizationId: string, classId: string) {
+	async delete (organizationId: string, classId: string, id: string) {
 		const lesson = await Lesson.findOneAndDelete({ _id: id, organizationId, classId })
 		return !!lesson
 	}

@@ -38,7 +38,7 @@ export class ClassRepository implements IClassRepository {
 		return this.mapper.mapFrom(classIns)
 	}
 
-	async update (id: string, organizationId: string, data: Partial<ClassToModel>) {
+	async update (organizationId: string, id: string, data: Partial<ClassToModel>) {
 		const classIns = await Class.findOneAndUpdate({
 			_id: id, organizationId
 		}, { $set: data }, { new: true })
@@ -50,7 +50,7 @@ export class ClassRepository implements IClassRepository {
 		return classes.acknowledged
 	}
 
-	async delete (id: string, organizationId: string) {
+	async delete (organizationId: string, id: string) {
 		const classIns = await Class.findOneAndDelete({ _id: id, organizationId })
 		return !!classIns
 	}

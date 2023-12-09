@@ -1,4 +1,4 @@
-import { SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
+import { LessonsUseCases, SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -37,7 +37,8 @@ export class SchedulesController {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
-		// TODO: verify user is teacher in lesson
+		const lesson = await LessonsUseCases.find(data.lessonId)
+		if (!lesson || !lesson.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
@@ -53,8 +54,8 @@ export class SchedulesController {
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
-		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
-		// TODO: verify user is teacher in lesson
+		if (hasAccess !== 'admin') throw new NotAuthorizedError()
+		// only admins can update and delete schedules
 
 		const schedule = await SchedulesUseCases.update({
 			data, id: req.params.id,
@@ -67,7 +68,8 @@ export class SchedulesController {
 	static async delete (req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
-		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+		if (hasAccess !== 'admin') throw new NotAuthorizedError()
+		// only admins can update and delete schedules
 
 		const isDeleted = await SchedulesUseCases.delete({
 			id: req.params.id,
