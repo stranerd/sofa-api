@@ -107,7 +107,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		streak: UserStreak,
 		ratings: UserRatings,
 		organizationsIn: {
-			type: [String],
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed],
 			required: false,
 			default: []
 		},

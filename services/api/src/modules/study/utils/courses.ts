@@ -31,7 +31,7 @@ export const canAccessCoursable = async<T extends Coursable> (type: T, coursable
 	if (purchase) return coursable as Type<T>
 	const userDet = await UsersUseCases.find(user.id)
 	// check that the creator is an org and the user belongs in the org
-	if (!userDet || !userDet.account.organizationsIn.includes(coursable.user.id)) return null
+	if (!userDet || !userDet.account.organizationsIn.some((o) => o.id === coursable.user.id)) return null
 	// allow user to access if the org is subscribed
 	if (coursable.user.roles.isSubscribed) return coursable as Type<T>
 	return null

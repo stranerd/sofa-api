@@ -31,7 +31,7 @@ export interface IUserRepository {
 
 	updateTutorTopics (userId: string, topicId: string, add: boolean): Promise<UserEntity | null>
 
-	updateOrganizationsIn (email: string, organizationIds: string[], add: boolean): Promise<UserEntity | null>
+	updateOrganizationsIn (email: string, organizations: UserAccount['organizationsIn'], add: boolean): Promise<UserEntity | null>
 
 	updateSocials (userId: string, socials: UserSocialsType): Promise<UserEntity | null>
 

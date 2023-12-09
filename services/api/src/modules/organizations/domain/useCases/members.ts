@@ -41,6 +41,10 @@ export class MembersUseCase {
 		return await this.repository.deleteByEmail(email)
 	}
 
+	async updateMemberUser (data: { email: string, user: EmbeddedUser }) {
+		return await this.repository.updateMemberUser(data.email, data.user)
+	}
+
 	async updateUserBio (user: EmbeddedUser) {
 		return await this.repository.updateUserBio(user)
 	}

@@ -11,5 +11,6 @@ export interface IMemberRepository {
 	remove: (data: { organizationId: string, email: string, type: MemberTypes }) => Promise<boolean>
 	aggregateMembersDays: () => Promise<Record<string, number>>
 	deleteByEmail: (email: string) => Promise<boolean>
+	updateMemberUser: (email: string, user: EmbeddedUser) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 }

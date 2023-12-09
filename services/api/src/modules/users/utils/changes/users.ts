@@ -18,9 +18,13 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			where: [{ field: 'email', value: after.bio.email }]
 		})
 
-		await UsersUseCases.updateOrganizationsIn({
-			email: after.bio.email, organizationIds: members.map((member) => member.organizationId), add: true
-		})
+		await Promise.all([
+			MembersUseCases.updateMemberUser({ email: after.bio.email, user: after.getEmbedded() }),
+			UsersUseCases.updateOrganizationsIn({
+				email: after.bio.email, add: true,
+				organizations: members.map((member) => ({ id: member.organizationId, type: member.type }))
+			})
+		])
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)

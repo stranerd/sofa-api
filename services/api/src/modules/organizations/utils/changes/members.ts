@@ -20,7 +20,7 @@ export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberE
 			`organizations/${after.organizationId}/members/${after.email}`, `organizations/${after.organizationId}/members/${after.id}/${after.email}`
 		], after)
 
-		if (!after.pending && after.accepted?.is && before.pending && !after.accepted) await updateMetas(after, true)
+		if (!after.pending && after.accepted?.is && before.pending && !before.accepted) await updateMetas(after, true)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.created([
@@ -33,7 +33,7 @@ export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberE
 
 const updateMetas = async (member: MemberEntity, add: boolean) => {
 	await Promise.all([
-		UsersUseCases.updateOrganizationsIn({ email: member.email, organizationIds: [member.organizationId], add }),
+		UsersUseCases.updateOrganizationsIn({ email: member.email, organizations: [{ id: member.organizationId, type: member.type }], add }),
 		UsersUseCases.incrementMeta({ id: member.organizationId, property: member.type === MemberTypes.teacher ? UserMeta.teachers : UserMeta.students, value: add ? 1 : -1 })
 	])
 }

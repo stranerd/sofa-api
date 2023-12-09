@@ -81,8 +81,8 @@ export class UsersUseCase {
 		return await this.repository.updateLocation(params.userId, params.location)
 	}
 
-	async updateOrganizationsIn (params: { email: string, organizationIds: string[], add: boolean }) {
-		return await this.repository.updateOrganizationsIn(params.email, params.organizationIds, params.add)
+	async updateOrganizationsIn (params: { email: string, organizations: UserAccount['organizationsIn'], add: boolean }) {
+		return await this.repository.updateOrganizationsIn(params.email, params.organizations, params.add)
 	}
 
 	async updateSettings (params: { userId: string, settings: Partial<UserAccount['settings']>; }) {

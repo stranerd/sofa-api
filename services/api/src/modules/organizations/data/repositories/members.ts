@@ -80,6 +80,11 @@ export class MemberRepository implements IMemberRepository {
 		return res.acknowledged
 	}
 
+	async updateMemberUser (email: string, user: EmbeddedUser) {
+		const members = await Member.updateMany({ email }, { $set: { user } })
+		return members.acknowledged
+	}
+
 	async updateUserBio (user: EmbeddedUser) {
 		const members = await Member.updateMany({ 'user.id': user.id }, { $set: { user } })
 		return members.acknowledged

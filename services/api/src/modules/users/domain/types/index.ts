@@ -1,4 +1,5 @@
 import { Phone } from '@modules/auth'
+import { MemberTypes } from '@modules/organizations'
 import { Ratings } from '@utils/commons'
 import { AuthRoles, MediaOutput } from 'equipped'
 
@@ -38,7 +39,7 @@ export type UserAccount = {
 		lastEvaluatedAt: number
 	}
 	ratings: Ratings
-	organizationsIn: string[]
+	organizationsIn: { id: string, type: MemberTypes }[]
 	settings: {
 		notifications: boolean
 	}
