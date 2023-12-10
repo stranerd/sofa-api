@@ -3,7 +3,7 @@ import { MessageFromModel } from './messages'
 
 export interface ConversationFromModel extends ConversationToModel {
 	_id: string
-	tutor: EmbeddedUser | null
+	ended: { rating: number, message: string, at: number } | null
 	createdAt: number
 	updatedAt: number
 	readAt: Record<string, number>
@@ -13,4 +13,7 @@ export interface ConversationFromModel extends ConversationToModel {
 export interface ConversationToModel {
 	title: string
 	user: EmbeddedUser
+	tutor: EmbeddedUser | null
+	pending: boolean
+	accepted: { is: boolean, at: number } | null
 }

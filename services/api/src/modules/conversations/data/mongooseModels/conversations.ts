@@ -22,6 +22,21 @@ const Schema = new appInstance.dbs.mongo.Schema<ConversationFromModel>({
 		required: false,
 		default: null
 	},
+	pending: {
+		type: Boolean,
+		required: false,
+		default: true
+	},
+	accepted: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
+	ended: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	createdAt: {
 		type: Number,
 		required: false,

@@ -6,7 +6,7 @@ export enum InteractionEntities {
 	quizzes = 'quizzes',
 	users = 'users',
 	quizQuestions = 'quizQuestions',
-	tutorConversations = 'tutorConversations',
+	conversations = 'conversations',
 }
 
 export type Interaction = {
