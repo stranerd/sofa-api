@@ -19,16 +19,27 @@ export class ConversationController {
 	}
 
 	static async create (req: Request) {
-		const { body } = validate({
+		const { body, tutorId } = validate({
 			body: Schema.string().min(1),
+			tutorId: Schema.string().min(1).nullable(),
 		}, req.body)
 
 		const authUserId = req.authUser!.id
 		const user = await UsersUseCases.find(authUserId)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
-		const title = await AI.summarizeForTitle(body)
-		const conversation = await ConversationsUseCases.add({ title, user: user.getEmbedded() })
+		const tutor = tutorId ? await UsersUseCases.find(tutorId) : null
+		if (tutorId) {
+			if (!tutor || tutor.isDeleted()) throw new BadRequestError('tutor not found')
+			if (!tutor.canJoinConversations()) throw new BadRequestError('tutor can\'t join conversations right now')
+		}
+
+		const title = tutorId ? body : await AI.summarizeForTitle(body)
+		const conversation = await ConversationsUseCases.add({
+			title, user: user.getEmbedded(),
+			pending: !!tutorId, accepted: !tutorId ? { is: true, at: Date.now() } : null,
+			tutor: tutor?.getEmbedded() ?? null
+		})
 		await MessagesUseCases.add({
 			body, media: null, starred: false,
 			conversationId: conversation.id,
@@ -59,18 +70,22 @@ export class ConversationController {
 		throw new NotAuthorizedError()
 	}
 
-	static async removeTutor (req: Request) {
+	static async accept (req: Request) {
+		const { accept } = validate({ accept: Schema.boolean() }, req.body)
+		const isUpdated = await ConversationsUseCases.accept({ id: req.params.id, accept, tutorId: req.authUser!.id })
+		if (isUpdated) return isUpdated
+		throw new NotAuthorizedError()
+	}
+
+	static async end (req: Request) {
 		const { rating, message } = validate({
 			rating: Schema.number().round(0).gte(0).lte(5),
 			message: Schema.string()
 		}, req.body)
 
-		const user = await UsersUseCases.find(req.authUser!.id)
-		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
-
-		const updatedConversation = await ConversationsUseCases.removeTutor({
+		const updatedConversation = await ConversationsUseCases.end({
 			rating, message, conversationId: req.params.id,
-			user: user.getEmbedded()
+			userId: req.authUser!.id
 		})
 
 		if (updatedConversation) return updatedConversation

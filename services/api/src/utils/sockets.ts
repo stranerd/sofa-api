@@ -34,7 +34,6 @@ export const registerSockets = () => {
 	appInstance.listener
 		.register('conversations/conversations', isMine)
 		.register('conversations/conversations/:conversationId/messages', conversationsCb)
-		.register('conversations/tutorRequests', isMine)
 
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
