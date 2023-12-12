@@ -34,7 +34,7 @@ export class ConversationController {
 			if (!tutor.canJoinConversations()) throw new BadRequestError('tutor can\'t join conversations right now')
 		}
 
-		const title = tutorId ? body : await AI.summarizeForTitle(body)
+		const title = await AI.summarizeForTitle(body)
 		const conversation = await ConversationsUseCases.add({
 			title, user: user.getEmbedded(),
 			pending: !!tutorId, accepted: !tutorId ? { is: true, at: Date.now() } : null,
