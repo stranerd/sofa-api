@@ -25,6 +25,13 @@ export class UsersUseCase {
 		return await this.repository.findUser(id)
 	}
 
+	async findByEmail (email: string) {
+		const res = await this.repository.getUsers({ where: [{ field: 'bio.email', value: email }] })
+		const user = res.results.at(0)
+		if (user && !user.isDeleted()) return user
+		return null
+	}
+
 	async get (query: QueryParams) {
 		return await this.repository.getUsers(query)
 	}

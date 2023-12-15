@@ -1,6 +1,7 @@
 import { UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
+import { MembersUseCases } from '../..'
 import { MemberFromModel } from '../../data/models/members'
 import { MemberEntity } from '../../domain/entities/members'
 import { MemberTypes } from '../../domain/types'
@@ -11,6 +12,11 @@ export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberE
 			`organizations/${after.organizationId}/members`, `organizations/${after.organizationId}/members/${after.id}`,
 			`organizations/${after.organizationId}/members/${after.email}`, `organizations/${after.organizationId}/members/${after.id}/${after.email}`,
 		], after)
+
+		if (!after.user) {
+			const user = await UsersUseCases.findByEmail(after.email)
+			if (user) await MembersUseCases.updateMemberUser({ email: after.email, user: user.getEmbedded() })
+		}
 
 		if (!after.pending && after.accepted?.is) await updateMetas(after, true)
 	},
