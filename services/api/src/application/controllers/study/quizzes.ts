@@ -16,9 +16,6 @@ export class QuizController {
 
 	static async find (req: Request) {
 		const quiz = await QuizzesUseCases.find(req.params.id)
-		if (!quiz) return null
-		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
-		if (!isAdmin && quiz.isForTutors) return null
 		return quiz
 	}
 
