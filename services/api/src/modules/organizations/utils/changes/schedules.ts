@@ -12,13 +12,13 @@ export const ScheduleDbChangeCallbacks: DbChangeCallbacks<ScheduleFromModel, Sch
 		], after)
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`organizations/${after.organizationId}/classes/${after.classId}/schedules`,
 			`organizations/${after.organizationId}/classes/${after.classId}/schedules/${after.id}`
 		], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`organizations/${before.organizationId}/classes/${before.classId}/schedules`,
 			`organizations/${before.organizationId}/classes/${before.classId}/schedules/${before.id}`
 		], before)

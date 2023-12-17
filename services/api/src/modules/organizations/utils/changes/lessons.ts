@@ -16,13 +16,13 @@ export const LessonDbChangeCallbacks: DbChangeCallbacks<LessonFromModel, LessonE
 		await UsersUseCases.incrementMeta({ id: after.organizationId, property: UserMeta.lessons, value: 1 })
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`organizations/${after.organizationId}/classes/${after.classId}/lessons`,
 			`organizations/${after.organizationId}/classes/${after.classId}/lessons/${after.id}`
 		], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`organizations/${before.organizationId}/classes/${before.classId}/lessons`,
 			`organizations/${before.organizationId}/classes/${before.classId}/lessons/${before.id}`
 		], before)

@@ -14,12 +14,12 @@ export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEnti
 		await UsersUseCases.incrementMeta({ id: after.organizationId, property: UserMeta.classes, value: 1 })
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`organizations/${after.organizationId}/classes`, `organizations/${after.organizationId}/classes/${after.id}`,
 		], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`organizations/${before.organizationId}/classes`, `organizations/${before.organizationId}/classes/${before.id}`
 		], before)
 

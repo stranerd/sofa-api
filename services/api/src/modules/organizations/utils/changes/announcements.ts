@@ -12,13 +12,13 @@ export const AnnouncementDbChangeCallbacks: DbChangeCallbacks<AnnouncementFromMo
 		], after)
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`organizations/${after.organizationId}/classes/${after.classId}/announcements`,
 			`organizations/${after.organizationId}/classes/${after.classId}/announcements/${after.id}`
 		], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`organizations/${before.organizationId}/classes/${before.classId}/announcements`,
 			`organizations/${before.organizationId}/classes/${before.classId}/announcements/${before.id}`
 		], before)

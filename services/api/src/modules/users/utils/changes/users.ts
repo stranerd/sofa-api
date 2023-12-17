@@ -27,7 +27,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		])
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)
+		await appInstance.listener.updated(['users/users', `users/users/${after.id}`], after)
 
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
 		if (updatedBioOrRoles) await Promise.all([
@@ -43,7 +43,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		if (changes.ai?.photo && before.ai.photo) await publishers.DELETEFILE.publish(before.ai.photo)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created(['users/users', `users/users/${before.id}`], before)
+		await appInstance.listener.deleted(['users/users', `users/users/${before.id}`], before)
 		await MembersUseCases.deleteByEmail(before.bio.email)
 		if (before.ai.photo) await publishers.DELETEFILE.publish(before.ai.photo)
 	}

@@ -13,7 +13,7 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 		], after)
 	},
 	updated: async ({ after, changes }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`users/connects/${after.from.id}`, `users/connects/${after.to.id}`,
 			`users/connects/${after.id}/${after.from.id}`, `users/connects/${after.id}/${after.to.id}`,
 		], after)
@@ -28,7 +28,7 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 		])
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`users/connects/${before.from.id}`, `users/connects/${before.to.id}`,
 			`users/connects/${before.id}/${before.from.id}`, `users/connects/${before.id}/${before.to.id}`,
 		], before)

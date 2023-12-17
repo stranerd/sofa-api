@@ -21,7 +21,7 @@ export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberE
 		if (!after.pending && after.accepted?.is) await updateMetas(after, true)
 	},
 	updated: async ({ after, before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`organizations/${after.organizationId}/members`, `organizations/${after.organizationId}/members/${after.id}`,
 			`organizations/${after.organizationId}/members/${after.email}`, `organizations/${after.organizationId}/members/${after.id}/${after.email}`
 		], after)
@@ -29,7 +29,7 @@ export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberE
 		if (!after.pending && after.accepted?.is && before.pending && !before.accepted) await updateMetas(after, true)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`organizations/${before.organizationId}/members`, `organizations/${before.organizationId}/members/${before.id}`,
 			`organizations/${before.organizationId}/members/${before.email}`, `organizations/${before.organizationId}/members/${before.id}/${before.email}`
 		], before)
