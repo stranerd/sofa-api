@@ -12,7 +12,7 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 		], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			'users/verifications', `users/verifications/${after.id}`
 		], after)
 
@@ -33,7 +33,7 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			'users/verifications', `users/verifications/${before.id}`
 		], before)
 	}

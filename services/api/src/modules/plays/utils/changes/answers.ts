@@ -10,12 +10,12 @@ export const AnswerDbChangeCallbacks: DbChangeCallbacks<AnswerFromModel, AnswerE
 		], after)
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			`plays/${after.type}/${after.typeId}/answers`, `plays/${after.type}/${after.typeId}/answers/${after.id}`
 		], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			`plays/${before.type}/${before.typeId}/answers`, `plays/${before.type}/${before.typeId}/answers/${before.id}`
 		], before)
 	}

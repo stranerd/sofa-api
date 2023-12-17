@@ -13,7 +13,7 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 		], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.updated([
 			'users/tutorRequests', `users/tutorRequests/${after.id}`
 		], after)
 
@@ -40,7 +40,7 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.created([
+		await appInstance.listener.deleted([
 			'users/tutorRequests', `users/tutorRequests/${before.id}`
 		], before)
 
