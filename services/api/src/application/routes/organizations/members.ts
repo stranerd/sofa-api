@@ -53,7 +53,7 @@ export const membersRoutes = groupRoutes('/members', [
 		]
 	}, {
 		path: '/leave',
-		method: 'delete',
+		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
@@ -64,8 +64,8 @@ export const membersRoutes = groupRoutes('/members', [
 			})
 		]
 	}, {
-		path: '/',
-		method: 'delete',
+		path: '/remove',
+		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
