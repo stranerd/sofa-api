@@ -61,7 +61,7 @@ export class TagRepository implements ITagRepository {
 		await Tag.collection.conn.transaction(async (session) => {
 			res = await Promise.all(titles.map(async (title) => {
 				title = title.toLowerCase().trim()
-				return await Tag.findOneAndUpdate({ type, title }, { $setOnInsert: { type, title, parent: null } }, { session, upsert: true, new: true })
+				return await Tag.findOneAndUpdate({ type, title: new RegExp(`^${title}$`, 'i') }, { $setOnInsert: { type, title, parent: null } }, { session, upsert: true, new: true })
 			}))
 			return res
 		})
