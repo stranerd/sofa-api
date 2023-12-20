@@ -2,7 +2,7 @@ import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, AuthUser } from 'equipped'
 import { FilesUseCases, QuizEntity, QuizzesUseCases } from '..'
-import { Coursable, DraftStatus } from '../domain/types'
+import { Coursable } from '../domain/types'
 
 const finders = {
 	[Coursable.quiz]: QuizzesUseCases,
@@ -20,8 +20,6 @@ export const canAccessCoursable = async<T extends Coursable> (type: T, coursable
 	if (coursable instanceof QuizEntity && coursable.isForTutors && user.roles[AuthRole.isAdmin]) return coursable as Type<T>
 	// current user has been granted access
 	if (coursable instanceof QuizEntity && coursable.access.members.includes(user.id)) return coursable as Type<T>
-	// owner of the item has not published yet
-	if (coursable.status === DraftStatus.draft) return null
 	// item is not in a course, so it is free
 	if (!coursable.courseId) return coursable as Type<T>
 	// current user is subscribed to the items from stranerd official account
