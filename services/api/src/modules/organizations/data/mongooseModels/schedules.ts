@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/types'
+import { ScheduleStatus } from '../../domain/types'
 import { ScheduleDbChangeCallbacks } from '../../utils/changes/schedules'
 import { ScheduleMapper } from '../mappers/schedules'
 import { ScheduleFromModel } from '../models/schedules'
@@ -31,6 +32,11 @@ const ScheduleSchema = new appInstance.dbs.mongo.Schema<ScheduleFromModel>({
 	time: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
+	},
+	status: {
+		type: String,
+		required: true,
+		default: ScheduleStatus.created
 	},
 	createdAt: {
 		type: Number,

@@ -21,3 +21,9 @@ export type LessonMembers = {
 	students: string[]
 	teachers: string[]
 }
+
+export enum ScheduleStatus {
+	created = 'created',
+	started = 'started',
+	ended = 'ended'
+}

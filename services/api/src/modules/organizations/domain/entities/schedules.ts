@@ -1,6 +1,6 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, ScheduleTime } from '../types'
+import { EmbeddedUser, ScheduleStatus, ScheduleTime } from '../types'
 
 export class ScheduleEntity extends BaseEntity {
 	public readonly id: string
@@ -9,11 +9,12 @@ export class ScheduleEntity extends BaseEntity {
 	public readonly lessonId: string
 	public readonly user: EmbeddedUser
 	public readonly title: string
+	public readonly status: ScheduleStatus
 	public readonly time: ScheduleTime
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, organizationId, classId, lessonId, user, title, time, createdAt, updatedAt }: ScheduleConstructorArgs) {
+	constructor ({ id, organizationId, classId, lessonId, user, title, status, time, createdAt, updatedAt }: ScheduleConstructorArgs) {
 		super()
 		this.id = id
 		this.organizationId = organizationId
@@ -21,6 +22,7 @@ export class ScheduleEntity extends BaseEntity {
 		this.lessonId = lessonId
 		this.user = generateDefaultUser(user)
 		this.title = title
+		this.status = status
 		this.time = time
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
@@ -34,6 +36,7 @@ type ScheduleConstructorArgs = {
 	lessonId: string
 	user: EmbeddedUser
 	title: string
+	status: ScheduleStatus
 	time: ScheduleTime
 	createdAt: number
 	updatedAt: number
