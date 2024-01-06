@@ -9,6 +9,8 @@ export interface IScheduleRepository {
 	find: (id: string) => Promise<ScheduleEntity | null>
 	update: (organizationId: string, classId: string, id: string, data: Partial<ScheduleToModel>) => Promise<ScheduleEntity | null>
 	delete: (organizationId: string, classId: string, id: string) => Promise<boolean>
+	start: (organizationId: string, classId: string, id: string) => Promise<ScheduleEntity | null>
+	end: (organizationId: string, classId: string, id: string) => Promise<ScheduleEntity | null>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	deleteLessonSchedules: (organizationId: string, classId: string, lessonId: string) => Promise<boolean>
 }

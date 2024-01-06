@@ -61,5 +61,29 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/start',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await SchedulesController.start(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/end',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await SchedulesController.end(req)
+				}
+			})
+		]
 	},
 ])

@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IScheduleRepository } from '../../domain/irepositories/schedules'
-import { EmbeddedUser } from '../../domain/types'
+import { EmbeddedUser, ScheduleStatus } from '../../domain/types'
 import { ScheduleMapper } from '../mappers/schedules'
 import { ScheduleToModel } from '../models/schedules'
 import { Schedule } from '../mongooseModels/schedules'
@@ -51,6 +51,22 @@ export class ScheduleRepository implements IScheduleRepository {
 	async delete (organizationId: string, classId: string, id: string) {
 		const schedule = await Schedule.findOneAndDelete({ _id: id, organizationId, classId })
 		return !!schedule
+	}
+
+	async start (organizationId: string, classId: string, id: string) {
+		const schedule = await Schedule.findByIdAndUpdate(
+			{ _id: id, organizationId, classId, status: ScheduleStatus.created },
+			{ $set: { status: ScheduleStatus.started } },
+		)
+		return this.mapper.mapFrom(schedule)
+	}
+
+	async end (organizationId: string, classId: string, id: string) {
+		const schedule = await Schedule.findByIdAndUpdate(
+			{ _id: id, organizationId, classId, status: ScheduleStatus.started },
+			{ $set: { status: ScheduleStatus.ended } },
+		)
+		return this.mapper.mapFrom(schedule)
 	}
 
 	async deleteLessonSchedules (organizationId: string, classId: string, lessonId: string) {

@@ -22,6 +22,14 @@ export class SchedulesUseCase {
 		return await this.repository.delete(data.organizationId, data.classId, data.id)
 	}
 
+	async start (data: { organizationId: string, classId: string, id: string }) {
+		return await this.repository.start(data.organizationId, data.classId, data.id)
+	}
+
+	async end (data: { organizationId: string, classId: string, id: string }) {
+		return await this.repository.end(data.organizationId, data.classId, data.id)
+	}
+
 	async find (id: string) {
 		return await this.repository.find(id)
 	}

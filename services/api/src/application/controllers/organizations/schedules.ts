@@ -79,4 +79,24 @@ export class SchedulesController {
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}
+
+	static async start (req: Request) {
+		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
+		if (!hasAccess) throw new NotAuthorizedError()
+		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+
+		const updated = await SchedulesUseCases.start({ organizationId: req.params.organizationId, classId: req.params.classId, id: req.params.id })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async end (req: Request) {
+		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
+		if (!hasAccess) throw new NotAuthorizedError()
+		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+
+		const updated = await SchedulesUseCases.end({ organizationId: req.params.organizationId, classId: req.params.classId, id: req.params.id })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
 }
