@@ -188,7 +188,10 @@ export class AuthRepository implements IAuthRepository {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
-			name: data.name,
+			name: {
+				first: data.name.first ?? '',
+				last: data.name.last ?? ''
+			},
 			description: '',
 			email: data.email,
 			photo: data.photo,
