@@ -80,7 +80,7 @@ export class QuestionEntity extends BaseEntity {
 
 	private stripAnswers (data: QuestionData): StrippedQuestionData {
 		if (data.type === QuestionTypes.multipleChoice) {
-			return { type: data.type, options: data.options }
+			return { type: data.type, options: data.options, noOfAnswers: data.answers.length }
 		} else if (data.type === QuestionTypes.trueOrFalse) {
 			return { type: data.type }
 		} else if (data.type === QuestionTypes.writeAnswer) {
