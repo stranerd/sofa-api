@@ -4,7 +4,7 @@ import { CoursableEntity } from './coursables'
 export class FileEntity extends CoursableEntity implements CoursableData {
 	public readonly type: FileType
 	public readonly media: Media
-	ignoreInJSON = ['media']
+	ignoreInJSON = ['media.link']
 
 	constructor (data: FileConstructorArgs) {
 		super(data)
