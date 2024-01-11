@@ -1,4 +1,4 @@
-import { LessonsUseCases, SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
+import { ClassesUseCases, SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -37,7 +37,8 @@ export class SchedulesController {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
-		const lesson = await LessonsUseCases.find(data.lessonId)
+		const classIns = await ClassesUseCases.find(req.params.classId)
+		const lesson = classIns?.lessons.find((l) => l.id === data.lessonId)
 		if (!lesson || !lesson.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 
 		const user = await UsersUseCases.find(req.authUser!.id)

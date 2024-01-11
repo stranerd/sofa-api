@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { ClassToModel } from '../../data/models/classes'
 import { IClassRepository } from '../irepositories/classes'
-import { EmbeddedUser } from '../types'
+import { ClassLesson, EmbeddedUser, LessonMembers } from '../types'
 
 export class ClassesUseCase {
 	private repository: IClassRepository
@@ -32,5 +32,23 @@ export class ClassesUseCase {
 
 	async updateUserBio (user: EmbeddedUser) {
 		return await this.repository.updateUserBio(user)
+	}
+
+	async addLesson (data: { organizationId: string, classId: string, data: Partial<ClassLesson> }) {
+		return await this.repository.addLesson(data.organizationId, data.classId, data.data)
+	}
+
+	async deleteLesson (data: { organizationId: string, classId: string, lessonId: string }) {
+		return await this.repository.deleteLesson(data.organizationId, data.classId, data.lessonId)
+	}
+
+	async updateLesson (input: { organizationId: string, classId: string, lessonId: string, data: Partial<ClassLesson> }) {
+		return await this.repository.updateLesson(input.organizationId, input.classId, input.lessonId, input.data)
+	}
+
+	async manageLessonUsers (input: {
+		organizationId: string, classId: string, lessonId: string, userIds: string[], type: keyof LessonMembers, add: boolean
+	}) {
+		return await this.repository.manageLessonUsers(input)
 	}
 }

@@ -27,3 +27,9 @@ export enum ScheduleStatus {
 	started = 'started',
 	ended = 'ended'
 }
+
+export type ClassLesson = {
+	id: string
+	title: string
+	users: LessonMembers
+}

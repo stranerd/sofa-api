@@ -68,7 +68,7 @@ export class UserRepository implements IUserRepository {
 		}, { upsert: true })
 	}
 
-	async incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1) {
+	async incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: number) {
 		await User.findByIdAndUpdate(userId, {
 			$inc: {
 				[`account.meta.${propertyName}`]: value,

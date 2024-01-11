@@ -1,5 +1,5 @@
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, Media, Saleable } from '../types'
+import { ClassLesson, EmbeddedUser, Media, Saleable } from '../types'
 
 export class ClassEntity extends BaseEntity implements Saleable {
 	public readonly id: string
@@ -10,10 +10,11 @@ export class ClassEntity extends BaseEntity implements Saleable {
 	public readonly user: EmbeddedUser
 	public readonly frozen: Saleable['frozen']
 	public readonly price: Saleable['price']
+	public readonly lessons: ClassLesson[]
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, organizationId, title, description, photo, user, frozen, price, createdAt, updatedAt }: ClassConstructorArgs) {
+	constructor ({ id, organizationId, title, description, photo, user, lessons, frozen, price, createdAt, updatedAt }: ClassConstructorArgs) {
 		super()
 		this.id = id
 		this.organizationId = organizationId
@@ -23,6 +24,7 @@ export class ClassEntity extends BaseEntity implements Saleable {
 		this.user = user
 		this.frozen = frozen
 		this.price = price
+		this.lessons = lessons
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -35,6 +37,7 @@ type ClassConstructorArgs = Saleable & {
 	description: string
 	photo: Media | null
 	user: EmbeddedUser
+	lessons: ClassLesson[]
 	createdAt: number
 	updatedAt: number
 }

@@ -1,29 +1,10 @@
-import { LessonsUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } from '@modules/organizations'
-import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { ClassesUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } from '@modules/organizations'
+import { BadRequestError, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
 export class LessonsController {
 	private static schema = () => ({
 		title: Schema.string().min(1)
 	})
-
-	static async find (req: Request) {
-		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
-
-		const lesson = await LessonsUseCases.find(req.params.id)
-		if (!lesson || lesson.organizationId !== req.params.organizationId || lesson.classId !== req.params.classId) return null
-		return lesson
-	}
-
-	static async get (req: Request) {
-		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
-
-		const query = req.query as QueryParams
-		query.authType = QueryKeys.and
-		query.auth = [{ field: 'organizationId', value: req.params.organizationId }, { field: 'classId', value: req.params.classId }]
-		return await LessonsUseCases.get(query)
-	}
 
 	static async create (req: Request) {
 		const data = validate({
@@ -42,12 +23,14 @@ export class LessonsController {
 			]
 		})
 
-		return await LessonsUseCases.add({
-			...data,
+		return await ClassesUseCases.addLesson({
 			organizationId: req.params.organizationId, classId: req.params.classId,
-			users: {
-				students: [],
-				teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[]
+			data: {
+				...data,
+				users: {
+					students: [],
+					teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[]
+				}
 			}
 		})
 	}
@@ -58,8 +41,8 @@ export class LessonsController {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin') throw new NotAuthorizedError()
 
-		const lesson = await LessonsUseCases.update({
-			data, organizationId: req.params.organizationId, classId: req.params.classId, id: req.params.id
+		const lesson = await ClassesUseCases.updateLesson({
+			data, organizationId: req.params.organizationId, classId: req.params.classId, lessonId: req.params.id
 		})
 
 		return lesson
@@ -69,8 +52,8 @@ export class LessonsController {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin') throw new NotAuthorizedError()
 
-		const isDeleted = await LessonsUseCases.delete({
-			id: req.params.id,
+		const isDeleted = await ClassesUseCases.deleteLesson({
+			lessonId: req.params.id,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId
 		})
@@ -84,15 +67,15 @@ export class LessonsController {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess) throw new NotAuthorizedError()
 
-		const isDeleted = await LessonsUseCases.manageUsers({
-			id: req.params.id,
+		const updated = await ClassesUseCases.manageLessonUsers({
+			lessonId: req.params.id,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
 			type: 'students',
 			userIds: [req.authUser!.id],
 			add: join
 		})
-		if (isDeleted) return isDeleted
+		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
 
@@ -117,15 +100,15 @@ export class LessonsController {
 			if (!teachers.length) throw new BadRequestError('user not found')
 		}
 
-		const isDeleted = await LessonsUseCases.manageUsers({
-			id: req.params.id,
+		const updated = await ClassesUseCases.manageLessonUsers({
+			lessonId: req.params.id,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
 			type: 'teachers',
 			userIds: [userId],
 			add
 		})
-		if (isDeleted) return isDeleted
+		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
 }

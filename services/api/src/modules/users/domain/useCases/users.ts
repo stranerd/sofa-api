@@ -36,7 +36,7 @@ export class UsersUseCase {
 		return await this.repository.getUsers(query)
 	}
 
-	async incrementMeta (params: { id: string, value: 1 | -1, property: keyof UserAccount['meta'] }) {
+	async incrementMeta (params: { id: string, value: number, property: keyof UserAccount['meta'] }) {
 		return await this.repository.incrementUserMetaProperty(params.id, params.property, params.value)
 	}
 

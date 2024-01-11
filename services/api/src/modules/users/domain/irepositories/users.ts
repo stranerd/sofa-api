@@ -13,7 +13,7 @@ export interface IUserRepository {
 
 	findUser (userId: string): Promise<UserEntity | null>
 
-	incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1): Promise<void>
+	incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: number): Promise<void>
 
 	updateNerdScore (userId: string, amount: ScoreRewards): Promise<boolean>
 

@@ -5,28 +5,6 @@ import { groupRoutes, makeController, StatusCodes } from 'equipped'
 export const lessonsRoutes = groupRoutes('/lessons', [
 	{
 		path: '/',
-		method: 'get',
-		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.get(req)
-				}
-			})
-		]
-	}, {
-		path: '/:id',
-		method: 'get',
-		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.find(req)
-				}
-			})
-		]
-	}, {
-		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,

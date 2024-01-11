@@ -38,6 +38,11 @@ const ClassSchema = new appInstance.dbs.mongo.Schema<ClassFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
+	lessons: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as ClassFromModel['lessons'],
+		required: false,
+		default: () => []
+	},
 	createdAt: {
 		type: Number,
 		required: false,
