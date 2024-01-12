@@ -33,3 +33,7 @@ export type ClassLesson = {
 	title: string
 	users: LessonMembers
 }
+
+export type ClassMembers = {
+	students: string[]
+}

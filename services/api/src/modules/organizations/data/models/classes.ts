@@ -1,8 +1,9 @@
-import { ClassLesson, EmbeddedUser, Media, Saleable } from '../../domain/types'
+import { ClassLesson, ClassMembers, EmbeddedUser, Media, Saleable } from '../../domain/types'
 
 export interface ClassFromModel extends ClassToModel {
 	_id: string
 	lessons: ClassLesson[]
+	members: ClassMembers
 	createdAt: number
 	updatedAt: number
 }

@@ -43,6 +43,13 @@ const ClassSchema = new appInstance.dbs.mongo.Schema<ClassFromModel>({
 		required: false,
 		default: () => []
 	},
+	members: {
+		students: {
+			type: [String],
+			required: false,
+			default: () => []
+		}
+	},
 	createdAt: {
 		type: Number,
 		required: false,

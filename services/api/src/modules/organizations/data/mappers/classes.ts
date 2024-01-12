@@ -14,6 +14,7 @@ export class ClassMapper extends BaseMapper<ClassFromModel, ClassToModel, ClassE
 			frozen: param.frozen,
 			price: param.price,
 			lessons: param.lessons,
+			members: param.members,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
 		})
