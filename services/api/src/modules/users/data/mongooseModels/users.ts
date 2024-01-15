@@ -122,7 +122,8 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
 			default: () => ({})
-		}
+		},
+		saved: Object.fromEntries(['classes'].map((key) => [key, { type: [String], required: false, default: [] }]))
 	},
 	type: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,

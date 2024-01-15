@@ -46,6 +46,9 @@ export type UserAccount = {
 	editing: {
 		quizzes: { id: string, questionId: string } | null
 	}
+	saved: {
+		classes: string[]
+	}
 }
 
 export type EmbeddedUser = {

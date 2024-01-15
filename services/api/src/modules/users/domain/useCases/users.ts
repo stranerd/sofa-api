@@ -99,4 +99,12 @@ export class UsersUseCase {
 	async updateEditing (params: { userId: string, editing: Partial<UserAccount['editing']> }) {
 		return await this.repository.updateEditing(params.userId, params.editing)
 	}
+
+	async updateSaved (params: { userId: string, key: keyof UserAccount['saved'], values: string[], add: boolean }) {
+		return await this.repository.updateSaved(params.userId, params.key, params.values, params.add)
+	}
+
+	async removeSaved (params: { key: keyof UserAccount['saved'], values: string[] }) {
+		return await this.repository.removeSaved(params.key, params.values)
+	}
 }

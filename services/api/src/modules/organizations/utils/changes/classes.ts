@@ -36,6 +36,7 @@ export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEnti
 
 		await Promise.all([
 			UsersUseCases.incrementMeta({ id: before.organizationId, property: UserMeta.classes, value: -1 }),
+			UsersUseCases.removeSaved({ key: 'classes', values: [before.id] }),
 			before.lessons.length && UsersUseCases.incrementMeta({ id: before.organizationId, property: UserMeta.lessons, value: -before.lessons.length }),
 			AnnouncementsUseCases.deleteClassAnnouncements({ organizationId: before.organizationId, classId: before.id }),
 			...before.lessons.map((l) => SchedulesUseCases.deleteLessonSchedules({ organizationId: before.organizationId, classId: before.id, lessonId: l.id })),

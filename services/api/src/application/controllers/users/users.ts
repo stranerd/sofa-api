@@ -1,3 +1,4 @@
+import { ClassesUseCases } from '@modules/organizations'
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, canAccessCoursable } from '@modules/study'
@@ -164,6 +165,22 @@ export class UsersController {
 		}
 
 		const updated = await UsersUseCases.updateEditing({ userId: req.authUser!.id, editing: { quizzes } })
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async updateSavedClasses (req: Request) {
+		const { classes, add } = validate({
+			classes: Schema.array(Schema.string().min(1)),
+			add: Schema.boolean(),
+		}, req.body)
+
+		if (add) {
+			const allClasses = await ClassesUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: classes }] })
+			classes.splice(0, classes.length, ...allClasses.results.map((c) => c.id))
+		}
+
+		const updated = await UsersUseCases.updateSaved({ userId: req.authUser!.id, key: 'classes', values: classes, add })
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}

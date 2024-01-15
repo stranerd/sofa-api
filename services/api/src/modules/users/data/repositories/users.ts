@@ -209,4 +209,18 @@ export class UserRepository implements IUserRepository {
 		const user = await User.findByIdAndUpdate(userId, { $set: editing }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
+
+	async updateSaved (userId: string, key: keyof UserAccount['saved'], values: string[], add: boolean) {
+		const user = await User.findByIdAndUpdate(userId, {
+			[add ? '$addToSet' : '$pull']: { [`account.saved.${key}`]: { [add ? '$each' : '$in']: values } }
+		}, { new: true })
+		return this.mapper.mapFrom(user)
+	}
+
+	async removeSaved (key: keyof UserAccount['saved'], values: string[]) {
+		const res = await User.updateMany({}, {
+			$pull: { [`account.saved.${key}`]: { $in: values } }
+		})
+		return !!res.acknowledged
+	}
 }

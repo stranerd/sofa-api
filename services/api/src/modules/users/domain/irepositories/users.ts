@@ -44,4 +44,8 @@ export interface IUserRepository {
 	updateSettings (userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 
 	updateEditing (userId: string, editing: Partial<UserAccount['editing']>): Promise<UserEntity | null>
+
+	updateSaved (userId: string, key: keyof UserAccount['saved'], values: string[], add: boolean): Promise<UserEntity | null>
+
+	removeSaved (key: keyof UserAccount['saved'], values: string[]): Promise<boolean>
 }
