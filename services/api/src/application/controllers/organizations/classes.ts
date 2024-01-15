@@ -21,10 +21,10 @@ export class ClassesController {
 		return classIns
 	}
 
-	static async get (req: Request) {
+	static async get (req: Request, explore = false) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
-		query.auth = [{ field: 'organizationId', value: req.params.organizationId }]
+		if (!explore) query.auth = [{ field: 'organizationId', value: req.params.organizationId }]
 		return await ClassesUseCases.get(query)
 	}
 
