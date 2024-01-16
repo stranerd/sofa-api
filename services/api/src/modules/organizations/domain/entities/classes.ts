@@ -30,6 +30,10 @@ export class ClassEntity extends BaseEntity implements Saleable {
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
+
+	getLesson (id: string) {
+		return this.lessons.find((l) => l.id === id) ?? null
+	}
 }
 
 type ClassConstructorArgs = Saleable & {

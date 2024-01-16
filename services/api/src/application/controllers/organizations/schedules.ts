@@ -38,7 +38,7 @@ export class SchedulesController {
 		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 		const classIns = await ClassesUseCases.find(req.params.classId)
-		const lesson = classIns?.lessons.find((l) => l.id === data.lessonId)
+		const lesson = classIns?.getLesson(data.lessonId) ?? null
 		if (!lesson || !lesson.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 
 		const user = await UsersUseCases.find(req.authUser!.id)

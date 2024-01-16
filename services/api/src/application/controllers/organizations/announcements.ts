@@ -1,4 +1,4 @@
-import { AnnouncementsUseCases, MemberTypes, canAccessOrgClasses } from '@modules/organizations'
+import { AnnouncementsUseCases, ClassesUseCases, MemberTypes, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -39,6 +39,11 @@ export class AnnouncementsController {
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+
+		if (data.filter.lessonId) {
+			const classInst = await ClassesUseCases.find(req.params.classId)
+			if (!classInst?.getLesson(data.filter.lessonId)) throw new BadRequestError('lesson not found')
+		}
 
 		return await AnnouncementsUseCases.add({
 			...data, user: user.getEmbedded(),
