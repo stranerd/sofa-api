@@ -29,6 +29,6 @@ export { Currencies, PlanDataType, Purchasables, Saleable, TransactionStatus, Tr
 export { FlutterwavePayment } from './utils/flutterwave'
 export { findPurchasable } from './utils/purchases'
 export { renewPlanSubscription, subscribeToPlan, updateOrgsMembersDays } from './utils/subscriptions'
-export { createSubscriptionTo, renewSubscriptionTo } from './utils/subscriptions/generic'
+export { cancelSubscriptionTo, createSubscriptionTo, renewSubscriptionTo } from './utils/subscriptions/generic'
 export { fulfillTransaction, processTransactions } from './utils/transactions'
 export { processWithdrawals } from './utils/withdrawals'

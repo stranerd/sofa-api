@@ -61,5 +61,29 @@ export const classesRoutes = groupRoutes('/classes', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/purchase',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await ClassesController.purchase(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/purchase',
+		method: 'delete',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await ClassesController.cancelPurchase(req)
+				}
+			})
+		]
 	},
 ])

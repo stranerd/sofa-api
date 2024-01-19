@@ -23,7 +23,8 @@ export const canAccessOrgClasses = async (user: AuthUser, organizationId: string
 		],
 		all: true
 	})
-	if (members.some((m) => m.type === MemberTypes.teacher)) return 'teacher'
+	// if (members.some((m) => m.type === MemberTypes.teacher)) return 'teacher'
+	if (classInst.lessons.some((l) => l.users.teachers.includes(user.id))) return 'teacher'
 	if (members.some((m) => m.type === MemberTypes.student)) return 'student'
 	if (classInst.members.students.includes(user.id)) return 'student'
 	return null

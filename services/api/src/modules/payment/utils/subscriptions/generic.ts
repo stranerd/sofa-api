@@ -61,9 +61,10 @@ const deactivateSub = async (userId: string, wallet: WalletEntity, data: Subscri
 		sendEmail: true
 	})
 	const oldSub = wallet.getSubscription(data)
+	if (!oldSub) return wallet
 	return await WalletsUseCases.updateSubscriptions({
 		id: wallet.id,
-		subscription: { active: false, current: oldSub?.current ?? null, next: null, data },
+		subscription: { active: false, current: oldSub.current, next: null, data },
 	})
 }
 
@@ -129,4 +130,9 @@ export const renewSubscriptionTo = async (userId: string, subscriptionData: Subs
 
 	const successful = await chargeForSubscription(user, data, subscriptionData, method)
 	return successful ? activateSub(userId, wallet, subscriptionData, data) : await deactivateSub(userId, wallet,  subscriptionData, data)
+}
+
+export const cancelSubscriptionTo = async (userId: string, subscriptionData: Subscription['data']) => {
+	const wallet = await WalletsUseCases.get(userId)
+	return deactivateSub(userId, wallet, subscriptionData, null)
 }
