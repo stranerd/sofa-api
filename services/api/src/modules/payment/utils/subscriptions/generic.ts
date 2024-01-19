@@ -42,16 +42,15 @@ const activateSub = async (userId: string, wallet: WalletEntity, data: Subscript
 		data: { type: NotificationType.GenericSubscriptionSuccessful, data },
 		sendEmail: true
 	})
-	/* return await WalletsUseCases.updateSubscription({
+	return await WalletsUseCases.updateSubscriptions({
 		id: wallet.id,
-		data: {
+		subscription: {
 			active: true,
-			current: { id: plan.id, activatedAt: now, expiredAt: renewedAt, jobId },
-			next: { id: plan.id, renewedAt },
-			data: plan.data,
-			membersDays: 0
-		}
-	}) */
+			current: { activatedAt: now, expiredAt: renewedAt, jobId },
+			next: { renewedAt },
+			data,
+		},
+	})
 }
 
 const deactivateSub = async (userId: string, wallet: WalletEntity, data: Subscription['data'], sub: Sub | null) => {
@@ -61,7 +60,11 @@ const deactivateSub = async (userId: string, wallet: WalletEntity, data: Subscri
 		data: { type: NotificationType.GenericSubscriptionFailed, data },
 		sendEmail: true
 	})
-	/* return await WalletsUseCases.updateSubscription({ id: wallet.id, data: { active: false, next: null } }) */
+	const oldSub = wallet.getSubscription(data)
+	return await WalletsUseCases.updateSubscriptions({
+		id: wallet.id,
+		subscription: { active: false, current: oldSub?.current ?? null, next: null, data },
+	})
 }
 
 const chargeForSubscription = async (user: UserEntity, sub: Sub, data: Subscription['data'], method: MethodEntity) => {

@@ -1,5 +1,5 @@
 import { WalletEntity } from '../entities/wallets'
-import { AccountDetails, PlanDataType, SubscriptionModel, TransferData, WithdrawData } from '../types'
+import { AccountDetails, PlanDataType, Subscription, SubscriptionModel, TransferData, WithdrawData } from '../types'
 
 export interface IWalletRepository {
 	get: (userId: string) => Promise<WalletEntity>
@@ -11,4 +11,5 @@ export interface IWalletRepository {
 	transfer: (data: TransferData) => Promise<boolean>
 	withdraw: (data: WithdrawData) => Promise<boolean>
 	updateMembersDays: (data: Record<string, number>) => Promise<boolean>
+	updateSubscriptions: (id: string, subscription: Subscription) => Promise<WalletEntity>
 }

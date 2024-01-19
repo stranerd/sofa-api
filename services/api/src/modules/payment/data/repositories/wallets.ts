@@ -1,7 +1,7 @@
 import { BadRequestError, DelayedJobs } from 'equipped'
 import { ClientSession } from 'mongodb'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
-import { AccountDetails, Currencies, PlanDataType, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
+import { AccountDetails, Currencies, PlanDataType, Subscription, SubscriptionModel, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
 import { TransactionToModel } from '../models/transactions'
 import { Transaction } from '../mongooseModels/transactions'
@@ -190,6 +190,25 @@ export class WalletRepository implements IWalletRepository {
 			return res
 		})
 		return res
+	}
+
+	async updateSubscriptions (id: string, subscription: Subscription) {
+		let res = null as WalletFromModel | null
+		await Wallet.collection.conn.transaction(async (session) => {
+			const wallet = this.mapper.mapFrom(await Wallet.findById(id, {}, { session }))!
+			const sub = wallet.getSubscription(subscription.data)
+			const subscriptions = [...wallet.subscriptions]
+			const index = sub ? subscriptions.indexOf(sub) : -1
+			if (index === -1) subscriptions.push(subscription)
+			else subscriptions[index] = subscription
+			const updatedWallet = await Wallet.findByIdAndUpdate(wallet.id,
+				{ $set: { subscriptions } },
+				{ new: true, session }
+			)
+			res = updatedWallet
+			return res
+		})
+		return this.mapper.mapFrom(res)!
 	}
 }
 
