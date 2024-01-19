@@ -1,7 +1,7 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { ClassToModel } from '../../data/models/classes'
 import { ClassEntity } from '../entities/classes'
-import { ClassLesson, EmbeddedUser, LessonMembers } from '../types'
+import { ClassLesson, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
 
 export interface IClassRepository {
 	add: (data: ClassToModel) => Promise<ClassEntity>
@@ -13,5 +13,6 @@ export interface IClassRepository {
 	addLesson: (organizationId: string, classId: string, data: Partial<ClassLesson>) => Promise<ClassEntity | null>
 	updateLesson: (organizationId: string, classId: string, lessonId: string, data: Partial<ClassLesson>) => Promise<ClassEntity | null>
 	deleteLesson: (organizationId: string, classId: string, lessonId: string) => Promise<ClassEntity | null>
+	manageMembers: (data: { organizationId: string, classId: string, userIds: string[], type: keyof ClassMembers, add: boolean }) => Promise<ClassEntity | null>
 	manageLessonUsers: (data: { organizationId: string, classId: string, lessonId: string, userIds: string[], type: keyof LessonMembers, add: boolean }) => Promise<ClassEntity | null>
 }

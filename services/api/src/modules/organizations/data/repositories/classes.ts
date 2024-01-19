@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IClassRepository } from '../../domain/irepositories/classes'
-import { ClassLesson, EmbeddedUser, LessonMembers } from '../../domain/types'
+import { ClassLesson, ClassMembers, EmbeddedUser, LessonMembers } from '../../domain/types'
 import { ClassMapper } from '../mappers/classes'
 import { ClassToModel } from '../models/classes'
 import { Class } from '../mongooseModels/classes'
@@ -82,6 +82,15 @@ export class ClassRepository implements IClassRepository {
 		const classInst = await Class.findOneAndUpdate(
 			{ organizationId, _id: classId, 'lessons.id': lessonId },
 			{ $pull: { lessons: { id: lessonId } } },
+			{ new: true }
+		)
+		return this.mapper.mapFrom(classInst)
+	}
+
+	async manageMembers ({ organizationId, classId, userIds, type, add }: { organizationId: string, classId: string, userIds: string[], type: keyof ClassMembers, add: boolean }) {
+		const classInst = await Class.findOneAndUpdate(
+			{ organizationId, _id: classId },
+			{ [add ? '$addToSet' : '$pull']: { [`members.${type}`]: { [add ? '$each' : '$in']: userIds } } },
 			{ new: true }
 		)
 		return this.mapper.mapFrom(classInst)
