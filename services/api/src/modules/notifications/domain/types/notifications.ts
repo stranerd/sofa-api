@@ -1,4 +1,4 @@
-import { Purchasables } from '@modules/payment'
+import { Purchasables, Subscription } from '@modules/payment'
 
 export enum NotificationType {
 	VerificationAccepted = 'VerificationAccepted',
@@ -14,6 +14,8 @@ export enum NotificationType {
 	WalletFundSuccessful = 'WalletFundSuccessful',
 	SubscriptionSuccessful = 'SubscriptionSuccessful',
 	SubscriptionFailed = 'SubscriptionFailed',
+	GenericSubscriptionSuccessful = 'GenericSubscriptionSuccessful',
+	GenericSubscriptionFailed = 'ClassSubscriptionFailed',
 	NewQuizAccessRequest = 'NewQuizAccessRequest',
 	QuizAccessRequestGranted = 'QuizAccessRequestGranted',
 	QuizAccessRequestRejected = 'QuizAccessRequestRejected',
@@ -35,6 +37,8 @@ export type NotificationData =
 	| { type: NotificationType.WalletFundSuccessful, amount: number, currency: string }
 	| { type: NotificationType.SubscriptionSuccessful, planId: string }
 	| { type: NotificationType.SubscriptionFailed, planId: string }
+	| { type: NotificationType.GenericSubscriptionSuccessful, data: Subscription['data'] }
+	| { type: NotificationType.GenericSubscriptionFailed, data: Subscription['data'] }
 	| { type: NotificationType.NewQuizAccessRequest, quizId: string, userIds: string[] }
 	| { type: NotificationType.QuizAccessRequestGranted, quizId: string }
 	| { type: NotificationType.QuizAccessRequestRejected, quizId: string }

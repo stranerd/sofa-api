@@ -1,23 +1,23 @@
+import { NotificationType, sendNotification } from '@modules/notifications'
 import { MembersUseCases } from '@modules/organizations'
 import { UserEntity, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
-import { NotificationType, sendNotification } from '@modules/notifications'
-import { MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '../'
-import { MethodEntity } from '../domain/entities/methods'
-import { PlanEntity } from '../domain/entities/plans'
-import { WalletEntity } from '../domain/entities/wallets'
-import { TransactionStatus, TransactionType } from '../domain/types'
-import { FlutterwavePayment } from './flutterwave'
+import { MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '../..'
+import { MethodEntity } from '../../domain/entities/methods'
+import { PlanEntity } from '../../domain/entities/plans'
+import { WalletEntity } from '../../domain/entities/wallets'
+import { TransactionStatus, TransactionType } from '../../domain/types'
+import { FlutterwavePayment } from '../flutterwave'
 
 const getSubscriptionMultipier = async (user: UserEntity, wallet: WalletEntity, subscription: PlanEntity) => {
 	if (!user.isOrg()) return 1
 	return wallet.subscription.membersDays / subscription.getLengthInDays()
 }
 
-const activateSub = async (userId: string, walletId: string, plan: PlanEntity) => {
+const activateSub = async (userId: string, wallet: WalletEntity, plan: PlanEntity) => {
 	const now = Date.now()
-	const renewedAt = plan.getNextCharge(now)
+	const renewedAt = wallet.getNextCharge(plan.interval, now)
 	const jobId = await appInstance.job.addDelayedJob({
 		type: DelayedJobs.RenewSubscription, data: { userId }
 	}, renewedAt - now)
@@ -28,7 +28,7 @@ const activateSub = async (userId: string, walletId: string, plan: PlanEntity) =
 		sendEmail: true
 	})
 	return await WalletsUseCases.updateSubscription({
-		id: walletId,
+		id: wallet.id,
 		data: {
 			active: true,
 			current: { id: plan.id, activatedAt: now, expiredAt: renewedAt, jobId },
@@ -36,6 +36,18 @@ const activateSub = async (userId: string, walletId: string, plan: PlanEntity) =
 			data: plan.data,
 			membersDays: 0
 		}
+	})
+}
+
+const deactivateSub = async (userId: string, walletId: string, plan: PlanEntity | null) => {
+	if (plan) await sendNotification([userId], {
+		title: `Subscription to ${plan.title} failed`,
+		body: `Your subscription to ${plan.title} failed to be activated`,
+		data: { type: NotificationType.SubscriptionFailed, planId: plan.id },
+		sendEmail: true
+	})
+	return await WalletsUseCases.updateSubscription({
+		id: walletId, data: { active: false, next: null }
 	})
 }
 
@@ -62,18 +74,6 @@ const chargeForSubscription = async (user: UserEntity, plan: PlanEntity, method:
 	}
 }
 
-const deactivateSub = async (userId: string, walletId: string, plan: PlanEntity | null) => {
-	if (plan) await sendNotification([userId], {
-		title: `Subscription to ${plan.title} successful`,
-		body: `Your subscription to ${plan.title} has been activated successfully`,
-		data: { type: NotificationType.SubscriptionFailed, planId: plan.id },
-		sendEmail: true
-	})
-	return await WalletsUseCases.updateSubscription({
-		id: walletId, data: { active: false, next: null }
-	})
-}
-
 export const subscribeToPlan = async (userId: string, subscriptionId: string) => {
 	const wallet = await WalletsUseCases.get(userId)
 	if (wallet.subscription.active) return wallet
@@ -91,10 +91,10 @@ export const subscribeToPlan = async (userId: string, subscriptionId: string) =>
 	if (!method) throw new BadRequestError('no method found')
 	const successful = await chargeForSubscription(user, plan, method, wallet)
 	if (!successful) throw new BadRequestError('charge failed')
-	return activateSub(userId, wallet.id, plan)
+	return activateSub(userId, wallet, plan)
 }
 
-export const renewSubscription = async (userId: string) => {
+export const renewPlanSubscription = async (userId: string) => {
 	const wallet = await WalletsUseCases.get(userId)
 	if (!wallet.subscription.next) return await deactivateSub(userId, wallet.id, null)
 	const user = await UsersUseCases.find(userId)
@@ -107,7 +107,7 @@ export const renewSubscription = async (userId: string) => {
 	const method = methods.at(0)
 	if (!method) return await deactivateSub(userId, wallet.id, plan)
 	const successful = await chargeForSubscription(user, plan, method, wallet)
-	return successful ? activateSub(userId, wallet.id, plan) : await deactivateSub(userId, wallet.id, plan)
+	return successful ? activateSub(userId, wallet, plan) : await deactivateSub(userId, wallet.id, plan)
 }
 
 export const updateOrgsMembersDays = async () => {

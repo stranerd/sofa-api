@@ -1,6 +1,6 @@
 import { deleteUnverifiedUsers } from '@modules/auth'
 import { EmailErrorsUseCases, NotificationsUseCases, PhoneErrorsUseCases, sendMailAndCatchError, sendTextAndCatchError } from '@modules/notifications'
-import { MethodsUseCases, processTransactions, processWithdrawals, renewSubscription, updateOrgsMembersDays } from '@modules/payment'
+import { MethodsUseCases, processTransactions, processWithdrawals, renewPlanSubscription, renewSubscriptionTo, updateOrgsMembersDays } from '@modules/payment'
 import { PlayTypes, endPlay } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
@@ -14,7 +14,8 @@ export const startJobs = async () => {
 		{ name: CronTypes.monthly, cron: '0 0 1 * *' }
 	], {
 		onDelayed: async (data) => {
-			if (data.type === DelayedJobs.RenewSubscription) await renewSubscription(data.data.userId)
+			if (data.type === DelayedJobs.RenewSubscription) await renewPlanSubscription(data.data.userId)
+			if (data.type === DelayedJobs.RenewGenericSubscription) await renewSubscriptionTo(data.data.userId, data.data.data)
 			if (data.type === DelayedJobs.PlayTimer) await endPlay(data.data.type as PlayTypes, data.data.typeId, data.data.userId)
 		},
 		onCronLike: async () => { },

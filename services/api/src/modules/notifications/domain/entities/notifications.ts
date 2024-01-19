@@ -53,8 +53,11 @@ export class NotificationEntity extends BaseEntity {
 		else if (not.type === NotificationType.WithdrawalSuccessful) return '/settings/wallet'
 		else if (not.type === NotificationType.WithdrawalFailed) return '/settings/wallet'
 		else if (not.type === NotificationType.WalletFundSuccessful) return '/settings/wallet'
+
 		else if (not.type === NotificationType.SubscriptionSuccessful) return '/settings/subscription'
 		else if (not.type === NotificationType.SubscriptionFailed) return '/settings/subscription'
+		else if (not.type === NotificationType.GenericSubscriptionSuccessful) return '/settings/wallet'
+		else if (not.type === NotificationType.GenericSubscriptionFailed) return '/settings/wallet'
 
 		else if (not.type === NotificationType.NewQuizAccessRequest) return `/quiz/${not.quizId}/edit`
 		else if (not.type === NotificationType.QuizAccessRequestGranted) return `/quiz/${not.quizId}/edit`

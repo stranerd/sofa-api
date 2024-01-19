@@ -1,6 +1,8 @@
 export * from './purchases'
+export * from './subscriptions'
 import { CronTypes, Enum } from 'equipped'
 import { PurchaseToModel } from '../../data/models/purchases'
+import { Subscription } from './subscriptions'
 
 export enum Currencies {
 	NGN = 'NGN'
@@ -16,6 +18,7 @@ export enum TransactionStatus {
 export enum TransactionType {
 	newCard = 'newCard',
 	subscription = 'subscription',
+	genericSubscription = 'genericSubscription',
 	purchase = 'purchase',
 	purchased = 'purchased',
 	sent = 'sent',
@@ -31,6 +34,9 @@ export type TransactionData = {
 	type: TransactionType.subscription
 	subscriptionId: string
 	multiplier: number
+} | {
+	type: TransactionType.genericSubscription
+	data: Subscription['data']
 } | {
 	type: TransactionType.purchase
 	purchase: PurchaseToModel

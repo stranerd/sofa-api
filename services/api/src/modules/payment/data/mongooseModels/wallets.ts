@@ -59,6 +59,11 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 			default: 0
 		}
 	},
+	subscriptions: {
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as WalletFromModel['subscriptions'],
+		required: false,
+		default: () => []
+	},
 	createdAt: {
 		type: Number,
 		required: false,
