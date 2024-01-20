@@ -1,5 +1,5 @@
 import { ClassesUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } from '@modules/organizations'
-import { BadRequestError, NotAuthorizedError, Request, Schema, validate } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
 export class LessonsController {
 	private static schema = () => ({
@@ -20,6 +20,7 @@ export class LessonsController {
 				{ field: 'organizationId', value: req.params.organizationId },
 				{ field: 'classId', value: req.params.classId },
 				{ field: 'type', value: MemberTypes.teacher },
+				{ field: 'user.id', condition: Conditions.in, value: data.teachers }
 			]
 		})
 
