@@ -1,3 +1,4 @@
+import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { ClassLesson, ClassMembers, EmbeddedUser, Media, Saleable } from '../types'
 
@@ -22,7 +23,7 @@ export class ClassEntity extends BaseEntity implements Saleable {
 		this.title = title
 		this.description = description
 		this.photo = photo
-		this.user = user
+		this.user = generateDefaultUser(user)
 		this.frozen = frozen
 		this.price = price
 		this.lessons = lessons

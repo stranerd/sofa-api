@@ -53,7 +53,9 @@ export type UserAccount = {
 
 export type EmbeddedUser = {
 	id: string
-	bio: Pick<UserBio, 'name' | 'photo'>
+	bio: Pick<UserBio, 'name' | 'photo'> & {
+		publicName: string
+	}
 	roles: UserRoles
 	type: UserTypeData | null
 }

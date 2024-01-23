@@ -1,3 +1,4 @@
+import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { EmbeddedUser, MemberTypes } from '../types'
 
@@ -17,7 +18,7 @@ export class MemberEntity extends BaseEntity {
 		super()
 		this.id = id
 		this.email = email
-		this.user = user
+		this.user = user ? generateDefaultUser(user) : null
 		this.type = type
 		this.organizationId = organizationId
 		this.pending = pending
