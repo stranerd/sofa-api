@@ -35,7 +35,6 @@ export class SchedulesController {
 		}, req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 		const classIns = await ClassesUseCases.find(req.params.classId)
 		const lesson = classIns?.getLesson(data.lessonId) ?? null
@@ -54,9 +53,7 @@ export class SchedulesController {
 		const data = validate(this.schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
-		if (hasAccess !== 'admin') throw new NotAuthorizedError()
-		// only admins can update and delete schedules
+		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 
 		const schedule = await SchedulesUseCases.update({
 			data, id: req.params.id,
@@ -68,9 +65,7 @@ export class SchedulesController {
 
 	static async delete (req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
-		if (hasAccess !== 'admin') throw new NotAuthorizedError()
-		// only admins can update and delete schedules
+		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 
 		const isDeleted = await SchedulesUseCases.delete({
 			id: req.params.id,
@@ -83,7 +78,6 @@ export class SchedulesController {
 
 	static async start (req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 
 		const updated = await SchedulesUseCases.start({ organizationId: req.params.organizationId, classId: req.params.classId, id: req.params.id })
@@ -93,7 +87,6 @@ export class SchedulesController {
 
 	static async end (req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 
 		const updated = await SchedulesUseCases.end({ organizationId: req.params.organizationId, classId: req.params.classId, id: req.params.id })

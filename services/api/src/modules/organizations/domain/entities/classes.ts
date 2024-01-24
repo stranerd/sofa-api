@@ -26,7 +26,12 @@ export class ClassEntity extends BaseEntity implements Saleable {
 		this.user = generateDefaultUser(user)
 		this.frozen = frozen
 		this.price = price
-		this.lessons = lessons
+		this.lessons = lessons.map((l) => ({
+			id: l.id,
+			title: l.title,
+			users: l.users ?? { students: [], teachers: [] },
+			curriculum: l.curriculum ?? []
+		}))
 		this.members = members
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt

@@ -105,4 +105,12 @@ export class ClassRepository implements IClassRepository {
 		return this.mapper.mapFrom(classInst)
 	}
 
+	async updateLessonCurriculum ({ organizationId, classId, lessonId, curriculum } : { organizationId: string, classId: string, lessonId: string, curriculum: ClassLesson['curriculum'] }) {
+		const classInst = await Class.findOneAndUpdate(
+			{ organizationId, _id: classId, 'lessons.id': lessonId },
+			{ $set: { 'lessons.$.curriculum': curriculum } },
+			{ new: true }
+		)
+		return this.mapper.mapFrom(classInst)
+	}
 }

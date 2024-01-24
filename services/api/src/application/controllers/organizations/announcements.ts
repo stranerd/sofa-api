@@ -34,7 +34,6 @@ export class AnnouncementsController {
 		const data = validate(this.schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 
 		const user = await UsersUseCases.find(req.authUser!.id)
@@ -53,8 +52,7 @@ export class AnnouncementsController {
 
 	static async delete (req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
-		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+		if (hasAccess !== 'admin') throw new NotAuthorizedError()
 
 		const isDeleted = await AnnouncementsUseCases.delete({
 			id: req.params.id,

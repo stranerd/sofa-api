@@ -1,10 +1,11 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IScheduleRepository } from '../../domain/irepositories/schedules'
-import { EmbeddedUser, ScheduleStatus } from '../../domain/types'
+import { ClassLessonable, EmbeddedUser, ScheduleStatus } from '../../domain/types'
 import { ScheduleMapper } from '../mappers/schedules'
 import { ScheduleToModel } from '../models/schedules'
 import { Schedule } from '../mongooseModels/schedules'
+import { Class } from '../mongooseModels/classes'
 
 export class ScheduleRepository implements IScheduleRepository {
 	private static instance: ScheduleRepository
@@ -49,8 +50,18 @@ export class ScheduleRepository implements IScheduleRepository {
 	}
 
 	async delete (organizationId: string, classId: string, id: string) {
-		const schedule = await Schedule.findOneAndDelete({ _id: id, organizationId, classId })
-		return !!schedule
+		let res = false
+		await Schedule.collection.conn.transaction(async (session) => {
+			const schedule = await Schedule.findOneAndDelete({ _id: id, organizationId, classId }, { session })
+			if (schedule) await Class.findOneAndUpdate(
+				{ _id: classId, organizationId },
+				{ $pull: { 'lessons.$[].curriculum.items': { id, type: ClassLessonable.schedule } } },
+				{ session }
+			)
+			res = !!schedule
+			return res
+		})
+		return res
 	}
 
 	async start (organizationId: string, classId: string, id: string) {

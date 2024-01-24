@@ -55,4 +55,10 @@ export class ClassesUseCase {
 	}) {
 		return await this.repository.manageLessonUsers(input)
 	}
+
+	async updateLessonCurriculum (data: {
+		organizationId: string, classId: string, lessonId: string, curriculum: ClassLesson['curriculum']
+	}) {
+		return await this.repository.updateLessonCurriculum(data)
+	}
 }
