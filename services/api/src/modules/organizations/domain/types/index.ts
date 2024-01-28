@@ -67,6 +67,8 @@ export type ClassLessonCurriculumSection = {
 
 export type ScheduleStream = {
 	broadcastId: string
-	stream: string
+	streamId: string
 	streamKey: string
+	type: 'jitsi'
+	roomId: string
 }

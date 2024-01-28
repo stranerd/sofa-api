@@ -55,7 +55,9 @@ export const createLiveStream = async (schedule: ScheduleEntity): Promise<Schedu
 
 	return {
 		broadcastId: broadcast.id!,
-		stream: stream.id!,
+		streamId: stream.id!,
 		streamKey: stream.cdn?.ingestionInfo?.streamName!,
+		type: 'jitsi',
+		roomId: `${schedule.title}-${schedule.id}`
 	}
 }
