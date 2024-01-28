@@ -49,7 +49,7 @@ export class ConversationRepository implements IConversationRepository {
 	}
 
 	async update (id: string, userId: string, data: Partial<ConversationToModel>) {
-		const conversation = await Conversation.findByIdAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
+		const conversation = await Conversation.findOneAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(conversation)
 	}
 

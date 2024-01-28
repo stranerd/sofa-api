@@ -64,3 +64,9 @@ export type ClassLessonCurriculumSection = {
 	label: string
 	items: ClassLessonCurriculumSectionItem[]
 }
+
+export type ScheduleStream = {
+	broadcastId: string
+	stream: string
+	streamKey: string
+}

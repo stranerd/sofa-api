@@ -2,10 +2,11 @@ import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IScheduleRepository } from '../../domain/irepositories/schedules'
 import { ClassLessonable, EmbeddedUser, ScheduleStatus } from '../../domain/types'
+import { createLiveStream } from '../../utils/livestreams'
 import { ScheduleMapper } from '../mappers/schedules'
-import { ScheduleToModel } from '../models/schedules'
-import { Schedule } from '../mongooseModels/schedules'
+import { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
 import { Class } from '../mongooseModels/classes'
+import { Schedule } from '../mongooseModels/schedules'
 
 export class ScheduleRepository implements IScheduleRepository {
 	private static instance: ScheduleRepository
@@ -65,15 +66,21 @@ export class ScheduleRepository implements IScheduleRepository {
 	}
 
 	async start (organizationId: string, classId: string, id: string) {
-		const schedule = await Schedule.findByIdAndUpdate(
-			{ _id: id, organizationId, classId, status: ScheduleStatus.created },
-			{ $set: { status: ScheduleStatus.started } },
-		)
-		return this.mapper.mapFrom(schedule)
+		let res = null as ScheduleFromModel | null
+		await Schedule.collection.conn.transaction(async (session) => {
+			const schedule = this.mapper.mapFrom(await Schedule.findOne({ _id: id, organizationId, classId }, { session }))
+			if (!schedule || schedule.status !== ScheduleStatus.created) return res
+			return res = await Schedule.findByIdAndUpdate(
+				schedule.id,
+				{ $set: { status: ScheduleStatus.started, stream: await createLiveStream(schedule) } },
+				{ session, new: true }
+			)
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async end (organizationId: string, classId: string, id: string) {
-		const schedule = await Schedule.findByIdAndUpdate(
+		const schedule = await Schedule.findOneAndUpdate(
 			{ _id: id, organizationId, classId, status: ScheduleStatus.started },
 			{ $set: { status: ScheduleStatus.ended } },
 		)

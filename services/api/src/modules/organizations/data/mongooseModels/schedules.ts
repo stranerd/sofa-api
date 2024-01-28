@@ -38,6 +38,11 @@ const ScheduleSchema = new appInstance.dbs.mongo.Schema<ScheduleFromModel>({
 		required: true,
 		default: ScheduleStatus.created
 	},
+	stream: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	createdAt: {
 		type: Number,
 		required: false,

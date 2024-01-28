@@ -32,6 +32,13 @@ export const mailchimpConfig = {
 	dataCenter: MAILCHIMP_CONFIG.dataCenter
 }
 
+const YOUTUBE_CONFIG = JSON.parse(getEnvOrFail('YOUTUBE_CONFIG') || '{}')
+export const youtubeConfig = {
+	clientId: YOUTUBE_CONFIG.clientId,
+	clientSecret: YOUTUBE_CONFIG.clientSecret,
+	refreshToken: YOUTUBE_CONFIG.refreshToken
+}
+
 export const superAdminEmail = getEnvOrFail('SUPER_ADMIN')
 export const officialAccountEmail = getEnvOrFail('OFFICIAL_ACCOUNT')
 
