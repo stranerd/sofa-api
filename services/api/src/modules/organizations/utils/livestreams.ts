@@ -1,5 +1,5 @@
-import { google } from 'googleapis'
 import { youtubeConfig } from '@utils/environment'
+import { google } from 'googleapis'
 import { ScheduleEntity } from '../domain/entities/schedules'
 import { ScheduleStream } from '../domain/types'
 
@@ -58,6 +58,6 @@ export const createLiveStream = async (schedule: ScheduleEntity): Promise<Schedu
 		streamId: stream.id!,
 		streamKey: stream.cdn?.ingestionInfo?.streamName!,
 		type: 'jitsi',
-		roomId: `${schedule.title}-${schedule.id}`
+		roomId: `${schedule.title}-${schedule.id}`.replace(/[^a-zA-Z0-9]/g, '')
 	}
 }
