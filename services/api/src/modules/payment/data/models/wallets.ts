@@ -2,7 +2,7 @@ import { AccountDetails, Currencies, Subscription, SubscriptionModel } from '../
 
 export interface WalletFromModel extends WalletToModel {
 	_id: string
-	balance: { amount: number, currency: Currencies }
+	balance: { amount: number; currency: Currencies }
 	accounts: AccountDetails[]
 	subscription: SubscriptionModel
 	subscriptions: Subscription[]

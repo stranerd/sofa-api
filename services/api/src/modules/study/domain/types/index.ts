@@ -14,12 +14,12 @@ export enum FileType {
 export enum FolderSaved {
 	courses = 'courses',
 	quizzes = 'quizzes',
-	files = 'files'
+	files = 'files',
 }
 
 export enum DraftStatus {
 	draft = 'draft',
-	published = 'published'
+	published = 'published',
 }
 
 export type Publishable = {
@@ -35,7 +35,7 @@ export type Publishable = {
 
 export enum Coursable {
 	quiz = 'quiz',
-	file = 'file'
+	file = 'file',
 }
 
 export type CoursableData = Publishable & {
@@ -44,18 +44,18 @@ export type CoursableData = Publishable & {
 
 export type CourseSections = {
 	label: string
-	items: { id: string, type: Coursable }[]
+	items: { id: string; type: Coursable }[]
 }[]
 
 export enum QuizMeta {
 	games = 'games',
 	tests = 'tests',
-	total = 'total'
+	total = 'total',
 }
 
 export enum CourseMeta {
 	purchases = 'purchases',
-	total = 'total'
+	total = 'total',
 }
 
 export type QuizAccess = {
@@ -67,5 +67,5 @@ export enum QuizModes {
 	practice = 'practice',
 	test = 'test',
 	game = 'game',
-	flashcard = 'flashcard'
+	flashcard = 'flashcard',
 }

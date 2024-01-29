@@ -10,36 +10,32 @@ export const answersRoutes = groupRoutes(`/:type(${types})/:typeId/answers`, [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await AnswerController.get(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await AnswerController.get(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await AnswerController.find(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await AnswerController.find(req),
+			})),
+		],
+	},
+	{
 		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await AnswerController.answer(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await AnswerController.answer(req),
+			})),
+		],
+	},
 ])

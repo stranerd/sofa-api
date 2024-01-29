@@ -8,48 +8,43 @@ export const methodsRoutes = groupRoutes('/methods', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MethodsController.get(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MethodsController.get(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MethodsController.find(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MethodsController.find(req),
+			})),
+		],
+	},
+	{
 		path: '/:id/primary',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MethodsController.makePrimary(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MethodsController.makePrimary(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MethodsController.delete(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MethodsController.delete(req),
+			})),
+		],
+	},
 ])

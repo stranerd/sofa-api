@@ -4,9 +4,7 @@ import { appInstance } from '@utils/types'
 
 export const subscribeToMailingList = async (email: string) => {
 	const body = {
-		members: [
-			{ email_address: email, status: 'subscribed' }
-		]
+		members: [{ email_address: email, status: 'subscribed' }],
 	}
 	const bodyJSON = JSON.stringify(body)
 	const { audienceId, apiKey, dataCenter } = mailchimpConfig

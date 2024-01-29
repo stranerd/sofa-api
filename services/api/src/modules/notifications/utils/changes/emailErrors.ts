@@ -6,5 +6,5 @@ import { appInstance } from '@utils/types'
 export const EmailErrorDbChangeCallbacks: DbChangeCallbacks<EmailErrorFromModel, EmailErrorEntity> = {
 	created: async ({ after }) => {
 		await appInstance.logger.error(after.error)
-	}
+	},
 }

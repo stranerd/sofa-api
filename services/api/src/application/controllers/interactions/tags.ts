@@ -3,19 +3,19 @@ import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equi
 
 export class TagController {
 	private static schema = () => ({
-		title: Schema.string().min(1)
+		title: Schema.string().min(1),
 	})
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		return await TagsUseCases.find(req.params.id)
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const query = req.query as QueryParams
 		return await TagsUseCases.get(query)
 	}
 
-	static async update (req: Request) {
+	static async update(req: Request) {
 		const data = validate(this.schema(), req.body)
 
 		const updatedTag = await TagsUseCases.update({ id: req.params.id, data })
@@ -23,18 +23,21 @@ export class TagController {
 		throw new NotAuthorizedError()
 	}
 
-	static async create (req: Request) {
-		const data = validate({
-			...this.schema(),
-			type: Schema.in(Object.values(TagTypes))
-		}, req.body)
+	static async create(req: Request) {
+		const data = validate(
+			{
+				...this.schema(),
+				type: Schema.in(Object.values(TagTypes)),
+			},
+			req.body,
+		)
 
 		// if (data.parent !== null) throw new BadRequestError('no tag type can have children')
 
 		return await TagsUseCases.add({ ...data, parent: null })
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const isDeleted = await TagsUseCases.delete({ id: req.params.id })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()

@@ -1,6 +1,19 @@
 import { BaseEntity, Validation } from 'equipped'
 import { getNextRank, getRank } from '../../utils/ranks'
-import { EmbeddedUser, UserAccount, UserAi, UserBio, UserDates, UserLocation, UserRoles, UserSocialsType, UserStatus, UserTutor, UserType, UserTypeData } from '../types'
+import {
+	EmbeddedUser,
+	UserAccount,
+	UserAi,
+	UserBio,
+	UserDates,
+	UserLocation,
+	UserRoles,
+	UserSocialsType,
+	UserStatus,
+	UserTutor,
+	UserType,
+	UserTypeData,
+} from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -16,7 +29,7 @@ export class UserEntity extends BaseEntity {
 	public readonly location: UserLocation | null
 	ignoreInJSON = ['type.code', 'bio.email', 'bio.phone']
 
-	constructor ({ id, bio, roles, dates, status, account, type, tutor, ai, socials, location }: UserConstructorArgs) {
+	constructor({ id, bio, roles, dates, status, account, type, tutor, ai, socials, location }: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = generateDefaultBio(bio ?? {})
@@ -31,46 +44,46 @@ export class UserEntity extends BaseEntity {
 		this.location = location
 	}
 
-	get rank () {
+	get rank() {
 		return getRank(this.account.rankings.overall.value ?? 0)
 	}
 
-	get nextRank () {
+	get nextRank() {
 		return getNextRank(this.rank.id)
 	}
 
-	isBioComplete () {
+	isBioComplete() {
 		return this.bio.photo && this.bio.description
 	}
 
-	isDeleted () {
+	isDeleted() {
 		return this.dates.deletedAt !== null
 	}
 
-	isTeacher () {
+	isTeacher() {
 		return this.type?.type === UserType.teacher
 	}
 
-	isOrg () {
+	isOrg() {
 		return this.type?.type === UserType.organization
 	}
 
-	getOrgCode () {
+	getOrgCode() {
 		if (this.type?.type !== UserType.organization) return null
 		return this.type.code
 	}
 
-	getEmbedded (): EmbeddedUser {
+	getEmbedded(): EmbeddedUser {
 		const publicName = this.type?.type === UserType.organization ? this.type.name : this.bio.name.full
 		return {
 			id: this.id,
 			bio: { name: this.bio.name, photo: this.bio.photo, publicName },
 			roles: this.roles,
-			type: this.type
+			type: this.type,
 		}
 	}
 
-	canJoinConversations () {
+	canJoinConversations() {
 		return this.isTeacher() && this.tutor.conversations.length < 5
 	}
 }
@@ -92,7 +105,7 @@ type UserConstructorArgs = {
 const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {
 	const first = Validation.capitalize(bio?.name?.first ?? 'Anon')
 	const last = Validation.capitalize(bio?.name?.last ?? 'Ymous')
-	const full = Validation.capitalize(bio?.name?.full ?? (first + ' ' + last))
+	const full = Validation.capitalize(bio?.name?.full ?? first + ' ' + last)
 	const email = bio?.email ?? 'anon@ymous.com'
 	const description = bio?.description ?? ''
 	const photo = bio?.photo ?? null
@@ -100,9 +113,7 @@ const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {
 	return { name: { first, last, full }, email, description, photo, phone }
 }
 
-const generateDefaultRoles = (roles: Partial<UserRoles>): UserRoles => {
-	return roles ?? {}
-}
+const generateDefaultRoles = (roles: Partial<UserRoles>): UserRoles => roles ?? {}
 
 export const generateDefaultUser = (user: Partial<EmbeddedUser>): EmbeddedUser => {
 	const id = user?.id ?? ''
@@ -114,6 +125,6 @@ export const generateDefaultUser = (user: Partial<EmbeddedUser>): EmbeddedUser =
 		id,
 		bio: { name: bio.name, photo: bio.photo, publicName },
 		roles,
-		type
+		type,
 	}
 }

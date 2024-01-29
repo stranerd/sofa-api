@@ -7,7 +7,7 @@ export class InstitutionEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, isGateway, createdAt, updatedAt }: InstitutionConstructorArgs) {
+	constructor({ id, title, isGateway, createdAt, updatedAt }: InstitutionConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title

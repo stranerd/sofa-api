@@ -10,11 +10,11 @@ export class MemberEntity extends BaseEntity {
 	public readonly organizationId: string
 	public readonly pending: boolean
 	public readonly withCode: boolean
-	public readonly accepted: { is: boolean, at: number } | null
+	public readonly accepted: { is: boolean; at: number } | null
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, email, user, type, organizationId, pending, withCode, accepted, createdAt, updatedAt }: MemberConstructorArgs) {
+	constructor({ id, email, user, type, organizationId, pending, withCode, accepted, createdAt, updatedAt }: MemberConstructorArgs) {
 		super()
 		this.id = id
 		this.email = email
@@ -37,7 +37,7 @@ type MemberConstructorArgs = {
 	organizationId: string
 	pending: boolean
 	withCode: boolean
-	accepted: { is: boolean, at: number } | null
+	accepted: { is: boolean; at: number } | null
 	createdAt: number
 	updatedAt: number
 }

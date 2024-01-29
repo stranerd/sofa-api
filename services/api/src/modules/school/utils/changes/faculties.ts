@@ -15,5 +15,5 @@ export const FacultyDbChangeCallbacks: DbChangeCallbacks<FacultyFromModel, Facul
 		await appInstance.listener.deleted(['school/faculties', `school/faculties/${before.id}`], before)
 
 		await DepartmentsUseCases.deleteFacultyDepartments(before.id)
-	}
+	},
 }

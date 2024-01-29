@@ -11,24 +11,24 @@ export class ClassesController {
 		photo: Schema.file().image().nullable(),
 		price: Schema.object({
 			amount: Schema.number().gte(0),
-			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
-		})
+			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN),
+		}),
 	})
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		const classIns = await ClassesUseCases.find(req.params.id)
 		if (!classIns || classIns.organizationId !== req.params.organizationId) return null
 		return classIns
 	}
 
-	static async get (req: Request, explore = false) {
+	static async get(req: Request, explore = false) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
 		if (!explore) query.auth = [{ field: 'organizationId', value: req.params.organizationId }]
 		return await ClassesUseCases.get(query)
 	}
 
-	static async update (req: Request) {
+	static async update(req: Request) {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
@@ -40,17 +40,19 @@ export class ClassesController {
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('organizations/classes', uploadedPhoto) : undefined
 
 		const updatedClass = await ClassesUseCases.update({
-			id: req.params.id, organizationId: req.params.organizationId,
+			id: req.params.id,
+			organizationId: req.params.organizationId,
 			data: {
-				title, description,
-				...(changedPhoto ? { photo } : {})
-			}
+				title,
+				description,
+				...(changedPhoto ? { photo } : {}),
+			},
 		})
 		if (updatedClass) return updatedClass
 		throw new NotAuthorizedError()
 	}
 
-	static async create (req: Request) {
+	static async create(req: Request) {
 		const data = validate(this.schema(), { ...req.body, photo: req.files.photo?.at(0) ?? null })
 
 		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
@@ -61,12 +63,15 @@ export class ClassesController {
 		const photo = data.photo ? await UploaderUseCases.upload('organizations/classes', data.photo) : null
 
 		return await ClassesUseCases.add({
-			...data, photo, user: user.getEmbedded(), frozen: false,
+			...data,
+			photo,
+			user: user.getEmbedded(),
+			frozen: false,
 			organizationId: req.params.organizationId,
 		})
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()
 		const isDeleted = await ClassesUseCases.delete({ id: req.params.id, organizationId: req.params.organizationId })
@@ -74,7 +79,7 @@ export class ClassesController {
 		throw new NotAuthorizedError()
 	}
 
-	static async purchase (req: Request) {
+	static async purchase(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess) throw new BadRequestError('you already have access to the class, no need to purchase it')
 
@@ -84,7 +89,7 @@ export class ClassesController {
 		return !!sub?.active
 	}
 
-	static async cancelPurchase (req: Request) {
+	static async cancelPurchase(req: Request) {
 		const data: Subscription['data'] = { type: 'classes', classId: req.params.id, organizationId: req.params.organizationId }
 		const wallet = await cancelSubscriptionTo(req.authUser!.id, data)
 		const sub = wallet.getSubscription(data)

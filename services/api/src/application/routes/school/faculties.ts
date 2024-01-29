@@ -7,59 +7,56 @@ export const facultiesRoutes = groupRoutes('/faculties', [
 		path: '/',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await FacultyController.get(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await FacultyController.get(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await FacultyController.find(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await FacultyController.find(req),
+			})),
+		],
+	},
+	{
 		path: '/',
 		method: 'post',
 		controllers: [
-			isAuthenticated, isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await FacultyController.create(req)
-				}
-			})
-		]
-	}, {
+			isAuthenticated,
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await FacultyController.create(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'put',
 		controllers: [
-			isAuthenticated, isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await FacultyController.update(req)
-				}
-			})
-		]
-	}, {
+			isAuthenticated,
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await FacultyController.update(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'delete',
 		controllers: [
-			isAuthenticated, isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await FacultyController.delete(req)
-				}
-			})
-		]
-	}
+			isAuthenticated,
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await FacultyController.delete(req),
+			})),
+		],
+	},
 ])

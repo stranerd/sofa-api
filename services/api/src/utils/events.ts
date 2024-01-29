@@ -14,7 +14,7 @@ export const subscribers = {
 	}),
 	[EventTypes.DELETEFILE]: eventBus.createSubscriber<Events['DELETEFILE']>(EventTypes.DELETEFILE, async (data) => {
 		if (data?.path) await UploaderUseCases.delete(data.path)
-	})
+	}),
 }
 
 export const publishers = {

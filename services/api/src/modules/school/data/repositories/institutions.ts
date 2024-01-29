@@ -10,40 +10,40 @@ export class InstitutionRepository implements IInstitutionRepository {
 	private static instance: InstitutionRepository
 	private mapper: InstitutionMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new InstitutionMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!InstitutionRepository.instance) InstitutionRepository.instance = new InstitutionRepository()
 		return InstitutionRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Institution, query)
 
 		return {
 			...data,
-			results: data.results.map((r) => this.mapper.mapFrom(r)!)
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
 	}
 
-	async delete (id: string): Promise<boolean> {
+	async delete(id: string): Promise<boolean> {
 		const deleteData = await Institution.findByIdAndDelete(id)
 		return !!deleteData
 	}
 
-	async add (data: InstitutionToModel) {
+	async add(data: InstitutionToModel) {
 		const institution = await new Institution(data).save()
 		return this.mapper.mapFrom(institution)!
 	}
 
-	async update (id: string, data: Partial<InstitutionToModel>) {
+	async update(id: string, data: Partial<InstitutionToModel>) {
 		const institution = await Institution.findByIdAndUpdate(id, { $set: data }, { new: true })
 		return this.mapper.mapFrom(institution)
 	}
 
-	async find (id: string): Promise<InstitutionEntity | null> {
+	async find(id: string): Promise<InstitutionEntity | null> {
 		const institution = await Institution.findById(id)
 		return this.mapper.mapFrom(institution)
 	}

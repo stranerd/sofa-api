@@ -10,9 +10,7 @@ export class MethodEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id, data, token, primary, userId, createdAt, updatedAt
-	}: MethodConstructorArgs) {
+	constructor({ id, data, token, primary, userId, createdAt, updatedAt }: MethodConstructorArgs) {
 		super()
 		this.id = id
 		this.data = data

@@ -14,7 +14,19 @@ export class TestEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, quizId, status, userId, questions, totalTimeInSec, scores, startedAt, endedAt, createdAt, updatedAt }: TestConstructorArgs) {
+	constructor({
+		id,
+		quizId,
+		status,
+		userId,
+		questions,
+		totalTimeInSec,
+		scores,
+		startedAt,
+		endedAt,
+		createdAt,
+		updatedAt,
+	}: TestConstructorArgs) {
 		super()
 		this.id = id
 		this.quizId = quizId
@@ -29,8 +41,8 @@ export class TestEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	getEndsAt () {
-		return (this.startedAt ?? 0) + (this.totalTimeInSec * 1000)
+	getEndsAt() {
+		return (this.startedAt ?? 0) + this.totalTimeInSec * 1000
 	}
 }
 

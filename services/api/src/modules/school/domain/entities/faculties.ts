@@ -7,7 +7,7 @@ export class FacultyEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, institutionId, createdAt, updatedAt }: FacultyConstructorArgs) {
+	constructor({ id, title, institutionId, createdAt, updatedAt }: FacultyConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -17,4 +17,4 @@ export class FacultyEntity extends BaseEntity {
 	}
 }
 
-type FacultyConstructorArgs = { id: string, title: string, institutionId: string, createdAt: number, updatedAt: number }
+type FacultyConstructorArgs = { id: string; title: string; institutionId: string; createdAt: number; updatedAt: number }

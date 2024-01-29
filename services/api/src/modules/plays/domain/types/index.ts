@@ -4,10 +4,10 @@ export enum PlayStatus {
 	created = 'created',
 	started = 'started',
 	ended = 'ended',
-	scored = 'scored'
+	scored = 'scored',
 }
 
 export enum PlayTypes {
 	games = 'games',
-	tests = 'tests'
+	tests = 'tests',
 }

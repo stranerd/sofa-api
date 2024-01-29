@@ -3,7 +3,7 @@ export enum RankTypes {
 	comrade = 'comrade',
 	scholar = 'scholar',
 	wizard = 'wizard',
-	einstein = 'einstein'
+	einstein = 'einstein',
 }
 
 type Rank = {
@@ -16,28 +16,28 @@ const Ranks: Record<RankTypes, Rank> = {
 	[RankTypes.rookie]: {
 		id: RankTypes.rookie,
 		level: 1,
-		score: 100
+		score: 100,
 	},
 	[RankTypes.comrade]: {
 		id: RankTypes.comrade,
 		level: 2,
-		score: 250
+		score: 250,
 	},
 	[RankTypes.scholar]: {
 		id: RankTypes.scholar,
 		level: 3,
-		score: 600
+		score: 600,
 	},
 	[RankTypes.wizard]: {
 		id: RankTypes.wizard,
 		level: 4,
-		score: 1500
+		score: 1500,
 	},
 	[RankTypes.einstein]: {
 		id: RankTypes.einstein,
 		level: 5,
-		score: Number.POSITIVE_INFINITY
-	}
+		score: Number.POSITIVE_INFINITY,
+	},
 }
 
 export const ranks = Object.values(Ranks).sort((a, b) => a.level - b.level)

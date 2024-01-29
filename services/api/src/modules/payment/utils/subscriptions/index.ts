@@ -18,14 +18,18 @@ const getSubscriptionMultipier = async (user: UserEntity, wallet: WalletEntity, 
 const activateSub = async (userId: string, wallet: WalletEntity, plan: PlanEntity) => {
 	const now = Date.now()
 	const renewedAt = wallet.getNextCharge(plan.interval, now)
-	const jobId = await appInstance.job.addDelayedJob({
-		type: DelayedJobs.RenewSubscription, data: { userId }
-	}, renewedAt - now)
+	const jobId = await appInstance.job.addDelayedJob(
+		{
+			type: DelayedJobs.RenewSubscription,
+			data: { userId },
+		},
+		renewedAt - now,
+	)
 	await sendNotification([userId], {
 		title: `Subscription to ${plan.title} successful`,
 		body: `Your subscription to ${plan.title} has been activated successfully`,
 		data: { type: NotificationType.SubscriptionSuccessful, planId: plan.id },
-		sendEmail: true
+		sendEmail: true,
 	})
 	return await WalletsUseCases.updateSubscription({
 		id: wallet.id,
@@ -34,20 +38,22 @@ const activateSub = async (userId: string, wallet: WalletEntity, plan: PlanEntit
 			current: { id: plan.id, activatedAt: now, expiredAt: renewedAt, jobId },
 			next: { id: plan.id, renewedAt },
 			data: plan.data,
-			membersDays: 0
-		}
+			membersDays: 0,
+		},
 	})
 }
 
 const deactivateSub = async (userId: string, walletId: string, plan: PlanEntity | null) => {
-	if (plan) await sendNotification([userId], {
-		title: `Subscription to ${plan.title} failed`,
-		body: `Your subscription to ${plan.title} failed to be activated`,
-		data: { type: NotificationType.SubscriptionFailed, planId: plan.id },
-		sendEmail: true
-	})
+	if (plan)
+		await sendNotification([userId], {
+			title: `Subscription to ${plan.title} failed`,
+			body: `Your subscription to ${plan.title} failed to be activated`,
+			data: { type: NotificationType.SubscriptionFailed, planId: plan.id },
+			sendEmail: true,
+		})
 	return await WalletsUseCases.updateSubscription({
-		id: walletId, data: { active: false, next: null }
+		id: walletId,
+		data: { active: false, next: null },
 	})
 }
 
@@ -56,17 +62,24 @@ const chargeForSubscription = async (user: UserEntity, plan: PlanEntity, method:
 		const multiplier = await getSubscriptionMultipier(user, wallet, plan)
 		const amount = plan.amount * multiplier
 		const transaction = await TransactionsUseCases.create({
-			userId: user.id, email: user.bio.email, amount: 0 - amount, currency: plan.currency,
-			status: TransactionStatus.initialized, title: `Subscription charge for ${plan.title}`,
-			data: { type: TransactionType.subscription, subscriptionId: plan.id, multiplier }
+			userId: user.id,
+			email: user.bio.email,
+			amount: 0 - amount,
+			currency: plan.currency,
+			status: TransactionStatus.initialized,
+			title: `Subscription charge for ${plan.title}`,
+			data: { type: TransactionType.subscription, subscriptionId: plan.id, multiplier },
 		})
 		const successful = await FlutterwavePayment.chargeCard({
-			email: transaction.email, amount: transaction.amount, currency: transaction.currency,
-			token: method.token, id: transaction.id
+			email: transaction.email,
+			amount: transaction.amount,
+			currency: transaction.currency,
+			token: method.token,
+			id: transaction.id,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
-			data: { status: successful ? TransactionStatus.settled : TransactionStatus.failed }
+			data: { status: successful ? TransactionStatus.settled : TransactionStatus.failed },
 		})
 		return successful
 	} catch {
@@ -85,7 +98,10 @@ export const subscribeToPlan = async (userId: string, subscriptionId: string) =>
 	if (!plan.active) throw new BadRequestError('you can\'t subscribe to this plan currently')
 	if (!plan.usersFor.includes(user.type.type)) throw new BadRequestError('you can\'t subscribe to this plan')
 	const { results: methods } = await MethodsUseCases.get({
-		where: [{ field: 'userId', value: userId }, { field: 'primary', value: true }]
+		where: [
+			{ field: 'userId', value: userId },
+			{ field: 'primary', value: true },
+		],
 	})
 	const method = methods.at(0)
 	if (!method) throw new BadRequestError('no method found')
@@ -102,7 +118,10 @@ export const renewPlanSubscription = async (userId: string) => {
 	const plan = await PlansUseCases.find(wallet.subscription.next.id)
 	if (!plan || !plan.active) return await deactivateSub(userId, wallet.id, null)
 	const { results: methods } = await MethodsUseCases.get({
-		where: [{ field: 'userId', value: userId }, { field: 'primary', value: true }]
+		where: [
+			{ field: 'userId', value: userId },
+			{ field: 'primary', value: true },
+		],
 	})
 	const method = methods.at(0)
 	if (!method) return await deactivateSub(userId, wallet.id, plan)

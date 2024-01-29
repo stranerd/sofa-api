@@ -6,31 +6,31 @@ import { EmbeddedUser, Interaction } from '../types'
 export class ReportsUseCase {
 	repository: IReportRepository
 
-	constructor (repo: IReportRepository) {
+	constructor(repo: IReportRepository) {
 		this.repository = repo
 	}
 
-	async create (input: ReportToModel) {
+	async create(input: ReportToModel) {
 		return await this.repository.create(input)
 	}
 
-	async delete (id: string) {
+	async delete(id: string) {
 		return await this.repository.delete(id)
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		return await this.repository.find(id)
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		return await this.repository.get(query)
 	}
 
-	async updateUserBio (user: EmbeddedUser) {
+	async updateUserBio(user: EmbeddedUser) {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async deleteEntityReports (entity: Interaction) {
+	async deleteEntityReports(entity: Interaction) {
 		return await this.repository.deleteEntityReports(entity)
 	}
 }

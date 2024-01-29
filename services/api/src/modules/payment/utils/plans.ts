@@ -12,8 +12,9 @@ export const getPlansList = (): PlanToModel[] => [
 		interval: CronTypes.monthly,
 		data: { tutorAidedConversations: 3 },
 		usersFor: Object.values(UserType).filter((type) => type !== UserType.organization),
-		active: true
-	}, {
+		active: true,
+	},
+	{
 		_id: 'organization-plan',
 		amount: 500,
 		currency: Currencies.NGN,
@@ -21,6 +22,6 @@ export const getPlansList = (): PlanToModel[] => [
 		interval: CronTypes.monthly,
 		data: { tutorAidedConversations: 0 },
 		usersFor: [UserType.organization],
-		active: true
-	}
+		active: true,
+	},
 ]

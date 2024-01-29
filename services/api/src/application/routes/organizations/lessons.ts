@@ -8,72 +8,65 @@ export const lessonsRoutes = groupRoutes('/lessons', [
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.create(req)
-				}
-			})
-		]
-	},  {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await LessonsController.create(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.update(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await LessonsController.update(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.delete(req)
-				}
-			})
-		]
-	},  {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await LessonsController.delete(req),
+			})),
+		],
+	},
+	{
 		path: '/:id/members/join',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.join(req)
-				}
-			})
-		]
-	},  {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await LessonsController.join(req),
+			})),
+		],
+	},
+	{
 		path: '/:id/members/teachers',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.manageTeachers(req)
-				}
-			})
-		]
-	},  {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await LessonsController.manageTeachers(req),
+			})),
+		],
+	},
+	{
 		path: '/:id/curriculum',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await LessonsController.updateCurriculum(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await LessonsController.updateCurriculum(req),
+			})),
+		],
 	},
 ])

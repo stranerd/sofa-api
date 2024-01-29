@@ -4,31 +4,31 @@ import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equi
 export class InstitutionController {
 	private static schema = () => ({
 		title: Schema.string().min(3),
-		isGateway: Schema.boolean()
+		isGateway: Schema.boolean(),
 	})
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		return await InstitutionsUseCases.find(req.params.id)
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const query = req.query as QueryParams
 		return await InstitutionsUseCases.get(query)
 	}
 
-	static async create (req: Request) {
+	static async create(req: Request) {
 		const data = validate(this.schema(), req.body)
 		return await InstitutionsUseCases.add(data)
 	}
 
-	static async update (req: Request) {
+	static async update(req: Request) {
 		const data = validate(this.schema(), req.body)
 		const updatedInstitution = await InstitutionsUseCases.update({ id: req.params.id, data })
 		if (updatedInstitution) return updatedInstitution
 		throw new NotAuthorizedError()
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const isDeleted = await InstitutionsUseCases.delete(req.params.id)
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()

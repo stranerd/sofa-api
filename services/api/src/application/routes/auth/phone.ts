@@ -8,23 +8,20 @@ export const phoneRoutes = groupRoutes('/phone', [
 		method: 'post',
 		controllers: [
 			isAuthenticatedButIgnoreVerified,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await PhoneController.sendVerificationText(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await PhoneController.sendVerificationText(req),
+			})),
+		],
+	},
+	{
 		path: '/verify',
 		method: 'post',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await PhoneController.verifyPhone(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await PhoneController.verifyPhone(req),
+			})),
+		],
+	},
 ])

@@ -11,15 +11,17 @@ export class QuizController {
 		photo: Schema.file().image().nullable(),
 		topic: Schema.string().min(1),
 		tags: Schema.array(Schema.string().min(1)).set(),
-		isForTutors: Schema.boolean().default(false).custom((value) => isAdmin ? true : value === false)
+		isForTutors: Schema.boolean()
+			.default(false)
+			.custom((value) => (isAdmin ? true : value === false)),
 	})
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		const quiz = await QuizzesUseCases.find(req.params.id)
 		return quiz
 	}
 
-	static async similar (req: Request) {
+	static async similar(req: Request) {
 		const quiz = await QuizzesUseCases.find(req.params.id)
 		if (!quiz) return []
 		const { results } = await QuizzesUseCases.get({
@@ -27,28 +29,28 @@ export class QuizController {
 			auth: [
 				{ field: 'topicId', value: quiz.topicId },
 				{ field: 'status', value: DraftStatus.published },
-				{ field: 'tagIds', condition: Conditions.in, value: quiz.tagIds }
+				{ field: 'tagIds', condition: Conditions.in, value: quiz.tagIds },
 			],
-			limit: 10
+			limit: 10,
 		})
 		return results
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
 		query.auth = [{ field: 'isForTutors', value: false }]
 		return await QuizzesUseCases.get(query)
 	}
 
-	static async getForTutors (req: Request) {
+	static async getForTutors(req: Request) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
 		query.auth = [{ field: 'isForTutors', value: true }]
 		return await QuizzesUseCases.get(query)
 	}
 
-	static async update (req: Request) {
+	static async update(req: Request) {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
@@ -60,22 +62,29 @@ export class QuizController {
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/quizzes', uploadedPhoto) : undefined
 
 		const updatedQuiz = await QuizzesUseCases.update({
-			id: req.params.id, userId: req.authUser!.id,
+			id: req.params.id,
+			userId: req.authUser!.id,
 			data: {
-				...utags, title, description, isForTutors,
-				...(changedPhoto ? { photo } : {})
-			}
+				...utags,
+				title,
+				description,
+				isForTutors,
+				...(changedPhoto ? { photo } : {}),
+			},
 		})
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
 
-	static async create (req: Request) {
+	static async create(req: Request) {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
-		const data = validate({
-			...this.schema(isAdmin),
-			courseId: Schema.string().min(1).nullable().default(null)
-		}, { ...req.body, photo: req.files.photo?.at(0) ?? null })
+		const data = validate(
+			{
+				...this.schema(isAdmin),
+				courseId: Schema.string().min(1).nullable().default(null),
+			},
+			{ ...req.body, photo: req.files.photo?.at(0) ?? null },
+		)
 
 		const tags = await verifyTags(data.topic, data.tags)
 
@@ -85,41 +94,53 @@ export class QuizController {
 		const photo = data.photo ? await UploaderUseCases.upload('study/quizzes', data.photo) : null
 
 		const quiz = await QuizzesUseCases.add({
-			...data, ...tags, user: user.getEmbedded(),
-			photo, status: DraftStatus.draft,
-			courseId: null
+			...data,
+			...tags,
+			user: user.getEmbedded(),
+			photo,
+			status: DraftStatus.draft,
+			courseId: null,
 		})
 
-		if (data.courseId) await CoursesUseCases.move({ id: data.courseId, userId: quiz.user.id, coursableId: quiz.id, type: Coursable.file, add: true })
-			.catch()
+		if (data.courseId)
+			await CoursesUseCases.move({
+				id: data.courseId,
+				userId: quiz.user.id,
+				coursableId: quiz.id,
+				type: Coursable.file,
+				add: true,
+			}).catch()
 
 		return quiz
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
 		const isDeleted = await QuizzesUseCases.delete({ id: req.params.id, userId: req.authUser!.id, isAdmin })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}
 
-	static async publish (req: Request) {
+	static async publish(req: Request) {
 		const updatedQuiz = await QuizzesUseCases.publish({ id: req.params.id, userId: req.authUser!.id })
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
 
-	static async reorder (req: Request) {
-		const { questions } = validate({
-			questions: Schema.array(Schema.string().min(1)).min(1)
-		}, req.body)
+	static async reorder(req: Request) {
+		const { questions } = validate(
+			{
+				questions: Schema.array(Schema.string().min(1)).min(1),
+			},
+			req.body,
+		)
 
 		const updatedQuiz = await QuizzesUseCases.reorder({ id: req.params.id, userId: req.authUser!.id, questionIds: questions })
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
 
-	static async requestAccess (req: Request) {
+	static async requestAccess(req: Request) {
 		const { add } = validate({ add: Schema.boolean() }, req.body)
 
 		const updatedQuiz = await QuizzesUseCases.requestAccess({ id: req.params.id, userId: req.authUser!.id, add })
@@ -127,26 +148,32 @@ export class QuizController {
 		throw new NotAuthorizedError()
 	}
 
-	static async grantAccess (req: Request) {
-		const { userId, grant } = validate({
-			userId: Schema.string().min(1),
-			grant: Schema.boolean()
-		}, req.body)
+	static async grantAccess(req: Request) {
+		const { userId, grant } = validate(
+			{
+				userId: Schema.string().min(1),
+				grant: Schema.boolean(),
+			},
+			req.body,
+		)
 
 		const updatedQuiz = await QuizzesUseCases.grantAccess({ id: req.params.id, ownerId: req.authUser!.id, userId, grant })
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}
 
-	static async addMembers (req: Request) {
-		const { userIds, grant } = validate({
-			userIds: Schema.array(Schema.string().min(1)).min(1),
-			grant: Schema.boolean()
-		}, req.body)
+	static async addMembers(req: Request) {
+		const { userIds, grant } = validate(
+			{
+				userIds: Schema.array(Schema.string().min(1)).min(1),
+				grant: Schema.boolean(),
+			},
+			req.body,
+		)
 
 		if (grant) {
 			const users = await UsersUseCases.get({
-				where: [{ field: 'id', value: userIds, condition: Conditions.in }]
+				where: [{ field: 'id', value: userIds, condition: Conditions.in }],
 			})
 			const activeUsers = users.results.filter((u) => !u.isDeleted())
 			if (userIds.length !== activeUsers.length) throw new BadRequestError('some users not found')

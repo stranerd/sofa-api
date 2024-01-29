@@ -16,5 +16,5 @@ export const InstitutionDbChangeCallbacks: DbChangeCallbacks<InstitutionFromMode
 
 		await CoursesUseCases.deleteInstitutionCourses(before.id)
 		await FacultiesUseCases.deleteInstitutionFaculties(before.id)
-	}
+	},
 }

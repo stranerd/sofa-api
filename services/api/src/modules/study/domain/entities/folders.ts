@@ -10,7 +10,7 @@ export class FolderEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, saved, user, createdAt, updatedAt }: FolderConstructorArgs) {
+	constructor({ id, title, saved, user, createdAt, updatedAt }: FolderConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title

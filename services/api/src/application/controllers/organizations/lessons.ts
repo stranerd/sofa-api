@@ -1,26 +1,39 @@
-import { ClassLessonable, ClassesUseCases, MemberTypes, MembersUseCases, SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
+import {
+	ClassLessonable,
+	ClassesUseCases,
+	MemberTypes,
+	MembersUseCases,
+	SchedulesUseCases,
+	canAccessOrgClasses,
+} from '@modules/organizations'
 import { Coursable, FileType, QuizModes, canAccessCoursable } from '@modules/study'
 import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
-function makeSet<T> (arr: T[], keyFn: (val: T) => string) {
-	return arr.reduce((acc, val) => {
-		const key = keyFn(val)
-		if (acc.keys[key]) return acc
-		acc.values[keyFn(val)] = val
-		return acc
-	}, { values: [] as T[], keys: {} as Record<string, boolean> }).values
+function makeSet<T>(arr: T[], keyFn: (val: T) => string) {
+	return arr.reduce(
+		(acc, val) => {
+			const key = keyFn(val)
+			if (acc.keys[key]) return acc
+			acc.values[keyFn(val)] = val
+			return acc
+		},
+		{ values: [] as T[], keys: {} as Record<string, boolean> },
+	).values
 }
 
 export class LessonsController {
 	private static schema = () => ({
-		title: Schema.string().min(1)
+		title: Schema.string().min(1),
 	})
 
-	static async create (req: Request) {
-		const data = validate({
-			...this.schema(),
-			teachers: Schema.array(Schema.string().min(1))
-		}, req.body)
+	static async create(req: Request) {
+		const data = validate(
+			{
+				...this.schema(),
+				teachers: Schema.array(Schema.string().min(1)),
+			},
+			req.body,
+		)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin') throw new NotAuthorizedError()
@@ -30,49 +43,53 @@ export class LessonsController {
 				{ field: 'organizationId', value: req.params.organizationId },
 				{ field: 'classId', value: req.params.classId },
 				{ field: 'type', value: MemberTypes.teacher },
-				{ field: 'user.id', condition: Conditions.in, value: data.teachers }
-			]
+				{ field: 'user.id', condition: Conditions.in, value: data.teachers },
+			],
 		})
 
 		return await ClassesUseCases.addLesson({
-			organizationId: req.params.organizationId, classId: req.params.classId,
+			organizationId: req.params.organizationId,
+			classId: req.params.classId,
 			data: {
 				...data,
 				users: {
 					students: [],
-					teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[]
-				}
-			}
+					teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[],
+				},
+			},
 		})
 	}
 
-	static async update (req: Request) {
+	static async update(req: Request) {
 		const data = validate(this.schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin') throw new NotAuthorizedError()
 
 		const lesson = await ClassesUseCases.updateLesson({
-			data, organizationId: req.params.organizationId, classId: req.params.classId, lessonId: req.params.id
+			data,
+			organizationId: req.params.organizationId,
+			classId: req.params.classId,
+			lessonId: req.params.id,
 		})
 
 		return lesson
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin') throw new NotAuthorizedError()
 
 		const isDeleted = await ClassesUseCases.deleteLesson({
 			lessonId: req.params.id,
 			organizationId: req.params.organizationId,
-			classId: req.params.classId
+			classId: req.params.classId,
 		})
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}
 
-	static async join (req: Request) {
+	static async join(req: Request) {
 		const { join } = validate({ join: Schema.boolean() }, req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
@@ -84,17 +101,20 @@ export class LessonsController {
 			classId: req.params.classId,
 			type: 'students',
 			userIds: [req.authUser!.id],
-			add: join
+			add: join,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
 
-	static async manageTeachers (req: Request) {
-		const { add, userId } = validate({
-			add: Schema.boolean(),
-			userId: Schema.string().min(1)
-		}, req.body)
+	static async manageTeachers(req: Request) {
+		const { add, userId } = validate(
+			{
+				add: Schema.boolean(),
+				userId: Schema.string().min(1),
+			},
+			req.body,
+		)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
@@ -106,7 +126,7 @@ export class LessonsController {
 					{ field: 'classId', value: req.params.classId },
 					{ field: 'type', value: MemberTypes.teacher },
 					{ field: 'user.id', value: userId },
-				]
+				],
 			})
 			if (!teachers.length) throw new BadRequestError('user not found')
 		}
@@ -117,50 +137,68 @@ export class LessonsController {
 			classId: req.params.classId,
 			type: 'teachers',
 			userIds: [userId],
-			add
+			add,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
 
-	static async updateCurriculum (req: Request) {
-		const { curriculum } = validate({
-			curriculum: Schema.array(Schema.object({
-				label: Schema.string().min(1),
-				items: Schema.array(Schema.discriminate((d) => d.type, {
-					[ClassLessonable.quiz]: Schema.object({
-						id: Schema.string().min(1),
-						type: Schema.is(ClassLessonable.quiz as const),
-						quizMode: Schema.in(Object.values(QuizModes)),
+	static async updateCurriculum(req: Request) {
+		const { curriculum } = validate(
+			{
+				curriculum: Schema.array(
+					Schema.object({
+						label: Schema.string().min(1),
+						items: Schema.array(
+							Schema.discriminate((d) => d.type, {
+								[ClassLessonable.quiz]: Schema.object({
+									id: Schema.string().min(1),
+									type: Schema.is(ClassLessonable.quiz as const),
+									quizMode: Schema.in(Object.values(QuizModes)),
+								}),
+								[ClassLessonable.file]: Schema.object({
+									id: Schema.string().min(1),
+									type: Schema.is(ClassLessonable.file as const),
+									fileType: Schema.in(Object.values(FileType)),
+								}),
+								[ClassLessonable.schedule]: Schema.object({
+									id: Schema.string().min(1),
+									type: Schema.is(ClassLessonable.schedule as const),
+								}),
+							}),
+						),
 					}),
-					[ClassLessonable.file]: Schema.object({
-						id: Schema.string().min(1),
-						type: Schema.is(ClassLessonable.file as const),
-						fileType: Schema.in(Object.values(FileType)),
-					}),
-					[ClassLessonable.schedule]: Schema.object({
-						id: Schema.string().min(1),
-						type: Schema.is(ClassLessonable.schedule as const),
-					}),
-				}))
-			}))
-		}, req.body)
+				),
+			},
+			req.body,
+		)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
 
-		const allFiles = makeSet(curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.file)), (f) => f.id)
-		const allQuizzes = makeSet(curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.quiz)), (q) => q.id)
-		const allSchedules = makeSet(curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.schedule)), (s) => s.id)
+		const allFiles = makeSet(
+			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.file)),
+			(f) => f.id,
+		)
+		const allQuizzes = makeSet(
+			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.quiz)),
+			(q) => q.id,
+		)
+		const allSchedules = makeSet(
+			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.schedule)),
+			(s) => s.id,
+		)
 
 		await Promise.all([
 			(async () => {
-				const accesses = await Promise.all(allFiles.map(async (f) => {
-					if (f.type !== ClassLessonable.file) return null
-					const access = await canAccessCoursable(Coursable.file, f.id, req.authUser!)
-					if (!access || access.type !== f.fileType) return null
-					return access
-				}))
+				const accesses = await Promise.all(
+					allFiles.map(async (f) => {
+						if (f.type !== ClassLessonable.file) return null
+						const access = await canAccessCoursable(Coursable.file, f.id, req.authUser!)
+						if (!access || access.type !== f.fileType) return null
+						return access
+					}),
+				)
 				if (accesses.every((a) => a)) return
 				throw new NotAuthorizedError('you have some invalid files')
 			})(),
@@ -177,18 +215,18 @@ export class LessonsController {
 						{ field: 'classId', value: req.params.classId },
 						{ field: 'id', value: schedulesIds },
 					],
-					all: true
+					all: true,
 				})
 				if (schedules.length === schedulesIds.length) return
 				throw new NotAuthorizedError('you have some invalid schedules')
-			})()
+			})(),
 		])
 
 		const updated = await ClassesUseCases.updateLessonCurriculum({
 			lessonId: req.params.id,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
-			curriculum
+			curriculum,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()

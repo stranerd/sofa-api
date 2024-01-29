@@ -12,5 +12,5 @@ export const PlanDbChangeCallbacks: DbChangeCallbacks<PlanFromModel, PlanEntity>
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['payment/plans', `payment/plans/${before.id}`], before)
-	}
+	},
 }

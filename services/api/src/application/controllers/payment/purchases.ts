@@ -1,8 +1,19 @@
-import { Currencies, findPurchasable, FlutterwavePayment, MethodsUseCases, Purchasables, PurchasesUseCases, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
+import {
+	Currencies,
+	findPurchasable,
+	FlutterwavePayment,
+	MethodsUseCases,
+	Purchasables,
+	PurchasesUseCases,
+	TransactionStatus,
+	TransactionsUseCases,
+	TransactionType,
+	WalletsUseCases,
+} from '@modules/payment'
 import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
 export class PurchasesController {
-	static async find (req: Request) {
+	static async find(req: Request) {
 		const userId = req.authUser!.id
 		const purchase = await PurchasesUseCases.find(req.params.id)
 		if (!purchase) return null
@@ -10,24 +21,27 @@ export class PurchasesController {
 		return null
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const userId = req.authUser!.id
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.or
 		query.auth = [
 			{ field: 'userId', value: userId },
-			{ field: 'data.userId', value: userId }
+			{ field: 'data.userId', value: userId },
 		]
 		return await PurchasesUseCases.get(query)
 	}
 
-	static async create (req: Request) {
-		const { type, id, methodId, payWithWallet } = validate({
-			type: Schema.in(Object.values(Purchasables)),
-			id: Schema.string().min(1),
-			methodId: Schema.string().default(''),
-			payWithWallet: Schema.boolean().default(false)
-		}, req.body)
+	static async create(req: Request) {
+		const { type, id, methodId, payWithWallet } = validate(
+			{
+				type: Schema.in(Object.values(Purchasables)),
+				id: Schema.string().min(1),
+				methodId: Schema.string().default(''),
+				payWithWallet: Schema.boolean().default(false),
+			},
+			req.body,
+		)
 
 		const userId = req.authUser!.id
 		const purchase = await PurchasesUseCases.for({ userId, type, itemId: id })
@@ -53,30 +67,34 @@ export class PurchasesController {
 				purchase: {
 					price: purchasable.price,
 					userId,
-					data: { type, id: purchasable.id, userId: purchasable.userId }
-				}
-			}
+					data: { type, id: purchasable.id, userId: purchasable.userId },
+				},
+			},
 		})
 		let successful = false
 
 		if (isFree) successful = true
 		else {
-			if (payWithWallet) successful = await WalletsUseCases.updateAmount({
-				userId,
-				amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN)
-			})
+			if (payWithWallet)
+				successful = await WalletsUseCases.updateAmount({
+					userId,
+					amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN),
+				})
 			else {
 				if (!method) throw new BadRequestError('invalid method')
 				successful = await FlutterwavePayment.chargeCard({
-					email: transaction.email, amount: transaction.amount, currency: transaction.currency,
-					token: method.token, id: transaction.id
+					email: transaction.email,
+					amount: transaction.amount,
+					currency: transaction.currency,
+					token: method.token,
+					id: transaction.id,
 				})
 			}
 		}
 
 		await TransactionsUseCases.update({
 			id: transaction.id,
-			data: { status: successful ? TransactionStatus.fulfilled : TransactionStatus.failed }
+			data: { status: successful ? TransactionStatus.fulfilled : TransactionStatus.failed },
 		})
 
 		return successful

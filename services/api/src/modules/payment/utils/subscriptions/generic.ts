@@ -17,14 +17,14 @@ type Sub = {
 	interval: 'monthly' | 'weekly'
 }
 
-const verifyData = async (data: Subscription['data']) :Promise<Sub | null> => {
+const verifyData = async (data: Subscription['data']): Promise<Sub | null> => {
 	if (data.type === 'classes') {
 		const classInst = await ClassesUseCases.find(data.classId)
 		if (!classInst || classInst.organizationId !== data.organizationId) return null
 		return {
 			...classInst.price,
 			title: classInst.title,
-			interval: 'monthly'
+			interval: 'monthly',
 		}
 	}
 	return null
@@ -33,14 +33,18 @@ const verifyData = async (data: Subscription['data']) :Promise<Sub | null> => {
 const activateSub = async (userId: string, wallet: WalletEntity, data: Subscription['data'], sub: Sub) => {
 	const now = Date.now()
 	const renewedAt = wallet.getNextCharge(sub.interval, now)
-	const jobId = await appInstance.job.addDelayedJob({
-		type: DelayedJobs.RenewGenericSubscription, data: { userId, data }
-	}, renewedAt - now)
+	const jobId = await appInstance.job.addDelayedJob(
+		{
+			type: DelayedJobs.RenewGenericSubscription,
+			data: { userId, data },
+		},
+		renewedAt - now,
+	)
 	await sendNotification([userId], {
 		title: `Subscription to ${sub.title} successful`,
 		body: `Your subscription to ${sub.title} has been activated successfully`,
 		data: { type: NotificationType.GenericSubscriptionSuccessful, data },
-		sendEmail: true
+		sendEmail: true,
 	})
 	return await WalletsUseCases.updateSubscriptions({
 		id: wallet.id,
@@ -54,12 +58,13 @@ const activateSub = async (userId: string, wallet: WalletEntity, data: Subscript
 }
 
 const deactivateSub = async (userId: string, wallet: WalletEntity, data: Subscription['data'], sub: Sub | null) => {
-	if (sub) await sendNotification([userId], {
-		title: `Subscription to ${sub.title} failed`,
-		body: `Your subscription to ${sub.title} failed to be activated`,
-		data: { type: NotificationType.GenericSubscriptionFailed, data },
-		sendEmail: true
-	})
+	if (sub)
+		await sendNotification([userId], {
+			title: `Subscription to ${sub.title} failed`,
+			body: `Your subscription to ${sub.title} failed to be activated`,
+			data: { type: NotificationType.GenericSubscriptionFailed, data },
+			sendEmail: true,
+		})
 	const oldSub = wallet.getSubscription(data)
 	if (!oldSub) return wallet
 	return await WalletsUseCases.updateSubscriptions({
@@ -71,17 +76,24 @@ const deactivateSub = async (userId: string, wallet: WalletEntity, data: Subscri
 const chargeForSubscription = async (user: UserEntity, sub: Sub, data: Subscription['data'], method: MethodEntity) => {
 	try {
 		const transaction = await TransactionsUseCases.create({
-			userId: user.id, email: user.bio.email, amount: 0 - sub.amount, currency: sub.currency,
-			status: TransactionStatus.initialized, title: `Subscription charge for ${sub.title}`,
-			data: { type: TransactionType.genericSubscription, data }
+			userId: user.id,
+			email: user.bio.email,
+			amount: 0 - sub.amount,
+			currency: sub.currency,
+			status: TransactionStatus.initialized,
+			title: `Subscription charge for ${sub.title}`,
+			data: { type: TransactionType.genericSubscription, data },
 		})
 		const successful = await FlutterwavePayment.chargeCard({
-			email: transaction.email, amount: transaction.amount, currency: transaction.currency,
-			token: method.token, id: transaction.id
+			email: transaction.email,
+			amount: transaction.amount,
+			currency: transaction.currency,
+			token: method.token,
+			id: transaction.id,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
-			data: { status: successful ? TransactionStatus.settled : TransactionStatus.failed }
+			data: { status: successful ? TransactionStatus.settled : TransactionStatus.failed },
 		})
 		return successful
 	} catch {
@@ -101,7 +113,10 @@ export const createSubscriptionTo = async (userId: string, subscriptionData: Sub
 	if (!data) throw new BadRequestError('cannot initiate subscription')
 
 	const { results: methods } = await MethodsUseCases.get({
-		where: [{ field: 'userId', value: userId }, { field: 'primary', value: true }]
+		where: [
+			{ field: 'userId', value: userId },
+			{ field: 'primary', value: true },
+		],
 	})
 	const method = methods.at(0)
 	if (!method) throw new BadRequestError('no method found')
@@ -114,22 +129,25 @@ export const createSubscriptionTo = async (userId: string, subscriptionData: Sub
 export const renewSubscriptionTo = async (userId: string, subscriptionData: Subscription['data']) => {
 	const wallet = await WalletsUseCases.get(userId)
 	const sub = wallet.getSubscription(subscriptionData)
-	if (!sub?.next) return await deactivateSub(userId, wallet,  subscriptionData, null)
+	if (!sub?.next) return await deactivateSub(userId, wallet, subscriptionData, null)
 
 	const user = await UsersUseCases.find(userId)
-	if (!user || user.isDeleted()) return await deactivateSub(userId, wallet, subscriptionData,  null)
+	if (!user || user.isDeleted()) return await deactivateSub(userId, wallet, subscriptionData, null)
 
 	const data = await verifyData(subscriptionData)
 	if (!data) return await deactivateSub(userId, wallet, subscriptionData, null)
 
 	const { results: methods } = await MethodsUseCases.get({
-		where: [{ field: 'userId', value: userId }, { field: 'primary', value: true }]
+		where: [
+			{ field: 'userId', value: userId },
+			{ field: 'primary', value: true },
+		],
 	})
 	const method = methods.at(0)
-	if (!method) return await deactivateSub(userId, wallet,  subscriptionData, data)
+	if (!method) return await deactivateSub(userId, wallet, subscriptionData, data)
 
 	const successful = await chargeForSubscription(user, data, subscriptionData, method)
-	return successful ? activateSub(userId, wallet, subscriptionData, data) : await deactivateSub(userId, wallet,  subscriptionData, data)
+	return successful ? activateSub(userId, wallet, subscriptionData, data) : await deactivateSub(userId, wallet, subscriptionData, data)
 }
 
 export const cancelSubscriptionTo = async (userId: string, subscriptionData: Subscription['data']) => {

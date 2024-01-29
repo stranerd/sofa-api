@@ -12,5 +12,5 @@ export const ReportDbChangeCallbacks: DbChangeCallbacks<ReportFromModel, ReportE
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/reports', `interactions/reports/${before.id}`], before)
-	}
+	},
 }

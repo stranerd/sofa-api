@@ -10,7 +10,7 @@ export class AnswerEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, type, typeId, userId, data, createdAt, updatedAt }: AnswerConstructorArgs) {
+	constructor({ id, type, typeId, userId, data, createdAt, updatedAt }: AnswerConstructorArgs) {
 		super()
 		this.id = id
 		this.type = type

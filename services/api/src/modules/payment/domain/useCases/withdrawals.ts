@@ -5,19 +5,19 @@ import { IWithdrawalRepository } from '../irepositories/withdrawals'
 export class WithdrawalsUseCase {
 	repository: IWithdrawalRepository
 
-	constructor (repo: IWithdrawalRepository) {
+	constructor(repo: IWithdrawalRepository) {
 		this.repository = repo
 	}
 
-	async get (input: QueryParams) {
+	async get(input: QueryParams) {
 		return await this.repository.get(input)
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		return await this.repository.find(id)
 	}
 
-	async update (data: { id: string, data: Partial<WithdrawalToModel> }) {
+	async update(data: { id: string; data: Partial<WithdrawalToModel> }) {
 		return await this.repository.update(data.id, data.data)
 	}
 }

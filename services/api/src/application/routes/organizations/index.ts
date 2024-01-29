@@ -9,22 +9,16 @@ import { schedulesRoutes } from './schedules'
 export const organizationsRoutes = groupRoutes('/organizations/:organizationId', [
 	...membersRoutes,
 	...classesRoutes,
-	...groupRoutes('/classes/:classId', [
-		...announcementsRoutes,
-		...lessonsRoutes,
-		...schedulesRoutes,
-	]),
+	...groupRoutes('/classes/:classId', [...announcementsRoutes, ...lessonsRoutes, ...schedulesRoutes]),
 ]).concat([
 	{
 		path: '/organizations/classes/explore',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ClassesController.get(req, true)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ClassesController.get(req, true),
+			})),
+		],
 	},
 ])

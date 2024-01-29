@@ -3,16 +3,29 @@ import { FileEntity } from '../../domain/entities/files'
 import { FileFromModel, FileToModel } from '../models/files'
 
 export class FileMapper extends BaseMapper<FileFromModel, FileToModel, FileEntity> {
-	mapFrom (model: FileFromModel | null) {
+	mapFrom(model: FileFromModel | null) {
 		if (!model) return null
-		const { _id, title, description, photo, type, media, courseId, user, topicId, tagIds, ratings, status, createdAt, updatedAt } = model
+		const { _id, title, description, photo, type, media, courseId, user, topicId, tagIds, ratings, status, createdAt, updatedAt } =
+			model
 		return new FileEntity({
-			id: _id.toString(), title, description, photo, type, media, ratings,
-			courseId, user, topicId, tagIds, status, createdAt, updatedAt
+			id: _id.toString(),
+			title,
+			description,
+			photo,
+			type,
+			media,
+			ratings,
+			courseId,
+			user,
+			topicId,
+			tagIds,
+			status,
+			createdAt,
+			updatedAt,
 		})
 	}
 
-	mapTo (entity: FileEntity) {
+	mapTo(entity: FileEntity) {
 		return {
 			title: entity.title,
 			description: entity.description,
@@ -23,7 +36,7 @@ export class FileMapper extends BaseMapper<FileFromModel, FileToModel, FileEntit
 			tagIds: entity.tagIds,
 			status: entity.status,
 			type: entity.type,
-			media: entity.media
+			media: entity.media,
 		}
 	}
 }

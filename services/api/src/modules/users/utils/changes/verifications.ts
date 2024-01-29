@@ -7,19 +7,17 @@ import { VerificationEntity } from '../../domain/entities/verifications'
 
 export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromModel, VerificationEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created([
-			'users/verifications', `users/verifications/${after.id}`
-		], after)
+		await appInstance.listener.created(['users/verifications', `users/verifications/${after.id}`], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated([
-			'users/verifications', `users/verifications/${after.id}`
-		], after)
+		await appInstance.listener.updated(['users/verifications', `users/verifications/${after.id}`], after)
 
 		if (changes.pending && before.pending && !after.pending) {
-			if (after.accepted) await AuthUsersUseCases.updateUserRole({
-				userId: after.userId, roles: { [AuthRole.isVerified]: true }
-			})
+			if (after.accepted)
+				await AuthUsersUseCases.updateUserRole({
+					userId: after.userId,
+					roles: { [AuthRole.isVerified]: true },
+				})
 
 			await sendNotification([after.userId], {
 				title: 'Verification Status',
@@ -27,14 +25,12 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 				sendEmail: true,
 				data: {
 					type: after.accepted ? NotificationType.VerificationAccepted : NotificationType.VerificationRejected,
-					verificationId: after.id
-				}
+					verificationId: after.id,
+				},
 			})
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted([
-			'users/verifications', `users/verifications/${before.id}`
-		], before)
-	}
+		await appInstance.listener.deleted(['users/verifications', `users/verifications/${before.id}`], before)
+	},
 }

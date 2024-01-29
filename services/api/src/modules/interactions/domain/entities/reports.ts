@@ -10,9 +10,7 @@ export class ReportEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		             id, entity, user, message, createdAt, updatedAt
-	             }: ReportConstructorArgs) {
+	constructor({ id, entity, user, message, createdAt, updatedAt }: ReportConstructorArgs) {
 		super()
 		this.id = id
 		this.entity = entity

@@ -12,5 +12,5 @@ export const paymentRoutes = groupRoutes('/payment', [
 	...transactionsRoutes,
 	...methodsRoutes,
 	...walletsRoutes,
-	...withdrawalsRoutes
+	...withdrawalsRoutes,
 ])

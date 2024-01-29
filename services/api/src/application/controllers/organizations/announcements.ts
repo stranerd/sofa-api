@@ -11,26 +11,30 @@ export class AnnouncementsController {
 		}),
 	})
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
 
 		const announcement = await AnnouncementsUseCases.find(req.params.id)
-		if (!announcement || announcement.organizationId !== req.params.organizationId || announcement.classId !== req.params.classId) return null
+		if (!announcement || announcement.organizationId !== req.params.organizationId || announcement.classId !== req.params.classId)
+			return null
 		return announcement
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
 
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
-		query.auth = [{ field: 'organizationId', value: req.params.organizationId }, { field: 'classId', value: req.params.classId }]
+		query.auth = [
+			{ field: 'organizationId', value: req.params.organizationId },
+			{ field: 'classId', value: req.params.classId },
+		]
 		return await AnnouncementsUseCases.get(query)
 	}
 
-	static async create (req: Request) {
+	static async create(req: Request) {
 		const data = validate(this.schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
@@ -45,32 +49,34 @@ export class AnnouncementsController {
 		}
 
 		return await AnnouncementsUseCases.add({
-			...data, user: user.getEmbedded(),
-			organizationId: req.params.organizationId, classId: req.params.classId
+			...data,
+			user: user.getEmbedded(),
+			organizationId: req.params.organizationId,
+			classId: req.params.classId,
 		})
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess !== 'admin') throw new NotAuthorizedError()
 
 		const isDeleted = await AnnouncementsUseCases.delete({
 			id: req.params.id,
 			organizationId: req.params.organizationId,
-			classId: req.params.classId
+			classId: req.params.classId,
 		})
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}
 
-	static async markRead (req: Request) {
+	static async markRead(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess) throw new NotAuthorizedError()
 
 		return await AnnouncementsUseCases.markRead({
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
-			userId: req.authUser!.id
+			userId: req.authUser!.id,
 		})
 	}
 }

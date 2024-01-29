@@ -3,23 +3,25 @@ import { CommentEntity } from '../../domain/entities/comments'
 import { CommentFromModel, CommentToModel } from '../models/comments'
 
 export class CommentMapper extends BaseMapper<CommentFromModel, CommentToModel, CommentEntity> {
-	mapFrom (param: CommentFromModel | null) {
-		return !param ? null : new CommentEntity({
-			id: param._id.toString(),
-			body: param.body,
-			entity: param.entity,
-			user: param.user,
-			meta: param.meta,
-			createdAt: param.createdAt,
-			updatedAt: param.updatedAt
-		})
+	mapFrom(param: CommentFromModel | null) {
+		return !param
+			? null
+			: new CommentEntity({
+				id: param._id.toString(),
+				body: param.body,
+				entity: param.entity,
+				user: param.user,
+				meta: param.meta,
+				createdAt: param.createdAt,
+				updatedAt: param.updatedAt,
+			})
 	}
 
-	mapTo (param: CommentEntity) {
+	mapTo(param: CommentEntity) {
 		return {
 			body: param.body,
 			entity: param.entity,
-			user: param.user
+			user: param.user,
 		}
 	}
 }

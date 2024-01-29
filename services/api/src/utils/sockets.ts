@@ -6,8 +6,8 @@ import { appInstance } from '@utils/types'
 import { AuthRole, OnJoinFn } from 'equipped'
 
 export const registerSockets = () => {
-	const isAdmin: OnJoinFn = async ({ channel, user }) => user?.roles?.[AuthRole.isAdmin] ? channel : null
-	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
+	const isAdmin: OnJoinFn = async ({ channel, user }) => (user?.roles?.[AuthRole.isAdmin] ? channel : null)
+	const isMine: OnJoinFn = async ({ channel, user }) => (user ? `${channel}/${user.id}` : null)
 	// const isSubbed: OnJoinFn = async ({ channel, user }) => user?.roles[AuthRole.isSubscribed] ? channel : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 	const conversationsCb: OnJoinFn = async (data, params) => {
@@ -77,7 +77,5 @@ export const registerSockets = () => {
 		.register('users/verifications', isOpen)
 		.register('users/tutorRequests', isOpen)
 
-
-	Object.values(PlayTypes)
-		.forEach((type) => appInstance.listener.register(`plays/${type}/:typeId/answers`, isOpen))
+	Object.values(PlayTypes).forEach((type) => appInstance.listener.register(`plays/${type}/:typeId/answers`, isOpen))
 }

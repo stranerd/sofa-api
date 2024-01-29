@@ -13,6 +13,6 @@ Instance.initialize({
 	kafkaURIs: getEnvOrFail('KAFKA_URIS').split(','),
 	debeziumUrl: getEnvOrFail('DEBEZIUM_URL'),
 	bullQueueName: 'task-queues',
-	eventColumnName: 'SofaApis'
+	eventColumnName: 'SofaApis',
 })
 export const appInstance = Instance.get()

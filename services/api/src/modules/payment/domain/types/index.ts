@@ -5,14 +5,14 @@ import { PurchaseToModel } from '../../data/models/purchases'
 import { Subscription } from './subscriptions'
 
 export enum Currencies {
-	NGN = 'NGN'
+	NGN = 'NGN',
 }
 
 export enum TransactionStatus {
 	initialized = 'initialized',
 	fulfilled = 'fulfilled',
 	failed = 'failed',
-	settled = 'settled'
+	settled = 'settled',
 }
 
 export enum TransactionType {
@@ -25,45 +25,55 @@ export enum TransactionType {
 	received = 'received',
 	fundWallet = 'fundWallet',
 	withdrawal = 'withdrawal',
-	withdrawalRefund = 'withdrawalRefund'
+	withdrawalRefund = 'withdrawalRefund',
 }
 
-export type TransactionData = {
-	type: TransactionType.newCard
-} | {
-	type: TransactionType.subscription
-	subscriptionId: string
-	multiplier: number
-} | {
-	type: TransactionType.genericSubscription
-	data: Subscription['data']
-} | {
-	type: TransactionType.purchase
-	purchase: PurchaseToModel
-} | {
-	type: TransactionType.purchased
-	purchaseId: string
-	userId: string
-	serviceCharge: number
-	purchasedType: PurchaseToModel['data']['type']
-	purchasedId: PurchaseToModel['data']['id']
-} | {
-	type: TransactionType.sent,
-	note: string
-	to: string
-} | {
-	type: TransactionType.received,
-	note: string
-	from: string
-} | {
-	type: TransactionType.fundWallet
-} | {
-	type: TransactionType.withdrawal,
-	withdrawalId: string
-} | {
-	type: TransactionType.withdrawalRefund,
-	withdrawalId: string
-}
+export type TransactionData =
+	| {
+			type: TransactionType.newCard
+	  }
+	| {
+			type: TransactionType.subscription
+			subscriptionId: string
+			multiplier: number
+	  }
+	| {
+			type: TransactionType.genericSubscription
+			data: Subscription['data']
+	  }
+	| {
+			type: TransactionType.purchase
+			purchase: PurchaseToModel
+	  }
+	| {
+			type: TransactionType.purchased
+			purchaseId: string
+			userId: string
+			serviceCharge: number
+			purchasedType: PurchaseToModel['data']['type']
+			purchasedId: PurchaseToModel['data']['id']
+	  }
+	| {
+			type: TransactionType.sent
+			note: string
+			to: string
+	  }
+	| {
+			type: TransactionType.received
+			note: string
+			from: string
+	  }
+	| {
+			type: TransactionType.fundWallet
+	  }
+	| {
+			type: TransactionType.withdrawal
+			withdrawalId: string
+	  }
+	| {
+			type: TransactionType.withdrawalRefund
+			withdrawalId: string
+	  }
 
 export type SubscriptionModel = {
 	active: boolean
@@ -82,7 +92,7 @@ export type SubscriptionModel = {
 }
 
 export enum PlanDataType {
-	tutorAidedConversations = 'tutorAidedConversations'
+	tutorAidedConversations = 'tutorAidedConversations',
 }
 
 export type PlanData = Record<PlanDataType, number>
@@ -90,7 +100,7 @@ export type PlanData = Record<PlanDataType, number>
 export type PlanFeatures = {}
 
 export enum MethodType {
-	card = 'card'
+	card = 'card',
 }
 
 export type MethodData = {
@@ -105,23 +115,23 @@ export type MethodData = {
 export type Interval = Enum<Pick<typeof CronTypes, 'monthly' | 'weekly'>>
 
 export type TransferData = {
-	from: string,
-	to: string,
-	fromEmail: string,
-	toEmail: string,
-	amount: number,
+	from: string
+	to: string
+	fromEmail: string
+	toEmail: string
+	amount: number
 	note: string
 }
 
 export type WithdrawData = {
-	userId: string,
-	email: string,
-	amount: number,
+	userId: string
+	email: string
+	amount: number
 	account: AccountDetails
 }
 
 export enum CurrencyCountries {
-	NG = 'NG'
+	NG = 'NG',
 }
 
 export type AccountDetails = {

@@ -11,7 +11,7 @@ export class CommentEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, body, entity, user, meta, createdAt, updatedAt }: CommentConstructorArgs) {
+	constructor({ id, body, entity, user, meta, createdAt, updatedAt }: CommentConstructorArgs) {
 		super()
 		this.id = id
 		this.body = body

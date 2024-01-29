@@ -1,34 +1,30 @@
 import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases, VerificationsUseCases } from '@modules/users'
-import {
-	BadRequestError,
-	Conditions,
-	NotAuthorizedError,
-	QueryParams,
-	Request,
-	Schema, validate
-} from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class VerificationsController {
-	static async find (req: Request) {
+	static async find(req: Request) {
 		return await VerificationsUseCases.find(req.params.id)
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const query = req.query as QueryParams
 		return await VerificationsUseCases.get(query)
 	}
 
-	static async create (req: Request) {
+	static async create(req: Request) {
 		const authUser = req.authUser!
 		if (authUser.roles.isVerified) throw new BadRequestError('User is already verified')
 
-		const { content } = validate({
-			content: Schema.object({
-				courses: Schema.array(Schema.string().min(1)).max(5),
-				quizzes: Schema.array(Schema.string().min(3)).max(5),
-			}),
-		}, req.body)
+		const { content } = validate(
+			{
+				content: Schema.object({
+					courses: Schema.array(Schema.string().min(1)).max(5),
+					quizzes: Schema.array(Schema.string().min(3)).max(5),
+				}),
+			},
+			req.body,
+		)
 
 		const user = await UsersUseCases.find(authUser.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('User not found')
@@ -41,19 +37,22 @@ export class VerificationsController {
 		return await VerificationsUseCases.create({ userId: authUser.id, content })
 	}
 
-	static async accept (req: Request) {
-		const { accept } = validate({
-			accept: Schema.boolean()
-		}, req.body)
+	static async accept(req: Request) {
+		const { accept } = validate(
+			{
+				accept: Schema.boolean(),
+			},
+			req.body,
+		)
 		const isUpdated = await VerificationsUseCases.accept({ id: req.params.id, accept })
 		if (isUpdated) return isUpdated
 		throw new NotAuthorizedError()
 	}
 
-	private static async verifyContent (userId: string, content: Parameters<typeof VerificationsUseCases.create>[0]['content']) {
+	private static async verifyContent(userId: string, content: Parameters<typeof VerificationsUseCases.create>[0]['content']) {
 		const { results: courses } = await CoursesUseCases.get({
 			where: [{ field: 'id', value: content.courses, condition: Conditions.in }],
-			all: true
+			all: true,
 		})
 
 		if (courses.length !== content.courses.length) return false
@@ -62,7 +61,7 @@ export class VerificationsController {
 
 		const { results: quizzes } = await QuizzesUseCases.get({
 			where: [{ field: 'id', value: content.quizzes, condition: Conditions.in }],
-			all: true
+			all: true,
 		})
 
 		if (quizzes.length !== content.quizzes.length) return false

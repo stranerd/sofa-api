@@ -7,7 +7,7 @@ export class QuizEntity extends CoursableEntity implements CoursableData {
 	public readonly access: QuizAccess
 	public readonly isForTutors: boolean
 
-	constructor (data: QuizConstructorArgs) {
+	constructor(data: QuizConstructorArgs) {
 		super(data)
 		this.questions = data.questions
 		this.meta = data.meta

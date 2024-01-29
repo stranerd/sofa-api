@@ -3,23 +3,26 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class LikesController {
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const query = req.query as QueryParams
 		return await LikesUseCases.get(query)
 	}
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		return await LikesUseCases.find(req.params.id)
 	}
 
-	static async create (req: Request) {
-		const { entity, value } = validate({
-			value: Schema.boolean(),
-			entity: Schema.object({
-				id: Schema.string().min(1),
-				type: Schema.in(Object.values(InteractionEntities))
-			})
-		}, req.body)
+	static async create(req: Request) {
+		const { entity, value } = validate(
+			{
+				value: Schema.boolean(),
+				entity: Schema.object({
+					id: Schema.string().min(1),
+					type: Schema.in(Object.values(InteractionEntities)),
+				}),
+			},
+			req.body,
+		)
 
 		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, value ? 'likes' : 'dislikes')
 		const user = await UsersUseCases.find(req.authUser!.id)
@@ -28,7 +31,7 @@ export class LikesController {
 		return await LikesUseCases.like({
 			value,
 			entity: { ...entity, userId },
-			user: user.getEmbedded()
+			user: user.getEmbedded(),
 		})
 	}
 }

@@ -4,11 +4,12 @@ import { UsersUseCases } from '@modules/users'
 import { Conditions, QueryParams, Request } from 'equipped'
 
 export class MyStudyController {
-	static async recent (req: Request) {
+	static async recent(req: Request) {
 		const { results: views } = await ViewsUseCases.get({
 			where: [
 				{ field: 'user.id', value: req.authUser!.id },
-				{ field: 'entity.type', condition: Conditions.in, value: [InteractionEntities.courses, InteractionEntities.quizzes] }],
+				{ field: 'entity.type', condition: Conditions.in, value: [InteractionEntities.courses, InteractionEntities.quizzes] },
+			],
 			sort: [{ field: 'createdAt', desc: true }],
 			limit: 30,
 		})
@@ -18,88 +19,99 @@ export class MyStudyController {
 			CoursesUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: courseIds }], all: true }),
 			QuizzesUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: quizIds }], all: true }),
 		])
-		return views.map((view) => {
-			if (view.entity.type === InteractionEntities.courses) return courses.results.find((course) => course.id === view.entity.id)
-			if (view.entity.type === InteractionEntities.quizzes) return quizzes.results.find((quiz) => quiz.id === view.entity.id)
-			return null
-		}).filter(Boolean)
+		return views
+			.map((view) => {
+				if (view.entity.type === InteractionEntities.courses) return courses.results.find((course) => course.id === view.entity.id)
+				if (view.entity.type === InteractionEntities.quizzes) return quizzes.results.find((quiz) => quiz.id === view.entity.id)
+				return null
+			})
+			.filter(Boolean)
 	}
 
-	static async byMyOrgs (req: Request) {
+	static async byMyOrgs(req: Request) {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user) return []
 		const query: QueryParams = {
 			where: [
 				{ field: 'user.id', condition: Conditions.in, value: user.account.organizationsIn },
-				{ field: 'status', value: DraftStatus.published }
+				{ field: 'status', value: DraftStatus.published },
 			],
 			sort: [{ field: 'createdAt', desc: true }],
 			limit: 15,
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
+			QuizzesUseCases.get({
+				...query,
+				where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }],
+			}),
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.createdAt - a.createdAt)
 	}
 
-	static async suggested (req: Request) {
+	static async suggested(req: Request) {
 		const query: QueryParams = {
 			where: [
 				{ field: 'user.id', condition: Conditions.ne, value: req.authUser!.id },
-				{ field: 'status', value: DraftStatus.published }
+				{ field: 'status', value: DraftStatus.published },
 			],
 			sort: [{ field: 'ratings.avg', desc: true }],
 			limit: 15,
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
+			QuizzesUseCases.get({
+				...query,
+				where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }],
+			}),
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.ratings.avg - a.ratings.avg)
 	}
 
-	static async latest (_req: Request) {
+	static async latest(_req: Request) {
 		const query: QueryParams = {
-			where: [
-				{ field: 'status', value: DraftStatus.published }
-			],
+			where: [{ field: 'status', value: DraftStatus.published }],
 			sort: [{ field: 'createdAt', desc: true }],
 			limit: 15,
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
+			QuizzesUseCases.get({
+				...query,
+				where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }],
+			}),
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.createdAt - a.createdAt)
 	}
 
-	static async rated (_req: Request) {
+	static async rated(_req: Request) {
 		const query: QueryParams = {
-			where: [
-				{ field: 'status', value: DraftStatus.published }
-			],
+			where: [{ field: 'status', value: DraftStatus.published }],
 			sort: [{ field: 'ratings.avg', desc: true }],
 			limit: 15,
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
+			QuizzesUseCases.get({
+				...query,
+				where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }],
+			}),
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.ratings.avg - a.ratings.avg)
 	}
 
-	static async popular (_req: Request) {
+	static async popular(_req: Request) {
 		const query: QueryParams = {
-			where: [
-				{ field: 'status', value: DraftStatus.published }
-			],
+			where: [{ field: 'status', value: DraftStatus.published }],
 			sort: [{ field: 'meta.total', desc: true }],
 			limit: 15,
 		}
 		const [courses, quizzes] = await Promise.all([
 			CoursesUseCases.get(query),
-			QuizzesUseCases.get({ ...query, where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }] })
+			QuizzesUseCases.get({
+				...query,
+				where: [...query.where!, { field: 'courseId', value: null }, { field: 'isForTutors', value: false }],
+			}),
 		])
 		return [...courses.results, ...quizzes.results].sort((a, b) => b.meta.total - a.meta.total)
 	}

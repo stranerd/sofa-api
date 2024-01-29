@@ -8,52 +8,66 @@ export enum QuestionTypes {
 	match = 'match',
 }
 
-export type QuestionData = {
-	type: QuestionTypes.multipleChoice,
-	options: string[],
-	answers: number[]
-} | {
-	type: QuestionTypes.trueOrFalse,
-	answer: boolean
-} | {
-	type: QuestionTypes.writeAnswer,
-	answers: string[]
-} | {
-	type: QuestionTypes.fillInBlanks,
-	indicator: string,
-	answers: string[]
-} | {
-	type: QuestionTypes.dragAnswers,
-	indicator: string,
-	answers: string[]
-} | {
-	type: QuestionTypes.sequence,
-	answers: string[]
-} | {
-	type: QuestionTypes.match,
-	set: { q: string, a: string }[]
-}
+export type QuestionData =
+	| {
+			type: QuestionTypes.multipleChoice
+			options: string[]
+			answers: number[]
+	  }
+	| {
+			type: QuestionTypes.trueOrFalse
+			answer: boolean
+	  }
+	| {
+			type: QuestionTypes.writeAnswer
+			answers: string[]
+	  }
+	| {
+			type: QuestionTypes.fillInBlanks
+			indicator: string
+			answers: string[]
+	  }
+	| {
+			type: QuestionTypes.dragAnswers
+			indicator: string
+			answers: string[]
+	  }
+	| {
+			type: QuestionTypes.sequence
+			answers: string[]
+	  }
+	| {
+			type: QuestionTypes.match
+			set: { q: string; a: string }[]
+	  }
 
-export type StrippedQuestionData = {
-	type: QuestionTypes.multipleChoice
-	options: string[]
-	noOfAnswers: number
-} | {
-	type: QuestionTypes.trueOrFalse
-} | {
-	type: QuestionTypes.writeAnswer
-} | {
-	type: QuestionTypes.fillInBlanks
-	indicator: string
-} | {
-	type: QuestionTypes.dragAnswers
-	indicator: string
-	answers: string[]
-} | {
-	type: QuestionTypes.sequence
-	answers: string[]
-} | {
-	type: QuestionTypes.match
-	questions: string[]
-	answers: string[]
-}
+export type StrippedQuestionData =
+	| {
+			type: QuestionTypes.multipleChoice
+			options: string[]
+			noOfAnswers: number
+	  }
+	| {
+			type: QuestionTypes.trueOrFalse
+	  }
+	| {
+			type: QuestionTypes.writeAnswer
+	  }
+	| {
+			type: QuestionTypes.fillInBlanks
+			indicator: string
+	  }
+	| {
+			type: QuestionTypes.dragAnswers
+			indicator: string
+			answers: string[]
+	  }
+	| {
+			type: QuestionTypes.sequence
+			answers: string[]
+	  }
+	| {
+			type: QuestionTypes.match
+			questions: string[]
+			answers: string[]
+	  }

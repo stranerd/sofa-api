@@ -4,22 +4,22 @@ import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, vali
 
 export class FolderController {
 	private static schema = () => ({
-		title: Schema.string().min(1)
+		title: Schema.string().min(1),
 	})
 
-	static async find (req: Request) {
+	static async find(req: Request) {
 		const folder = await FoldersUseCases.find(req.params.id)
 		if (!folder || folder.user.id !== req.authUser!.id) return null
 		return folder
 	}
 
-	static async get (req: Request) {
+	static async get(req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'user.id', value: req.authUser!.id }]
 		return await FoldersUseCases.get(query)
 	}
 
-	static async create (req: Request) {
+	static async create(req: Request) {
 		const data = validate(this.schema(), req.body)
 
 		const authUserId = req.authUser!.id
@@ -29,7 +29,7 @@ export class FolderController {
 		return await FoldersUseCases.add({ ...data, user: user.getEmbedded() })
 	}
 
-	static async update (req: Request) {
+	static async update(req: Request) {
 		const data = validate(this.schema(), req.body)
 
 		const updatedFolder = await FoldersUseCases.update({ id: req.params.id, userId: req.authUser!.id, data })
@@ -37,12 +37,15 @@ export class FolderController {
 		throw new NotAuthorizedError()
 	}
 
-	static async saveProp (req: Request) {
-		const data = validate({
-			type: Schema.in(Object.values(FolderSaved)),
-			propIds: Schema.array(Schema.string().min(1)),
-			add: Schema.boolean()
-		}, req.body)
+	static async saveProp(req: Request) {
+		const data = validate(
+			{
+				type: Schema.in(Object.values(FolderSaved)),
+				propIds: Schema.array(Schema.string().min(1)),
+				add: Schema.boolean(),
+			},
+			req.body,
+		)
 
 		if (data.add) {
 			const verified = await verifyToBeSaved(data.type, data.propIds)
@@ -54,13 +57,13 @@ export class FolderController {
 			userId: req.authUser!.id,
 			values: data.propIds,
 			add: data.add,
-			prop: data.type
+			prop: data.type,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const isDeleted = await FoldersUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()

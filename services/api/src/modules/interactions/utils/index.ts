@@ -32,20 +32,28 @@ const finders = {
 	[InteractionEntities.quizQuestions]: async (id: string) => {
 		const question = await QuestionsUseCases.find(id)
 		return question?.id
-	}
+	},
 }
 
 export const verifyInteractionAndGetUserId = async (type: InteractionEntities, id: string, interaction: Interactions) => {
 	const types = (() => {
 		if (interaction === 'comments') return [InteractionEntities.comments]
 		if (interaction === 'views') return [InteractionEntities.courses, InteractionEntities.quizzes]
-		if (interaction === 'reports') return [InteractionEntities.courses, InteractionEntities.quizzes, InteractionEntities.users, InteractionEntities.quizQuestions]
-		if (interaction === 'reviews') return [InteractionEntities.courses, InteractionEntities.quizzes, /* InteractionEntities.conversations // hidden so users cannot create this externally */]
+		if (interaction === 'reports')
+			return [InteractionEntities.courses, InteractionEntities.quizzes, InteractionEntities.users, InteractionEntities.quizQuestions]
+		if (interaction === 'reviews')
+			return [
+				InteractionEntities.courses,
+				InteractionEntities.quizzes /* InteractionEntities.conversations // hidden so users cannot create this externally */,
+			]
 		return []
-	})().reduce((acc, cur) => {
-		acc[cur] = finders[cur]
-		return acc
-	}, {} as Record<InteractionEntities, (id: string) => Promise<string | undefined>>)
+	})().reduce(
+		(acc, cur) => {
+			acc[cur] = finders[cur]
+			return acc
+		},
+		{} as Record<InteractionEntities, (id: string) => Promise<string | undefined>>,
+	)
 
 	const finder = types[type]
 	if (!finder) throw new BadRequestError(`${interaction} not supported for ${type}`)

@@ -12,5 +12,5 @@ export const authRoutes = groupRoutes('/auth', [
 	...passwordsRoutes,
 	...phoneRoutes,
 	...tokenRoutes,
-	...userRoutes
+	...userRoutes,
 ])

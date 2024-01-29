@@ -15,7 +15,19 @@ export class PublishableEntity extends BaseEntity implements Publishable {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, description, photo, user, topicId, tagIds, ratings, status, createdAt, updatedAt }: PublishableConstructorArgs) {
+	constructor({
+		id,
+		title,
+		description,
+		photo,
+		user,
+		topicId,
+		tagIds,
+		ratings,
+		status,
+		createdAt,
+		updatedAt,
+	}: PublishableConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -40,7 +52,7 @@ type PublishableConstructorArgs = Publishable & {
 export class CoursableEntity extends PublishableEntity implements CoursableData {
 	public readonly courseId: string | null
 
-	constructor (data: PublishableConstructorArgs & { courseId: string | null }) {
+	constructor(data: PublishableConstructorArgs & { courseId: string | null }) {
 		super(data)
 		this.courseId = data.courseId
 	}

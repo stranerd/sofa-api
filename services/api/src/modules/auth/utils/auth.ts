@@ -5,7 +5,7 @@ import {
 	deleteCachedRefreshToken,
 	exchangeOldForNewTokens,
 	makeAccessToken,
-	makeRefreshToken
+	makeRefreshToken,
 } from 'equipped'
 import { AuthUsersUseCases } from '../'
 import { AuthUserEntity } from '../domain/entities/users'
@@ -22,7 +22,7 @@ export const generateAuthOutput = async (user: AuthUserEntity): Promise<AuthOutp
 		id: user.id,
 		email: user.email,
 		roles: user.roles,
-		isEmailVerified: user.isEmailVerified
+		isEmailVerified: user.isEmailVerified,
 	})
 	const refreshToken = await makeRefreshToken({ id: user.id })
 	return { accessToken, refreshToken, user }
@@ -41,10 +41,13 @@ export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { u
 }
 
 export const deleteUnverifiedUsers = async () => {
-	const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
+	const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
 	const { results: unverifiedUsers } = await AuthUsersUseCases.getUsers({
-		where: [{ field: 'isEmailVerified', value: false }, { field: 'signedUpAt', condition: Conditions.lte, value: sevenDaysAgo }],
-		all: true
+		where: [
+			{ field: 'isEmailVerified', value: false },
+			{ field: 'signedUpAt', condition: Conditions.lte, value: sevenDaysAgo },
+		],
+		all: true,
 	})
 	await AuthUsersUseCases.deleteUsers(unverifiedUsers.map((u) => u.id))
 }

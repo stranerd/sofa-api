@@ -16,8 +16,8 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 				email: after.email,
 				description: after.description,
 				phone: after.phone,
-				photo: after.photo
-			}
+				photo: after.photo,
+			},
 		})
 		await UsersUseCases.updateRoles({ id: after.id, data: after.roles, timestamp: Date.now() })
 		if (isProd) await subscribeToMailingList(after.email)
@@ -28,24 +28,25 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			subject: 'Welcome To Stranerd',
 			from: EmailsList.NO_REPLY,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
 	},
 	updated: async ({ before, after, changes }) => {
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 
 		const updatedBio = AuthUserEntity.bioKeys().some((key) => changes[key])
-		if (updatedBio) await UsersUseCases.createOrUpdateUser({
-			id: after.id,
-			timestamp: Date.now(),
-			data: {
-				name: after.allNames,
-				email: after.email,
-				description: after.description,
-				phone: after.phone,
-				photo: after.photo
-			}
-		})
+		if (updatedBio)
+			await UsersUseCases.createOrUpdateUser({
+				id: after.id,
+				timestamp: Date.now(),
+				data: {
+					name: after.allNames,
+					email: after.email,
+					description: after.description,
+					phone: after.phone,
+					photo: after.photo,
+				},
+			})
 
 		const updatedRoles = changes.roles
 		if (updatedRoles) await UsersUseCases.updateRoles({ id: after.id, data: after.roles, timestamp: Date.now() })
@@ -62,7 +63,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			subject: 'Sad to see you go',
 			from: EmailsList.NO_REPLY,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
-	}
+	},
 }

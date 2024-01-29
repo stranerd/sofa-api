@@ -3,77 +3,77 @@ import { appInstance } from '@utils/types'
 export const PublishableSchema = {
 	_id: {
 		type: String,
-		default: () => appInstance.dbs.mongo.Id.toString()
+		default: () => appInstance.dbs.mongo.Id.toString(),
 	},
 	title: {
 		type: String,
-		required: true
+		required: true,
 	},
 	description: {
 		type: String,
 		required: false,
-		default: ''
+		default: '',
 	},
 	photo: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: null
+		default: null,
 	},
 	user: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
+		required: true,
 	},
 	status: {
 		type: String,
-		required: true
+		required: true,
 	},
 	topicId: {
 		type: String,
-		required: true
+		required: true,
 	},
 	tagIds: {
 		type: [String],
 		required: true,
-		default: []
+		default: [],
 	},
 	ratings: {
 		total: {
 			type: Number,
 			required: false,
-			default: 0
+			default: 0,
 		},
 		count: {
 			type: Number,
 			required: false,
-			default: 0
+			default: 0,
 		},
 		avg: {
 			type: Number,
 			required: false,
-			default: 0
-		}
+			default: 0,
+		},
 	},
 	createdAt: {
 		type: Number,
 		required: false,
-		default: Date.now
+		default: Date.now,
 	},
 	updatedAt: {
 		type: Number,
 		required: false,
-		default: Date.now
-	}
+		default: Date.now,
+	},
 }
 
 export const SaleableSchema = {
 	frozen: {
 		type: Boolean,
 		required: false,
-		default: false
+		default: false,
 	},
 	price: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
+		required: true,
 	},
 }
 
@@ -82,6 +82,6 @@ export const CoursableDataSchema = {
 	courseId: {
 		type: String,
 		required: false,
-		default: null
+		default: null,
 	},
 }

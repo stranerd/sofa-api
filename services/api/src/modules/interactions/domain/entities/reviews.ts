@@ -11,9 +11,7 @@ export class ReviewEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id, entity, user, rating, message, createdAt, updatedAt
-	}: ReviewConstructorArgs) {
+	constructor({ id, entity, user, rating, message, createdAt, updatedAt }: ReviewConstructorArgs) {
 		super()
 		this.id = id
 		this.entity = entity

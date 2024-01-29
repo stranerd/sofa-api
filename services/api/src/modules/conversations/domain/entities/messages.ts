@@ -13,7 +13,7 @@ export class MessageEntity extends BaseEntity {
 	public readonly updatedAt: number
 	public readonly readAt: Record<string, number>
 
-	constructor ({ id, conversationId, userId, body, media, tags, starred, createdAt, updatedAt, readAt }: MessageConstructorArgs) {
+	constructor({ id, conversationId, userId, body, media, tags, starred, createdAt, updatedAt, readAt }: MessageConstructorArgs) {
 		super()
 		this.id = id
 		this.conversationId = conversationId

@@ -11,5 +11,5 @@ export interface IFileRepository {
 	delete: (id: string, userId: string) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	publish: (id: string, userId: string) => Promise<FileEntity | null>
-	updateRatings (id: string, ratings: number, add: boolean): Promise<boolean>
+	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
 }

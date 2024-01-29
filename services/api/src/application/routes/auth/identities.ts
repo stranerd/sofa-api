@@ -6,23 +6,20 @@ export const identitiesRoutes = groupRoutes('/identities', [
 		path: '/google',
 		method: 'post',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await IdentitiesController.googleSignIn(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await IdentitiesController.googleSignIn(req),
+			})),
+		],
+	},
+	{
 		path: '/apple',
 		method: 'post',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await IdentitiesController.appleSignIn(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await IdentitiesController.appleSignIn(req),
+			})),
+		],
+	},
 ])

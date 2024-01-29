@@ -16,7 +16,20 @@ export class GameEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, quizId, user, status, participants, questions, totalTimeInSec, scores, startedAt, endedAt, createdAt, updatedAt }: GameConstructorArgs) {
+	constructor({
+		id,
+		quizId,
+		user,
+		status,
+		participants,
+		questions,
+		totalTimeInSec,
+		scores,
+		startedAt,
+		endedAt,
+		createdAt,
+		updatedAt,
+	}: GameConstructorArgs) {
 		super()
 		this.id = id
 		this.quizId = quizId
@@ -32,9 +45,8 @@ export class GameEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-
-	getEndsAt () {
-		return (this.startedAt ?? 0) + (this.totalTimeInSec * 1000)
+	getEndsAt() {
+		return (this.startedAt ?? 0) + this.totalTimeInSec * 1000
 	}
 }
 

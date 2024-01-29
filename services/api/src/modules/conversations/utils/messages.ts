@@ -11,17 +11,20 @@ export const generateResponse = async (message: MessageEntity) => {
 		where: [
 			{ field: 'conversationId', value: message.conversationId },
 			{ field: 'createdAt', value: message.createdAt, condition: Conditions.lt },
-			{ condition: QueryKeys.or, value: [
-				{ field: 'userId', value: ConversationEntity.AI_Id },
-				{ field: 'tags', condition: Conditions.in, value: ConversationEntity.AI_Id }
-			]}
+			{
+				condition: QueryKeys.or,
+				value: [
+					{ field: 'userId', value: ConversationEntity.AI_Id },
+					{ field: 'tags', condition: Conditions.in, value: ConversationEntity.AI_Id },
+				],
+			},
 		],
 		sort: [{ field: 'createdAt', desc: true }],
-		limit: 10
+		limit: 10,
 	})
 
 	const aiMessages: Parameters<typeof AI.replyMessage>[0] = messages
-		.map((m) => ({ role: m.userId === ConversationEntity.AI_Id ? 'assistant' as const : 'user' as const, content: m.body }))
+		.map((m) => ({ role: m.userId === ConversationEntity.AI_Id ? ('assistant' as const) : ('user' as const), content: m.body }))
 		.reverse()
 		.concat({ role: 'user', content: message.body })
 
@@ -29,10 +32,11 @@ export const generateResponse = async (message: MessageEntity) => {
 	if (!response) return
 
 	await MessagesUseCases.add({
-		body: response, media: null,
+		body: response,
+		media: null,
 		tags: [message.userId],
 		conversationId: message.conversationId,
 		userId: ConversationEntity.AI_Id,
-		starred: false
+		starred: false,
 	})
 }

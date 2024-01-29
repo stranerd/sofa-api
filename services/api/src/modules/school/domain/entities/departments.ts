@@ -8,7 +8,7 @@ export class DepartmentEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, institutionId, facultyId, createdAt, updatedAt }: DepartmentConstructorArgs) {
+	constructor({ id, title, institutionId, facultyId, createdAt, updatedAt }: DepartmentConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -19,4 +19,11 @@ export class DepartmentEntity extends BaseEntity {
 	}
 }
 
-type DepartmentConstructorArgs = { id: string, title: string, institutionId: string, facultyId: string, createdAt: number, updatedAt: number }
+type DepartmentConstructorArgs = {
+	id: string
+	title: string
+	institutionId: string
+	facultyId: string
+	createdAt: number
+	updatedAt: number
+}

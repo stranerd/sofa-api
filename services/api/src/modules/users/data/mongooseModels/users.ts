@@ -5,171 +5,180 @@ import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 
 const Meta = Object.fromEntries(
-	Object.values(UserMeta).map((key) => [key, {
-		type: Number,
-		required: false,
-		default: 0
-	}])
+	Object.values(UserMeta).map((key) => [
+		key,
+		{
+			type: Number,
+			required: false,
+			default: 0,
+		},
+	]),
 )
 
 const Rankings = Object.fromEntries(
-	Object.values(UserRankings).map((key) => [key, {
-		value: {
-			type: Number,
-			required: false,
-			default: 0
+	Object.values(UserRankings).map((key) => [
+		key,
+		{
+			value: {
+				type: Number,
+				required: false,
+				default: 0,
+			},
+			lastUpdatedAt: {
+				type: Number,
+				required: false,
+				default: Date.now(),
+			},
 		},
-		lastUpdatedAt: {
-			type: Number,
-			required: false,
-			default: Date.now()
-		}
-	}])
+	]),
 )
 
 const UserStreak = {
 	count: {
 		type: Number,
 		required: false,
-		default: 0
+		default: 0,
 	},
 	longestStreak: {
 		type: Number,
 		required: false,
-		default: 0
+		default: 0,
 	},
 	lastEvaluatedAt: {
 		type: Number,
 		required: false,
-		default: 0
-	}
+		default: 0,
+	},
 }
 
 const UserRatings = {
 	total: {
 		type: Number,
 		required: false,
-		default: 0
+		default: 0,
 	},
 	count: {
 		type: Number,
 		required: false,
-		default: 0
+		default: 0,
 	},
 	avg: {
 		type: Number,
 		required: false,
-		default: 0
-	}
+		default: 0,
+	},
 }
 
-const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
-	_id: {
-		type: String,
-		default: () => appInstance.dbs.mongo.Id.toString()
-	},
-	bio: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
-	},
-	roles: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: false,
-		default: {}
-	},
-	dates: {
-		createdAt: {
-			type: Number,
-			required: false,
-			default: Date.now
+const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
+	{
+		_id: {
+			type: String,
+			default: () => appInstance.dbs.mongo.Id.toString(),
 		},
-		deletedAt: {
-			type: Number,
-			required: false,
-			default: null
-		}
-	},
-	status: {
-		connections: {
-			type: [String],
-			required: false,
-			default: []
+		bio: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
 		},
-		lastUpdatedAt: {
-			type: Number,
+		roles: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: 0
-		}
-	},
-	account: {
-		rankings: Rankings,
-		meta: Meta,
-		streak: UserStreak,
-		ratings: UserRatings,
-		organizationsIn: {
-			type: [appInstance.dbs.mongo.Schema.Types.Mixed],
-			required: false,
-			default: []
+			default: {},
 		},
-		settings: {
-			notifications: {
-				type: Boolean,
+		dates: {
+			createdAt: {
+				type: Number,
 				required: false,
-				default: true
-			}
+				default: Date.now,
+			},
+			deletedAt: {
+				type: Number,
+				required: false,
+				default: null,
+			},
 		},
-		editing: {
+		status: {
+			connections: {
+				type: [String],
+				required: false,
+				default: [],
+			},
+			lastUpdatedAt: {
+				type: Number,
+				required: false,
+				default: 0,
+			},
+		},
+		account: {
+			rankings: Rankings,
+			meta: Meta,
+			streak: UserStreak,
+			ratings: UserRatings,
+			organizationsIn: {
+				type: [appInstance.dbs.mongo.Schema.Types.Mixed],
+				required: false,
+				default: [],
+			},
+			settings: {
+				notifications: {
+					type: Boolean,
+					required: false,
+					default: true,
+				},
+			},
+			editing: {
+				type: appInstance.dbs.mongo.Schema.Types.Mixed,
+				required: false,
+				default: () => ({}),
+			},
+			saved: Object.fromEntries(['classes'].map((key) => [key, { type: [String], required: false, default: [] }])),
+		},
+		type: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: () => ({})
+			default: null,
 		},
-		saved: Object.fromEntries(['classes'].map((key) => [key, { type: [String], required: false, default: [] }]))
-	},
-	type: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: false,
-		default: null
-	},
-	tutor: {
-		conversations: {
-			type: [String],
-			required: false,
-			default: []
+		tutor: {
+			conversations: {
+				type: [String],
+				required: false,
+				default: [],
+			},
+			topics: {
+				type: [String],
+				required: false,
+				default: [],
+			},
 		},
-		topics: {
-			type: [String],
+		ai: {
+			photo: {
+				type: appInstance.dbs.mongo.Schema.Types.Mixed,
+				required: false,
+				default: null,
+			},
+			name: {
+				type: String,
+				required: false,
+				default: 'Dr. Sofa',
+			},
+			tagline: {
+				type: String,
+				required: false,
+				default: 'AI assistant',
+			},
+		},
+		socials: {
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed as any],
 			required: false,
-			default: []
-		}
-	},
-	ai: {
-		photo: {
+			default: [],
+		},
+		location: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: null
+			default: null,
 		},
-		name: {
-			type: String,
-			required: false,
-			default: 'Dr. Sofa'
-		},
-		tagline: {
-			type: String,
-			required: false,
-			default: 'AI assistant'
-		}
 	},
-	socials: {
-		type: [appInstance.dbs.mongo.Schema.Types.Mixed as any],
-		required: false,
-		default: []
-	},
-	location: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: false,
-		default: null
-	}
-}, { minimize: false })
+	{ minimize: false },
+)
 
 export const User = appInstance.dbs.mongo.use('users').model<UserFromModel>('User', UserSchema)
 

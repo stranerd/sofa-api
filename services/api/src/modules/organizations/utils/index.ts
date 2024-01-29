@@ -7,9 +7,7 @@ export const canModOrgs = async (user: AuthUser, organizationId: string) => {
 	return null
 }
 
-export const canAccessOrgMembers = async (user: AuthUser, organizationId: string) => {
-	return await canModOrgs(user, organizationId)
-}
+export const canAccessOrgMembers = async (user: AuthUser, organizationId: string) => await canModOrgs(user, organizationId)
 
 export const canAccessOrgClasses = async (user: AuthUser, organizationId: string, classId: string) => {
 	const classInst = await ClassesUseCases.find(classId)
@@ -19,9 +17,9 @@ export const canAccessOrgClasses = async (user: AuthUser, organizationId: string
 	const { results: members } = await MembersUseCases.get({
 		where: [
 			{ field: 'email', value: user.email },
-			{ field: 'organizationId', value: organizationId }
+			{ field: 'organizationId', value: organizationId },
 		],
-		all: true
+		all: true,
 	})
 	// if (members.some((m) => m.type === MemberTypes.teacher)) return 'teacher'
 	if (classInst.lessons.some((l) => l.users.teachers.includes(user.id))) return 'teacher'

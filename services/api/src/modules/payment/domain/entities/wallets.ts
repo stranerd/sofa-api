@@ -4,16 +4,14 @@ import { AccountDetails, Currencies, PlanDataType, Subscription, SubscriptionMod
 export class WalletEntity extends BaseEntity {
 	public readonly id: string
 	public readonly userId: string
-	public readonly balance: { amount: number, currency: Currencies }
+	public readonly balance: { amount: number; currency: Currencies }
 	public readonly accounts: AccountDetails[]
 	public readonly subscription: SubscriptionModel
 	public readonly subscriptions: Subscription[]
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id, userId, balance, accounts, subscription, subscriptions, createdAt, updatedAt
-	}: WalletConstructorArgs) {
+	constructor({ id, userId, balance, accounts, subscription, subscriptions, createdAt, updatedAt }: WalletConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId
@@ -25,15 +23,15 @@ export class WalletEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	canAddTutorToConversation () {
+	canAddTutorToConversation() {
 		return this.subscription.data[PlanDataType.tutorAidedConversations] > 0
 	}
 
-	getSubscription (data: Subscription['data']) {
+	getSubscription(data: Subscription['data']) {
 		return this.subscriptions.find((s) => Validation.Differ.equal(s.data, data))
 	}
 
-	getNextCharge (interval: 'monthly' | 'weekly', time: number) {
+	getNextCharge(interval: 'monthly' | 'weekly', time: number) {
 		const date = new Date(time)
 		if (interval === CronTypes.weekly) date.setDate(date.getDate() + 7)
 		if (interval === CronTypes.monthly) date.setMonth(date.getMonth() + 1)
@@ -44,7 +42,7 @@ export class WalletEntity extends BaseEntity {
 type WalletConstructorArgs = {
 	id: string
 	userId: string
-	balance: { amount: number, currency: Currencies }
+	balance: { amount: number; currency: Currencies }
 	accounts: AccountDetails[]
 	subscription: SubscriptionModel
 	subscriptions: Subscription[]

@@ -14,18 +14,7 @@ export class PlanEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id,
-		amount,
-		currency,
-		title,
-		interval,
-		active,
-		data,
-		usersFor,
-		createdAt,
-		updatedAt
-	}: PlanConstructorArgs) {
+	constructor({ id, amount, currency, title, interval, active, data, usersFor, createdAt, updatedAt }: PlanConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -39,7 +28,7 @@ export class PlanEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	getLengthInDays () {
+	getLengthInDays() {
 		if (this.interval === CronTypes.weekly) return 7
 		if (this.interval === CronTypes.monthly) return 30
 		throw new BadRequestError('Not implemented')

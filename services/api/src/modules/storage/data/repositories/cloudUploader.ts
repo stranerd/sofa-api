@@ -6,11 +6,11 @@ import { MediaInput } from '../models/media'
 export class CloudUploaderRepository implements IUploaderRepository {
 	private bucket: Bucket
 
-	constructor () {
+	constructor() {
 		this.bucket = new Storage().bucket(`stranerd${environment}.appspot.com`)
 	}
 
-	async delete (path: string) {
+	async delete(path: string) {
 		if (!path) return false
 		const file = this.bucket.file(path)
 		const exists = (await file.exists())[0]
@@ -18,7 +18,7 @@ export class CloudUploaderRepository implements IUploaderRepository {
 		return exists
 	}
 
-	async upload (path: string, media: MediaInput) {
+	async upload(path: string, media: MediaInput) {
 		media.data = Buffer.from(media.data)
 		const timestamp = Date.now()
 		media.name = media.name.toLowerCase()
@@ -35,7 +35,9 @@ export class CloudUploaderRepository implements IUploaderRepository {
 			type: media.type,
 			size: media.size,
 			duration: media.duration,
-			path, timestamp, link
+			path,
+			timestamp,
+			link,
 		}
 	}
 }

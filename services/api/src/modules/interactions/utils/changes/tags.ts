@@ -12,5 +12,5 @@ export const TagDbChangeCallbacks: DbChangeCallbacks<TagFromModel, TagEntity> = 
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/tags', `interactions/tags/${before.id}`], before)
-	}
+	},
 }

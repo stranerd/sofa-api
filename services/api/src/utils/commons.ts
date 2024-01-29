@@ -1,4 +1,4 @@
-export type Ratings =  {
+export type Ratings = {
 	total: number
 	count: number
 	avg: number

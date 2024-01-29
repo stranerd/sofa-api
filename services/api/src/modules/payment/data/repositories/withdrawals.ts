@@ -9,30 +9,30 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 	private static instance: WithdrawalRepository
 	private mapper: WithdrawalMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new WithdrawalMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!WithdrawalRepository.instance) WithdrawalRepository.instance = new WithdrawalRepository()
 		return WithdrawalRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Withdrawal, query)
 
 		return {
 			...data,
-			results: data.results.map((r) => this.mapper.mapFrom(r)!)
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const withdrawal = await Withdrawal.findById(id)
 		return this.mapper.mapFrom(withdrawal)
 	}
 
-	async update (id: string, data: Partial<WithdrawalToModel>) {
+	async update(id: string, data: Partial<WithdrawalToModel>) {
 		const withdrawal = await Withdrawal.findByIdAndUpdate(id, { $set: data }, { new: true })
 		return this.mapper.mapFrom(withdrawal)
 	}

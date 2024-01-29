@@ -6,66 +6,66 @@ import { UserFromModel } from '../models/users'
 const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 	_id: {
 		type: String,
-		default: () => appInstance.dbs.mongo.Id.toString()
+		default: () => appInstance.dbs.mongo.Id.toString(),
 	},
 	email: {
 		type: String,
 		trim: true,
 		lowercase: true,
 		unique: true,
-		required: true
+		required: true,
 	},
 	password: {
 		type: String,
 		required: false,
-		default: ''
+		default: '',
 	},
 	name: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
+		required: true,
 	},
 	description: {
 		type: String,
 		trim: true,
 		required: false,
-		default: ''
+		default: '',
 	},
 	photo: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: null
+		default: null,
 	},
 	phone: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: null
+		default: null,
 	},
 	isEmailVerified: {
 		type: Boolean,
 		required: false,
-		default: false
+		default: false,
 	},
 	authTypes: {
 		type: [String],
 		set: (types: string[]) => Array.from(new Set(types)),
 		required: false,
-		default: []
+		default: [],
 	},
 	roles: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: {}
+		default: {},
 	},
 	lastSignedInAt: {
 		type: Number,
 		required: false,
-		default: Date.now
+		default: Date.now,
 	},
 	signedUpAt: {
 		type: Number,
 		required: false,
-		default: Date.now
-	}
+		default: Date.now,
+	},
 })
 
 export const User = appInstance.dbs.mongo.use('auth').model<UserFromModel>('User', UserSchema)

@@ -16,7 +16,20 @@ export class ClassEntity extends BaseEntity implements Saleable {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, organizationId, title, description, photo, user, lessons, members, frozen, price, createdAt, updatedAt }: ClassConstructorArgs) {
+	constructor({
+		id,
+		organizationId,
+		title,
+		description,
+		photo,
+		user,
+		lessons,
+		members,
+		frozen,
+		price,
+		createdAt,
+		updatedAt,
+	}: ClassConstructorArgs) {
 		super()
 		this.id = id
 		this.organizationId = organizationId
@@ -30,14 +43,14 @@ export class ClassEntity extends BaseEntity implements Saleable {
 			id: l.id,
 			title: l.title,
 			users: l.users ?? { students: [], teachers: [] },
-			curriculum: l.curriculum ?? []
+			curriculum: l.curriculum ?? [],
 		}))
 		this.members = members
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
 
-	getLesson (id: string) {
+	getLesson(id: string) {
 		return this.lessons.find((l) => l.id === id) ?? null
 	}
 }

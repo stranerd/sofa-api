@@ -3,22 +3,24 @@ import { PlanEntity } from '../../domain/entities/plans'
 import { PlanFromModel, PlanToModel } from '../models/plans'
 
 export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntity> {
-	mapFrom (param: PlanFromModel | null) {
-		return !param ? null : new PlanEntity({
-			id: param._id.toString(),
-			title: param.title,
-			active: param.active,
-			amount: param.amount,
-			currency: param.currency,
-			interval: param.interval,
-			data: param.data,
-			usersFor: param.usersFor,
-			createdAt: param.createdAt,
-			updatedAt: param.updatedAt
-		})
+	mapFrom(param: PlanFromModel | null) {
+		return !param
+			? null
+			: new PlanEntity({
+				id: param._id.toString(),
+				title: param.title,
+				active: param.active,
+				amount: param.amount,
+				currency: param.currency,
+				interval: param.interval,
+				data: param.data,
+				usersFor: param.usersFor,
+				createdAt: param.createdAt,
+				updatedAt: param.updatedAt,
+			})
 	}
 
-	mapTo (param: PlanEntity) {
+	mapTo(param: PlanEntity) {
 		return {
 			_id: param.id,
 			title: param.title,
@@ -27,7 +29,7 @@ export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntit
 			currency: param.currency,
 			data: param.data,
 			usersFor: param.usersFor,
-			interval: param.interval
+			interval: param.interval,
 		}
 	}
 }

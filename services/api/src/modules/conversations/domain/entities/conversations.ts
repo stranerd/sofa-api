@@ -10,14 +10,14 @@ export class ConversationEntity extends BaseEntity {
 	public readonly user: EmbeddedUser
 	public readonly tutor: EmbeddedUser | null
 	public readonly pending: boolean
-	public readonly accepted: { is: boolean, at: number } | null
-	public readonly ended: { rating: number, message: string, at: number } | null
+	public readonly accepted: { is: boolean; at: number } | null
+	public readonly ended: { rating: number; message: string; at: number } | null
 	public readonly createdAt: number
 	public readonly updatedAt: number
 	public readonly last: MessageEntity | null
 	public readonly readAt: Record<string, number>
 
-	constructor ({ id, title, user, tutor, pending, accepted, ended, createdAt, updatedAt, last, readAt }: ConversationConstructorArgs) {
+	constructor({ id, title, user, tutor, pending, accepted, ended, createdAt, updatedAt, last, readAt }: ConversationConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -32,7 +32,7 @@ export class ConversationEntity extends BaseEntity {
 		this.readAt = readAt
 	}
 
-	tags (userId: string) {
+	tags(userId: string) {
 		return this.user.id === userId ? [this.tutor?.id ?? ConversationEntity.AI_Id] : [this.user.id]
 	}
 }
@@ -43,8 +43,8 @@ type ConversationConstructorArgs = {
 	user: EmbeddedUser
 	tutor: EmbeddedUser | null
 	pending: boolean
-	accepted: { is: boolean, at: number } | null
-	ended: { rating: number, message: string, at: number } | null
+	accepted: { is: boolean; at: number } | null
+	ended: { rating: number; message: string; at: number } | null
 	createdAt: number
 	updatedAt: number
 	last: MessageEntity | null

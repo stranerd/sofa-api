@@ -4,65 +4,68 @@ import { GameDbChangeCallbacks } from '../../utils/changes/games'
 import { GameMapper } from '../mappers/games'
 import { GameFromModel } from '../models/games'
 
-const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>({
-	_id: {
-		type: String,
-		default: () => appInstance.dbs.mongo.Id.toString()
+const Schema = new appInstance.dbs.mongo.Schema<GameFromModel>(
+	{
+		_id: {
+			type: String,
+			default: () => appInstance.dbs.mongo.Id.toString(),
+		},
+		quizId: {
+			type: String,
+			required: true,
+		},
+		user: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+		},
+		status: {
+			type: String,
+			required: true,
+			default: PlayStatus.created,
+		},
+		participants: {
+			type: [String],
+			required: false,
+			default: [],
+		},
+		questions: {
+			type: [String],
+			required: false,
+			default: [],
+		},
+		totalTimeInSec: {
+			type: Number,
+			required: false,
+			default: 0,
+		},
+		scores: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: {},
+		},
+		startedAt: {
+			type: Number,
+			required: false,
+			default: null,
+		},
+		endedAt: {
+			type: Number,
+			required: false,
+			default: null,
+		},
+		createdAt: {
+			type: Number,
+			required: false,
+			default: Date.now,
+		},
+		updatedAt: {
+			type: Number,
+			required: false,
+			default: Date.now,
+		},
 	},
-	quizId: {
-		type: String,
-		required: true
-	},
-	user: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
-	},
-	status: {
-		type: String,
-		required: true,
-		default: PlayStatus.created
-	},
-	participants: {
-		type: [String],
-		required: false,
-		default: []
-	},
-	questions: {
-		type: [String],
-		required: false,
-		default: []
-	},
-	totalTimeInSec: {
-		type: Number,
-		required: false,
-		default: 0
-	},
-	scores: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: false,
-		default: {}
-	},
-	startedAt: {
-		type: Number,
-		required: false,
-		default: null
-	},
-	endedAt: {
-		type: Number,
-		required: false,
-		default: null
-	},
-	createdAt: {
-		type: Number,
-		required: false,
-		default: Date.now
-	},
-	updatedAt: {
-		type: Number,
-		required: false,
-		default: Date.now
-	}
-}, { timestamps: { currentTime: Date.now }, minimize: false })
+	{ timestamps: { currentTime: Date.now }, minimize: false },
+)
 
 export const Game = appInstance.dbs.mongo.use('plays').model<GameFromModel>('Game', Schema)
 

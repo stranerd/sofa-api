@@ -13,7 +13,19 @@ export class TutorRequestEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, userId, topicId, verification, qualification, pending, accepted, testId, testFinished, createdAt, updatedAt }: TutorRequestConstructorArgs) {
+	constructor({
+		id,
+		userId,
+		topicId,
+		verification,
+		qualification,
+		pending,
+		accepted,
+		testId,
+		testFinished,
+		createdAt,
+		updatedAt,
+	}: TutorRequestConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId

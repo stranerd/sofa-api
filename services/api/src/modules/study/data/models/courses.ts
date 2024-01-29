@@ -2,7 +2,7 @@ import { Coursable, CourseMeta, CourseSections, Publishable, Saleable } from '..
 
 export interface CourseFromModel extends CourseToModel {
 	_id: string
-	coursables: { id: string, type: Coursable }[]
+	coursables: { id: string; type: Coursable }[]
 	sections: CourseSections
 	meta: Record<CourseMeta, number>
 	ratings: Publishable['ratings']
@@ -10,4 +10,4 @@ export interface CourseFromModel extends CourseToModel {
 	updatedAt: number
 }
 
-export interface CourseToModel extends Omit<Publishable, 'ratings'>, Saleable { }
+export interface CourseToModel extends Omit<Publishable, 'ratings'>, Saleable {}

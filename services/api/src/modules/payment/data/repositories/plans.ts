@@ -9,33 +9,35 @@ export class PlanRepository implements IPlanRepository {
 	private static instance: PlanRepository
 	private mapper: PlanMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new PlanMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!PlanRepository.instance) PlanRepository.instance = new PlanRepository()
 		return PlanRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Plan, query)
 
 		return {
 			...data,
-			results: data.results.map((r) => this.mapper.mapFrom(r)!)
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
 	}
 
-	async init (data: PlanToModel[]) {
+	async init(data: PlanToModel[]) {
 		await Plan.deleteMany({ _id: { $nin: data.map((d) => d._id) } })
-		return await Promise.all(data.map(async (d) => {
-			const sub = await Plan.findByIdAndUpdate(d._id, { $set: d }, { new: true, upsert: true })
-			return this.mapper.mapFrom(sub)!
-		}))
+		return await Promise.all(
+			data.map(async (d) => {
+				const sub = await Plan.findByIdAndUpdate(d._id, { $set: d }, { new: true, upsert: true })
+				return this.mapper.mapFrom(sub)!
+			}),
+		)
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const plan = await Plan.findById(id)
 		return this.mapper.mapFrom(plan)
 	}

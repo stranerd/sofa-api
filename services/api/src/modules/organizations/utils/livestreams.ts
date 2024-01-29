@@ -4,10 +4,7 @@ import { ScheduleEntity } from '../domain/entities/schedules'
 import { ScheduleStream } from '../domain/types'
 
 export const createLiveStream = async (schedule: ScheduleEntity): Promise<ScheduleStream> => {
-	const OAuth2Client = new google.auth.OAuth2(
-		youtubeConfig.clientId,
-		youtubeConfig.clientSecret
-	)
+	const OAuth2Client = new google.auth.OAuth2(youtubeConfig.clientId, youtubeConfig.clientSecret)
 	OAuth2Client.setCredentials({ refresh_token: youtubeConfig.refreshToken })
 
 	const youtube = google.youtube({ version: 'v3', auth: OAuth2Client })
@@ -26,8 +23,8 @@ export const createLiveStream = async (schedule: ScheduleEntity): Promise<Schedu
 			contentDetails: {
 				enableAutoStart: true,
 				recordFromStart: true,
-			}
-		}
+			},
+		},
 	})
 
 	const { data: stream } = await youtube.liveStreams.insert({
@@ -42,9 +39,9 @@ export const createLiveStream = async (schedule: ScheduleEntity): Promise<Schedu
 				ingestionType: 'rtmp',
 			},
 			contentDetails: {
-				isReusable: true
-			}
-		}
+				isReusable: true,
+			},
+		},
 	})
 
 	await youtube.liveBroadcasts.bind({
@@ -58,6 +55,6 @@ export const createLiveStream = async (schedule: ScheduleEntity): Promise<Schedu
 		streamId: stream.id!,
 		streamKey: stream.cdn?.ingestionInfo?.streamName!,
 		type: 'jitsi',
-		roomId: `${schedule.title}-${schedule.id}`.replace(/[^a-zA-Z0-9]/g, '')
+		roomId: `${schedule.title}-${schedule.id}`.replace(/[^a-zA-Z0-9]/g, ''),
 	}
 }

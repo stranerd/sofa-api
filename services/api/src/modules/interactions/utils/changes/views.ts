@@ -12,5 +12,5 @@ export const ViewDbChangeCallbacks: DbChangeCallbacks<ViewFromModel, ViewEntity>
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/views', `interactions/views/${before.id}`], before)
-	}
+	},
 }

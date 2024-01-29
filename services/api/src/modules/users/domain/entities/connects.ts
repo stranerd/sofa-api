@@ -11,7 +11,7 @@ export class ConnectEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, from, to, pending, accepted, createdAt, updatedAt }: ConnectConstructorArgs) {
+	constructor({ id, from, to, pending, accepted, createdAt, updatedAt }: ConnectConstructorArgs) {
 		super()
 		this.id = id
 		this.from = generateDefaultUser(from)

@@ -12,5 +12,5 @@ export const LikeDbChangeCallbacks: DbChangeCallbacks<LikeFromModel, LikeEntity>
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/likes', `interactions/likes/${before.id}`], before)
-	}
+	},
 }

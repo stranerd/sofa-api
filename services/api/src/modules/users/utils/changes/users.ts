@@ -15,36 +15,51 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		await appInstance.listener.created(['users/users', `users/users/${after.id}`], after)
 
 		const { results: members } = await MembersUseCases.get({
-			where: [{ field: 'email', value: after.bio.email }]
+			where: [{ field: 'email', value: after.bio.email }],
 		})
 
 		await Promise.all([
 			MembersUseCases.updateMemberUser({ email: after.bio.email, user: after.getEmbedded() }),
 			UsersUseCases.updateOrganizationsIn({
-				email: after.bio.email, add: true,
-				organizations: members.map((member) => ({ id: member.organizationId, type: member.type }))
-			})
+				email: after.bio.email,
+				add: true,
+				organizations: members.map((member) => ({ id: member.organizationId, type: member.type })),
+			}),
 		])
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['users/users', `users/users/${after.id}`], after)
 
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
-		if (updatedBioOrRoles) await Promise.all([
-			ConversationsUseCases,
-			CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases,
-			GamesUseCases,
-			CoursesUseCases, FoldersUseCases, QuizzesUseCases, FilesUseCases,
-			ConnectsUseCases,
-			AnnouncementsUseCases, ClassesUseCases, MembersUseCases, SchedulesUseCases
-		].map(async (useCase) => await useCase.updateUserBio(after.getEmbedded())))
+		if (updatedBioOrRoles)
+			await Promise.all(
+				[
+					ConversationsUseCases,
+					CommentsUseCases,
+					LikesUseCases,
+					ReportsUseCases,
+					ReviewsUseCases,
+					ViewsUseCases,
+					GamesUseCases,
+					CoursesUseCases,
+					FoldersUseCases,
+					QuizzesUseCases,
+					FilesUseCases,
+					ConnectsUseCases,
+					AnnouncementsUseCases,
+					ClassesUseCases,
+					MembersUseCases,
+					SchedulesUseCases,
+				].map(async (useCase) => await useCase.updateUserBio(after.getEmbedded())),
+			)
 
-		if (changes.dates?.deletedAt && after.dates.deletedAt && !before.dates.deletedAt) await MembersUseCases.deleteByEmail(after.bio.email)
+		if (changes.dates?.deletedAt && after.dates.deletedAt && !before.dates.deletedAt)
+			await MembersUseCases.deleteByEmail(after.bio.email)
 		if (changes.ai?.photo && before.ai.photo) await publishers.DELETEFILE.publish(before.ai.photo)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['users/users', `users/users/${before.id}`], before)
 		await MembersUseCases.deleteByEmail(before.bio.email)
 		if (before.ai.photo) await publishers.DELETEFILE.publish(before.ai.photo)
-	}
+	},
 }

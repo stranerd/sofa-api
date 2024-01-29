@@ -3,53 +3,56 @@ import { QuestionDbChangeCallbacks } from '../../utils/changes/questions'
 import { QuestionMapper } from '../mappers/questions'
 import { QuestionFromModel } from '../models/questions'
 
-const Schema = new appInstance.dbs.mongo.Schema<QuestionFromModel>({
-	_id: {
-		type: String,
-		default: () => appInstance.dbs.mongo.Id.toString()
+const Schema = new appInstance.dbs.mongo.Schema<QuestionFromModel>(
+	{
+		_id: {
+			type: String,
+			default: () => appInstance.dbs.mongo.Id.toString(),
+		},
+		userId: {
+			type: String,
+			required: true,
+		},
+		quizId: {
+			type: String,
+			required: true,
+		},
+		question: {
+			type: String,
+			required: false,
+			default: '',
+		},
+		explanation: {
+			type: String,
+			required: false,
+			default: '',
+		},
+		questionMedia: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: null,
+		},
+		timeLimit: {
+			type: Number,
+			required: true,
+		},
+		data: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+		},
+		createdAt: {
+			type: Number,
+			required: false,
+			default: Date.now,
+		},
+		updatedAt: {
+			type: Number,
+			required: false,
+			default: Date.now,
+		},
 	},
-	userId: {
-		type: String,
-		required: true
-	},
-	quizId: {
-		type: String,
-		required: true
-	},
-	question: {
-		type: String,
-		required: false,
-		default: ''
-	},
-	explanation: {
-		type: String,
-		required: false,
-		default: ''
-	},
-	questionMedia: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: false,
-		default: null
-	},
-	timeLimit: {
-		type: Number,
-		required: true
-	},
-	data: {
-		type: appInstance.dbs.mongo.Schema.Types.Mixed,
-		required: true
-	},
-	createdAt: {
-		type: Number,
-		required: false,
-		default: Date.now
-	},
-	updatedAt: {
-		type: Number,
-		required: false,
-		default: Date.now
-	}
-}, { timestamps: { currentTime: Date.now }, minimize: false })
+	{ timestamps: { currentTime: Date.now }, minimize: false },
+)
 
 export const Question = appInstance.dbs.mongo.use('study').model<QuestionFromModel>('Quiz-Question', Schema)
 

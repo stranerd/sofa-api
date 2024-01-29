@@ -10,9 +10,7 @@ export class TagEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id, type, title, parent, meta, createdAt, updatedAt
-	}: TagConstructorArgs) {
+	constructor({ id, type, title, parent, meta, createdAt, updatedAt }: TagConstructorArgs) {
 		super()
 		this.id = id
 		this.type = type
@@ -23,11 +21,11 @@ export class TagEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	isTopic () {
+	isTopic() {
 		return this.type === TagTypes.topics
 	}
 
-	isGeneric () {
+	isGeneric() {
 		return this.type === TagTypes.generic
 	}
 }

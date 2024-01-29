@@ -9,7 +9,7 @@ export interface MemberFromModel extends MemberToModel {
 export interface MemberToModel {
 	pending: boolean
 	withCode: boolean
-	accepted: { is: boolean, at: number } | null
+	accepted: { is: boolean; at: number } | null
 	organizationId: string
 	email: string
 	user: EmbeddedUser | null

@@ -12,5 +12,5 @@ export const interactionRoutes = groupRoutes('/interactions', [
 	...reportsRoutes,
 	...reviewsRoutes,
 	...tagsRoutes,
-	...viewsRoutes
+	...viewsRoutes,
 ])

@@ -6,7 +6,7 @@ export { MediaOutput as Media } from 'equipped'
 
 export enum MemberTypes {
 	teacher = 'teacher',
-	student = 'student'
+	student = 'student',
 }
 
 export type AnnouncementFilter = {
@@ -27,7 +27,7 @@ export type LessonMembers = {
 export enum ScheduleStatus {
 	created = 'created',
 	started = 'started',
-	ended = 'ended'
+	ended = 'ended',
 }
 
 export type ClassLesson = {
@@ -44,21 +44,24 @@ export type ClassMembers = {
 export enum ClassLessonable {
 	quiz = 'quiz',
 	file = 'file',
-	schedule = 'schedule'
+	schedule = 'schedule',
 }
 
-type ClassLessonCurriculumSectionItem = {
-	id: string
-	type: ClassLessonable.quiz
-	quizMode: QuizModes
-} | {
-	id: string
-	type: ClassLessonable.file
-	fileType: FileType
-} | {
-	id: string
-	type: ClassLessonable.schedule
-}
+type ClassLessonCurriculumSectionItem =
+	| {
+			id: string
+			type: ClassLessonable.quiz
+			quizMode: QuizModes
+	  }
+	| {
+			id: string
+			type: ClassLessonable.file
+			fileType: FileType
+	  }
+	| {
+			id: string
+			type: ClassLessonable.schedule
+	  }
 
 export type ClassLessonCurriculumSection = {
 	label: string

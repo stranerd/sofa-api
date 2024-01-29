@@ -10,45 +10,45 @@ export class DepartmentRepository implements IDepartmentRepository {
 	private static instance: DepartmentRepository
 	private mapper: DepartmentMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new DepartmentMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!DepartmentRepository.instance) DepartmentRepository.instance = new DepartmentRepository()
 		return DepartmentRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Department, query)
 
 		return {
 			...data,
-			results: data.results.map((r) => this.mapper.mapFrom(r)!)
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
 	}
 
-	async delete (id: string): Promise<boolean> {
+	async delete(id: string): Promise<boolean> {
 		const deleteData = await Department.findByIdAndDelete(id)
 		return !!deleteData
 	}
 
-	async deleteFacultyDepartments (facultyId: string): Promise<boolean> {
+	async deleteFacultyDepartments(facultyId: string): Promise<boolean> {
 		const deleteData = await Department.deleteMany({ facultyId })
 		return deleteData.acknowledged
 	}
 
-	async add (data: DepartmentToModel) {
+	async add(data: DepartmentToModel) {
 		const department = await new Department(data).save()
 		return this.mapper.mapFrom(department)!
 	}
 
-	async update (id: string, data: Partial<DepartmentToModel>) {
+	async update(id: string, data: Partial<DepartmentToModel>) {
 		const department = await Department.findByIdAndUpdate(id, { $set: data }, { new: true })
 		return this.mapper.mapFrom(department)
 	}
 
-	async find (id: string): Promise<DepartmentEntity | null> {
+	async find(id: string): Promise<DepartmentEntity | null> {
 		const department = await Department.findById(id)
 		return this.mapper.mapFrom(department)
 	}

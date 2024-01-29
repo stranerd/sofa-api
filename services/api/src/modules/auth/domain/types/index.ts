@@ -6,7 +6,7 @@ export type Phone = {
 }
 
 export interface UserUpdateInput {
-	name: { first: string, last: string }
+	name: { first: string; last: string }
 	description: string
 	photo: MediaOutput | null
 }

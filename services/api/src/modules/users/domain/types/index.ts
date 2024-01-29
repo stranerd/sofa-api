@@ -7,7 +7,7 @@ export * from './verifications'
 
 export type UserBio = {
 	email: string
-	name: { first: string, last: string, full: string }
+	name: { first: string; last: string; full: string }
 	description: string
 	photo: MediaOutput | null
 	phone: Phone | null
@@ -31,7 +31,7 @@ export type UserStatus = {
 }
 
 export type UserAccount = {
-	rankings: Record<UserRankings, { value: number, lastUpdatedAt: number }>
+	rankings: Record<UserRankings, { value: number; lastUpdatedAt: number }>
 	meta: Record<UserMeta, number>
 	streak: {
 		count: number
@@ -39,12 +39,12 @@ export type UserAccount = {
 		lastEvaluatedAt: number
 	}
 	ratings: Ratings
-	organizationsIn: { id: string, type: MemberTypes }[]
+	organizationsIn: { id: string; type: MemberTypes }[]
 	settings: {
 		notifications: boolean
 	}
 	editing: {
-		quizzes: { id: string, questionId: string } | null
+		quizzes: { id: string; questionId: string } | null
 	}
 	saved: {
 		classes: string[]
@@ -84,33 +84,32 @@ export enum UserMeta {
 	classes = 'classes',
 	lessons = 'lessons',
 
-	total = 'total'
+	total = 'total',
 }
 
 export enum UserRankings {
 	daily = 'daily',
 	weekly = 'weekly',
 	monthly = 'monthly',
-	overall = 'overall'
+	overall = 'overall',
 }
 
 export enum ScoreRewards {
 	newCourse = 1,
 	newFolder = 0.05,
 	newFile = 1,
-	newQuiz = 1
+	newQuiz = 1,
 }
-
 
 export enum UserType {
 	student = 'student',
 	teacher = 'teacher',
-	organization = 'organization'
+	organization = 'organization',
 }
 
 export enum UserSchoolType {
 	'aspirant' = 'aspirant',
-	'college' = 'college'
+	'college' = 'college',
 }
 
 type AspirantType = {
@@ -130,17 +129,20 @@ type CollegeType = {
 	departmentId: string
 }
 
-export type UserTypeData = {
-	type: UserType.student,
-	school: AspirantType | CollegeType
-} | {
-	type: UserType.teacher,
-	school: string
-} | {
-	type: UserType.organization,
-	name: string,
-	code: string
-}
+export type UserTypeData =
+	| {
+			type: UserType.student
+			school: AspirantType | CollegeType
+	  }
+	| {
+			type: UserType.teacher
+			school: string
+	  }
+	| {
+			type: UserType.organization
+			name: string
+			code: string
+	  }
 
 export type UserTutor = {
 	conversations: string[]
@@ -163,4 +165,4 @@ export enum UserSocials {
 	tiktok = 'tiktok',
 }
 
-export type UserSocialsType = { ref: UserSocials, link: string }[]
+export type UserSocialsType = { ref: UserSocials; link: string }[]

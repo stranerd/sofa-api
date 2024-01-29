@@ -12,5 +12,5 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['school/courses', `school/courses/${before.id}`], before)
-	}
+	},
 }

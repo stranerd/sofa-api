@@ -10,53 +10,58 @@ export class TestRepository implements ITestRepository {
 	private static instance: TestRepository
 	private mapper: TestMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new TestMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!TestRepository.instance) TestRepository.instance = new TestRepository()
 		return TestRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Test, query)
 
 		return {
 			...data,
-			results: data.results.map((r) => this.mapper.mapFrom(r)!)
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
 	}
 
-	async add (data: TestToModel) {
+	async add(data: TestToModel) {
 		const test = await new Test({ ...data, status: PlayStatus.created }).save()
 		return this.mapper.mapFrom(test)!
 	}
 
-	async start (id: string, userId: string) {
+	async start(id: string, userId: string) {
 		const test = await Test.findOneAndUpdate(
 			{ _id: id, userId, status: PlayStatus.created },
 			{ $set: { startedAt: Date.now(), status: PlayStatus.started } },
-			{ new: true })
+			{ new: true },
+		)
 		return this.mapper.mapFrom(test)
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const test = await Test.findById(id)
 		return this.mapper.mapFrom(test)
 	}
 
-	async end (id: string, userId: string) {
+	async end(id: string, userId: string) {
 		const test = await Test.findOneAndUpdate(
 			{ _id: id, userId, status: PlayStatus.started },
-			{ $set: { endedAt: Date.now(), status: PlayStatus.ended } }, { new: true })
+			{ $set: { endedAt: Date.now(), status: PlayStatus.ended } },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(test)
 	}
 
-	async score (id: string, userId: string, scores: Record<string, number>) {
+	async score(id: string, userId: string, scores: Record<string, number>) {
 		const test = await Test.findOneAndUpdate(
 			{ _id: id, userId, status: PlayStatus.ended },
-			{ $set: { scores, status: PlayStatus.scored } }, { new: true })
+			{ $set: { scores, status: PlayStatus.scored } },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(test)
 	}
 }

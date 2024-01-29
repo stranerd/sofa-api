@@ -8,82 +8,74 @@ export const userRoutes = groupRoutes('/user', [
 		method: 'get',
 		controllers: [
 			isAuthenticatedButIgnoreVerified,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.find(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.find(req),
+			})),
+		],
+	},
+	{
 		path: '/',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.update(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.update(req),
+			})),
+		],
+	},
+	{
 		path: '/roles',
 		method: 'post',
 		controllers: [
-			isAuthenticated, isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.updateRole(req)
-				}
-
-			})
-		]
-	}, {
+			isAuthenticated,
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.updateRole(req),
+			})),
+		],
+	},
+	{
 		path: '/signout',
 		method: 'post',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.signout(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.signout(req),
+			})),
+		],
+	},
+	{
 		path: '/superAdmin',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.superAdmin(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.superAdmin(req),
+			})),
+		],
+	},
+	{
 		path: '/officialAccount',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.officialAccount(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.officialAccount(req),
+			})),
+		],
+	},
+	{
 		path: '/',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UserController.delete(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UserController.delete(req),
+			})),
+		],
+	},
 ])

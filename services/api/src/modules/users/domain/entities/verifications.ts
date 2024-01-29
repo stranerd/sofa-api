@@ -10,7 +10,7 @@ export class VerificationEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, userId, content, pending, accepted, createdAt, updatedAt }: VerificationConstructorArgs) {
+	constructor({ id, userId, content, pending, accepted, createdAt, updatedAt }: VerificationConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId

@@ -9,9 +9,7 @@ export class PurchaseEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id, userId, price, data, createdAt, updatedAt
-	}: PurchaseConstructorArgs) {
+	constructor({ id, userId, price, data, createdAt, updatedAt }: PurchaseConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId

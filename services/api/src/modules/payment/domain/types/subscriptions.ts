@@ -9,7 +9,7 @@ export type Subscription = {
 		renewedAt: number
 	} | null
 	data: {
-		type: 'classes',
+		type: 'classes'
 		organizationId: string
 		classId: string
 	}

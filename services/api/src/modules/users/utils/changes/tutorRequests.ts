@@ -8,19 +8,18 @@ import { UsersUseCases } from '@modules/users'
 
 export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromModel, TutorRequestEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created([
-			'users/tutorRequests', `users/tutorRequests/${after.id}`
-		], after)
+		await appInstance.listener.created(['users/tutorRequests', `users/tutorRequests/${after.id}`], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated([
-			'users/tutorRequests', `users/tutorRequests/${after.id}`
-		], after)
+		await appInstance.listener.updated(['users/tutorRequests', `users/tutorRequests/${after.id}`], after)
 
 		if (changes.pending && before.pending && !after.pending) {
-			if (after.accepted) await UsersUseCases.updateTutorTopics({
-				userId: after.userId, topicId: after.topicId, add: true
-			})
+			if (after.accepted)
+				await UsersUseCases.updateTutorTopics({
+					userId: after.userId,
+					topicId: after.topicId,
+					add: true,
+				})
 
 			await sendNotification([after.userId], {
 				title: 'Tutor Request Status',
@@ -28,8 +27,8 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 				sendEmail: true,
 				data: {
 					type: after.accepted ? NotificationType.TutorRequestAccepted : NotificationType.TutorRequestRejected,
-					tutorRequestId: after.id
-				}
+					tutorRequestId: after.id,
+				},
 			})
 		}
 
@@ -40,11 +39,9 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted([
-			'users/tutorRequests', `users/tutorRequests/${before.id}`
-		], before)
+		await appInstance.listener.deleted(['users/tutorRequests', `users/tutorRequests/${before.id}`], before)
 
 		await publishers.DELETEFILE.publish(before.verification)
 		await Promise.all(before.qualification.map((file) => publishers.DELETEFILE.publish(file)))
-	}
+	},
 }

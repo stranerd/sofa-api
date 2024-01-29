@@ -13,7 +13,25 @@ export interface IClassRepository {
 	addLesson: (organizationId: string, classId: string, data: Partial<ClassLesson>) => Promise<ClassEntity | null>
 	updateLesson: (organizationId: string, classId: string, lessonId: string, data: Partial<ClassLesson>) => Promise<ClassEntity | null>
 	deleteLesson: (organizationId: string, classId: string, lessonId: string) => Promise<ClassEntity | null>
-	manageMembers: (data: { organizationId: string, classId: string, userIds: string[], type: keyof ClassMembers, add: boolean }) => Promise<ClassEntity | null>
-	manageLessonUsers: (data: { organizationId: string, classId: string, lessonId: string, userIds: string[], type: keyof LessonMembers, add: boolean }) => Promise<ClassEntity | null>
-	updateLessonCurriculum: (data: { organizationId: string, classId: string, lessonId: string, curriculum: ClassLesson['curriculum'] }) => Promise<ClassEntity | null>
+	manageMembers: (data: {
+		organizationId: string
+		classId: string
+		userIds: string[]
+		type: keyof ClassMembers
+		add: boolean
+	}) => Promise<ClassEntity | null>
+	manageLessonUsers: (data: {
+		organizationId: string
+		classId: string
+		lessonId: string
+		userIds: string[]
+		type: keyof LessonMembers
+		add: boolean
+	}) => Promise<ClassEntity | null>
+	updateLessonCurriculum: (data: {
+		organizationId: string
+		classId: string
+		lessonId: string
+		curriculum: ClassLesson['curriculum']
+	}) => Promise<ClassEntity | null>
 }

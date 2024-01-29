@@ -18,7 +18,7 @@ export type InteractionEntity = Interaction & { userId: string }
 
 export enum CommentMeta {
 	comments = 'comments',
-	total = 'total'
+	total = 'total',
 }
 
 export type CommentMetaType = Record<CommentMeta, number>
@@ -30,12 +30,12 @@ export enum TagMeta {
 	documents = 'documents',
 	videos = 'videos',
 
-	total = 'total'
+	total = 'total',
 }
 
 export type TagMetaType = Record<TagMeta, number>
 
 export enum TagTypes {
 	generic = 'generic',
-	topics = 'topics'
+	topics = 'topics',
 }

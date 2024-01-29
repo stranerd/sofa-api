@@ -17,14 +17,18 @@ const start = async () => {
 	appInstance.listener.callers = {
 		onConnect: async (userId, socketId) => {
 			await UsersUseCases.updateStatus({
-				userId, socketId, add: true
+				userId,
+				socketId,
+				add: true,
 			})
 		},
 		onDisconnect: async (userId, socketId) => {
 			await UsersUseCases.updateStatus({
-				userId, socketId, add: false
+				userId,
+				socketId,
+				add: false,
 			})
-		}
+		},
 	}
 	const app = appInstance.server
 	app.routes = routes

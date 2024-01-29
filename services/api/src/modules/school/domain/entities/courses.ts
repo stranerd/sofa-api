@@ -9,7 +9,7 @@ export class CourseEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, title, institutionId, facultyId, departmentId, createdAt, updatedAt }: CourseConstructorArgs) {
+	constructor({ id, title, institutionId, facultyId, departmentId, createdAt, updatedAt }: CourseConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -22,6 +22,11 @@ export class CourseEntity extends BaseEntity {
 }
 
 type CourseConstructorArgs = {
-	id: string, title: string, institutionId: string, facultyId: string | null, departmentId: string | null
-	createdAt: number, updatedAt: number
+	id: string
+	title: string
+	institutionId: string
+	facultyId: string | null
+	departmentId: string | null
+	createdAt: number
+	updatedAt: number
 }

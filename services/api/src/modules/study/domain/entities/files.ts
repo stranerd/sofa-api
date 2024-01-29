@@ -6,7 +6,7 @@ export class FileEntity extends CoursableEntity implements CoursableData {
 	public readonly media: Media
 	ignoreInJSON = ['media.link']
 
-	constructor (data: FileConstructorArgs) {
+	constructor(data: FileConstructorArgs) {
 		super(data)
 		this.type = data.type
 		this.media = data.media
