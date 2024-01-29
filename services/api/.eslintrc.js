@@ -11,7 +11,7 @@ module.exports = {
 		ecmaVersion: 2021,
 	},
 	rules: {
-		'prettier/prettier': 'warn',
+		'prettier/prettier': 'error',
 		'no-console': 'warn',
 		'no-debugger': 'error',
 		'no-tabs': 'off',
