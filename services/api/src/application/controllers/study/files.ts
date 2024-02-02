@@ -22,8 +22,8 @@ export class FileController {
 		title: Schema.string().min(1),
 		description: Schema.string().min(1),
 		photo: Schema.file().image().nullable(),
-		topicId: Schema.string().min(1),
-		tagIds: Schema.array(Schema.string().min(1).lower().trim()).set(),
+		topic: Schema.string().min(1),
+		tags: Schema.array(Schema.string().min(1)).set(),
 	})
 
 	static async find(req: Request) {
@@ -64,7 +64,7 @@ export class FileController {
 			},
 		)
 
-		const tags = await verifyTags(data.topicId, data.tagIds)
+		const tags = await verifyTags(data.topic, data.tags)
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
@@ -105,9 +105,9 @@ export class FileController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, topicId, tagIds } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, topic, tags } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
-		const utags = await verifyTags(topicId, tagIds)
+		const utags = await verifyTags(topic, tags)
 
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('study/files/covers', uploadedPhoto) : undefined
 
