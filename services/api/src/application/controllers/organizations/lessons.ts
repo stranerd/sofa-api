@@ -178,12 +178,6 @@ export class LessonsController {
 			(s) => s.id,
 		)
 
-		console.log({
-			allFiles,
-			allQuizzes,
-			allSchedules,
-		})
-
 		await Promise.all([
 			(async () => {
 				const accesses = await Promise.all(
@@ -208,7 +202,7 @@ export class LessonsController {
 					where: [
 						{ field: 'organizationId', value: req.params.organizationId },
 						{ field: 'classId', value: req.params.classId },
-						{ field: 'id', value: schedulesIds },
+						{ field: 'id', condition: Conditions.in, value: schedulesIds },
 					],
 					all: true,
 				})
