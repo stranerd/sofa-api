@@ -178,6 +178,12 @@ export class LessonsController {
 			(s) => s.id,
 		)
 
+		console.log({
+			allFiles,
+			allQuizzes,
+			allSchedules,
+		})
+
 		await Promise.all([
 			(async () => {
 				const accesses = await Promise.all(
