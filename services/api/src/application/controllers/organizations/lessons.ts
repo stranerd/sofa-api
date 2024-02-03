@@ -7,19 +7,8 @@ import {
 	canAccessOrgClasses,
 } from '@modules/organizations'
 import { Coursable, FileType, QuizModes, canAccessCoursable } from '@modules/study'
+import { makeSet } from '@utils/commons'
 import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
-
-function makeSet<T>(arr: T[], keyFn: (val: T) => string) {
-	return arr.reduce(
-		(acc, val) => {
-			const key = keyFn(val)
-			if (acc.keys[key]) return acc
-			acc.values[keyFn(val)] = val
-			return acc
-		},
-		{ values: [] as T[], keys: {} as Record<string, boolean> },
-	).values
-}
 
 export class LessonsController {
 	private static schema = () => ({
@@ -208,7 +197,7 @@ export class LessonsController {
 				throw new NotAuthorizedError('you have some invalid quizzes')
 			})(),
 			(async () => {
-				const schedulesIds = [...new Set(allSchedules.map((s) => s.id))]
+				const schedulesIds = allSchedules.map((s) => s.id)
 				const { results: schedules } = await SchedulesUseCases.get({
 					where: [
 						{ field: 'organizationId', value: req.params.organizationId },

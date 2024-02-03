@@ -2,7 +2,8 @@ import { ClassesUseCases, canAccessOrgClasses, canModOrgs } from '@modules/organ
 import { Currencies, Subscription, cancelSubscriptionTo, createSubscriptionTo } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { makeSet } from '@utils/commons'
+import { BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 
 export class ClassesController {
 	private static schema = () => ({
@@ -19,6 +20,30 @@ export class ClassesController {
 		const classIns = await ClassesUseCases.find(req.params.id)
 		if (!classIns || classIns.organizationId !== req.params.organizationId) return null
 		return classIns
+	}
+
+	static async similar(req: Request) {
+		const classIns = await ClassesUseCases.find(req.params.id)
+		if (!classIns || classIns.organizationId !== req.params.organizationId) return []
+		const valuesToSearchAgainst = [classIns.title, classIns.description, ...classIns.lessons.map((l) => l.title)]
+		const classes = await Promise.all(
+			valuesToSearchAgainst.map(async (value) => {
+				const { results } = await ClassesUseCases.get({
+					authType: QueryKeys.or,
+					auth: [{ field: 'id', condition: Conditions.ne, value: classIns.id }],
+					search: {
+						fields: ['title', 'description', 'lessons.title'],
+						value,
+					},
+					limit: 10,
+				})
+				return results
+			}),
+		)
+		return Validation.getRandomSample(
+			makeSet(classes.flat(), (c) => c.id),
+			10,
+		)
 	}
 
 	static async get(req: Request, explore = false) {
