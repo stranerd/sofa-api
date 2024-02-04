@@ -1,5 +1,5 @@
 import { ClassesUseCases, canModOrgs } from '@modules/organizations'
-import { Currencies, Subscription, cancelSubscriptionTo, createSubscriptionTo } from '@modules/payment'
+import { Currencies, Subscription, Subscriptions } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import { makeSet } from '@utils/commons'
@@ -106,14 +106,14 @@ export class ClassesController {
 
 	static async purchase(req: Request) {
 		const data: Subscription['data'] = { type: 'classes', classId: req.params.id, organizationId: req.params.organizationId }
-		const wallet = await createSubscriptionTo(req.authUser!.id, data)
+		const wallet = await Subscriptions.createGeneric(req.authUser!.id, data)
 		const sub = wallet.getSubscription(data)
 		return !!sub?.active
 	}
 
 	static async cancelPurchase(req: Request) {
 		const data: Subscription['data'] = { type: 'classes', classId: req.params.id, organizationId: req.params.organizationId }
-		const wallet = await cancelSubscriptionTo(req.authUser!.id, data)
+		const wallet = await Subscriptions.cancelGeneric(req.authUser!.id, data)
 		const sub = wallet.getSubscription(data)
 		return !sub || !sub.active
 	}

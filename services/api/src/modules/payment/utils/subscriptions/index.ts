@@ -95,8 +95,8 @@ export const subscribeToPlan = async (userId: string, subscriptionId: string) =>
 	if (!user.type) throw new BadRequestError('complete your profile before you subscribe')
 	const plan = await PlansUseCases.find(subscriptionId)
 	if (!plan) throw new BadRequestError('subscription not found')
-	if (!plan.active) throw new BadRequestError('you can\'t subscribe to this plan currently')
-	if (!plan.usersFor.includes(user.type.type)) throw new BadRequestError('you can\'t subscribe to this plan')
+	if (!plan.active) throw new BadRequestError('you cant subscribe to this plan currently')
+	if (!plan.usersFor.includes(user.type.type)) throw new BadRequestError('you cant subscribe to this plan')
 	const { results: methods } = await MethodsUseCases.get({
 		where: [
 			{ field: 'userId', value: userId },

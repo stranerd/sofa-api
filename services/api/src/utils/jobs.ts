@@ -11,7 +11,7 @@ import {
 	processTransactions,
 	processWithdrawals,
 	renewPlanSubscription,
-	renewSubscriptionTo,
+	Subscriptions,
 	updateOrgsMembersDays,
 } from '@modules/payment'
 import { PlayTypes, endPlay } from '@modules/plays'
@@ -30,7 +30,7 @@ export const startJobs = async () => {
 		{
 			onDelayed: async (data) => {
 				if (data.type === DelayedJobs.RenewSubscription) await renewPlanSubscription(data.data.userId)
-				if (data.type === DelayedJobs.RenewGenericSubscription) await renewSubscriptionTo(data.data.userId, data.data.data)
+				if (data.type === DelayedJobs.RenewGenericSubscription) await Subscriptions.renewGeneric(data.data.userId, data.data.data)
 				if (data.type === DelayedJobs.PlayTimer) await endPlay(data.data.type as PlayTypes, data.data.typeId, data.data.userId)
 			},
 			onCronLike: async () => {},
