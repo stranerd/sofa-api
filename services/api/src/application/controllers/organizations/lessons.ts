@@ -25,7 +25,7 @@ export class LessonsController {
 		)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
 
 		const { results: teachers } = await MembersUseCases.get({
 			where: [
@@ -53,7 +53,7 @@ export class LessonsController {
 		const data = validate(this.schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
 
 		const lesson = await ClassesUseCases.updateLesson({
 			data,
@@ -67,7 +67,7 @@ export class LessonsController {
 
 	static async delete(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
 
 		const isDeleted = await ClassesUseCases.deleteLesson({
 			lessonId: req.params.id,
@@ -82,7 +82,7 @@ export class LessonsController {
 		const { join } = validate({ join: Schema.boolean() }, req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
+		if (!hasAccess?.role) throw new NotAuthorizedError()
 
 		const updated = await ClassesUseCases.manageLessonUsers({
 			lessonId: req.params.id,
@@ -106,7 +106,7 @@ export class LessonsController {
 		)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
 
 		if (add) {
 			const { results: teachers } = await MembersUseCases.get({
@@ -163,7 +163,9 @@ export class LessonsController {
 		)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
+		const lesson = hasAccess.class.getLesson(req.params.id)
+		if (!lesson?.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 
 		const allFiles = makeSet(
 			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.file)),

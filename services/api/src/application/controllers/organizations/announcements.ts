@@ -1,19 +1,19 @@
-import { AnnouncementsUseCases, ClassesUseCases, MemberTypes, canAccessOrgClasses } from '@modules/organizations'
+import { AnnouncementsUseCases, MemberTypes, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class AnnouncementsController {
-	private static schema = () => ({
+	private static schema = (role: 'teacher' | 'admin') => ({
 		body: Schema.string().min(1),
 		filter: Schema.object({
-			lessonId: Schema.string().min(1).nullable(),
+			lessonId: role === 'admin' ? Schema.string().min(1).nullable() : Schema.string().min(1),
 			userType: Schema.in(Object.values(MemberTypes)).nullable(),
 		}),
 	})
 
 	static async find(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
+		if (!hasAccess?.role) throw new NotAuthorizedError()
 
 		const announcement = await AnnouncementsUseCases.find(req.params.id)
 		if (!announcement || announcement.organizationId !== req.params.organizationId || announcement.classId !== req.params.classId)
@@ -23,7 +23,7 @@ export class AnnouncementsController {
 
 	static async get(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
+		if (!hasAccess?.role) throw new NotAuthorizedError()
 
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.and
@@ -35,17 +35,18 @@ export class AnnouncementsController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(this.schema(), req.body)
-
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin' && hasAccess !== 'teacher') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
+
+		const data = validate(this.schema(hasAccess.role), req.body)
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		if (data.filter.lessonId) {
-			const classInst = await ClassesUseCases.find(req.params.classId)
-			if (!classInst?.getLesson(data.filter.lessonId)) throw new BadRequestError('lesson not found')
+			const lesson = hasAccess.class.getLesson(data.filter.lessonId)
+			if (!lesson) throw new BadRequestError('lesson not found')
+			if (hasAccess.role === 'teacher' && !lesson.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 		}
 
 		return await AnnouncementsUseCases.add({
@@ -58,7 +59,7 @@ export class AnnouncementsController {
 
 	static async delete(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess !== 'admin') throw new NotAuthorizedError()
+		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
 
 		const isDeleted = await AnnouncementsUseCases.delete({
 			id: req.params.id,
@@ -71,7 +72,7 @@ export class AnnouncementsController {
 
 	static async markRead(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (!hasAccess) throw new NotAuthorizedError()
+		if (!hasAccess?.role) throw new NotAuthorizedError()
 
 		return await AnnouncementsUseCases.markRead({
 			organizationId: req.params.organizationId,

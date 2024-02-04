@@ -1,5 +1,5 @@
 import { NotificationType, sendNotification } from '@modules/notifications'
-import { ClassesUseCases } from '@modules/organizations'
+import { canAccessOrgClasses } from '@modules/organizations'
 import { UserEntity, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
@@ -17,13 +17,23 @@ type Sub = {
 	interval: 'monthly' | 'weekly'
 }
 
-const verifyData = async (data: Subscription['data']): Promise<Sub | null> => {
+const verifyData = async (data: Subscription['data'], user: UserEntity): Promise<Sub | null> => {
 	if (data.type === 'classes') {
-		const classInst = await ClassesUseCases.find(data.classId)
-		if (!classInst || classInst.organizationId !== data.organizationId) return null
+		const access = await canAccessOrgClasses(
+			{
+				id: user.id,
+				email: user.bio.email,
+				roles: user.roles,
+				isEmailVerified: true,
+			},
+			data.organizationId,
+			data.classId,
+		)
+		if (!access) return null
 		return {
-			...classInst.price,
-			title: classInst.title,
+			amount: access.role ? 0 : access.class.price.amount,
+			currency: access.class.price.currency,
+			title: access.class.title,
 			interval: 'monthly',
 		}
 	}
@@ -74,6 +84,7 @@ const deactivateSub = async (userId: string, wallet: WalletEntity, data: Subscri
 }
 
 const chargeForSubscription = async (user: UserEntity, sub: Sub, data: Subscription['data'], method: MethodEntity) => {
+	if (sub.amount <= 0) return true
 	try {
 		const transaction = await TransactionsUseCases.create({
 			userId: user.id,
@@ -109,7 +120,7 @@ export const createSubscriptionTo = async (userId: string, subscriptionData: Sub
 	const user = await UsersUseCases.find(userId)
 	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-	const data = await verifyData(subscriptionData)
+	const data = await verifyData(subscriptionData, user)
 	if (!data) throw new BadRequestError('cannot initiate subscription')
 
 	const { results: methods } = await MethodsUseCases.get({
@@ -134,7 +145,7 @@ export const renewSubscriptionTo = async (userId: string, subscriptionData: Subs
 	const user = await UsersUseCases.find(userId)
 	if (!user || user.isDeleted()) return await deactivateSub(userId, wallet, subscriptionData, null)
 
-	const data = await verifyData(subscriptionData)
+	const data = await verifyData(subscriptionData, user)
 	if (!data) return await deactivateSub(userId, wallet, subscriptionData, null)
 
 	const { results: methods } = await MethodsUseCases.get({

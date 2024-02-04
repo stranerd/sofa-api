@@ -28,7 +28,7 @@ export const registerSockets = () => {
 	const orgClassesCb: OnJoinFn = async (data, params) => {
 		const { organizationId = null, classId = null } = params
 		if (!organizationId || !classId || !data.user) return null
-		return (await canAccessOrgClasses(data.user, organizationId, classId)) ? await isOpen(data, params) : null
+		return (await canAccessOrgClasses(data.user, organizationId, classId))?.role ? await isOpen(data, params) : null
 	}
 
 	appInstance.listener

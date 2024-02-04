@@ -1,4 +1,4 @@
-import { ClassesUseCases, canAccessOrgClasses, canModOrgs } from '@modules/organizations'
+import { ClassesUseCases, canModOrgs } from '@modules/organizations'
 import { Currencies, Subscription, cancelSubscriptionTo, createSubscriptionTo } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
@@ -105,9 +105,6 @@ export class ClassesController {
 	}
 
 	static async purchase(req: Request) {
-		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
-		if (hasAccess) throw new BadRequestError('you already have access to the class, no need to purchase it')
-
 		const data: Subscription['data'] = { type: 'classes', classId: req.params.id, organizationId: req.params.organizationId }
 		const wallet = await createSubscriptionTo(req.authUser!.id, data)
 		const sub = wallet.getSubscription(data)
