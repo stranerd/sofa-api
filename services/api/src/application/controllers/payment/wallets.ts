@@ -2,7 +2,7 @@ import {
 	CurrencyCountries,
 	FlutterwavePayment,
 	MethodsUseCases,
-	subscribeToPlan,
+	Subscriptions,
 	TransactionStatus,
 	TransactionsUseCases,
 	TransactionType,
@@ -23,7 +23,7 @@ export class WalletsController {
 			},
 			req.body,
 		)
-		return await subscribeToPlan(req.authUser!.id, planId)
+		return await Subscriptions.createPlan(req.authUser!.id, planId)
 	}
 
 	static async toggleRenewSubscription(req: Request) {

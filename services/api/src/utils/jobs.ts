@@ -6,14 +6,7 @@ import {
 	sendMailAndCatchError,
 	sendTextAndCatchError,
 } from '@modules/notifications'
-import {
-	MethodsUseCases,
-	processTransactions,
-	processWithdrawals,
-	renewPlanSubscription,
-	Subscriptions,
-	updateOrgsMembersDays,
-} from '@modules/payment'
+import { MethodsUseCases, Subscriptions, processTransactions, processWithdrawals, updateOrgsMembersDays } from '@modules/payment'
 import { PlayTypes, endPlay } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
@@ -29,7 +22,7 @@ export const startJobs = async () => {
 		],
 		{
 			onDelayed: async (data) => {
-				if (data.type === DelayedJobs.RenewSubscription) await renewPlanSubscription(data.data.userId)
+				if (data.type === DelayedJobs.RenewSubscription) await Subscriptions.renewPlan(data.data.userId)
 				if (data.type === DelayedJobs.RenewGenericSubscription) await Subscriptions.renewGeneric(data.data.userId, data.data.data)
 				if (data.type === DelayedJobs.PlayTimer) await endPlay(data.data.type as PlayTypes, data.data.typeId, data.data.userId)
 			},

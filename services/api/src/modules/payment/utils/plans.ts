@@ -1,7 +1,9 @@
+import { MembersUseCases } from '@modules/organizations'
+import { UserType } from '@modules/users'
 import { CronTypes } from 'equipped'
+import { WalletsUseCases } from '..'
 import { PlanToModel } from '../data/models/plans'
 import { Currencies } from '../domain/types'
-import { UserType } from '@modules/users'
 
 export const getPlansList = (): PlanToModel[] => [
 	{
@@ -25,3 +27,8 @@ export const getPlansList = (): PlanToModel[] => [
 		active: true,
 	},
 ]
+
+export const updateOrgsMembersDays = async () => {
+	const records = await MembersUseCases.aggregateMembersDays()
+	await WalletsUseCases.updateMembersDays(records)
+}

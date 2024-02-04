@@ -36,8 +36,8 @@ export {
 	TransactionType,
 } from './domain/types'
 export { FlutterwavePayment } from './utils/flutterwave'
+export { updateOrgsMembersDays } from './utils/plans'
 export { findPurchasable } from './utils/purchases'
-export { renewPlanSubscription, subscribeToPlan, updateOrgsMembersDays } from './utils/subscriptions'
-export { Subscriptions } from './utils/subscriptions/a'
+export { Subscriptions } from './utils/subscriptions'
 export { fulfillTransaction, processTransactions } from './utils/transactions'
 export { processWithdrawals } from './utils/withdrawals'
