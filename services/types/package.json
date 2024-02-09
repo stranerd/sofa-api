@@ -4,6 +4,6 @@
     "lint": "echo 'Linted'"
   },
   "dependencies": {
-    "equipped": "4.2.2"
+    "equipped": "4.2.10"
   }
 }
