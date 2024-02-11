@@ -13,7 +13,7 @@ export const canAccessOrgClasses = async (user: AuthUser, organizationId: string
 	const classInst = await ClassesUseCases.find(classId)
 	if (!classInst || classInst.organizationId !== organizationId) return null
 	const canModOrg = await canModOrgs(user, organizationId)
-	if (canModOrg) return { class: classInst, role: 'admin' }
+	if (canModOrg) return { class: classInst, role: 'admin' as const }
 	const { results: members } = await MembersUseCases.get({
 		where: [
 			{ field: 'email', value: user.email },
@@ -22,8 +22,8 @@ export const canAccessOrgClasses = async (user: AuthUser, organizationId: string
 		all: true,
 	})
 	// if (members.some((m) => m.type === MemberTypes.teacher)) return 'teacher'
-	if (classInst.lessons.some((l) => l.users.teachers.includes(user.id))) return { class: classInst, role: 'teacher' }
-	if (members.some((m) => m.type === MemberTypes.student)) return { class: classInst, role: 'student' }
-	if (classInst.members.students.includes(user.id)) return { class: classInst, role: 'student' }
+	if (classInst.lessons.some((l) => l.users.teachers.includes(user.id))) return { class: classInst, role: 'teacher' as const }
+	if (members.some((m) => m.type === MemberTypes.student)) return { class: classInst, role: 'student' as const }
+	if (classInst.members.students.includes(user.id)) return { class: classInst, role: 'student' as const }
 	return { class: classInst, role: null }
 }
