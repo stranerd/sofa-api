@@ -69,7 +69,7 @@ export class ScheduleRepository implements IScheduleRepository {
 	async start(organizationId: string, classId: string, id: string) {
 		let res = null as ScheduleFromModel | null
 		await Schedule.collection.conn.transaction(async (session) => {
-			const schedule = this.mapper.mapFrom(await Schedule.findOne({ _id: id, organizationId, classId }, { session }))
+			const schedule = this.mapper.mapFrom(await Schedule.findOne({ _id: id, organizationId, classId }, {}, { session }))
 			if (!schedule || schedule.status !== ScheduleStatus.created) return res
 			return (res = await Schedule.findByIdAndUpdate(
 				schedule.id,
