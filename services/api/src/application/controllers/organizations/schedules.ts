@@ -5,6 +5,7 @@ import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, S
 export class SchedulesController {
 	private static schema = () => ({
 		title: Schema.string().min(1),
+		description: Schema.string().min(1),
 		time: Schema.object({ start: Schema.number(), end: Schema.number() }).custom((v) => v.end > v.start, 'end must be after start'),
 	})
 

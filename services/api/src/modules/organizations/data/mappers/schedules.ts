@@ -5,7 +5,7 @@ import { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
 export class ScheduleMapper extends BaseMapper<ScheduleFromModel, ScheduleToModel, ScheduleEntity> {
 	mapFrom(model: ScheduleFromModel | null) {
 		if (!model) return null
-		const { _id, organizationId, classId, lessonId, user, title, status, time, stream, createdAt, updatedAt } = model
+		const { _id, organizationId, classId, lessonId, user, title, description, status, time, stream, createdAt, updatedAt } = model
 		return new ScheduleEntity({
 			id: _id.toString(),
 			organizationId,
@@ -13,6 +13,7 @@ export class ScheduleMapper extends BaseMapper<ScheduleFromModel, ScheduleToMode
 			lessonId,
 			user,
 			title,
+			description,
 			status,
 			time,
 			stream,
@@ -24,6 +25,7 @@ export class ScheduleMapper extends BaseMapper<ScheduleFromModel, ScheduleToMode
 	mapTo(entity: ScheduleEntity) {
 		return {
 			title: entity.title,
+			description: entity.description,
 			classId: entity.classId,
 			organizationId: entity.organizationId,
 			lessonId: entity.lessonId,

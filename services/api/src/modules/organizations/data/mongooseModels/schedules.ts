@@ -26,6 +26,11 @@ const ScheduleSchema = new appInstance.dbs.mongo.Schema<ScheduleFromModel>(
 			type: String,
 			required: true,
 		},
+		description: {
+			type: String,
+			required: false,
+			default: '',
+		},
 		user: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,

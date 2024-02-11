@@ -14,5 +14,6 @@ export interface ScheduleToModel {
 	lessonId: string
 	user: EmbeddedUser
 	title: string
+	description: string
 	time: ScheduleTime
 }

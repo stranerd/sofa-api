@@ -9,6 +9,7 @@ export class ScheduleEntity extends BaseEntity {
 	public readonly lessonId: string
 	public readonly user: EmbeddedUser
 	public readonly title: string
+	public readonly description: string
 	public readonly status: ScheduleStatus
 	public readonly time: ScheduleTime
 	public readonly stream: ScheduleStream | null
@@ -22,6 +23,7 @@ export class ScheduleEntity extends BaseEntity {
 		lessonId,
 		user,
 		title,
+		description,
 		status,
 		time,
 		stream,
@@ -35,6 +37,7 @@ export class ScheduleEntity extends BaseEntity {
 		this.lessonId = lessonId
 		this.user = generateDefaultUser(user)
 		this.title = title
+		this.description = description
 		this.status = status
 		this.time = time
 		this.stream = stream
@@ -50,6 +53,7 @@ type ScheduleConstructorArgs = {
 	lessonId: string
 	user: EmbeddedUser
 	title: string
+	description: string
 	status: ScheduleStatus
 	time: ScheduleTime
 	stream: ScheduleStream | null
