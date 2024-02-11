@@ -2,7 +2,7 @@ import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IScheduleRepository } from '../../domain/irepositories/schedules'
 import { ClassLessonable, EmbeddedUser, ScheduleStatus } from '../../domain/types'
-import { createLiveStream } from '../../utils/livestreams'
+import { createLiveStream, endLiveStream } from '../../utils/livestreams'
 import { ScheduleMapper } from '../mappers/schedules'
 import { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
 import { Class } from '../mongooseModels/classes'
@@ -81,11 +81,14 @@ export class ScheduleRepository implements IScheduleRepository {
 	}
 
 	async end(organizationId: string, classId: string, id: string) {
-		const schedule = await Schedule.findOneAndUpdate(
-			{ _id: id, organizationId, classId, status: ScheduleStatus.started },
-			{ $set: { status: ScheduleStatus.ended } },
-		)
-		return this.mapper.mapFrom(schedule)
+		let res = null as ScheduleFromModel | null
+		await Schedule.collection.conn.transaction(async (session) => {
+			const schedule = this.mapper.mapFrom(await Schedule.findOne({ _id: id, organizationId, classId }, {}, { session }))
+			if (!schedule || schedule.status !== ScheduleStatus.started) return res
+			await endLiveStream(schedule).catch()
+			return (res = await Schedule.findByIdAndUpdate(schedule.id, { $set: { status: ScheduleStatus.ended } }, { session, new: true }))
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async deleteLessonSchedules(organizationId: string, classId: string, lessonId: string) {
