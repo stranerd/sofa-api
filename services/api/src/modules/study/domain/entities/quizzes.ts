@@ -14,6 +14,10 @@ export class QuizEntity extends CoursableEntity implements CoursableData {
 		this.access = data.access
 		this.isForTutors = data.isForTutors
 	}
+
+	canUserAccess(userId: string) {
+		return this.user.id === userId || this.access.members.includes(userId)
+	}
 }
 
 type QuizConstructorArgs = CoursableData & {

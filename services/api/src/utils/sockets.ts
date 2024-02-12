@@ -10,25 +10,27 @@ export const registerSockets = () => {
 	const isMine: OnJoinFn = async ({ channel, user }) => (user ? `${channel}/${user.id}` : null)
 	// const isSubbed: OnJoinFn = async ({ channel, user }) => user?.roles[AuthRole.isSubscribed] ? channel : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
-	const conversationsCb: OnJoinFn = async (data, params) => {
+	const conversationsCb: OnJoinFn = async (data, params, query) => {
 		const { conversationId = null } = params
 		if (!conversationId || !data.user) return null
-		return (await canAccessConversation(conversationId, data.user.id)) ? await isOpen(data, params) : null
+		return (await canAccessConversation(conversationId, data.user.id)) ? await isOpen(data, params, query) : null
 	}
-	const coursablesCb: OnJoinFn = async (data, params) => {
+	const coursablesCb: OnJoinFn = async (data, params, query) => {
 		const { quizId = null } = params
 		if (!quizId || !data.user) return null
-		return (await canAccessCoursable(Coursable.quiz, quizId, data.user)) ? await isOpen(data, params) : null
+		return (await canAccessCoursable(Coursable.quiz, quizId, data.user, query.access)) ? await isOpen(data, params, query) : null
 	}
-	const orgMembersCb: OnJoinFn = async (data, params) => {
+	const orgMembersCb: OnJoinFn = async (data, params, query) => {
 		const { organizationId = null } = params
 		if (!organizationId || !data.user) return null
-		return (await canAccessOrgMembers(data.user, organizationId)) ? await isOpen(data, params) : `${data.channel}/${data.user.email}}`
+		return (await canAccessOrgMembers(data.user, organizationId))
+			? await isOpen(data, params, query)
+			: `${data.channel}/${data.user.email}}`
 	}
-	const orgClassesCb: OnJoinFn = async (data, params) => {
+	const orgClassesCb: OnJoinFn = async (data, params, query) => {
 		const { organizationId = null, classId = null } = params
 		if (!organizationId || !classId || !data.user) return null
-		return (await canAccessOrgClasses(data.user, organizationId, classId))?.role ? await isOpen(data, params) : null
+		return (await canAccessOrgClasses(data.user, organizationId, classId))?.role ? await isOpen(data, params, query) : null
 	}
 
 	appInstance.listener

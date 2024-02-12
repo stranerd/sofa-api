@@ -48,6 +48,10 @@ export class GameEntity extends BaseEntity {
 	getEndsAt() {
 		return (this.startedAt ?? 0) + this.totalTimeInSec * 1000
 	}
+
+	canUserAccess(userId: string) {
+		return this.user.id === userId || this.participants.includes(userId)
+	}
 }
 
 type GameConstructorArgs = {

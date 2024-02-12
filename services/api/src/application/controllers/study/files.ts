@@ -140,7 +140,7 @@ export class FileController {
 	static async media(req: Request) {
 		const user = await verifyAccessToken(req.query.AccessToken ?? '')
 		if (!user) throw new NotAuthenticatedError()
-		const hasAccess = await canAccessCoursable(Coursable.file, req.params.id, user)
+		const hasAccess = await canAccessCoursable(Coursable.file, req.params.id, user, req.query.access)
 		if (!hasAccess) throw new NotAuthorizedError('cannot access this file')
 		return hasAccess.media
 	}

@@ -41,7 +41,7 @@ export class TestController {
 			req.body,
 		)
 
-		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!)
+		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!, req.query.access)
 		if (!hasAccess || hasAccess.isForTutors) throw new NotAuthorizedError('cannot access this quiz')
 
 		const user = await UsersUseCases.find(req.authUser!.id)

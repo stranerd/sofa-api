@@ -44,6 +44,10 @@ export class TestEntity extends BaseEntity {
 	getEndsAt() {
 		return (this.startedAt ?? 0) + this.totalTimeInSec * 1000
 	}
+
+	canUserAccess(userId: string) {
+		return this.userId === userId
+	}
 }
 
 type TestConstructorArgs = {
