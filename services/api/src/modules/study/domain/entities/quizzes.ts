@@ -1,4 +1,4 @@
-import { CoursableData, QuizAccess, QuizMeta } from '../types'
+import { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../types'
 import { CoursableEntity } from './coursables'
 
 export class QuizEntity extends CoursableEntity implements CoursableData {
@@ -6,6 +6,7 @@ export class QuizEntity extends CoursableEntity implements CoursableData {
 	public readonly meta: Record<QuizMeta, number>
 	public readonly access: QuizAccess
 	public readonly isForTutors: boolean
+	public readonly modes: Record<QuizModes, boolean>
 
 	constructor(data: QuizConstructorArgs) {
 		super(data)
@@ -13,6 +14,7 @@ export class QuizEntity extends CoursableEntity implements CoursableData {
 		this.meta = data.meta
 		this.access = data.access
 		this.isForTutors = data.isForTutors
+		this.modes = data.modes
 	}
 
 	canUserAccess(userId: string) {
@@ -26,6 +28,7 @@ type QuizConstructorArgs = CoursableData & {
 	meta: Record<QuizMeta, number>
 	access: QuizAccess
 	isForTutors: boolean
+	modes: Record<QuizModes, boolean>
 	createdAt: number
 	updatedAt: number
 }

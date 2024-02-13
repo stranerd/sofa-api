@@ -1,4 +1,4 @@
-import { CoursableData, QuizAccess, QuizMeta } from '../../domain/types'
+import { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../../domain/types'
 
 export interface QuizFromModel extends QuizToModel {
 	_id: string
@@ -12,4 +12,5 @@ export interface QuizFromModel extends QuizToModel {
 
 export interface QuizToModel extends Omit<CoursableData, 'ratings'> {
 	isForTutors: boolean
+	modes: Record<QuizModes, boolean>
 }

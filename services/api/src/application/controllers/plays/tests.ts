@@ -43,6 +43,7 @@ export class TestController {
 
 		const hasAccess = await canAccessCoursable(Coursable.quiz, data.quizId, req.authUser!, req.query.access)
 		if (!hasAccess || hasAccess.isForTutors) throw new NotAuthorizedError('cannot access this quiz')
+		if (!hasAccess.modes.test) throw new NotAuthorizedError('cannot create a test for this quiz')
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')

@@ -20,6 +20,7 @@ export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntit
 			status,
 			meta,
 			isForTutors,
+			modes,
 			createdAt,
 			updatedAt,
 		} = model
@@ -38,6 +39,7 @@ export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntit
 			status,
 			meta,
 			isForTutors,
+			modes,
 			createdAt,
 			updatedAt,
 		})
@@ -54,6 +56,7 @@ export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntit
 			tagIds: entity.tagIds,
 			status: entity.status,
 			isForTutors: entity.isForTutors,
+			modes: entity.modes,
 		}
 	}
 }
