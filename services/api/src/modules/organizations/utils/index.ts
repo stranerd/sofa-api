@@ -18,6 +18,7 @@ export const canAccessOrgClasses = async (user: AuthUser, organizationId: string
 		where: [
 			{ field: 'email', value: user.email },
 			{ field: 'organizationId', value: organizationId },
+			{ field: 'accepted.is', value: true },
 		],
 		all: true,
 	})

@@ -49,7 +49,7 @@ export class MembersController {
 				code: Schema.force
 					.string()
 					.nullish()
-					.custom((val) => (orgCode ? val === orgCode : true), 'doesn\'t match'),
+					.custom((val) => (orgCode ? val === orgCode : true), 'does not match'),
 				type: Schema.in(Object.values(MemberTypes)),
 			},
 			req.body,
