@@ -61,13 +61,16 @@ export class SchedulesController {
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
-		// TODO: check if user is teacher of lesson
 
 		const schedule = await SchedulesUseCases.update({
 			data,
 			id: req.params.id,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
+			lessons:
+				hasAccess.role === 'teacher'
+					? hasAccess.class.lessons.filter((l) => l.users.teachers.includes(req.authUser!.id)).map((l) => l.id)
+					: undefined,
 		})
 
 		return schedule
@@ -76,12 +79,15 @@ export class SchedulesController {
 	static async delete(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
-		// TODO: check if user is teacher of lesson
 
 		const isDeleted = await SchedulesUseCases.delete({
 			id: req.params.id,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
+			lessons:
+				hasAccess.role === 'teacher'
+					? hasAccess.class.lessons.filter((l) => l.users.teachers.includes(req.authUser!.id)).map((l) => l.id)
+					: undefined,
 		})
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
@@ -90,12 +96,15 @@ export class SchedulesController {
 	static async start(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
-		// TODO: check if user is teacher of lesson
 
 		const updated = await SchedulesUseCases.start({
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
 			id: req.params.id,
+			lessons:
+				hasAccess.role === 'teacher'
+					? hasAccess.class.lessons.filter((l) => l.users.teachers.includes(req.authUser!.id)).map((l) => l.id)
+					: undefined,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
@@ -104,12 +113,15 @@ export class SchedulesController {
 	static async end(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
-		// TODO: check if user is teacher of lesson
 
 		const updated = await SchedulesUseCases.end({
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
 			id: req.params.id,
+			lessons:
+				hasAccess.role === 'teacher'
+					? hasAccess.class.lessons.filter((l) => l.users.teachers.includes(req.authUser!.id)).map((l) => l.id)
+					: undefined,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()

@@ -40,8 +40,17 @@ export class ScheduleRepository implements IScheduleRepository {
 		return this.mapper.mapFrom(schedule)
 	}
 
-	async update(organizationId: string, classId: string, id: string, data: Partial<ScheduleToModel>) {
-		const schedule = await Schedule.findOneAndUpdate({ _id: id, organizationId, classId }, { $set: data }, { new: true })
+	async update(organizationId: string, classId: string, id: string, data: Partial<ScheduleToModel>, lessons: string[] | undefined) {
+		const schedule = await Schedule.findOneAndUpdate(
+			{
+				_id: id,
+				organizationId,
+				classId,
+				...(lessons ? { lessonId: { $in: lessons } } : {}),
+			},
+			{ $set: data },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(schedule)
 	}
 
@@ -50,26 +59,52 @@ export class ScheduleRepository implements IScheduleRepository {
 		return schedules.acknowledged
 	}
 
-	async delete(organizationId: string, classId: string, id: string) {
+	async delete(organizationId: string, classId: string, id: string, lessons: string[] | undefined) {
 		let res = false
 		await Schedule.collection.conn.transaction(async (session) => {
-			const schedule = await Schedule.findOneAndDelete({ _id: id, organizationId, classId }, { session })
-			if (schedule)
-				await Class.findOneAndUpdate(
-					{ _id: classId, organizationId },
-					{ $pull: { 'lessons.$[].curriculum.items': { id, type: ClassLessonable.schedule } } },
-					{ session },
-				)
+			const schedule = await Schedule.findOneAndDelete(
+				{
+					_id: id,
+					organizationId,
+					classId,
+					...(lessons ? { lessonId: { $in: lessons } } : {}),
+				},
+				{ session },
+			)
+			if (schedule) {
+				const classInst = await Class.findOne({ _id: classId, organizationId }, {}, { session })
+				if (classInst) {
+					const updatedLessons = classInst.lessons.map((l) => ({
+						...l,
+						curriculum: l.curriculum.map((c) => ({
+							...c,
+							items: c.items.filter((i) => !(i.id === id && i.type === ClassLessonable.schedule)),
+						})),
+					}))
+					await Class.findByIdAndUpdate(classId, { $set: { lessons: updatedLessons } }, { session })
+				}
+			}
 			res = !!schedule
 			return res
 		})
 		return res
 	}
 
-	async start(organizationId: string, classId: string, id: string) {
+	async start(organizationId: string, classId: string, id: string, lessons: string[] | undefined) {
 		let res = null as ScheduleFromModel | null
 		await Schedule.collection.conn.transaction(async (session) => {
-			const schedule = this.mapper.mapFrom(await Schedule.findOne({ _id: id, organizationId, classId }, {}, { session }))
+			const schedule = this.mapper.mapFrom(
+				await Schedule.findOne(
+					{
+						_id: id,
+						organizationId,
+						classId,
+						...(lessons ? { lessonId: { $in: lessons } } : {}),
+					},
+					{},
+					{ session },
+				),
+			)
 			if (!schedule || schedule.status !== ScheduleStatus.created) return res
 			return (res = await Schedule.findByIdAndUpdate(
 				schedule.id,
@@ -80,10 +115,21 @@ export class ScheduleRepository implements IScheduleRepository {
 		return this.mapper.mapFrom(res)
 	}
 
-	async end(organizationId: string, classId: string, id: string) {
+	async end(organizationId: string, classId: string, id: string, lessons: string[] | undefined) {
 		let res = null as ScheduleFromModel | null
 		await Schedule.collection.conn.transaction(async (session) => {
-			const schedule = this.mapper.mapFrom(await Schedule.findOne({ _id: id, organizationId, classId }, {}, { session }))
+			const schedule = this.mapper.mapFrom(
+				await Schedule.findOne(
+					{
+						_id: id,
+						organizationId,
+						classId,
+						...(lessons ? { lessonId: { $in: lessons } } : {}),
+					},
+					{},
+					{ session },
+				),
+			)
 			if (!schedule || schedule.status !== ScheduleStatus.started) return res
 			await endLiveStream(schedule).catch()
 			return (res = await Schedule.findByIdAndUpdate(schedule.id, { $set: { status: ScheduleStatus.ended } }, { session, new: true }))

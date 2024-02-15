@@ -18,16 +18,16 @@ export class SchedulesUseCase {
 		return await this.repository.deleteLessonSchedules(data.organizationId, data.classId, data.lessonId)
 	}
 
-	async delete(data: { organizationId: string; classId: string; id: string }) {
-		return await this.repository.delete(data.organizationId, data.classId, data.id)
+	async delete(data: { organizationId: string; classId: string; id: string; lessons: string[] | undefined }) {
+		return await this.repository.delete(data.organizationId, data.classId, data.id, data.lessons)
 	}
 
-	async start(data: { organizationId: string; classId: string; id: string }) {
-		return await this.repository.start(data.organizationId, data.classId, data.id)
+	async start(data: { organizationId: string; classId: string; id: string; lessons: string[] | undefined }) {
+		return await this.repository.start(data.organizationId, data.classId, data.id, data.lessons)
 	}
 
-	async end(data: { organizationId: string; classId: string; id: string }) {
-		return await this.repository.end(data.organizationId, data.classId, data.id)
+	async end(data: { organizationId: string; classId: string; id: string; lessons: string[] | undefined }) {
+		return await this.repository.end(data.organizationId, data.classId, data.id, data.lessons)
 	}
 
 	async find(id: string) {
@@ -38,8 +38,14 @@ export class SchedulesUseCase {
 		return await this.repository.get(query)
 	}
 
-	async update(input: { organizationId: string; classId: string; id: string; data: Partial<ScheduleToModel> }) {
-		return await this.repository.update(input.organizationId, input.classId, input.id, input.data)
+	async update(input: {
+		organizationId: string
+		classId: string
+		id: string
+		data: Partial<ScheduleToModel>
+		lessons: string[] | undefined
+	}) {
+		return await this.repository.update(input.organizationId, input.classId, input.id, input.data, input.lessons)
 	}
 
 	async updateUserBio(user: EmbeddedUser) {
