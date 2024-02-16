@@ -41,7 +41,7 @@ export class UserRepository implements IUserRepository {
 				$set: { bio: data },
 				$setOnInsert: { _id: userId, dates: { createdAt: timestamp, deletedAt: null } },
 			},
-			{ upsert: true },
+			{ upsert: true, new: true },
 		)
 	}
 
@@ -56,7 +56,7 @@ export class UserRepository implements IUserRepository {
 			{
 				$set: { 'dates.deletedAt': timestamp },
 			},
-			{ upsert: true },
+			{ upsert: true, new: true },
 		)
 	}
 
@@ -87,7 +87,7 @@ export class UserRepository implements IUserRepository {
 			{
 				$set: { roles: data },
 			},
-			{ upsert: true },
+			{ upsert: true, new: true },
 		)
 	}
 
