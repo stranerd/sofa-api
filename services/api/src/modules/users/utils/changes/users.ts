@@ -30,7 +30,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['users/users', `users/users/${after.id}`], after)
 
-		const updatedBioOrRoles = !!changes.bio || !!changes.roles
+		const updatedBioOrRoles = !!changes.bio || !!changes.roles || !!changes.type
 		if (updatedBioOrRoles)
 			await Promise.all(
 				[

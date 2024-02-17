@@ -120,6 +120,8 @@ export const generateDefaultUser = (user: Partial<EmbeddedUser>): EmbeddedUser =
 	const bio = generateDefaultBio(user?.bio ?? {})
 	const roles = generateDefaultRoles(user?.roles ?? {})
 	const type = user?.type ?? null
+	// @ts-ignore
+	if (type && type.type === UserType.organization) delete type.code
 	const publicName = type?.type === UserType.organization ? type.name : bio.name.full
 	return {
 		id,
