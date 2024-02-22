@@ -26,7 +26,12 @@ export class UsersUseCase {
 	}
 
 	async findByEmail(email: string) {
-		const res = await this.repository.getUsers({ where: [{ field: 'bio.email', value: email }] })
+		const res = await this.repository.getUsers({
+			where: [
+				{ field: 'bio.email', value: email },
+				{ field: 'dates.deletedAt', value: null },
+			],
+		})
 		const user = res.results.at(0)
 		if (user && !user.isDeleted()) return user
 		return null
