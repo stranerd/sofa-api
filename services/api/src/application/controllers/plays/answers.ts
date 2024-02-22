@@ -22,7 +22,7 @@ export class AnswerController {
 		const data = validate(
 			{
 				questionId: Schema.string().min(1),
-				answer: Schema.or([Schema.array(Schema.number()), Schema.boolean(), Schema.string().min(1), Schema.array(Schema.string())]),
+				answer: Schema.or([Schema.array(Schema.number()), Schema.boolean(), Schema.string(), Schema.array(Schema.string())]),
 			},
 			req.body,
 		)
