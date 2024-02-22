@@ -32,6 +32,7 @@ export class MemberRepository implements IMemberRepository {
 		await Member.collection.conn.transaction(async (session) => {
 			await Promise.all(
 				data.members.map(async ({ email, user, type }) => {
+					email = email.toLowerCase()
 					const member = await Member.findOneAndUpdate(
 						{ email, type, organizationId: data.organizationId },
 						{
@@ -50,6 +51,7 @@ export class MemberRepository implements IMemberRepository {
 	}
 
 	async request(data: { email: string; user: EmbeddedUser | null; type: MemberTypes; organizationId: string; withCode: boolean }) {
+		data.email = data.email.toLowerCase()
 		const updateData: MemberToModel = { ...data, pending: true, accepted: null }
 		const organizationMember = await Member.findOneAndUpdate(
 			{ email: data.email, organizationId: data.organizationId },

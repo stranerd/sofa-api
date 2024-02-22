@@ -28,7 +28,7 @@ export class UsersUseCase {
 	async findByEmail(email: string) {
 		const res = await this.repository.getUsers({
 			where: [
-				{ field: 'bio.email', value: email },
+				{ field: 'bio.email', value: email.toLowerCase() },
 				{ field: 'dates.deletedAt', value: null },
 			],
 		})
