@@ -7,13 +7,13 @@ export class LikeMapper extends BaseMapper<LikeFromModel, LikeToModel, LikeEntit
 		return !param
 			? null
 			: new LikeEntity({
-				id: param._id.toString(),
-				value: param.value,
-				entity: param.entity,
-				user: param.user,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					value: param.value,
+					entity: param.entity,
+					user: param.user,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: LikeEntity) {

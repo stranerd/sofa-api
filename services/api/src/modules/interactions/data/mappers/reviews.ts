@@ -7,14 +7,14 @@ export class ReviewMapper extends BaseMapper<ReviewFromModel, ReviewToModel, Rev
 		return !param
 			? null
 			: new ReviewEntity({
-				id: param._id.toString(),
-				entity: param.entity,
-				user: param.user,
-				rating: param.rating,
-				message: param.message,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					entity: param.entity,
+					user: param.user,
+					rating: param.rating,
+					message: param.message,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: ReviewEntity) {

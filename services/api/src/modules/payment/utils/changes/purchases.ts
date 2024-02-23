@@ -26,21 +26,21 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 		await Promise.all([
 			user
 				? TransactionsUseCases.create({
-					title: `Purchase of one of your ${after.data.type}: ${after.data.id}`,
-					userId: user.id,
-					email: user.bio.email,
-					amount: Math.ceil((1 - serviceCharge) * after.price.amount),
-					currency: after.price.currency,
-					status: TransactionStatus.fulfilled,
-					data: {
-						type: TransactionType.purchased,
-						purchaseId: after.id,
-						userId: after.userId,
-						serviceCharge,
-						purchasedType: after.data.type,
-						purchasedId: after.data.id,
-					},
-				})
+						title: `Purchase of one of your ${after.data.type}: ${after.data.id}`,
+						userId: user.id,
+						email: user.bio.email,
+						amount: Math.ceil((1 - serviceCharge) * after.price.amount),
+						currency: after.price.currency,
+						status: TransactionStatus.fulfilled,
+						data: {
+							type: TransactionType.purchased,
+							purchaseId: after.id,
+							userId: after.userId,
+							serviceCharge,
+							purchasedType: after.data.type,
+							purchasedId: after.data.id,
+						},
+					})
 				: null,
 			after.data.type === Purchasables.courses
 				? CoursesUseCases.updateMeta({ id: after.data.id, property: CourseMetaType.purchases, value: 1 })

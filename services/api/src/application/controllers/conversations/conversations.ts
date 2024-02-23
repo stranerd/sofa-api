@@ -37,7 +37,7 @@ export class ConversationController {
 		const tutor = tutorId ? await UsersUseCases.find(tutorId) : null
 		if (tutorId) {
 			if (!tutor || tutor.isDeleted()) throw new BadRequestError('tutor not found')
-			if (!tutor.canJoinConversations()) throw new BadRequestError('tutor can\'t join conversations right now')
+			if (!tutor.canJoinConversations()) throw new BadRequestError("tutor can't join conversations right now")
 		}
 
 		const title = await AI.summarizeForTitle(body)

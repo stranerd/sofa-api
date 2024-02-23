@@ -7,12 +7,12 @@ export class ViewMapper extends BaseMapper<ViewFromModel, ViewToModel, ViewEntit
 		return !param
 			? null
 			: new ViewEntity({
-				id: param._id.toString(),
-				entity: param.entity,
-				user: param.user,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					entity: param.entity,
+					user: param.user,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: ViewEntity) {

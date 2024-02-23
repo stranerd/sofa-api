@@ -71,7 +71,7 @@ export class MethodRepository implements IMethodRepository {
 		let res = false
 		await Method.collection.conn.transaction(async (session) => {
 			let method = await Method.findOne({ _id: id, userId, primary: true }, {}, { session })
-			if (method) throw new BadRequestError('You can\'t delete your primary method')
+			if (method) throw new BadRequestError("You can't delete your primary method")
 			method = await Method.findOneAndDelete({ _id: id, userId }, { session })
 			return (res = !!method)
 		})
