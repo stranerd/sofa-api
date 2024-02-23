@@ -72,17 +72,12 @@ export const filesRoutes = groupRoutes('/files', [
 		path: '/:id/media',
 		method: 'get',
 		controllers: [
-			makeController(async (req, { pipeThrough }) => {
+			makeController(async (req) => {
 				const media = await FileController.media(req)
 				const response = await axios.get(media.link, { baseURL: '', responseType: 'stream' }).catch(() => {
 					throw new BadRequestError('failed to fetch file')
 				})
-				response.data.pipe(pipeThrough)
-				return {
-					status: StatusCodes.Ok,
-					result: true,
-					piped: true,
-				}
+				return req.pipe((stream) => response.data.pipe(stream))
 			}),
 		],
 	},
