@@ -1,59 +1,31 @@
 import { AnnouncementsController } from '@application/controllers/organizations/announcements'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController, StatusCodes } from 'equipped'
+import { groupRoutes, makeController } from 'equipped'
 
 export const announcementsRoutes = groupRoutes('/announcements', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await AnnouncementsController.get(req),
-			})),
-		],
+		controllers: [makeController(async (req) => AnnouncementsController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await AnnouncementsController.find(req),
-			})),
-		],
+		controllers: [makeController(async (req) => AnnouncementsController.find(req))],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await AnnouncementsController.create(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.create(req))],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await AnnouncementsController.delete(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.delete(req))],
 	},
 	{
 		path: '/read',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await AnnouncementsController.markRead(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.markRead(req))],
 	},
 ])

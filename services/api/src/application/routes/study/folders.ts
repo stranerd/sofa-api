@@ -1,72 +1,36 @@
 import { FolderController } from '@application/controllers/study/folders'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController, StatusCodes } from 'equipped'
+import { groupRoutes, makeController } from 'equipped'
 
 export const foldersRoutes = groupRoutes('/folders', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await FolderController.get(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => FolderController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await FolderController.find(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => FolderController.find(req))],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await FolderController.create(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => FolderController.create(req))],
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await FolderController.update(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => FolderController.update(req))],
 	},
 	{
 		path: '/:id/save',
 		method: 'put',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await FolderController.saveProp(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => FolderController.saveProp(req))],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await FolderController.delete(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => FolderController.delete(req))],
 	},
 ])
