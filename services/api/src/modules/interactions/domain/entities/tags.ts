@@ -1,24 +1,9 @@
 import { BaseEntity } from 'equipped'
 import { TagMetaType, TagTypes } from '../types'
 
-export class TagEntity extends BaseEntity {
-	public readonly id: string
-	public readonly type: TagTypes
-	public readonly title: string
-	public readonly parent: string | null
-	public readonly meta: TagMetaType
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({ id, type, title, parent, meta, createdAt, updatedAt }: TagConstructorArgs) {
-		super()
-		this.id = id
-		this.type = type
-		this.title = title
-		this.parent = parent
-		this.meta = meta
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class TagEntity extends BaseEntity<TagConstructorArgs> {
+	constructor(data: TagConstructorArgs) {
+		super(data)
 	}
 
 	isTopic() {

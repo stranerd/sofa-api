@@ -1,24 +1,9 @@
 import { BaseEntity } from 'equipped'
 import { MethodData } from '../types'
 
-export class MethodEntity extends BaseEntity {
-	public readonly id: string
-	public readonly data: MethodData
-	public readonly token: string
-	public readonly primary: boolean
-	public readonly userId: string
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({ id, data, token, primary, userId, createdAt, updatedAt }: MethodConstructorArgs) {
-		super()
-		this.id = id
-		this.data = data
-		this.token = token
-		this.primary = primary
-		this.userId = userId
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class MethodEntity extends BaseEntity<MethodConstructorArgs> {
+	constructor(data: MethodConstructorArgs) {
+		super(data)
 	}
 }
 

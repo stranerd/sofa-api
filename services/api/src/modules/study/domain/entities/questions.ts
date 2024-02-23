@@ -2,41 +2,9 @@ import { BaseEntity, Validation } from 'equipped'
 import stringSimilarity from 'string-similarity'
 import { Media, QuestionData, QuestionTypes, StrippedQuestionData } from '../types'
 
-export class QuestionEntity extends BaseEntity {
-	public readonly id: string
-	public readonly userId: string
-	public readonly quizId: string
-	public readonly question: string
-	public readonly explanation: string
-	public readonly questionMedia: Media | null
-	public readonly timeLimit: number
-	public readonly data: QuestionData
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({
-		id,
-		userId,
-		quizId,
-		question,
-		explanation,
-		questionMedia,
-		timeLimit,
-		data,
-		createdAt,
-		updatedAt,
-	}: QuestionConstructorArgs) {
-		super()
-		this.id = id
-		this.userId = userId
-		this.quizId = quizId
-		this.question = question
-		this.explanation = explanation
-		this.questionMedia = questionMedia
-		this.timeLimit = timeLimit
-		this.data = data
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class QuestionEntity extends BaseEntity<QuestionConstructorArgs> {
+	constructor(data: QuestionConstructorArgs) {
+		super(data)
 	}
 
 	get strippedData() {
