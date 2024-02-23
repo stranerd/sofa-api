@@ -1,28 +1,9 @@
 import { BaseEntity } from 'equipped'
 import { NotificationData, NotificationType } from '../types'
 
-export class NotificationEntity extends BaseEntity {
-	public readonly id: string
-	public readonly title: string
-	public readonly body: string
-	public readonly data: NotificationData
-	public readonly userId: string
-	public readonly seen: boolean
-	public readonly sendEmail: boolean
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({ id, title, body, data, userId, sendEmail, createdAt, seen, updatedAt }: NotificationConstructorArgs) {
-		super()
-		this.id = id
-		this.title = title
-		this.body = body
-		this.data = data ?? {}
-		this.userId = userId
-		this.seen = seen
-		this.sendEmail = sendEmail
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class NotificationEntity extends BaseEntity<NotificationConstructorArgs> {
+	constructor(data: NotificationConstructorArgs) {
+		super(data)
 	}
 
 	get link() {
@@ -49,7 +30,7 @@ export class NotificationEntity extends BaseEntity {
 		else if (not.type === NotificationType.QuizAccessMemberGranted) return `/quiz/${not.quizId}/edit`
 		else if (not.type === NotificationType.QuizAccessMemberRebuked) return `/quiz/${not.quizId}`
 
-		return '/'
+		return '/dashboard'
 	}
 }
 

@@ -1,72 +1,36 @@
 import { TestController } from '@application/controllers/plays/tests'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController, StatusCodes } from 'equipped'
+import { groupRoutes, makeController } from 'equipped'
 
 export const testsRoutes = groupRoutes('/tests', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TestController.get(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TestController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TestController.find(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TestController.find(req))],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TestController.create(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TestController.create(req))],
 	},
 	{
 		path: '/:id/questions',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TestController.getQuestions(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TestController.getQuestions(req))],
 	},
 	{
 		path: '/:id/start',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TestController.start(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TestController.start(req))],
 	},
 	{
 		path: '/:id/end',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TestController.end(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TestController.end(req))],
 	},
 ])

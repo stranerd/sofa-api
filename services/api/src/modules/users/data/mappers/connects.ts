@@ -7,14 +7,14 @@ export class ConnectMapper extends BaseMapper<ConnectFromModel, ConnectToModel, 
 		return !param
 			? null
 			: new ConnectEntity({
-				id: param._id.toString(),
-				from: param.from,
-				to: param.to,
-				pending: param.pending,
-				accepted: param.accepted,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					from: param.from,
+					to: param.to,
+					pending: param.pending,
+					accepted: param.accepted,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: ConnectEntity) {

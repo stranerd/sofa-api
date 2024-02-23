@@ -160,15 +160,15 @@ export class QuizRepository implements IQuizRepository {
 			{
 				...(grant
 					? {
-						$addToSet: { 'access.members': { $each: userIds } },
-						$pull: { 'access.requests': { $in: userIds } },
-					}
+							$addToSet: { 'access.members': { $each: userIds } },
+							$pull: { 'access.requests': { $in: userIds } },
+						}
 					: {
-						$pull: {
-							'access.members': { $in: userIds },
-							'access.requests': { $in: userIds },
-						},
-					}),
+							$pull: {
+								'access.members': { $in: userIds },
+								'access.requests': { $in: userIds },
+							},
+						}),
 			},
 		)
 		return !!quiz

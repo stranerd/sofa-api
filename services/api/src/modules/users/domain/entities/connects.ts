@@ -2,24 +2,11 @@ import { BaseEntity } from 'equipped'
 import { EmbeddedUser } from '../types'
 import { generateDefaultUser } from './users'
 
-export class ConnectEntity extends BaseEntity {
-	public readonly id: string
-	public readonly from: EmbeddedUser
-	public readonly to: EmbeddedUser
-	public readonly pending: boolean
-	public readonly accepted: boolean
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({ id, from, to, pending, accepted, createdAt, updatedAt }: ConnectConstructorArgs) {
-		super()
-		this.id = id
-		this.from = generateDefaultUser(from)
-		this.to = generateDefaultUser(to)
-		this.pending = pending
-		this.accepted = accepted
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class ConnectEntity extends BaseEntity<ConnectConstructorArgs> {
+	constructor(data: ConnectConstructorArgs) {
+		data.from = generateDefaultUser(data.from)
+		data.to = generateDefaultUser(data.to)
+		super(data)
 	}
 }
 

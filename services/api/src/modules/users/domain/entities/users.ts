@@ -15,33 +15,13 @@ import {
 	UserTypeData,
 } from '../types'
 
-export class UserEntity extends BaseEntity {
-	public readonly id: string
-	public readonly bio: UserBio
-	public readonly roles: UserRoles
-	public readonly dates: UserDates
-	public readonly status: UserStatus
-	public readonly account: UserAccount
-	public readonly type: UserTypeData | null
-	public readonly tutor: UserTutor
-	public readonly ai: UserAi
-	public readonly socials: UserSocialsType
-	public readonly location: UserLocation | null
+export class UserEntity extends BaseEntity<UserConstructorArgs> {
 	ignoreInJSON = ['type.code', 'bio.email', 'bio.phone']
 
-	constructor({ id, bio, roles, dates, status, account, type, tutor, ai, socials, location }: UserConstructorArgs) {
-		super()
-		this.id = id
-		this.bio = generateDefaultBio(bio ?? {})
-		this.roles = generateDefaultRoles(roles ?? {})
-		this.dates = dates
-		this.status = status
-		this.account = account
-		this.type = type
-		this.tutor = tutor
-		this.ai = ai
-		this.socials = socials
-		this.location = location
+	constructor(data: UserConstructorArgs) {
+		data.bio = generateDefaultBio(data.bio)
+		data.roles = generateDefaultRoles(data.roles)
+		super(data)
 	}
 
 	get rank() {

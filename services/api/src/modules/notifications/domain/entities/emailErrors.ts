@@ -1,29 +1,8 @@
 import { BaseEntity } from 'equipped'
 
-export class EmailErrorEntity extends BaseEntity {
-	public readonly id: string
-	public readonly error: string
-	public readonly subject: string
-	public readonly to: string
-	public readonly content: string
-	public readonly from: string
-	public readonly data: {
-		attachments?: Record<string, boolean>
-	}
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
+export class EmailErrorEntity extends BaseEntity<ErrorConstructor> {
 	constructor(data: ErrorConstructor) {
-		super()
-		this.id = data.id
-		this.error = data.error
-		this.subject = data.subject
-		this.to = data.to
-		this.content = data.content
-		this.from = data.from
-		this.data = data.data
-		this.createdAt = data.createdAt
-		this.updatedAt = data.updatedAt
+		super(data)
 	}
 }
 

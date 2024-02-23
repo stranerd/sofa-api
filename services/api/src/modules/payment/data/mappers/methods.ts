@@ -7,14 +7,14 @@ export class MethodMapper extends BaseMapper<MethodFromModel, MethodToModel, Met
 		return !param
 			? null
 			: new MethodEntity({
-				id: param._id.toString(),
-				data: param.data,
-				token: param.token,
-				primary: param.primary,
-				userId: param.userId,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					data: param.data,
+					token: param.token,
+					primary: param.primary,
+					userId: param.userId,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: MethodEntity) {

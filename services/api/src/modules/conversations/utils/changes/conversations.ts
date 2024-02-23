@@ -35,7 +35,7 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 
 		const justAccepted = changes.accepted && !before.accepted && after.accepted
 		if (justAccepted && after.tutor) {
-			if (after.accepted.is)
+			if (after.accepted?.is)
 				await UsersUseCases.updateTutorConversations({
 					userId: after.tutor.id,
 					conversationId: after.id,
@@ -52,7 +52,7 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 				sendEmail: true,
 				data: {
 					type: NotificationType.TutorAddedToConversation,
-					accepted: after.accepted.is,
+					accepted: after.accepted!.is,
 					tutorId: after.tutor.id,
 					conversationId: after.id,
 				},
@@ -65,8 +65,8 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 				UsersUseCases.updateTutorConversations({ userId: before.tutor.id, conversationId: after.id, add: false }),
 				ReviewsUseCases.add({
 					user: after.user,
-					rating: after.ended.rating,
-					message: after.ended.message,
+					rating: after.ended!.rating,
+					message: after.ended!.message,
 					entity: { type: InteractionEntities.conversations, id: after.id, userId: before.tutor.id },
 				}),
 			])

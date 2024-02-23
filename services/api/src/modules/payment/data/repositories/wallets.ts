@@ -82,16 +82,16 @@ export class WalletRepository implements IWalletRepository {
 
 			const data = renew
 				? {
-					'subscription.current.jobId': await appInstance.job.addDelayedJob(
-						{ type: DelayedJobs.RenewSubscription, data: { userId } },
-						renewedAt - Date.now(),
-					),
-					'subscription.next': { id, renewedAt },
-				}
+						'subscription.current.jobId': await appInstance.job.addDelayedJob(
+							{ type: DelayedJobs.RenewSubscription, data: { userId } },
+							renewedAt - Date.now(),
+						),
+						'subscription.next': { id, renewedAt },
+					}
 				: {
-					'subscription.current.jobId': null,
-					'subscription.next': null,
-				}
+						'subscription.current.jobId': null,
+						'subscription.next': null,
+					}
 			const updatedWallet = await Wallet.findByIdAndUpdate(wallet.id, { $set: data }, { session, new: true })
 			return (res = updatedWallet)
 		})

@@ -7,17 +7,17 @@ export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntit
 		return !param
 			? null
 			: new PlanEntity({
-				id: param._id.toString(),
-				title: param.title,
-				active: param.active,
-				amount: param.amount,
-				currency: param.currency,
-				interval: param.interval,
-				data: param.data,
-				usersFor: param.usersFor,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					title: param.title,
+					active: param.active,
+					amount: param.amount,
+					currency: param.currency,
+					interval: param.interval,
+					data: param.data,
+					usersFor: param.usersFor,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: PlanEntity) {

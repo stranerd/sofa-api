@@ -1,15 +1,11 @@
 import { CoursableData, FileType, Media } from '../types'
 import { CoursableEntity } from './coursables'
 
-export class FileEntity extends CoursableEntity implements CoursableData {
-	public readonly type: FileType
-	public readonly media: Media
+export class FileEntity extends CoursableEntity<FileConstructorArgs> implements CoursableData {
 	ignoreInJSON = ['media.link']
 
 	constructor(data: FileConstructorArgs) {
 		super(data)
-		this.type = data.type
-		this.media = data.media
 	}
 }
 

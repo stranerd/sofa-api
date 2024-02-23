@@ -7,19 +7,19 @@ export class ClassMapper extends BaseMapper<ClassFromModel, ClassToModel, ClassE
 		return !param
 			? null
 			: new ClassEntity({
-				id: param._id.toString(),
-				organizationId: param.organizationId,
-				title: param.title,
-				description: param.description,
-				photo: param.photo,
-				user: param.user,
-				frozen: param.frozen,
-				price: param.price,
-				lessons: param.lessons,
-				members: param.members,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					organizationId: param.organizationId,
+					title: param.title,
+					description: param.description,
+					photo: param.photo,
+					user: param.user,
+					frozen: param.frozen,
+					price: param.price,
+					lessons: param.lessons,
+					members: param.members,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: ClassEntity) {

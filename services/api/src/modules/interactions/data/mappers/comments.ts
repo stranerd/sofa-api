@@ -7,14 +7,14 @@ export class CommentMapper extends BaseMapper<CommentFromModel, CommentToModel, 
 		return !param
 			? null
 			: new CommentEntity({
-				id: param._id.toString(),
-				body: param.body,
-				entity: param.entity,
-				user: param.user,
-				meta: param.meta,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					body: param.body,
+					entity: param.entity,
+					user: param.user,
+					meta: param.meta,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: CommentEntity) {
