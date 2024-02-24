@@ -131,8 +131,12 @@ export class ScheduleRepository implements IScheduleRepository {
 				),
 			)
 			if (!schedule || schedule.status !== ScheduleStatus.started) return res
-			await endLiveStream(schedule).catch()
-			return (res = await Schedule.findByIdAndUpdate(schedule.id, { $set: { status: ScheduleStatus.ended } }, { session, new: true }))
+			const stream = await endLiveStream(schedule)
+			return (res = await Schedule.findByIdAndUpdate(
+				schedule.id,
+				{ $set: { status: ScheduleStatus.ended, 'stream.canRewatch': !!stream?.duration } },
+				{ session, new: true },
+			))
 		})
 		return this.mapper.mapFrom(res)
 	}

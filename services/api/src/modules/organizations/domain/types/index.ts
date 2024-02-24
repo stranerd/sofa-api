@@ -74,4 +74,5 @@ export type ScheduleStream = {
 	streamKey: string
 	type: 'jitsi'
 	roomId: string
+	canRewatch: boolean
 }

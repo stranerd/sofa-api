@@ -1,5 +1,6 @@
 import { youtubeConfig } from '@utils/environment'
 import { google } from 'googleapis'
+import moment from 'moment'
 import { ScheduleEntity } from '../domain/entities/schedules'
 import { ScheduleStream } from '../domain/types'
 
@@ -59,14 +60,29 @@ export const createLiveStream = async (schedule: ScheduleEntity): Promise<Schedu
 		streamKey: stream.cdn?.ingestionInfo?.streamName!,
 		type: 'jitsi',
 		roomId: `${schedule.title.replace(/[^a-zA-Z0-9]/g, '')}-${schedule.id}`,
+		canRewatch: false,
 	}
 }
 
 export const endLiveStream = async (schedule: ScheduleEntity) => {
 	if (!schedule.stream) return
 	const youtube = await getYoutubeClient()
-	await youtube.liveBroadcasts.bind({
+	await youtube.liveBroadcasts.transition({
 		id: schedule.stream.broadcastId,
 		part: ['id', 'snippet', 'status', 'contentDetails'],
+		broadcastStatus: 'complete',
 	})
+
+	const { data: videos } = await youtube.videos.list({
+		part: ['contentDetails', 'id', 'liveStreamingDetails', 'snippet'],
+		id: [schedule.stream.broadcastId],
+	})
+	const video = videos.items?.[0]
+	const durationStr = video?.contentDetails?.duration
+	if (!durationStr) return
+	const duration = moment.duration(durationStr)
+	const durationInSeconds = duration.asSeconds()
+	return {
+		duration: durationInSeconds,
+	}
 }
