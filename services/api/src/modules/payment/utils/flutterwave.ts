@@ -1,4 +1,5 @@
 import { flutterwaveConfig } from '@utils/environment'
+import { appInstance } from '@utils/types'
 import a from 'axios'
 import { MethodToModel } from '../data/models/methods'
 import { Currencies, CurrencyCountries, MethodType } from '../domain/types'
@@ -100,8 +101,13 @@ export class FlutterwavePayment {
 	}
 
 	static async getBanks(country: CurrencyCountries) {
+		const key = `flutterwave-banks-${country}`
+		const cachedBanks = await appInstance.cache.get(key)
+		if (cachedBanks) return JSON.parse(cachedBanks) as Bank[]
 		const res = await axios.get(`/banks/${country}`).catch(() => null)
-		return (res?.data?.data as Bank[]) ?? []
+		const banks = (res?.data?.data as Bank[]) ?? []
+		await appInstance.cache.set(key, JSON.stringify(banks), 60 * 60 * 24)
+		return banks
 	}
 
 	static async verifyAccount({ bankNumber, bankCode }: { bankNumber: string; bankCode: string }) {
