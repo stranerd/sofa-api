@@ -9,14 +9,14 @@ export class TestController {
 		const test = await TestsUseCases.find(req.params.id)
 		if (!test) return null
 		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
-		if (test.userId !== req.authUser!.id && !isAdmin) return null
+		if (test.user.id !== req.authUser!.id && !isAdmin) return null
 		return test
 	}
 
 	static async get(req: Request) {
 		const query = req.query as QueryParams
 		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
-		if (!isAdmin) query.auth = [{ field: 'userId', value: req.authUser!.id }]
+		if (!isAdmin) query.auth = [{ field: 'user.id', value: req.authUser!.id }]
 		return await TestsUseCases.get(query)
 	}
 

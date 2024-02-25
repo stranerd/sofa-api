@@ -19,8 +19,8 @@ const Schema = new appInstance.dbs.mongo.Schema<TestFromModel>(
 			required: true,
 			default: PlayStatus.started,
 		},
-		userId: {
-			type: String,
+		user: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
 		questions: {

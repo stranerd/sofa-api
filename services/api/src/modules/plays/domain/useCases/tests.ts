@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { TestToModel } from '../../data/models/tests'
 import { ITestRepository } from '../irepositories/tests'
+import { EmbeddedUser } from '../types'
 
 export class TestsUseCase {
 	private repository: ITestRepository
@@ -31,5 +32,9 @@ export class TestsUseCase {
 
 	async score(data: { id: string; userId: string; scores: Record<string, number> }) {
 		return await this.repository.score(data.id, data.userId, data.scores)
+	}
+
+	async updateUserBio(user: EmbeddedUser) {
+		return await this.repository.updateUserBio(user)
 	}
 }

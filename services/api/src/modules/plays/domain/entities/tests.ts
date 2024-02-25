@@ -1,8 +1,10 @@
+import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { PlayStatus } from '../types'
+import { EmbeddedUser, PlayStatus } from '../types'
 
 export class TestEntity extends BaseEntity<TestConstructorArgs> {
 	constructor(data: TestConstructorArgs) {
+		data.user = generateDefaultUser(data.user)
 		super(data)
 	}
 
@@ -11,7 +13,7 @@ export class TestEntity extends BaseEntity<TestConstructorArgs> {
 	}
 
 	canUserAccess(userId: string) {
-		return this.userId === userId
+		return this.user.id === userId
 	}
 }
 
@@ -19,7 +21,7 @@ type TestConstructorArgs = {
 	id: string
 	quizId: string
 	status: PlayStatus
-	userId: string
+	user: EmbeddedUser
 	questions: string[]
 	totalTimeInSec: number
 	scores: Record<string, number>

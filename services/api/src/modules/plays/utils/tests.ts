@@ -1,8 +1,11 @@
 import { QuestionsUseCases, QuizEntity } from '@modules/study'
-import { Conditions } from 'equipped'
+import { BadRequestError, Conditions } from 'equipped'
 import { TestsUseCases } from '..'
+import { UsersUseCases } from '@modules/users'
 
 export const createTest = async (userId: string, quiz: QuizEntity) => {
+	const user = await UsersUseCases.find(userId)
+	if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 	const { results: questions } = await QuestionsUseCases.get({
 		where: [{ field: 'id', condition: Conditions.in, value: quiz.questions }],
 		all: true,
@@ -12,7 +15,7 @@ export const createTest = async (userId: string, quiz: QuizEntity) => {
 	return await TestsUseCases.add({
 		quizId: quiz.id,
 		questions: questionIds,
-		userId,
+		user: user.getEmbedded(),
 		totalTimeInSec,
 	})
 }

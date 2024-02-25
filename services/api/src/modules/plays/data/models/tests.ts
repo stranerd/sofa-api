@@ -1,4 +1,4 @@
-import { PlayStatus } from '../../domain/types'
+import { EmbeddedUser, PlayStatus } from '../../domain/types'
 
 export interface TestFromModel extends TestToModel {
 	_id: string
@@ -12,7 +12,7 @@ export interface TestFromModel extends TestToModel {
 
 export interface TestToModel {
 	quizId: string
-	userId: string
+	user: EmbeddedUser
 	questions: string[]
 	totalTimeInSec: number
 }

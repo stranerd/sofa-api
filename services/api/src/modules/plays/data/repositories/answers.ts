@@ -73,7 +73,7 @@ export class AnswerRepository implements IAnswerRepository {
 			const test = await Test.findById(typeId, {}, { session })
 			if (!test) return false
 			if (!test.questions.includes(data.questionId)) return false
-			if (test.userId !== data.userId) return false
+			if (test.user.id !== data.userId) return false
 			if (test.status !== PlayStatus.started) return false
 			return true
 		}

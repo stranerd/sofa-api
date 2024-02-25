@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { ITestRepository } from '../../domain/irepositories/tests'
-import { PlayStatus } from '../../domain/types'
+import { EmbeddedUser, PlayStatus } from '../../domain/types'
 import { TestMapper } from '../mappers/tests'
 import { TestToModel } from '../models/tests'
 import { Test } from '../mongooseModels/tests'
@@ -26,6 +26,11 @@ export class TestRepository implements ITestRepository {
 			...data,
 			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
+	}
+
+	async updateUserBio(user: EmbeddedUser) {
+		const tests = await Test.updateMany({ 'user.id': user.id }, { $set: { user } })
+		return tests.acknowledged
 	}
 
 	async add(data: TestToModel) {
