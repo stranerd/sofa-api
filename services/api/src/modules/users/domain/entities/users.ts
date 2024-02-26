@@ -55,11 +55,14 @@ export class UserEntity extends BaseEntity<UserConstructorArgs> {
 
 	getEmbedded(): EmbeddedUser {
 		const publicName = this.type?.type === UserType.organization ? this.type.name : this.bio.name.full
+		const type = this.type
+		// @ts-ignore
+		if (type && type.type === UserType.organization) delete type.code
 		return {
 			id: this.id,
 			bio: { name: this.bio.name, photo: this.bio.photo, publicName },
 			roles: this.roles,
-			type: this.type,
+			type,
 		}
 	}
 
