@@ -6,7 +6,8 @@ import {
 	SchedulesUseCases,
 	canAccessOrgClasses,
 } from '@modules/organizations'
-import { Coursable, FileType, QuizModes, canAccessCoursable } from '@modules/study'
+import { PlayTypes } from '@modules/plays'
+import { Coursable, FileType, canAccessCoursable } from '@modules/study'
 import { makeSet } from '@utils/commons'
 import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
@@ -143,7 +144,7 @@ export class LessonsController {
 								[ClassLessonable.quiz]: Schema.object({
 									id: Schema.string().min(1),
 									type: Schema.is(ClassLessonable.quiz as const),
-									quizMode: Schema.in(Object.values(QuizModes)),
+									quizMode: Schema.in(Object.values(PlayTypes)),
 								}),
 								[ClassLessonable.file]: Schema.object({
 									id: Schema.string().min(1),

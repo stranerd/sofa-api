@@ -8,6 +8,8 @@ export enum PlayStatus {
 }
 
 export enum PlayTypes {
-	games = 'games',
+	practice = 'practice',
 	tests = 'tests',
+	games = 'games',
+	flashcards = 'flashcards',
 }

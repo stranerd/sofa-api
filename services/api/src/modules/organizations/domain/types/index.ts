@@ -1,4 +1,5 @@
-import { FileType, QuizModes } from '@modules/study'
+import { PlayTypes } from '@modules/plays'
+import { FileType } from '@modules/study'
 
 export { Saleable } from '@modules/payment'
 export { EmbeddedUser } from '@modules/users'
@@ -51,7 +52,7 @@ type ClassLessonCurriculumSectionItem =
 	| {
 			id: string
 			type: ClassLessonable.quiz
-			quizMode: QuizModes
+			quizMode: PlayTypes
 	  }
 	| {
 			id: string

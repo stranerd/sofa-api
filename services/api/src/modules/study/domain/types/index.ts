@@ -62,10 +62,3 @@ export type QuizAccess = {
 	requests: string[]
 	members: string[]
 }
-
-export enum QuizModes {
-	practice = 'practice',
-	test = 'test',
-	game = 'game',
-	flashcard = 'flashcard',
-}

@@ -29,7 +29,6 @@ export {
 	FolderSaved,
 	QuestionTypes,
 	QuizMeta as QuizMetaType,
-	QuizModes,
 } from './domain/types'
 export { QuizEntity } from './domain/entities/quizzes'
 export { canAccessCoursable } from './utils/courses'
