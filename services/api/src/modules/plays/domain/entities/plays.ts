@@ -9,8 +9,16 @@ export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 		super(data)
 	}
 
+	isPublic() {
+		return this.isGame() || this.isAssessment()
+	}
+
 	isTest() {
 		return this.data.type === PlayTypes.tests
+	}
+
+	isTutorTest() {
+		return this.isTest() && 'forTutors' in this.data && !!this.data.forTutors
 	}
 
 	isGame() {

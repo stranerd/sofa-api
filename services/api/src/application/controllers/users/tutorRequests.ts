@@ -66,7 +66,7 @@ export class TutorRequestsController {
 
 		const verificationUploaded = await UploaderUseCases.upload('tutorRequests/verification', verification)
 		const qualificationUploaded = await UploaderUseCases.uploadMany('tutorRequests/qualification', qualification)
-		const test = await createPlay(user.id, quiz, { type: PlayTypes.tests })
+		const test = await createPlay(user.id, quiz, { type: PlayTypes.tests, forTutors: true })
 
 		return await TutorRequestsUseCases.create({
 			userId: user.id,

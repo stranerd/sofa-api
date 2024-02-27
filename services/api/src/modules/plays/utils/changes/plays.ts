@@ -31,7 +31,7 @@ export const PlaysDbChangeCallbacks: DbChangeCallbacks<PlayFromModel, PlayEntity
 
 		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startPlayTimer(after)
 		if (before.status === PlayStatus.started && after.status === PlayStatus.ended)
-			await Promise.all([calculatePlayResults(after), after.isTest() && TutorRequestsUseCases.markTestFinished(after.id)])
+			await Promise.all([calculatePlayResults(after), after.isTutorTest() && TutorRequestsUseCases.markTestFinished(after.id)])
 		if (before.status === PlayStatus.ended && after.status === PlayStatus.scored) await postPlayScored(after)
 
 		if (after.isGame()) {

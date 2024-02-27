@@ -1,14 +1,27 @@
 import { PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
 import { Coursable, QuestionsUseCases, canAccessCoursable } from '@modules/study'
-import { Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+
+const publicTypes = [PlayTypes.games, PlayTypes.assessments]
 
 export class PlayController {
 	static async find(req: Request) {
-		return await PlaysUseCases.find(req.params.id)
+		const play = await PlaysUseCases.find(req.params.id)
+		if (!play || publicTypes.includes(play.data.type)) return play
+		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
+		if (play.isTutorTest() && isAdmin) return play
+		return play.getMembers().includes(req.authUser!.id) ? play : null
 	}
 
 	static async get(req: Request) {
 		const query = req.query as QueryParams
+		query.authType = QueryKeys.or
+		query.auth = [
+			{ field: 'data.type', condition: Conditions.in, value: publicTypes },
+			{ field: 'user.id', value: req.authUser!.id },
+		]
+		const isAdmin = req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin]
+		if (isAdmin) query.auth.push({ field: 'data.forTutors', value: true })
 		return await PlaysUseCases.get(query)
 	}
 
@@ -20,10 +33,10 @@ export class PlayController {
 					[PlayTypes.games]: Schema.object({
 						type: Schema.is(PlayTypes.games as const),
 						join: Schema.boolean().default(false),
-					}).transform((d) => ({ type: PlayTypes.games, participants: d.join ? [req.authUser!.id] : [] })),
+					}).transform((d) => ({ type: PlayTypes.games as const, participants: d.join ? [req.authUser!.id] : [] })),
 					[PlayTypes.tests]: Schema.object({
 						type: Schema.is(PlayTypes.tests as const),
-					}),
+					}).transform(() => ({ type: PlayTypes.tests as const, forTutors: false })),
 					[PlayTypes.flashcards]: Schema.object({
 						type: Schema.is(PlayTypes.flashcards as const),
 					}),
@@ -32,7 +45,7 @@ export class PlayController {
 					}),
 					[PlayTypes.assessments]: Schema.object({
 						type: Schema.is(PlayTypes.assessments as const),
-					}).transform(() => ({ type: PlayTypes.assessments, participants: [] })),
+					}).transform(() => ({ type: PlayTypes.assessments as const, participants: [] })),
 				}),
 			},
 			req.body,

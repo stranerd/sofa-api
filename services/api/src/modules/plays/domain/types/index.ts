@@ -21,5 +21,9 @@ export type PlayData =
 			participants: string[]
 	  }
 	| {
-			type: PlayTypes.practice | PlayTypes.tests | PlayTypes.flashcards
+			type: PlayTypes.tests
+			forTutors: boolean
+	  }
+	| {
+			type: PlayTypes.practice | PlayTypes.flashcards
 	  }
