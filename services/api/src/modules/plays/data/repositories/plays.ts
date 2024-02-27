@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IPlayRepository } from '../../domain/irepositories/plays'
-import { EmbeddedUser, PlayStatus } from '../../domain/types'
+import { EmbeddedUser, PlayStatus, PlayTypes } from '../../domain/types'
 import { PlayMapper } from '../mappers/plays'
 import { PlayToModel } from '../models/plays'
 import { Play } from '../mongooseModels/plays'
@@ -72,8 +72,9 @@ export class PlayRepository implements IPlayRepository {
 	}
 
 	async join(id: string, userId: string, join: boolean) {
+		const joinableTypes = [PlayTypes.games, PlayTypes.assessments]
 		const play = await Play.findOneAndUpdate(
-			{ _id: id, status: PlayStatus.created },
+			{ _id: id, 'data.type': { $in: joinableTypes }, status: PlayStatus.created },
 			{ [join ? '$addToSet' : '$pull']: { 'data.participants': userId } },
 			{ new: true },
 		)
