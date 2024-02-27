@@ -59,8 +59,7 @@ export const registerSockets = () => {
 		.register('payment/wallets', isMine)
 		.register('payment/withdrawals', isMine)
 
-		.register('plays/games', isMine)
-		.register('plays/tests', isMine)
+		.register('plays/plays', isMine)
 
 		.register('school/courses', isOpen)
 		.register('school/departments', isOpen)

@@ -78,6 +78,10 @@ export enum UserMeta {
 	hostedGames = 'hostedGames',
 	playedGames = 'playedGames',
 	playedTests = 'playedTests',
+	playedPractice = 'playedPractice',
+	playedFlashcards = 'playedFlashcards',
+	hostedAssessments = 'hostedAssessments',
+	playedAssessments = 'playedAssessments',
 
 	students = 'students',
 	teachers = 'teachers',

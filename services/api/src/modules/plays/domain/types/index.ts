@@ -12,4 +12,14 @@ export enum PlayTypes {
 	tests = 'tests',
 	games = 'games',
 	flashcards = 'flashcards',
+	assessments = 'assessments',
 }
+
+export type PlayData =
+	| {
+			type: PlayTypes.games | PlayTypes.assessments
+			participants: string[]
+	  }
+	| {
+			type: PlayTypes.practice | PlayTypes.tests | PlayTypes.flashcards
+	  }

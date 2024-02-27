@@ -1,5 +1,5 @@
 import { TagsUseCases } from '@modules/interactions'
-import { createTest } from '@modules/plays'
+import { PlayTypes, createPlay } from '@modules/plays'
 import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, QuizzesUseCases } from '@modules/study'
 import { TutorRequestsUseCases, UsersUseCases } from '@modules/users'
@@ -66,7 +66,7 @@ export class TutorRequestsController {
 
 		const verificationUploaded = await UploaderUseCases.upload('tutorRequests/verification', verification)
 		const qualificationUploaded = await UploaderUseCases.uploadMany('tutorRequests/qualification', qualification)
-		const test = await createTest(user.id, quiz)
+		const test = await createPlay(user.id, quiz, { type: PlayTypes.tests })
 
 		return await TutorRequestsUseCases.create({
 			userId: user.id,

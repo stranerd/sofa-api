@@ -50,6 +50,9 @@ export type CourseSections = {
 export enum QuizMeta {
 	games = 'games',
 	tests = 'tests',
+	flashcards = 'flashcards',
+	practice = 'practice',
+	assessments = 'assessments',
 	total = 'total',
 }
 

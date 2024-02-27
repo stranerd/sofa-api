@@ -1,11 +1,11 @@
+import { ClassLessonable, canAccessOrgClasses } from '@modules/organizations'
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
+import { PlaysUseCases } from '@modules/plays'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, AuthUser } from 'equipped'
 import { FilesUseCases, QuizEntity, QuizzesUseCases } from '..'
-import { Coursable } from '../domain/types'
 import { FileEntity } from '../domain/entities/files'
-import { ClassLessonable, canAccessOrgClasses } from '@modules/organizations'
-import { GamesUseCases, TestsUseCases } from '@modules/plays'
+import { Coursable } from '../domain/types'
 
 const finders = {
 	[Coursable.quiz]: QuizzesUseCases,
@@ -35,7 +35,7 @@ export const canAccessCoursable = async <T extends Coursable>(
 	// access checks based on query params
 	const isQuiz = coursable instanceof QuizEntity
 	const isFile = coursable instanceof FileEntity
-	const { lessonId, classId, organizationId, testId, gameId, courseId } = access ?? {}
+	const { lessonId, classId, organizationId, playId, courseId } = access ?? {}
 	if (lessonId && classId && organizationId) {
 		const hasAccess = await canAccessOrgClasses(user, organizationId, classId)
 		const lesson = hasAccess?.class.getLesson(lessonId)
@@ -45,13 +45,9 @@ export const canAccessCoursable = async <T extends Coursable>(
 			if (isFile && currItems.find((i) => i.id === coursableId && i.type === ClassLessonable.file)) return coursable as Type<T>
 		}
 	}
-	if (testId && isQuiz) {
-		const test = await TestsUseCases.find(testId)
-		if (test && test.canUserAccess(user.id)) return coursable as Type<T>
-	}
-	if (gameId && isQuiz) {
-		const game = await GamesUseCases.find(gameId)
-		if (game && game.canUserAccess(user.id)) return coursable as Type<T>
+	if (playId && isQuiz) {
+		const play = await PlaysUseCases.find(playId)
+		if (play && play.canUserAccess(user.id)) return coursable as Type<T>
 	}
 	if (courseId && coursable.courseId === courseId) {
 		const purchase = await PurchasesUseCases.for({ userId: user.id, type: Purchasables.courses, itemId: courseId })

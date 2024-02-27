@@ -1,7 +1,7 @@
 import { ConversationsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases } from '@modules/interactions'
 import { AnnouncementsUseCases, ClassesUseCases, MembersUseCases, SchedulesUseCases } from '@modules/organizations'
-import { GamesUseCases, TestsUseCases } from '@modules/plays'
+import { PlaysUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
@@ -40,8 +40,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 					ReportsUseCases,
 					ReviewsUseCases,
 					ViewsUseCases,
-					GamesUseCases,
-					TestsUseCases,
+					PlaysUseCases,
 					CoursesUseCases,
 					FoldersUseCases,
 					QuizzesUseCases,

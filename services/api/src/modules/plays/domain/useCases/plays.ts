@@ -1,17 +1,21 @@
 import { QueryParams } from 'equipped'
-import { TestToModel } from '../../data/models/tests'
-import { ITestRepository } from '../irepositories/tests'
+import { PlayToModel } from '../../data/models/plays'
+import { IPlayRepository } from '../irepositories/plays'
 import { EmbeddedUser } from '../types'
 
-export class TestsUseCase {
-	private repository: ITestRepository
+export class PlaysUseCase {
+	protected repository: IPlayRepository
 
-	constructor(repository: ITestRepository) {
+	constructor(repository: IPlayRepository) {
 		this.repository = repository
 	}
 
-	async add(data: TestToModel) {
+	async add(data: PlayToModel) {
 		return await this.repository.add(data)
+	}
+
+	async delete(input: { id: string; userId: string }) {
+		return await this.repository.delete(input.id, input.userId)
 	}
 
 	async find(id: string) {
@@ -20,6 +24,10 @@ export class TestsUseCase {
 
 	async get(query: QueryParams) {
 		return await this.repository.get(query)
+	}
+
+	async updateUserBio(user: EmbeddedUser) {
+		return await this.repository.updateUserBio(user)
 	}
 
 	async start(input: { id: string; userId: string }) {
@@ -34,7 +42,7 @@ export class TestsUseCase {
 		return await this.repository.score(data.id, data.userId, data.scores)
 	}
 
-	async updateUserBio(user: EmbeddedUser) {
-		return await this.repository.updateUserBio(user)
+	async join(data: { id: string; userId: string; join: boolean }) {
+		return await this.repository.join(data.id, data.userId, data.join)
 	}
 }

@@ -1,6 +1,6 @@
-import { EmbeddedUser, PlayStatus } from '../../domain/types'
+import { EmbeddedUser, PlayData, PlayStatus } from '../../domain/types'
 
-export interface TestFromModel extends TestToModel {
+export interface PlayFromModel extends PlayToModel {
 	_id: string
 	status: PlayStatus
 	scores: Record<string, number>
@@ -10,9 +10,10 @@ export interface TestFromModel extends TestToModel {
 	updatedAt: number
 }
 
-export interface TestToModel {
+export interface PlayToModel {
 	quizId: string
 	user: EmbeddedUser
 	questions: string[]
 	totalTimeInSec: number
+	data: PlayData
 }

@@ -1,18 +1,13 @@
 import { AnswerRepository } from './data/repositories/answers'
-import { GameRepository } from './data/repositories/games'
-import { TestRepository } from './data/repositories/tests'
+import { PlayRepository } from './data/repositories/plays'
 import { AnswersUseCase } from './domain/useCases/answers'
-import { GamesUseCase } from './domain/useCases/games'
-import { TestsUseCase } from './domain/useCases/tests'
+import { PlaysUseCase } from './domain/useCases/plays'
 
-const gameRepository = GameRepository.getInstance()
-const testRepository = TestRepository.getInstance()
 const answerRepository = AnswerRepository.getInstance()
+const playRepository = PlayRepository.getInstance()
 
-export const GamesUseCases = new GamesUseCase(gameRepository)
-export const TestsUseCases = new TestsUseCase(testRepository)
 export const AnswersUseCases = new AnswersUseCase(answerRepository)
+export const PlaysUseCases = new PlaysUseCase(playRepository)
 
 export { PlayStatus, PlayTypes } from './domain/types'
-export { endPlay } from './utils/plays'
-export { createTest } from './utils/tests'
+export { createPlay } from './utils'
