@@ -40,7 +40,7 @@ export class TestRepository implements ITestRepository {
 
 	async start(id: string, userId: string) {
 		const test = await Test.findOneAndUpdate(
-			{ _id: id, userId, status: PlayStatus.created },
+			{ _id: id, 'user.id': userId, status: PlayStatus.created },
 			{ $set: { startedAt: Date.now(), status: PlayStatus.started } },
 			{ new: true },
 		)
@@ -54,7 +54,7 @@ export class TestRepository implements ITestRepository {
 
 	async end(id: string, userId: string) {
 		const test = await Test.findOneAndUpdate(
-			{ _id: id, userId, status: PlayStatus.started },
+			{ _id: id, 'user.id': userId, status: PlayStatus.started },
 			{ $set: { endedAt: Date.now(), status: PlayStatus.ended } },
 			{ new: true },
 		)
@@ -63,7 +63,7 @@ export class TestRepository implements ITestRepository {
 
 	async score(id: string, userId: string, scores: Record<string, number>) {
 		const test = await Test.findOneAndUpdate(
-			{ _id: id, userId, status: PlayStatus.ended },
+			{ _id: id, 'user.id': userId, status: PlayStatus.ended },
 			{ $set: { scores, status: PlayStatus.scored } },
 			{ new: true },
 		)
