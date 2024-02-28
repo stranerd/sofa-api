@@ -1,4 +1,4 @@
-import { CoursableData, QuizAccess, QuizMeta } from '../types'
+import { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../types'
 import { CoursableEntity } from './coursables'
 
 export class QuizEntity extends CoursableEntity<QuizConstructorArgs> implements CoursableData {
@@ -17,6 +17,7 @@ type QuizConstructorArgs = CoursableData & {
 	meta: Record<QuizMeta, number>
 	access: QuizAccess
 	isForTutors: boolean
+	modes: Record<QuizModes, boolean>
 	createdAt: number
 	updatedAt: number
 }

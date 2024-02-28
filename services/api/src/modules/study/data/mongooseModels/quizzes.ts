@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/types'
 import { CoursableDataSchema } from '.'
-import { QuizMeta } from '../../domain/types'
+import { QuizMeta, QuizModes } from '../../domain/types'
 import { QuizDbChangeCallbacks } from '../../utils/changes/quizzes'
 import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel } from '../models/quizzes'
@@ -39,6 +39,16 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>(
 			required: false,
 			default: false,
 		},
+		modes: Object.fromEntries(
+			Object.values(QuizModes).map((mode) => [
+				mode,
+				{
+					type: Boolean,
+					required: false,
+					default: true,
+				},
+			]),
+		),
 	},
 	{ timestamps: { currentTime: Date.now }, minimize: false },
 )

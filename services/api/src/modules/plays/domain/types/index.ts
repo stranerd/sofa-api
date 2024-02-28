@@ -1,4 +1,7 @@
 export { QuestionAnswer as PlayAnswer } from '@modules/study'
+import { QuizModes as PlayTypes } from '@modules/study'
+
+export { PlayTypes }
 
 export { EmbeddedUser } from '@modules/users'
 
@@ -7,14 +10,6 @@ export enum PlayStatus {
 	started = 'started',
 	ended = 'ended',
 	scored = 'scored',
-}
-
-export enum PlayTypes {
-	practice = 'practice',
-	tests = 'tests',
-	games = 'games',
-	flashcards = 'flashcards',
-	assessments = 'assessments',
 }
 
 export type PlayData =

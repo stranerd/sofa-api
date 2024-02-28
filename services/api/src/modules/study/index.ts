@@ -30,6 +30,7 @@ export {
 	FolderSaved,
 	QuestionTypes,
 	QuizMeta as QuizMetaType,
+	QuizModes,
 } from './domain/types'
 export type { QuestionAnswer } from './domain/types'
 export { canAccessCoursable } from './utils/courses'

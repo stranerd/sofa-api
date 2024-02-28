@@ -1,8 +1,16 @@
 import { UploaderUseCases } from '@modules/storage'
-import { Coursable, CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
+import { Coursable, CoursesUseCases, DraftStatus, QuizModes, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
+
+const modesSchema = Object.values(QuizModes).reduce(
+	(acc, cur) => {
+		acc[cur] = Schema.boolean().default(true)
+		return acc
+	},
+	{} as Record<QuizModes, ReturnType<typeof Schema.boolean>>,
+)
 
 export class QuizController {
 	private static schema = (isAdmin: boolean) => ({
@@ -14,6 +22,7 @@ export class QuizController {
 		isForTutors: Schema.boolean()
 			.default(false)
 			.custom((value) => (isAdmin ? true : value === false)),
+		modes: Schema.object(modesSchema),
 	})
 
 	static async find(req: Request) {

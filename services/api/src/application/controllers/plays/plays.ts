@@ -53,6 +53,7 @@ export class PlayController {
 
 		const hasAccess = await canAccessCoursable(Coursable.quiz, quizId, req.authUser!, req.query.access)
 		if (!hasAccess || hasAccess.isForTutors) throw new NotAuthorizedError('cannot access this quiz')
+		if (!hasAccess.modes[data.type]) throw new NotAuthorizedError(`cannot create ${data.type} for this quiz`)
 
 		return await createPlay(req.authUser!.id, hasAccess, data, true)
 	}
