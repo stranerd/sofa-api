@@ -14,8 +14,13 @@ export enum PlayStatus {
 
 export type PlayData =
 	| {
-			type: PlayTypes.games | PlayTypes.assessments
+			type: PlayTypes.games
 			participants: string[]
+	  }
+	| {
+			type: PlayTypes.assessments
+			participants: string[]
+			endedAt: number
 	  }
 	| {
 			type: PlayTypes.tests

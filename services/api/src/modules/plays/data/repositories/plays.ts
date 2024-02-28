@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { IPlayRepository } from '../../domain/irepositories/plays'
 import { EmbeddedUser, PlayScore, PlayStatus, PlayTypes } from '../../domain/types'
 import { PlayMapper } from '../mappers/plays'
-import { PlayToModel } from '../models/plays'
+import { PlayFromModel, PlayToModel } from '../models/plays'
 import { Play } from '../mongooseModels/plays'
 
 export class PlayRepository implements IPlayRepository {
@@ -72,12 +72,19 @@ export class PlayRepository implements IPlayRepository {
 	}
 
 	async join(id: string, userId: string, join: boolean) {
-		const joinableTypes = [PlayTypes.games, PlayTypes.assessments]
-		const play = await Play.findOneAndUpdate(
-			{ _id: id, 'data.type': { $in: joinableTypes }, status: PlayStatus.created },
-			{ [join ? '$addToSet' : '$pull']: { 'data.participants': userId } },
-			{ new: true },
-		)
-		return this.mapper.mapFrom(play)
+		let res = null as PlayFromModel | null
+		await Play.collection.conn.transaction(async (session) => {
+			const joinableTypes = [PlayTypes.games, PlayTypes.assessments]
+			const play = this.mapper.mapFrom(await Play.findById(id, {}, { session }))
+			if (!play || !joinableTypes.includes(play.data.type)) return
+			if (play.status !== PlayStatus.created) return
+			if (join && play.data.type === PlayTypes.assessments && play.data.endedAt < Date.now()) return
+			return (res = await Play.findByIdAndUpdate(
+				play.id,
+				{ [join ? '$addToSet' : '$pull']: { 'data.participants': userId } },
+				{ new: true },
+			))
+		})
+		return this.mapper.mapFrom(res)!
 	}
 }

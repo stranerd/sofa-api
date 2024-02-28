@@ -36,7 +36,7 @@ export class PlayController {
 					}).transform((d) => ({ type: PlayTypes.games as const, participants: d.join ? [req.authUser!.id] : [] })),
 					[PlayTypes.tests]: Schema.object({
 						type: Schema.is(PlayTypes.tests as const),
-					}).transform(() => ({ type: PlayTypes.tests as const, forTutors: false })),
+					}).transform((d) => ({ ...d, forTutors: false })),
 					[PlayTypes.flashcards]: Schema.object({
 						type: Schema.is(PlayTypes.flashcards as const),
 					}),
@@ -45,7 +45,8 @@ export class PlayController {
 					}),
 					[PlayTypes.assessments]: Schema.object({
 						type: Schema.is(PlayTypes.assessments as const),
-					}).transform(() => ({ type: PlayTypes.assessments as const, participants: [] })),
+						endedAt: Schema.time().min(Date.now()).asStamp(),
+					}).transform((d) => ({ ...d, participants: [] })),
 				}),
 			},
 			req.body,
