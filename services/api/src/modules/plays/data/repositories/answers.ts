@@ -31,12 +31,12 @@ export class AnswerRepository implements IAnswerRepository {
 	async answer({ type, typeId, userId, questionId, answer }: AnswerToModel) {
 		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
-			const verified = await this.#verifyType(type, typeId, { questionId, userId }, session)
-			if (!verified) throw new BadRequestError('cannot answer this question')
+			const typeUserId = await this.#verifyType(type, typeId, { questionId, userId }, session)
+			if (!typeUserId) throw new BadRequestError('cannot answer this question')
 			const newAnswer = await Answer.findOneAndUpdate(
-				{ type, typeId, userId, endedAt: null },
+				{ type, typeId, typeUserId, userId, endedAt: null },
 				{
-					$setOnInsert: { type, typeId, userId },
+					$setOnInsert: { type, typeId, typeUserId, userId },
 					$set: { [`data.${questionId}`]: { value: answer, at: Date.now() } },
 				},
 				{ upsert: true, new: true, session },
@@ -64,11 +64,11 @@ export class AnswerRepository implements IAnswerRepository {
 
 	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string; userId: string }, session: ClientSession) {
 		const play = this.playMapper.mapFrom(await Play.findById(typeId, {}, { session }))
-		if (!play) return false
-		if (play.data.type !== type) return false
-		if (!play.questions.includes(data.questionId)) return false
-		if (!play.getActiveParticipants().includes(data.userId)) return false
-		if (play.status !== PlayStatus.started) return false
-		return true
+		if (!play) return null
+		if (play.data.type !== type) return null
+		if (!play.questions.includes(data.questionId)) return null
+		if (!play.getActiveParticipants().includes(data.userId)) return null
+		if (play.status !== PlayStatus.started) return null
+		return play.user.id
 	}
 }

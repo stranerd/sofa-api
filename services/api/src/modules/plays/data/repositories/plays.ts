@@ -78,13 +78,12 @@ export class PlayRepository implements IPlayRepository {
 			const play = this.mapper.mapFrom(await Play.findById(id, {}, { session }))
 			if (!play || !joinableTypes.includes(play.data.type)) return
 			if (play.status !== PlayStatus.created) return
-			if (join && play.data.type === PlayTypes.assessments && play.data.endedAt < Date.now()) return
 			return (res = await Play.findByIdAndUpdate(
 				play.id,
 				{ [join ? '$addToSet' : '$pull']: { 'data.participants': userId } },
 				{ new: true },
 			))
 		})
-		return this.mapper.mapFrom(res)!
+		return this.mapper.mapFrom(res)
 	}
 }

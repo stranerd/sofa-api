@@ -45,11 +45,12 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 }
 
 export const startPlayTimer = async (play: PlayEntity) => {
+	if (!play.getUsesTimer()) return
 	const cacheKey = `plays-${play.type}-${play.id}-timer`
 	const cachedJobId = await appInstance.cache.get(cacheKey)
 	if (cachedJobId) return
 	let endsIn = play.getEndsAt() - Date.now()
-	if (endsIn < 5000) endsIn = 5000
+	if (endsIn < 10000) endsIn = 10000
 	const jobId = await appInstance.job.addDelayedJob(
 		{
 			type: DelayedJobs.PlayTimer,

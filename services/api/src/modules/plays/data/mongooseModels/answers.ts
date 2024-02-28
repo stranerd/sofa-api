@@ -17,6 +17,10 @@ const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>(
 			type: String,
 			required: true,
 		},
+		typeUserId: {
+			type: String,
+			required: true,
+		},
 		userId: {
 			type: String,
 			required: true,

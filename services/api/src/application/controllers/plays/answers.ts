@@ -5,15 +5,25 @@ export class AnswerController {
 	static async find(req: Request) {
 		const answer = await AnswersUseCases.find(req.params.id)
 		if (!answer || answer.type !== req.params.type || answer.typeId !== req.params.typeId) return null
+		const authUserId = req.authUser!.id
+		if (answer.userId !== authUserId && answer.typeUserId !== authUserId) return null
 		return answer
 	}
 
 	static async get(req: Request) {
 		const query = req.query as QueryParams
+		const authUserId = req.authUser!.id
 		query.authType = QueryKeys.and
 		query.auth = [
 			{ field: 'type', value: req.params.type },
 			{ field: 'typeId', value: req.params.typeId },
+			{
+				condition: QueryKeys.or,
+				value: [
+					{ field: 'userId', value: authUserId },
+					{ field: 'typeUserId', value: authUserId },
+				],
+			},
 		]
 		return await AnswersUseCases.get(query)
 	}

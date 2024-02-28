@@ -62,7 +62,12 @@ export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 	}
 
 	getEndsAt() {
+		if (this.data.type === PlayTypes.assessments) return this.data.endedAt
 		return (this.startedAt ?? 0) + this.totalTimeInSec * 1000
+	}
+
+	getUsesTimer() {
+		return ![PlayTypes.practice, PlayTypes.flashcards].includes(this.data.type)
 	}
 
 	canUserAccess(userId: string) {

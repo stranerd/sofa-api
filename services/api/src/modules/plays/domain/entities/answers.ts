@@ -5,12 +5,17 @@ export class AnswerEntity extends BaseEntity<AnswerConstructorArgs> {
 	constructor(data: AnswerConstructorArgs) {
 		super(data)
 	}
+
+	getMembers() {
+		return [...new Set([this.userId, this.typeUserId])]
+	}
 }
 
 type AnswerConstructorArgs = {
 	id: string
 	type: PlayTypes
 	typeId: string
+	typeUserId: string
 	userId: string
 	data: Record<string, { value: PlayAnswer; at: number }>
 	endedAt: number | null

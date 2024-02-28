@@ -5,11 +5,12 @@ import { AnswerFromModel, AnswerToModel } from '../models/answers'
 export class AnswerMapper extends BaseMapper<AnswerFromModel, AnswerToModel, AnswerEntity> {
 	mapFrom(model: AnswerFromModel | null) {
 		if (!model) return null
-		const { _id, type, typeId, userId, data, endedAt, createdAt, updatedAt } = model
+		const { _id, type, typeId, typeUserId, userId, data, endedAt, createdAt, updatedAt } = model
 		return new AnswerEntity({
 			id: _id.toString(),
 			type,
 			typeId,
+			typeUserId,
 			userId,
 			data,
 			endedAt,
