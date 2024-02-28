@@ -20,4 +20,9 @@ export const answersRoutes = groupRoutes(`/:type(${types})/:typeId/answers`, [
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => AnswerController.answer(req))],
 	},
+	{
+		path: '/:id/end',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => AnswerController.end(req))],
+	},
 ])

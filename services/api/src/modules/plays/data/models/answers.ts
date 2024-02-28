@@ -6,6 +6,7 @@ export interface AnswerFromModel extends Omit<AnswerToModel, 'questionId' | 'ans
 	typeId: string
 	userId: string
 	data: Record<string, { value: PlayAnswer; at: number }>
+	endedAt: number | null
 	createdAt: number
 	updatedAt: number
 }

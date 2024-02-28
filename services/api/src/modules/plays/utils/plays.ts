@@ -28,7 +28,7 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 			const correct = question.checkAnswer(answerEntity.data[question.id].value)
 			if (!correct) return
 			scoresPool[userId].value += 1
-			scoresPool[userId].at += answerEntity.data[question.id].at
+			scoresPool[userId].at += answerEntity.endedAt ?? Number.MAX_SAFE_INTEGER
 		})
 	})
 

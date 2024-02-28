@@ -25,4 +25,8 @@ export class AnswersUseCase {
 	async deleteTypeAnswers(data: { type: PlayTypes; typeId: string }) {
 		return await this.repository.deleteTypeAnswers(data.type, data.typeId)
 	}
+
+	async end(data: Omit<AnswerToModel, 'answer' | 'questionId'>) {
+		return await this.repository.end(data)
+	}
 }

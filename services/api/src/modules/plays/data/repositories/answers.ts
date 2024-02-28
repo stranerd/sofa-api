@@ -34,7 +34,7 @@ export class AnswerRepository implements IAnswerRepository {
 			const verified = await this.#verifyType(type, typeId, { questionId, userId }, session)
 			if (!verified) throw new BadRequestError('cannot answer this question')
 			const newAnswer = await Answer.findOneAndUpdate(
-				{ type, typeId, userId },
+				{ type, typeId, userId, endedAt: null },
 				{
 					$setOnInsert: { type, typeId, userId },
 					$set: { [`data.${questionId}`]: { value: answer, at: Date.now() } },
@@ -55,6 +55,11 @@ export class AnswerRepository implements IAnswerRepository {
 	async deleteTypeAnswers(type: PlayTypes, typeId: string) {
 		const answers = await Answer.deleteMany({ type, typeId })
 		return answers.acknowledged
+	}
+
+	async end({ type, typeId, userId }: Omit<AnswerToModel, 'answer' | 'questionId'>) {
+		const res = await Answer.findOneAndUpdate({ type, typeId, userId, endedAt: null }, { $set: { endedAt: Date.now() } }, { new: true })
+		return this.mapper.mapFrom(res)
 	}
 
 	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string; userId: string }, session: ClientSession) {

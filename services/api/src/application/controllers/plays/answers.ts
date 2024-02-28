@@ -33,4 +33,12 @@ export class AnswerController {
 			userId: req.authUser!.id,
 		})
 	}
+
+	static async end(req: Request) {
+		return await AnswersUseCases.end({
+			type: req.params.type as PlayTypes,
+			typeId: req.params.typeId,
+			userId: req.authUser!.id,
+		})
+	}
 }

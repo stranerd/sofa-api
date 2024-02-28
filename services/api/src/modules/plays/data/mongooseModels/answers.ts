@@ -26,6 +26,11 @@ const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>(
 			required: false,
 			default: {},
 		},
+		endedAt: {
+			type: Number,
+			required: false,
+			default: null,
+		},
 		createdAt: {
 			type: Number,
 			required: false,
