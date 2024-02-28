@@ -1,3 +1,5 @@
+export { QuestionAnswer as PlayAnswer } from '@modules/study'
+
 export { EmbeddedUser } from '@modules/users'
 
 export enum PlayStatus {

@@ -21,6 +21,7 @@ export const FilesUseCases = new FilesUseCase(fileRepository)
 export const QuestionsUseCases = new QuestionsUseCase(questionRepository)
 export const CoursesUseCases = new CoursesUseCase(courseRepository)
 
+export { QuizEntity } from './domain/entities/quizzes'
 export {
 	Coursable,
 	CourseMeta as CourseMetaType,
@@ -30,6 +31,6 @@ export {
 	QuestionTypes,
 	QuizMeta as QuizMetaType,
 } from './domain/types'
-export { QuizEntity } from './domain/entities/quizzes'
+export type { QuestionAnswer } from './domain/types'
 export { canAccessCoursable } from './utils/courses'
 export { verifyToBeSaved } from './utils/folders'

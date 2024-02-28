@@ -1,6 +1,6 @@
 import { BaseEntity, Validation } from 'equipped'
 import stringSimilarity from 'string-similarity'
-import { Media, QuestionData, QuestionTypes, StrippedQuestionData } from '../types'
+import { Media, QuestionAnswer, QuestionData, QuestionTypes, StrippedQuestionData } from '../types'
 
 export class QuestionEntity extends BaseEntity<QuestionConstructorArgs> {
 	constructor(data: QuestionConstructorArgs) {
@@ -28,25 +28,39 @@ export class QuestionEntity extends BaseEntity<QuestionConstructorArgs> {
 		)
 	}
 
-	checkAnswer(answer: any): boolean {
+	checkAnswer(answer: QuestionAnswer): boolean {
 		if (this.data.type === QuestionTypes.multipleChoice) {
 			return Array.isArray(answer) && Validation.Differ.equal(answer.sort(), this.data.answers.sort())
 		} else if (this.data.type === QuestionTypes.trueOrFalse) {
 			return answer === this.data.answer
 		} else if (this.data.type === QuestionTypes.writeAnswer) {
-			return this.data.answers.some((a) => this.compare(a, answer))
+			return this.data.answers.some((a) => this.compare(a, answer as string))
 		} else if (this.data.type === QuestionTypes.fillInBlanks) {
 			const answers = this.data.answers
-			return Array.isArray(answer) && answer.length === answers.length && answer.every((a, i) => this.compare(a, answers[i]))
+			return (
+				Array.isArray(answer) && answer.length === answers.length && answer.every((a, i) => this.compare(a as string, answers[i]))
+			)
 		} else if (this.data.type === QuestionTypes.dragAnswers) {
 			const answers = this.data.answers
-			return Array.isArray(answer) && answer.length === answers.length && answer.every((a, i) => this.compare(a, answers[i], 1))
+			return (
+				Array.isArray(answer) &&
+				answer.length === answers.length &&
+				answer.every((a, i) => this.compare(a as string, answers[i], 1))
+			)
 		} else if (this.data.type === QuestionTypes.sequence) {
 			const answers = this.data.answers
-			return Array.isArray(answer) && answer.length === answers.length && answer.every((a, i) => this.compare(a, answers[i], 1))
+			return (
+				Array.isArray(answer) &&
+				answer.length === answers.length &&
+				answer.every((a, i) => this.compare(a as string, answers[i], 1))
+			)
 		} else if (this.data.type === QuestionTypes.match) {
 			const questions = this.data.set
-			return Array.isArray(answer) && answer.length === questions.length && answer.every((a, i) => this.compare(a, questions[i].a, 1))
+			return (
+				Array.isArray(answer) &&
+				answer.length === questions.length &&
+				answer.every((a, i) => this.compare(a as string, questions[i].a, 1))
+			)
 		}
 		return false
 	}

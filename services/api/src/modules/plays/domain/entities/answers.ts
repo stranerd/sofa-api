@@ -1,5 +1,5 @@
 import { BaseEntity } from 'equipped'
-import { PlayTypes } from '../types'
+import { PlayAnswer, PlayTypes } from '../types'
 
 export class AnswerEntity extends BaseEntity<AnswerConstructorArgs> {
 	constructor(data: AnswerConstructorArgs) {
@@ -12,7 +12,7 @@ type AnswerConstructorArgs = {
 	type: PlayTypes
 	typeId: string
 	userId: string
-	data: Record<string, any>
+	data: Record<string, { value: PlayAnswer; at: number }>
 	createdAt: number
 	updatedAt: number
 }

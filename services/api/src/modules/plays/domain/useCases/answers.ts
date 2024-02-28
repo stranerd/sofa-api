@@ -10,7 +10,7 @@ export class AnswersUseCase {
 		this.repository = repository
 	}
 
-	async answer(data: AnswerToModel & { questionId: string; answer: any }) {
+	async answer(data: AnswerToModel) {
 		return await this.repository.answer(data)
 	}
 

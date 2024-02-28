@@ -28,7 +28,7 @@ export class AnswerRepository implements IAnswerRepository {
 		}
 	}
 
-	async answer({ type, typeId, userId, questionId, answer }: AnswerToModel & { questionId: string; answer: any }) {
+	async answer({ type, typeId, userId, questionId, answer }: AnswerToModel) {
 		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
 			const verified = await this.#verifyType(type, typeId, { questionId, userId }, session)
@@ -37,7 +37,7 @@ export class AnswerRepository implements IAnswerRepository {
 				{ type, typeId, userId },
 				{
 					$setOnInsert: { type, typeId, userId },
-					$set: { [`data.${questionId}`]: answer },
+					$set: { [`data.${questionId}`]: { value: answer, at: Date.now() } },
 				},
 				{ upsert: true, new: true, session },
 			)

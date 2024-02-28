@@ -24,7 +24,7 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 		answers.forEach((answerEntity) => {
 			const userId = answerEntity.userId
 			if (!(question.id in answerEntity.data)) return
-			const correct = question.checkAnswer(answerEntity.data[question.id])
+			const correct = question.checkAnswer(answerEntity.data[question.id].value)
 			if (!correct) return
 			scores[userId] += 10
 		})

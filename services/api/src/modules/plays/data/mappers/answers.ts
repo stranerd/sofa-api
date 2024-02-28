@@ -22,6 +22,8 @@ export class AnswerMapper extends BaseMapper<AnswerFromModel, AnswerToModel, Ans
 			type: entity.type,
 			typeId: entity.typeId,
 			userId: entity.userId,
+			questionId: '',
+			answer: true,
 		}
 	}
 }
