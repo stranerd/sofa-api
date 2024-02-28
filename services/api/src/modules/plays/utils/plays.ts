@@ -27,7 +27,7 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 			if (!(question.id in answerEntity.data)) return
 			const correct = question.checkAnswer(answerEntity.data[question.id].value)
 			if (!correct) return
-			scoresPool[userId].value += 10
+			scoresPool[userId].value += 1
 			scoresPool[userId].at += answerEntity.data[question.id].at
 		})
 	})
@@ -39,7 +39,7 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 			if (a[1].at <= b[1].at) return -1
 			return 1
 		})
-		.map(([userId, { value }]) => ({ userId, value }))
+		.map(([userId, { value }]) => ({ userId, value: Number((questions.length ? value / questions.length : 0).toFixed(6)) }))
 
 	await PlaysUseCases.score({ id: play.id, userId: play.user.id, scores })
 }
