@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { PlayToModel } from '../../data/models/plays'
 import { IPlayRepository } from '../irepositories/plays'
-import { EmbeddedUser } from '../types'
+import { EmbeddedUser, PlayScore } from '../types'
 
 export class PlaysUseCase {
 	protected repository: IPlayRepository
@@ -38,7 +38,7 @@ export class PlaysUseCase {
 		return await this.repository.end(input.id, input.userId)
 	}
 
-	async score(data: { id: string; userId: string; scores: Record<string, number> }) {
+	async score(data: { id: string; userId: string; scores: PlayScore }) {
 		return await this.repository.score(data.id, data.userId, data.scores)
 	}
 

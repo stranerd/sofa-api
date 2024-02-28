@@ -1,9 +1,9 @@
-import { EmbeddedUser, PlayData, PlayStatus } from '../../domain/types'
+import { EmbeddedUser, PlayData, PlayScore, PlayStatus } from '../../domain/types'
 
 export interface PlayFromModel extends PlayToModel {
 	_id: string
 	status: PlayStatus
-	scores: Record<string, number>
+	scores: PlayScore
 	startedAt: number | null
 	endedAt: number | null
 	createdAt: number

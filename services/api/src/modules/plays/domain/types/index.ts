@@ -29,3 +29,5 @@ export type PlayData =
 	| {
 			type: PlayTypes.practice | PlayTypes.flashcards
 	  }
+
+export type PlayScore = { userId: string; value: number }[]

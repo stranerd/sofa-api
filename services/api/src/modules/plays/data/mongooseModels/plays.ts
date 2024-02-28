@@ -38,9 +38,9 @@ const Schema = new appInstance.dbs.mongo.Schema<PlayFromModel>(
 			default: 0,
 		},
 		scores: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as PlayFromModel['scores'],
 			required: false,
-			default: {},
+			default: [],
 		},
 		startedAt: {
 			type: Number,

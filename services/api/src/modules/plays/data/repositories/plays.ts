@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IPlayRepository } from '../../domain/irepositories/plays'
-import { EmbeddedUser, PlayStatus, PlayTypes } from '../../domain/types'
+import { EmbeddedUser, PlayScore, PlayStatus, PlayTypes } from '../../domain/types'
 import { PlayMapper } from '../mappers/plays'
 import { PlayToModel } from '../models/plays'
 import { Play } from '../mongooseModels/plays'
@@ -62,7 +62,7 @@ export class PlayRepository implements IPlayRepository {
 		return this.mapper.mapFrom(play)
 	}
 
-	async score(id: string, userId: string, scores: Record<string, number>) {
+	async score(id: string, userId: string, scores: PlayScore) {
 		const play = await Play.findOneAndUpdate(
 			{ _id: id, 'user.id': userId, status: PlayStatus.ended },
 			{ $set: { scores, status: PlayStatus.scored } },
