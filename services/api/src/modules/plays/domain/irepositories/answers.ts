@@ -9,4 +9,5 @@ export interface IAnswerRepository {
 	find: (id: string) => Promise<AnswerEntity | null>
 	deleteTypeAnswers: (type: PlayTypes, typeId: string) => Promise<boolean>
 	end: (data: Omit<AnswerToModel, 'answer' | 'questionId'>) => Promise<AnswerEntity | null>
+	reset: (data: Omit<AnswerToModel, 'answer' | 'questionId'>) => Promise<AnswerEntity | null>
 }

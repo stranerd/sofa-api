@@ -62,6 +62,16 @@ export class AnswerRepository implements IAnswerRepository {
 		return this.mapper.mapFrom(res)
 	}
 
+	async reset({ type, typeId, userId }: Omit<AnswerToModel, 'answer' | 'questionId'>) {
+		if (![PlayTypes.practice, PlayTypes.flashcards].includes(type)) return null
+		const res = await Answer.findOneAndUpdate(
+			{ type, typeId, userId, endedAt: null },
+			{ $set: { endedAt: null, data: {} } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(res)
+	}
+
 	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string; userId: string }, session: ClientSession) {
 		const play = this.playMapper.mapFrom(await Play.findById(typeId, {}, { session }))
 		if (!play) return null

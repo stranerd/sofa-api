@@ -57,4 +57,12 @@ export class AnswerController {
 			userId: req.authUser!.id,
 		})
 	}
+
+	static async reset(req: Request) {
+		return await AnswersUseCases.reset({
+			type: req.params.type as PlayTypes,
+			typeId: req.params.typeId,
+			userId: req.authUser!.id,
+		})
+	}
 }

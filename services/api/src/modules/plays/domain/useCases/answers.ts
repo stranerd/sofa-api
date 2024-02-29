@@ -29,4 +29,8 @@ export class AnswersUseCase {
 	async end(data: Omit<AnswerToModel, 'answer' | 'questionId'>) {
 		return await this.repository.end(data)
 	}
+
+	async reset(data: Omit<AnswerToModel, 'answer' | 'questionId'>) {
+		return await this.repository.reset(data)
+	}
 }
