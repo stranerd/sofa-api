@@ -29,6 +29,7 @@ export class QuestionEntity extends BaseEntity<QuestionConstructorArgs> {
 	}
 
 	checkAnswer(answer: QuestionAnswer): boolean {
+		if (!answer) return false
 		if (this.data.type === QuestionTypes.multipleChoice) {
 			return Array.isArray(answer) && Validation.Differ.equal(answer.sort(), this.data.answers.sort())
 		} else if (this.data.type === QuestionTypes.trueOrFalse) {

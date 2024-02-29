@@ -8,7 +8,7 @@ export enum QuestionTypes {
 	match = 'match',
 }
 
-export type QuestionAnswer = boolean | string | number[] | string[]
+export type QuestionAnswer = boolean | string | number[] | string[] | null
 
 export type QuestionData =
 	| {
