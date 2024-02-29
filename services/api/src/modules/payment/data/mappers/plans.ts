@@ -9,6 +9,8 @@ export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntit
 			: new PlanEntity({
 					id: param._id.toString(),
 					title: param.title,
+					description: param.description,
+					features: param.features,
 					active: param.active,
 					amount: param.amount,
 					currency: param.currency,
@@ -24,6 +26,8 @@ export class PlanMapper extends BaseMapper<PlanFromModel, PlanToModel, PlanEntit
 		return {
 			_id: param.id,
 			title: param.title,
+			description: param.description,
+			features: param.features,
 			active: param.active,
 			amount: param.amount,
 			currency: param.currency,

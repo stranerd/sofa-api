@@ -17,6 +17,8 @@ export class PlanEntity extends BaseEntity<PlanConstructorArgs> {
 type PlanConstructorArgs = {
 	id: string
 	title: string
+	description: string
+	features: string[]
 	amount: number
 	active: boolean
 	currency: Currencies
