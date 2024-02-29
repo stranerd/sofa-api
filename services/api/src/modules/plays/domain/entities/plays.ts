@@ -1,12 +1,14 @@
 import { QuizMetaType } from '@modules/study'
 import { UserMeta, generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, PlayData, PlayScore, PlayStatus, PlayTypes } from '../types'
+import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTypes } from '../types'
 
 export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 	constructor(data: PlayConstructorArgs) {
 		data.user = generateDefaultUser(data.user)
 		super(data)
+		this.sources['']
+		if (!this.isPractice() && !this.isFlashcard()) this.ignoreInJSON.push('sources')
 	}
 
 	isPublic() {
@@ -29,8 +31,20 @@ export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 		return this.data.type === PlayTypes.assessments
 	}
 
+	isPractice() {
+		return this.data.type === PlayTypes.practice
+	}
+
+	isFlashcard() {
+		return this.data.type === PlayTypes.flashcards
+	}
+
 	get type() {
 		return this.data.type
+	}
+
+	get questions() {
+		return this.sources.map((s) => s.id)
 	}
 
 	getQuizMetaType() {
@@ -81,7 +95,7 @@ export type PlayConstructorArgs = {
 	user: EmbeddedUser
 	data: PlayData
 	status: PlayStatus
-	questions: string[]
+	sources: PlaySources
 	totalTimeInSec: number
 	scores: PlayScore
 	startedAt: number | null

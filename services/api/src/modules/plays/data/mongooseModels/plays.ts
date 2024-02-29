@@ -27,8 +27,8 @@ const Schema = new appInstance.dbs.mongo.Schema<PlayFromModel>(
 			required: true,
 			default: PlayStatus.created,
 		},
-		questions: {
-			type: [String],
+		sources: {
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as PlayFromModel['sources'],
 			required: false,
 			default: [],
 		},

@@ -1,5 +1,5 @@
 import { PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
-import { Coursable, QuestionsUseCases, canAccessCoursable } from '@modules/study'
+import { Coursable, canAccessCoursable } from '@modules/study'
 import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 const publicTypes = [PlayTypes.games, PlayTypes.assessments]
@@ -80,14 +80,7 @@ export class PlayController {
 	static async getQuestions(req: Request) {
 		const play = await PlaysUseCases.find(req.params.id)
 		if (!play) throw new NotFoundError()
-		const { results: questions } = await QuestionsUseCases.get({
-			where: [{ field: 'id', condition: Conditions.in, value: play.questions }],
-			all: true,
-		})
-		return play.questions
-			.map((id) => questions.find((q) => q.id === id)!)
-			.filter((q) => !!q)
-			.map((q) => q.strip())
+		return play.sources.map((q) => q.strip())
 	}
 
 	static async join(req: Request) {

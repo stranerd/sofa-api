@@ -12,14 +12,14 @@ export const createPlay = async (userId: string, quiz: QuizEntity, data: PlayToM
 		where: [{ field: 'id', condition: Conditions.in, value: quiz.questions }],
 		all: true,
 	})
-	const questionIds = quiz.questions.map((id) => questions.find((q) => q.id === id)?.id).filter((q) => !!q) as string[]
+	const sources = quiz.questions.map((id) => questions.find((q) => q.id === id)!).filter(Boolean)
 	const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
 	const play = await PlaysUseCases.add({
 		quizId: quiz.id,
-		questions: questionIds,
 		user: user.getEmbedded(),
 		totalTimeInSec,
 		data,
+		sources,
 	})
 	if (view)
 		await ViewsUseCases.create({

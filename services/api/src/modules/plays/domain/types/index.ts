@@ -1,9 +1,11 @@
 export { QuestionAnswer as PlayAnswer } from '@modules/study'
-import { QuizModes as PlayTypes } from '@modules/study'
+import { QuizModes as PlayTypes, QuestionEntity } from '@modules/study'
 
 export { PlayTypes }
 
 export { EmbeddedUser } from '@modules/users'
+
+export type PlaySources = QuestionEntity[]
 
 export enum PlayStatus {
 	created = 'created',

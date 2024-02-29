@@ -21,6 +21,7 @@ export const FilesUseCases = new FilesUseCase(fileRepository)
 export const QuestionsUseCases = new QuestionsUseCase(questionRepository)
 export const CoursesUseCases = new CoursesUseCase(courseRepository)
 
+export { QuestionEntity } from './domain/entities/questions'
 export { QuizEntity } from './domain/entities/quizzes'
 export {
 	Coursable,
