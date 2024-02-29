@@ -14,6 +14,14 @@ const PlanSchema = new appInstance.dbs.mongo.Schema<PlanFromModel>(
 			type: String,
 			required: true,
 		},
+		description: {
+			type: String,
+			required: true,
+		},
+		features: {
+			type: [String],
+			required: true,
+		},
 		active: {
 			type: Boolean,
 			required: true,

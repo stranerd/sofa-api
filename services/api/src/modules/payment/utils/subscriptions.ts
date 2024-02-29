@@ -170,6 +170,7 @@ export class Subscriptions {
 		if (data.type === 'plans') {
 			const plan = await PlansUseCases.find(data.planId)
 			if (!plan) throw new Error('plan not found')
+			if (plan.amount === 0) throw new Error('you cant subscribe to this plan')
 			if (!plan.active) throw new Error('you cant subscribe to this plan currently')
 			if (!plan.usersFor.includes(user.type?.type as any)) throw new Error('you cant subscribe to this plan')
 			const multiplier = user.isOrg() ? wallet.subscription.membersDays / plan.getLengthInDays() : 1

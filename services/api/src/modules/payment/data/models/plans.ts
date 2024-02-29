@@ -11,6 +11,8 @@ export interface PlanToModel {
 	amount: number
 	currency: Currencies
 	title: string
+	description: string
+	features: string[]
 	interval: Interval
 	active: boolean
 	data: PlanData
