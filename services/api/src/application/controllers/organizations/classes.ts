@@ -84,6 +84,7 @@ export class ClassesController {
 		if (!hasAccess) throw new NotAuthorizedError()
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+		if (!user.isOrg()) throw new BadRequestError('only organizations can create classes')
 
 		const photo = data.photo ? await UploaderUseCases.upload('organizations/classes', data.photo) : null
 

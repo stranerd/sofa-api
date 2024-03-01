@@ -8,6 +8,8 @@ export class PlansController {
 
 	static async get(req: Request) {
 		const query = req.query as QueryParams
+		query.sort ??= []
+		query.sort.push({ field: 'amount', desc: false })
 		return await PlansUseCases.get(query)
 	}
 }
