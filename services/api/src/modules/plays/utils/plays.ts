@@ -1,16 +1,11 @@
-import { QuestionsUseCases } from '@modules/study'
 import { UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { Conditions, DelayedJobs } from 'equipped'
+import { DelayedJobs, Validation } from 'equipped'
 import { AnswersUseCases, PlaysUseCases } from '..'
 import { PlayEntity } from '../domain/entities/plays'
 
 export const calculatePlayResults = async (play: PlayEntity) => {
-	const { results: unsortedQuestions } = await QuestionsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: play.questions }],
-		all: true,
-	})
-	const questions = play.questions.map((id) => unsortedQuestions.find((q) => q.id === id)!).filter(Boolean)
+	const questions = play.sources
 	const { results: answers } = await AnswersUseCases.get({
 		where: [
 			{ field: 'type', value: play.type },
@@ -19,16 +14,18 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 		all: true,
 	})
 
-	const scoresPool = Object.fromEntries(play.getActiveParticipants().map((participant) => [participant, { value: 0, at: 0 }]))
+	const scoresPool = Object.fromEntries(
+		play.getActiveParticipants().map((participant) => [participant, { value: 0, at: Number.MAX_SAFE_INTEGER }]),
+	)
 
 	questions.forEach((question) => {
-		answers.forEach((answerEntity) => {
-			const userId = answerEntity.userId
-			if (!(question.id in answerEntity.data)) return
-			const correct = question.checkAnswer(answerEntity.data[question.id].value)
+		answers.forEach((answer) => {
+			const userId = answer.userId
+			if (!(question.id in answer.data)) return
+			const correct = question.checkAnswer(answer.data[question.id].value)
 			if (!correct) return
 			scoresPool[userId].value += 1
-			scoresPool[userId].at += answerEntity.endedAt ?? Number.MAX_SAFE_INTEGER
+			scoresPool[userId].at = answer.getLastDate()
 		})
 	})
 
@@ -39,7 +36,7 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 			if (a[1].at <= b[1].at) return -1
 			return 1
 		})
-		.map(([userId, { value }]) => ({ userId, value: Number((questions.length ? value / questions.length : 0).toFixed(6)) }))
+		.map(([userId, { value }]) => ({ userId, value: parseFloat(Validation.divideByZero(value, questions.length).toFixed(6)) }))
 
 	await PlaysUseCases.score({ id: play.id, userId: play.user.id, scores })
 }

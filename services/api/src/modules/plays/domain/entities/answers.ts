@@ -9,6 +9,11 @@ export class AnswerEntity extends BaseEntity<AnswerConstructorArgs> {
 	getMembers() {
 		return [...new Set([this.userId, this.typeUserId])]
 	}
+
+	getLastDate() {
+		if (this.endedAt) return this.endedAt
+		return Object.values(this.data).reduce((acc, { at }) => Math.max(acc, at), 0)
+	}
 }
 
 type AnswerConstructorArgs = {
