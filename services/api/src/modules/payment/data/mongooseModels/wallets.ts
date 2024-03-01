@@ -37,6 +37,11 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>(
 				required: false,
 				default: false,
 			},
+			methodId: {
+				type: String,
+				required: false,
+				default: null,
+			},
 			current: {
 				type: appInstance.dbs.mongo.Schema.Types.Mixed,
 				required: false,

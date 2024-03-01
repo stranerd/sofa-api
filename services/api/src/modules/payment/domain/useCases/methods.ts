@@ -1,4 +1,4 @@
-import { QueryParams } from 'equipped'
+import { QueryKeys, QueryParams } from 'equipped'
 import { MethodToModel } from '../../data/models/methods'
 import { IMethodRepository } from '../irepositories/methods'
 
@@ -31,5 +31,18 @@ export class MethodsUseCase {
 
 	async delete(data: { id: string; userId: string }) {
 		return await this.repository.delete(data.id, data.userId)
+	}
+
+	async getForUser(userId: string, methodId: string | null) {
+		const { results: methods } = await this.get({
+			where: [
+				{ field: 'userId', value: userId },
+				{
+					condition: QueryKeys.or,
+					value: [{ field: 'primary', value: true }, ...(methodId ? [{ field: 'id', value: methodId }] : [])],
+				},
+			],
+		})
+		return methods.find((m) => m.id === methodId) ?? methods.find((m) => m.primary) ?? methods.at(0) ?? null
 	}
 }

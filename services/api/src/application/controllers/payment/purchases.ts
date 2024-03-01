@@ -37,7 +37,7 @@ export class PurchasesController {
 			{
 				type: Schema.in(Object.values(Purchasables)),
 				id: Schema.string().min(1),
-				methodId: Schema.string().default(''),
+				methodId: Schema.string().min(1).nullable().default(null),
 				payWithWallet: Schema.boolean().default(false),
 			},
 			req.body,
@@ -52,8 +52,8 @@ export class PurchasesController {
 		if (purchasable.userId === userId) throw new BadRequestError('cannot purchase owned item')
 		const isFree = purchasable.price.amount === 0
 
-		const method = await MethodsUseCases.find(methodId)
-		if (!isFree && !payWithWallet && (!method || method.userId !== userId)) throw new BadRequestError('invalid method')
+		const method = await MethodsUseCases.getForUser(userId, methodId)
+		if (!isFree && !payWithWallet && !method) throw new BadRequestError('invalid method')
 
 		const transaction = await TransactionsUseCases.create({
 			userId,

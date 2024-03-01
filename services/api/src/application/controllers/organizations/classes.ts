@@ -106,8 +106,14 @@ export class ClassesController {
 	}
 
 	static async purchase(req: Request) {
+		const { methodId } = validate(
+			{
+				methodId: Schema.string().min(1).nullable().default(null),
+			},
+			req.body,
+		)
 		const data: Subscription['data'] = { type: 'classes', classId: req.params.id, organizationId: req.params.organizationId }
-		const wallet = await Subscriptions.createGeneric(req.authUser!.id, data)
+		const wallet = await Subscriptions.createGeneric(req.authUser!.id, data, methodId)
 		const sub = wallet.getSubscription(data)
 		return !!sub?.active
 	}

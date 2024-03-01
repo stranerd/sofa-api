@@ -77,6 +77,7 @@ export type TransactionData =
 
 export type SubscriptionModel = {
 	active: boolean
+	methodId: string | null
 	current: {
 		id: string
 		activatedAt: number

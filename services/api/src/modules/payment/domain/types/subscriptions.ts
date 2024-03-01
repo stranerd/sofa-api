@@ -1,5 +1,6 @@
 export type Subscription = {
 	active: boolean
+	methodId: string | null
 	current: {
 		activatedAt: number
 		expiredAt: number

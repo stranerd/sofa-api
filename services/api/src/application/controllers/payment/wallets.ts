@@ -17,13 +17,14 @@ export class WalletsController {
 	}
 
 	static async subscribeToPlan(req: Request) {
-		const { planId } = validate(
+		const { planId, methodId } = validate(
 			{
 				planId: Schema.string().min(1),
+				methodId: Schema.string().min(1).nullable().default(null),
 			},
 			req.body,
 		)
-		return await Subscriptions.createPlan(req.authUser!.id, planId)
+		return await Subscriptions.createPlan(req.authUser!.id, planId, methodId)
 	}
 
 	static async toggleRenewSubscription(req: Request) {
@@ -116,14 +117,14 @@ export class WalletsController {
 		const { amount, methodId } = validate(
 			{
 				amount: Schema.number().gte(100),
-				methodId: Schema.string().min(1),
+				methodId: Schema.string().min(1).nullable(),
 			},
 			req.body,
 		)
 
 		const userId = req.authUser!.id
-		const method = await MethodsUseCases.find(methodId)
-		if (!method || method.userId !== userId) throw new BadRequestError('invalid method')
+		const method = await MethodsUseCases.getForUser(userId, methodId)
+		if (!method) throw new BadRequestError('invalid method')
 
 		const wallet = await WalletsUseCases.get(userId)
 

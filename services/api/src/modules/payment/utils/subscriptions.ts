@@ -72,13 +72,14 @@ const deactivate = async (userId: string, wallet: WalletEntity, data: Subscribab
 	if (!oldSub) return wallet
 	return await WalletsUseCases.updateSubscriptions({
 		id: wallet.id,
-		subscription: { active: false, current: oldSub.current, next: null, data },
+		subscription: { active: false, methodId: oldSub.methodId, current: oldSub.current, next: null, data },
 	})
 }
 
 export class Subscriptions {
 	private static async run(
 		userId: string,
+		methodId: string | null,
 		data: Subscribable,
 		wallet: WalletEntity,
 		onFail: (userId: string, wallet: WalletEntity, data: Subscribable, sub: Sub | null, error: string) => Promise<WalletEntity>,
@@ -90,13 +91,7 @@ export class Subscriptions {
 
 			const sub = await Subscriptions.verify(data, wallet, user)
 
-			const { results: methods } = await MethodsUseCases.get({
-				where: [
-					{ field: 'userId', value: userId },
-					{ field: 'primary', value: true },
-				],
-			})
-			const method = methods.at(0)
+			const method = await MethodsUseCases.getForUser(userId, methodId)
 			if (!method) throw new SubError(sub, 'no method found')
 
 			const successful = await charge(user, sub, data, method)
@@ -134,6 +129,7 @@ export class Subscriptions {
 				id: wallet.id,
 				subscription: {
 					active: true,
+					methodId: method.id,
 					current: { activatedAt: now, expiredAt: renewedAt, jobId },
 					next: { renewedAt },
 					data,
@@ -188,11 +184,11 @@ export class Subscriptions {
 		throw new Error('cannot initiate subscription')
 	}
 
-	static async createGeneric(userId: string, data: Subscription['data']) {
+	static async createGeneric(userId: string, data: Subscription['data'], methodId: string | null) {
 		const wallet = await WalletsUseCases.get(userId)
 		const sub = wallet.getSubscription(data)
 		if (sub?.active) return wallet
-		return Subscriptions.run(userId, data, wallet, (_, __, ___, ____, error) => {
+		return Subscriptions.run(userId, methodId, data, wallet, (_, __, ___, ____, error) => {
 			throw new BadRequestError(error)
 		})
 	}
@@ -201,7 +197,7 @@ export class Subscriptions {
 		const wallet = await WalletsUseCases.get(userId)
 		const sub = wallet.getSubscription(data)
 		if (!sub?.next) return deactivate(userId, wallet, data, null)
-		return Subscriptions.run(userId, data, wallet, deactivate)
+		return Subscriptions.run(userId, sub.methodId, data, wallet, deactivate)
 	}
 
 	static async cancelGeneric(userId: string, subscriptionData: Subscription['data']) {
@@ -209,10 +205,10 @@ export class Subscriptions {
 		return deactivate(userId, wallet, subscriptionData, null)
 	}
 
-	static async createPlan(userId: string, planId: string) {
+	static async createPlan(userId: string, planId: string, methodId: string | null) {
 		const wallet = await WalletsUseCases.get(userId)
 		if (wallet.subscription.active) return wallet
-		return Subscriptions.run(userId, { type: 'plans', planId }, wallet, (_, __, ___, ____, error) => {
+		return Subscriptions.run(userId, methodId, { type: 'plans', planId }, wallet, (_, __, ___, ____, error) => {
 			throw new BadRequestError(error)
 		})
 	}
@@ -224,6 +220,6 @@ export class Subscriptions {
 			planId: wallet.subscription.next?.id ?? '',
 		}
 		if (!wallet.subscription.next) return deactivate(userId, wallet, data, null)
-		return Subscriptions.run(userId, data, wallet, deactivate)
+		return Subscriptions.run(userId, wallet.subscription.methodId, data, wallet, deactivate)
 	}
 }
