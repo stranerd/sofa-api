@@ -171,7 +171,7 @@ export class Subscriptions {
 			if (plan.amount === 0) throw new Error('you cant subscribe to this plan')
 			if (!plan.active) throw new Error('you cant subscribe to this plan currently')
 			if (!plan.usersFor.includes(user.type?.type as any)) throw new Error('you cant subscribe to this plan')
-			const multiplier = user.isOrg() ? wallet.subscription.membersDays / plan.getLengthInDays() : 1
+			const multiplier = user.isOrg() ? wallet.subscription.membersDays / plan.lengthInDays : 1
 			return {
 				type: data.type,
 				amount: plan.amount * multiplier,
