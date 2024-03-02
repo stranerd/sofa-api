@@ -6,9 +6,10 @@ import { PlayFromModel, PlayToModel } from '../models/plays'
 export class PlayMapper extends BaseMapper<PlayFromModel, PlayToModel, PlayEntity> {
 	mapFrom(model: PlayFromModel | null) {
 		if (!model) return null
-		const { _id, quizId, status, user, data, sources, totalTimeInSec, scores, startedAt, endedAt, createdAt, updatedAt } = model
+		const { _id, title, quizId, status, user, data, sources, totalTimeInSec, scores, startedAt, endedAt, createdAt, updatedAt } = model
 		return new PlayEntity({
 			id: _id.toString(),
+			title,
 			quizId,
 			status,
 			user,
@@ -25,6 +26,7 @@ export class PlayMapper extends BaseMapper<PlayFromModel, PlayToModel, PlayEntit
 
 	mapTo(entity: PlayEntity) {
 		return {
+			title: entity.title,
 			quizId: entity.quizId,
 			user: entity.user,
 			totalTimeInSec: entity.totalTimeInSec,

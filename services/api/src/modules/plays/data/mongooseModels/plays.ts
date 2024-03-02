@@ -10,6 +10,11 @@ const Schema = new appInstance.dbs.mongo.Schema<PlayFromModel>(
 			type: String,
 			default: () => appInstance.dbs.mongo.Id.toString(),
 		},
+		title: {
+			type: String,
+			required: false,
+			default: '',
+		},
 		quizId: {
 			type: String,
 			required: true,

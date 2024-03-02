@@ -5,7 +5,13 @@ import { BadRequestError, Conditions } from 'equipped'
 import { PlaysUseCases } from '..'
 import { PlayToModel } from '../data/models/plays'
 
-export const createPlay = async (userId: string, quiz: QuizEntity, data: PlayToModel['data'], view = false) => {
+export const createPlay = async (
+	userId: string,
+	quiz: QuizEntity,
+	otherData: { title: string },
+	data: PlayToModel['data'],
+	view = false,
+) => {
 	const user = await UsersUseCases.find(userId)
 	if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 	const { results: questions } = await QuestionsUseCases.get({
@@ -15,6 +21,7 @@ export const createPlay = async (userId: string, quiz: QuizEntity, data: PlayToM
 	const sources = quiz.questions.map((id) => questions.find((q) => q.id === id)!).filter(Boolean)
 	const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
 	const play = await PlaysUseCases.add({
+		title: otherData.title ?? quiz.title,
 		quizId: quiz.id,
 		user: user.getEmbedded(),
 		totalTimeInSec,

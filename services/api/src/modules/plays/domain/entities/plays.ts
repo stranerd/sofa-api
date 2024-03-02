@@ -91,6 +91,7 @@ export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 
 export type PlayConstructorArgs = {
 	id: string
+	title: string
 	quizId: string
 	user: EmbeddedUser
 	data: PlayData

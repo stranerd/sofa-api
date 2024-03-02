@@ -11,6 +11,7 @@ export interface PlayFromModel extends PlayToModel {
 }
 
 export interface PlayToModel {
+	title: string
 	quizId: string
 	user: EmbeddedUser
 	totalTimeInSec: number

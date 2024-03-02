@@ -26,8 +26,9 @@ export class PlayController {
 	}
 
 	static async create(req: Request) {
-		const { quizId, data } = validate(
+		const { title, quizId, data } = validate(
 			{
+				title: Schema.string().min(1),
 				quizId: Schema.string(),
 				data: Schema.discriminate((d) => d.type, {
 					[PlayTypes.games]: Schema.object({
@@ -56,7 +57,7 @@ export class PlayController {
 		if (!hasAccess || hasAccess.isForTutors) throw new NotAuthorizedError('cannot access this quiz')
 		if (!hasAccess.modes[data.type]) throw new NotAuthorizedError(`cannot create ${data.type} for this quiz`)
 
-		return await createPlay(req.authUser!.id, hasAccess, data, true)
+		return await createPlay(req.authUser!.id, hasAccess, { title }, data, true)
 	}
 
 	static async delete(req: Request) {
