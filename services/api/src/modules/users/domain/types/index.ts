@@ -114,6 +114,7 @@ export enum UserType {
 export enum UserSchoolType {
 	'aspirant' = 'aspirant',
 	'college' = 'college',
+	'university' = 'university',
 }
 
 type AspirantType = {
@@ -136,7 +137,7 @@ type CollegeType = {
 export type UserTypeData =
 	| {
 			type: UserType.student
-			school: AspirantType | CollegeType
+			school: AspirantType | CollegeType | { type: UserSchoolType.university }
 	  }
 	| {
 			type: UserType.teacher

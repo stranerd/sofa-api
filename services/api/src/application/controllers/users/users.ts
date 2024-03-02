@@ -40,6 +40,9 @@ export class UsersController {
 									}).custom((exam) => exam.endDate >= exam.startDate, 'end date cannot be less than start date'),
 								),
 							}),
+							[UserSchoolType.university]: Schema.object({
+								type: Schema.is(UserSchoolType.university as const),
+							}),
 						}),
 					}),
 					[UserType.teacher]: Schema.object({
@@ -86,6 +89,9 @@ export class UsersController {
 					userId: req.authUser!.id,
 					data: { ...data, school: data.school },
 				})
+				if (updated) return updated
+			} else if (data.school.type === UserSchoolType.university) {
+				const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, school: data.school } })
 				if (updated) return updated
 			}
 		} else {
