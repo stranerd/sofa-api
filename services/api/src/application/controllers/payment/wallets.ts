@@ -27,6 +27,10 @@ export class WalletsController {
 		return await Subscriptions.createPlan(req.authUser!.id, planId, methodId)
 	}
 
+	static async renewPlan(req: Request) {
+		return await Subscriptions.renewPlan(req.authUser!.id)
+	}
+
 	static async toggleRenewSubscription(req: Request) {
 		const { renew } = validate({ renew: Schema.boolean() }, req.body)
 		return await WalletsUseCases.toggleRenewSubscription({ userId: req.authUser!.id, renew })

@@ -77,12 +77,13 @@ const deactivate = async (userId: string, wallet: WalletEntity, data: Subscribab
 }
 
 export class Subscriptions {
-	private static async run(
+	static async #run(
 		userId: string,
 		methodId: string | null,
 		data: Subscribable,
 		wallet: WalletEntity,
 		onFail: (userId: string, wallet: WalletEntity, data: Subscribable, sub: Sub | null, error: string) => Promise<WalletEntity>,
+		oldJobId: string | null,
 	) {
 		try {
 			const user = await UsersUseCases.find(userId)
@@ -114,6 +115,7 @@ export class Subscriptions {
 						: { type: NotificationType.GenericSubscriptionSuccessful, data },
 				sendEmail: true,
 			})
+			if (oldJobId) await appInstance.job.removeDelayedJob(oldJobId)
 			if (data.type === 'plans')
 				return await WalletsUseCases.updateSubscription({
 					id: wallet.id,
@@ -188,16 +190,23 @@ export class Subscriptions {
 		const wallet = await WalletsUseCases.get(userId)
 		const sub = wallet.getSubscription(data)
 		if (sub?.active) return wallet
-		return Subscriptions.run(userId, methodId, data, wallet, (_, __, ___, ____, error) => {
-			throw new BadRequestError(error)
-		})
+		return Subscriptions.#run(
+			userId,
+			methodId,
+			data,
+			wallet,
+			(_, __, ___, ____, error) => {
+				throw new BadRequestError(error)
+			},
+			sub?.current?.jobId ?? null,
+		)
 	}
 
 	static async renewGeneric(userId: string, data: Subscription['data']) {
 		const wallet = await WalletsUseCases.get(userId)
 		const sub = wallet.getSubscription(data)
 		if (!sub?.next) return deactivate(userId, wallet, data, null)
-		return Subscriptions.run(userId, sub.methodId, data, wallet, deactivate)
+		return Subscriptions.#run(userId, sub.methodId, data, wallet, deactivate, sub.current?.jobId ?? null)
 	}
 
 	static async cancelGeneric(userId: string, subscriptionData: Subscription['data']) {
@@ -208,9 +217,16 @@ export class Subscriptions {
 	static async createPlan(userId: string, planId: string, methodId: string | null) {
 		const wallet = await WalletsUseCases.get(userId)
 		if (wallet.subscription.active) return wallet
-		return Subscriptions.run(userId, methodId, { type: 'plans', planId }, wallet, (_, __, ___, ____, error) => {
-			throw new BadRequestError(error)
-		})
+		return Subscriptions.#run(
+			userId,
+			methodId,
+			{ type: 'plans', planId },
+			wallet,
+			(_, __, ___, ____, error) => {
+				throw new BadRequestError(error)
+			},
+			wallet.subscription.current?.jobId ?? null,
+		)
 	}
 
 	static async renewPlan(userId: string) {
@@ -220,6 +236,13 @@ export class Subscriptions {
 			planId: wallet.subscription.next?.id ?? '',
 		}
 		if (!wallet.subscription.next) return deactivate(userId, wallet, data, null)
-		return Subscriptions.run(userId, wallet.subscription.methodId, data, wallet, deactivate)
+		return Subscriptions.#run(
+			userId,
+			wallet.subscription.methodId,
+			data,
+			wallet,
+			deactivate,
+			wallet.subscription.current?.jobId ?? null,
+		)
 	}
 }

@@ -14,7 +14,12 @@ export const walletsRoutes = groupRoutes('/wallets', [
 		controllers: [isAuthenticated, makeController(async (req) => WalletsController.subscribeToPlan(req))],
 	},
 	{
-		path: '/subscriptions/renewal/toggle',
+		path: '/subscriptions/renew',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => WalletsController.renewPlan(req))],
+	},
+	{
+		path: '/subscriptions/renew/toggle',
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => WalletsController.toggleRenewSubscription(req))],
 	},
