@@ -158,7 +158,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 			name: {
 				type: String,
 				required: false,
-				default: 'Dr. Sofa',
+				default: 'Dr. Stranerd',
 			},
 			tagline: {
 				type: String,
