@@ -77,7 +77,7 @@ export class PlayRepository implements IPlayRepository {
 			const joinableTypes = [PlayTypes.games, PlayTypes.assessments]
 			const play = this.mapper.mapFrom(await Play.findById(id, {}, { session }))
 			if (!play || !joinableTypes.includes(play.data.type)) return
-			if (play.status !== PlayStatus.created) return
+			if (![PlayStatus.created, PlayStatus.started].includes(play.status)) return
 			return (res = await Play.findByIdAndUpdate(
 				play.id,
 				{ [join ? '$addToSet' : '$pull']: { 'data.participants': userId } },
