@@ -25,7 +25,19 @@ export class PlayRepository implements IPlayRepository {
 	}
 
 	async add(data: PlayToModel) {
-		const play = await new Play(data).save()
+		const upsertTypes = [PlayTypes.practice, PlayTypes.flashcards]
+		const play = await (upsertTypes.includes(data.data.type)
+			? Play.findOneAndUpdate(
+					{
+						'data.type': data.data.type,
+						'user.id': data.user.id,
+						status: { $in: [PlayStatus.created, PlayStatus.started] },
+						quizId: data.quizId,
+					},
+					{ $set: data },
+					{ new: true, upsert: true },
+				)
+			: new Play(data).save())
 		return this.mapper.mapFrom(play)!
 	}
 
