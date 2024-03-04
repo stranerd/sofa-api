@@ -34,7 +34,7 @@ export class ClassesUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async addLesson(data: { organizationId: string; classId: string; data: Partial<ClassLesson> }) {
+	async addLesson(data: { organizationId: string; classId: string; data: Omit<ClassLesson, 'id'> }) {
 		return await this.repository.addLesson(data.organizationId, data.classId, data.data)
 	}
 

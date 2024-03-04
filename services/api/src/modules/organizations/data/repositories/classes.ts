@@ -60,9 +60,12 @@ export class ClassRepository implements IClassRepository {
 		return !!classIns
 	}
 
-	async addLesson(organizationId: string, classId: string, data: Partial<ClassLesson>) {
-		data.id = appInstance.dbs.mongo.Id.toString()
-		const classInst = await Class.findOneAndUpdate({ organizationId, _id: classId }, { $push: { lessons: data } }, { new: true })
+	async addLesson(organizationId: string, classId: string, data: Omit<ClassLesson, 'id'>) {
+		const lesson = {
+			...data,
+			id: appInstance.dbs.mongo.Id.toString(),
+		}
+		const classInst = await Class.findOneAndUpdate({ organizationId, _id: classId }, { $push: { lessons: lesson } }, { new: true })
 		return this.mapper.mapFrom(classInst)
 	}
 

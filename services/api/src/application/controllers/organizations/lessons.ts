@@ -42,6 +42,7 @@ export class LessonsController {
 			classId: req.params.classId,
 			data: {
 				title: data.title,
+				curriculum: [],
 				users: {
 					students: [],
 					teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[],

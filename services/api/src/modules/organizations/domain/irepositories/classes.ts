@@ -10,7 +10,7 @@ export interface IClassRepository {
 	update: (organizationId: string, id: string, data: Partial<ClassToModel>) => Promise<ClassEntity | null>
 	delete: (organizationId: string, id: string) => Promise<boolean>
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
-	addLesson: (organizationId: string, classId: string, data: Partial<ClassLesson>) => Promise<ClassEntity | null>
+	addLesson: (organizationId: string, classId: string, data: Omit<ClassLesson, 'id'>) => Promise<ClassEntity | null>
 	updateLesson: (organizationId: string, classId: string, lessonId: string, data: Partial<ClassLesson>) => Promise<ClassEntity | null>
 	deleteLesson: (organizationId: string, classId: string, lessonId: string) => Promise<ClassEntity | null>
 	manageMembers: (data: {
