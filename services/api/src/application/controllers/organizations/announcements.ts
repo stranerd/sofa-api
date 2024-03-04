@@ -3,13 +3,18 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class AnnouncementsController {
-	private static schema = (role: 'teacher' | 'admin') => ({
-		body: Schema.string().min(1),
-		filter: Schema.object({
-			lessonIds: Schema.array(Schema.string()).min(role === 'admin' ? 0 : 1),
-			userTypes: Schema.array(Schema.in(Object.values(MemberTypes))),
-		}),
-	})
+	private static schema = (role: 'teacher' | 'admin') => {
+		const lessonIds = Schema.array(Schema.string().min(1))
+		const userTypes = Schema.array(Schema.in(Object.values(MemberTypes)))
+		const isAdmin = role === 'admin'
+		return {
+			body: Schema.string().min(1),
+			filter: Schema.object({
+				lessonIds: isAdmin ? lessonIds.nullable() : lessonIds.min(1),
+				userTypes: isAdmin ? userTypes.nullable() : userTypes.min(1),
+			}),
+		}
+	}
 
 	static async find(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
@@ -43,7 +48,7 @@ export class AnnouncementsController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		data.filter.lessonIds.forEach((lessonId) => {
+		data.filter.lessonIds?.forEach((lessonId) => {
 			const lesson = hasAccess.class.getLesson(lessonId)
 			if (!lesson) throw new BadRequestError('lesson not found')
 			if (hasAccess.role === 'teacher' && !lesson.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
