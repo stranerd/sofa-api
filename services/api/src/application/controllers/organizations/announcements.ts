@@ -6,8 +6,8 @@ export class AnnouncementsController {
 	private static schema = (role: 'teacher' | 'admin') => ({
 		body: Schema.string().min(1),
 		filter: Schema.object({
-			lessonId: role === 'admin' ? Schema.string().min(1).nullable() : Schema.string().min(1),
-			userType: Schema.in(Object.values(MemberTypes)).nullable(),
+			lessonIds: Schema.array(Schema.string()).min(role === 'admin' ? 0 : 1),
+			userTypes: Schema.array(Schema.in(Object.values(MemberTypes))),
 		}),
 	})
 
@@ -43,11 +43,11 @@ export class AnnouncementsController {
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		if (data.filter.lessonId) {
-			const lesson = hasAccess.class.getLesson(data.filter.lessonId)
+		data.filter.lessonIds.forEach((lessonId) => {
+			const lesson = hasAccess.class.getLesson(lessonId)
 			if (!lesson) throw new BadRequestError('lesson not found')
 			if (hasAccess.role === 'teacher' && !lesson.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
-		}
+		})
 
 		return await AnnouncementsUseCases.add({
 			...data,
