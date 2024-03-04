@@ -1,11 +1,25 @@
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { AnnouncementFilter, EmbeddedUser } from '../types'
+import { AnnouncementFilter, EmbeddedUser, MemberTypes } from '../types'
+import { ClassEntity } from './classes'
 
 export class AnnouncementEntity extends BaseEntity<AnnouncementConstructorArgs> {
 	constructor(data: AnnouncementConstructorArgs) {
 		data.user = generateDefaultUser(data.user)
 		super(data)
+	}
+
+	getRecipients(classInst: ClassEntity) {
+		const filterLessons = this.filter.lessonIds
+		const lessons = filterLessons ? classInst.lessons.filter((lesson) => filterLessons.includes(lesson.id)) : classInst.lessons
+		const recipients = lessons.reduce((acc, lesson) => {
+			const filterUserTypes = this.filter.userTypes
+			if (!filterUserTypes || filterUserTypes.includes(MemberTypes.student)) acc.push(...lesson.users.students)
+			if (!filterUserTypes || filterUserTypes.includes(MemberTypes.teacher)) acc.push(...lesson.users.teachers)
+			if (!filterUserTypes) acc.push(classInst.user.id)
+			return acc
+		}, [] as string[])
+		return [...new Set(recipients)].filter((id) => this.user.id !== id)
 	}
 }
 

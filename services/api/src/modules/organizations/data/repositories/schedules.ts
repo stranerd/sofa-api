@@ -76,7 +76,7 @@ export class ScheduleRepository implements IScheduleRepository {
 				if (classInst) {
 					const updatedLessons = classInst.lessons.map((l) => ({
 						...l,
-						curriculum: (l.curriculum ?? []).map((c) => ({
+						curriculum: l.curriculum.map((c) => ({
 							...c,
 							items: c.items.filter((i) => !(i.id === id && i.type === ClassLessonable.schedule)),
 						})),

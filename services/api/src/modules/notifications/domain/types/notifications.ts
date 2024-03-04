@@ -21,6 +21,7 @@ export enum NotificationType {
 	QuizAccessRequestRejected = 'QuizAccessRequestRejected',
 	QuizAccessMemberGranted = 'QuizAccessMemberGranted',
 	QuizAccessMemberRebuked = 'QuizAccessMemberRebuked',
+	ClassAnnouncementCreated = 'ClassAnnouncementCreated',
 }
 
 export type NotificationData =
@@ -44,3 +45,4 @@ export type NotificationData =
 	| { type: NotificationType.QuizAccessRequestRejected; quizId: string }
 	| { type: NotificationType.QuizAccessMemberGranted; quizId: string }
 	| { type: NotificationType.QuizAccessMemberRebuked; quizId: string }
+	| { type: NotificationType.ClassAnnouncementCreated; organizationId: string; classId: string; announcementId: string }

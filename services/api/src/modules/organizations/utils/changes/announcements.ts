@@ -1,5 +1,7 @@
+import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
+import { ClassesUseCases } from '../../'
 import { AnnouncementFromModel } from '../../data/models/announcements'
 import { AnnouncementEntity } from '../../domain/entities/announcements'
 
@@ -12,6 +14,20 @@ export const AnnouncementDbChangeCallbacks: DbChangeCallbacks<AnnouncementFromMo
 			],
 			after,
 		)
+
+		const classInst = await ClassesUseCases.find(after.classId)
+		if (classInst)
+			await sendNotification(after.getRecipients(classInst), {
+				title: `Announcement in class: ${classInst.title}`,
+				body: after.body,
+				sendEmail: true,
+				data: {
+					type: NotificationType.ClassAnnouncementCreated,
+					organizationId: classInst.organizationId,
+					classId: classInst.id,
+					announcementId: after.id,
+				},
+			})
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.updated(
