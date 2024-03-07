@@ -16,4 +16,5 @@ export type PurchaseData = {
 	type: Purchasables
 	id: string
 	userId: string
+	title: string
 }

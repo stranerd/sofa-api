@@ -26,7 +26,7 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 		await Promise.all([
 			user
 				? TransactionsUseCases.create({
-						title: `Purchase of one of your ${after.data.type}: ${after.data.id}`,
+						title: `Purchase of one of your ${after.data.type}: ${after.data.title}`,
 						userId: user.id,
 						email: user.bio.email,
 						amount: Math.ceil((1 - serviceCharge) * after.price.amount),
@@ -47,7 +47,7 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 				: null,
 			sendNotification([after.data.userId], {
 				title: 'New Purchase',
-				body: `Someone just purchased one of your ${after.data.type} #${after.data.id}`,
+				body: `Someone just purchased one of your ${after.data.type} ${after.data.title}`,
 				sendEmail: true,
 				data: {
 					type: NotificationType.NewPurchase,
@@ -59,7 +59,7 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 			}),
 			sendNotification([after.userId], {
 				title: 'Successful Purchase',
-				body: `Your puchase of ${after.data.type} #${after.data.id} was successful`,
+				body: `Your puchase of ${after.data.type} ${after.data.title} was successful`,
 				sendEmail: true,
 				data: {
 					type: NotificationType.NewPurchased,

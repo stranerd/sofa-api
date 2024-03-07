@@ -67,7 +67,7 @@ export class PurchasesController {
 				purchase: {
 					price: purchasable.price,
 					userId,
-					data: { type, id: purchasable.id, userId: purchasable.userId },
+					data: { type, id: purchasable.id, userId: purchasable.userId, title: purchasable.title },
 				},
 			},
 		})
