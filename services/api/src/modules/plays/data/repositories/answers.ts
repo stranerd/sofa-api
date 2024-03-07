@@ -33,10 +33,18 @@ export class AnswerRepository implements IAnswerRepository {
 		await Answer.collection.conn.transaction(async (session) => {
 			const typeUserId = await this.#verifyType(type, typeId, { questionId, userId }, session)
 			if (!typeUserId) throw new BadRequestError('cannot answer this question')
-			const newAnswer = await Answer.findOneAndUpdate(
-				{ type, typeId, typeUserId, userId, endedAt: null },
+			const answerModel = await Answer.findOneAndUpdate(
+				{ type, typeId, typeUserId, userId },
 				{
 					$setOnInsert: { type, typeId, typeUserId, userId },
+				},
+				{ upsert: true, new: true, session },
+			)
+			if (answerModel.endedAt ?? 0 > 0) throw new BadRequestError('you have already played this')
+
+			const newAnswer = await Answer.findByIdAndUpdate(
+				answerModel._id,
+				{
 					$set: { [`data.${questionId}`]: { value: answer, at: Date.now() } },
 				},
 				{ upsert: true, new: true, session },
