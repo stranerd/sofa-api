@@ -11,6 +11,7 @@ import {
 	WalletsUseCases,
 } from '@modules/payment'
 import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
+import { SelectedPaymentMethodSchema } from '.'
 
 export class PurchasesController {
 	static async find(req: Request) {
@@ -33,12 +34,11 @@ export class PurchasesController {
 	}
 
 	static async create(req: Request) {
-		const { type, id, methodId, payWithWallet } = validate(
+		const { type, id, methodId } = validate(
 			{
 				type: Schema.in(Object.values(Purchasables)),
 				id: Schema.string().min(1),
-				methodId: Schema.string().min(1).nullable().default(null),
-				payWithWallet: Schema.boolean().default(false),
+				methodId: SelectedPaymentMethodSchema,
 			},
 			req.body,
 		)
@@ -52,6 +52,7 @@ export class PurchasesController {
 		if (purchasable.userId === userId) throw new BadRequestError('cannot purchase owned item')
 		const isFree = purchasable.price.amount === 0
 
+		const payWithWallet = methodId === true
 		const method = await MethodsUseCases.getForUser(userId, methodId)
 		if (!isFree && !payWithWallet && !method) throw new BadRequestError('invalid method')
 

@@ -33,7 +33,8 @@ export class MethodsUseCase {
 		return await this.repository.delete(data.id, data.userId)
 	}
 
-	async getForUser(userId: string, methodId: string | null) {
+	async getForUser(userId: string, methodId: string | true | null) {
+		if (methodId === true) return null
 		const { results: methods } = await this.get({
 			where: [
 				{ field: 'userId', value: userId },
