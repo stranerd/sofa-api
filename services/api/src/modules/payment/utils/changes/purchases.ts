@@ -8,7 +8,7 @@ import { Purchasables, TransactionStatus, TransactionType } from '../../domain/t
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { CourseMetaType, CoursesUseCases } from '@modules/study'
 
-const serviceCharge = 0.2
+const serviceCharge = PurchaseEntity.serviceCharge
 
 export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, PurchaseEntity> = {
 	created: async ({ after }) => {

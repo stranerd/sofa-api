@@ -5,6 +5,8 @@ export class PurchaseEntity extends BaseEntity<PurchaseConstructorArgs> {
 	constructor(data: PurchaseConstructorArgs) {
 		super(data)
 	}
+
+	static serviceCharge = 0.2
 }
 
 type PurchaseConstructorArgs = {

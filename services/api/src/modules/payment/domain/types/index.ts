@@ -19,6 +19,7 @@ export enum TransactionType {
 	newCard = 'newCard',
 	subscription = 'subscription',
 	genericSubscription = 'genericSubscription',
+	classSubscriptionPayment = 'classSubscriptionPayment',
 	purchase = 'purchase',
 	purchased = 'purchased',
 	sent = 'sent',
@@ -40,6 +41,13 @@ export type TransactionData =
 	| {
 			type: TransactionType.genericSubscription
 			data: Subscription['data']
+	  }
+	| {
+			type: TransactionType.classSubscriptionPayment
+			classId: string
+			organizationId: string
+			userId: string
+			serviceCharge: number
 	  }
 	| {
 			type: TransactionType.purchase

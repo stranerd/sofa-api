@@ -5,6 +5,7 @@ import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
 import { FlutterwavePayment, MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '..'
 import { MethodEntity } from '../domain/entities/methods'
+import { PurchaseEntity } from '../domain/entities/purchases'
 import { WalletEntity } from '../domain/entities/wallets'
 import { Interval, SelectedPaymentMethod, Subscription, TransactionStatus, TransactionType } from '../domain/types'
 
@@ -46,6 +47,24 @@ const charge = async (user: UserEntity, sub: Sub, data: Subscribable, method: Me
 			id: transaction.id,
 			data: { status: successful ? TransactionStatus.settled : TransactionStatus.failed },
 		})
+		if (successful && sub.type === 'classes' && data.type === 'classes') {
+			const serviceCharge = PurchaseEntity.serviceCharge
+			await TransactionsUseCases.create({
+				userId: data.organizationId,
+				email: sub.orgEmail,
+				amount: Math.ceil((1 - serviceCharge) * sub.amount),
+				currency: sub.currency,
+				status: TransactionStatus.fulfilled,
+				title: `Subscription payment for ${sub.title}`,
+				data: {
+					type: TransactionType.classSubscriptionPayment,
+					organizationId: data.organizationId,
+					classId: data.classId,
+					userId: user.id,
+					serviceCharge,
+				},
+			})
+		}
 		return successful
 	} catch {
 		return false
@@ -159,12 +178,15 @@ export class Subscriptions {
 				data.classId,
 			)
 			if (!access) throw new Error('class not found')
+			const org = await UsersUseCases.find(data.organizationId)
+			if (!org) throw new Error('class owner not found')
 			return {
 				type: data.type,
 				amount: access.role ? 0 : access.class.price.amount,
 				currency: access.class.price.currency,
 				title: access.class.title,
 				interval,
+				orgEmail: org.bio.email,
 			}
 		}
 		if (data.type === 'plans') {
