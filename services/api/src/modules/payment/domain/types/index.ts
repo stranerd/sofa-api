@@ -75,31 +75,6 @@ export type TransactionData =
 			withdrawalId: string
 	  }
 
-export type SubscriptionModel = {
-	active: boolean
-	methodId: string | null
-	current: {
-		id: string
-		activatedAt: number
-		expiredAt: number
-		jobId: string | null
-	} | null
-	next: {
-		id: string
-		renewedAt: number
-	} | null
-	data: PlanData
-	membersDays: number
-}
-
-export enum PlanDataType {
-	tutorAidedConversations = 'tutorAidedConversations',
-}
-
-export type PlanData = Record<PlanDataType, number>
-
-export type PlanFeatures = {}
-
 export enum MethodType {
 	card = 'card',
 }

@@ -4,6 +4,7 @@ import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import { makeSet } from '@utils/commons'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
+import { SelectedPaymentMethodSchema } from '../payment'
 
 export class ClassesController {
 	private static schema = () => ({
@@ -108,7 +109,7 @@ export class ClassesController {
 	static async purchase(req: Request) {
 		const { methodId } = validate(
 			{
-				methodId: Schema.string().min(1).nullable().default(null),
+				methodId: SelectedPaymentMethodSchema,
 			},
 			req.body,
 		)

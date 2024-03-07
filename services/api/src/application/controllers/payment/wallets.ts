@@ -10,6 +10,7 @@ import {
 } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Request, Schema, validate, ValidationError } from 'equipped'
+import { SelectedPaymentMethodSchema } from '.'
 
 export class WalletsController {
 	static async get(req: Request) {
@@ -20,7 +21,7 @@ export class WalletsController {
 		const { planId, methodId } = validate(
 			{
 				planId: Schema.string().min(1),
-				methodId: Schema.string().min(1).nullable().default(null),
+				methodId: SelectedPaymentMethodSchema,
 			},
 			req.body,
 		)
@@ -121,12 +122,13 @@ export class WalletsController {
 		const { amount, methodId } = validate(
 			{
 				amount: Schema.number().gte(100),
-				methodId: Schema.string().min(1).nullable(),
+				methodId: SelectedPaymentMethodSchema,
 			},
 			req.body,
 		)
 
 		const userId = req.authUser!.id
+		if (methodId === true) throw new BadRequestError('you cant fund your wallet from your wallet')
 		const method = await MethodsUseCases.getForUser(userId, methodId)
 		if (!method) throw new BadRequestError('invalid method')
 

@@ -6,7 +6,7 @@ import { BadRequestError, DelayedJobs } from 'equipped'
 import { FlutterwavePayment, MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '..'
 import { MethodEntity } from '../domain/entities/methods'
 import { WalletEntity } from '../domain/entities/wallets'
-import { Interval, Subscription, TransactionStatus, TransactionType } from '../domain/types'
+import { Interval, SelectedPaymentMethod, Subscription, TransactionStatus, TransactionType } from '../domain/types'
 
 type PlanSubscribable = { type: 'plans'; planId: string }
 type Subscribable = Subscription['data'] | PlanSubscribable
@@ -79,7 +79,7 @@ const deactivate = async (userId: string, wallet: WalletEntity, data: Subscribab
 export class Subscriptions {
 	static async #run(
 		userId: string,
-		methodId: string | null,
+		methodId: SelectedPaymentMethod,
 		data: Subscribable,
 		wallet: WalletEntity,
 		onFail: (userId: string, wallet: WalletEntity, data: Subscribable, sub: Sub | null, error: string) => Promise<WalletEntity>,
@@ -92,6 +92,8 @@ export class Subscriptions {
 
 			const sub = await Subscriptions.verify(data, wallet, user)
 
+			const payWithWallet = methodId === true
+			if (payWithWallet) throw new SubError(sub, 'pay with wallet is not currently available for subscriptions')
 			const method = await MethodsUseCases.getForUser(userId, methodId)
 			if (!method) throw new SubError(sub, 'no method found')
 
@@ -186,7 +188,7 @@ export class Subscriptions {
 		throw new Error('cannot initiate subscription')
 	}
 
-	static async createGeneric(userId: string, data: Subscription['data'], methodId: string | null) {
+	static async createGeneric(userId: string, data: Subscription['data'], methodId: SelectedPaymentMethod) {
 		const wallet = await WalletsUseCases.get(userId)
 		const sub = wallet.getSubscription(data)
 		if (sub?.active) return wallet
@@ -214,7 +216,7 @@ export class Subscriptions {
 		return deactivate(userId, wallet, subscriptionData, null)
 	}
 
-	static async createPlan(userId: string, planId: string, methodId: string | null) {
+	static async createPlan(userId: string, planId: string, methodId: SelectedPaymentMethod) {
 		const wallet = await WalletsUseCases.get(userId)
 		if (wallet.subscription.active) return wallet
 		return Subscriptions.#run(

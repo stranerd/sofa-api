@@ -35,6 +35,7 @@ export {
 	TransactionStatus,
 	TransactionType,
 } from './domain/types'
+export type { SelectedPaymentMethod } from './domain/types'
 export { FlutterwavePayment } from './utils/flutterwave'
 export { updateOrgsMembersDays } from './utils/plans'
 export { findPurchasable } from './utils/purchases'
