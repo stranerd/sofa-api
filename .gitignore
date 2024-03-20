@@ -3,3 +3,5 @@ env.json
 .idea/
 
 services/*/credentials.json
+
+.DS_Store
