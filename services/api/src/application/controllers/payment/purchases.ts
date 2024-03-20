@@ -1,5 +1,4 @@
 import {
-	Currencies,
 	findPurchasable,
 	FlutterwavePayment,
 	MethodsUseCases,
@@ -79,7 +78,8 @@ export class PurchasesController {
 			if (payWithWallet)
 				successful = await WalletsUseCases.updateAmount({
 					userId,
-					amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN),
+					amount: transaction.amount,
+					currency: transaction.currency,
 				})
 			else {
 				if (!method) throw new BadRequestError('invalid method')

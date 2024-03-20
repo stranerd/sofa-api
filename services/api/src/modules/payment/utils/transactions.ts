@@ -1,9 +1,9 @@
+import { NotificationType, sendNotification } from '@modules/notifications'
 import { Conditions } from 'equipped'
 import { MethodsUseCases, PurchasesUseCases, TransactionsUseCases, WalletsUseCases } from '../'
 import { TransactionEntity } from '../domain/entities/transactions'
-import { Currencies, TransactionStatus, TransactionType } from '../domain/types'
+import { TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
-import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.newCard) {
@@ -12,7 +12,8 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 		await MethodsUseCases.create(method)
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
@@ -29,7 +30,8 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.purchased) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
@@ -39,7 +41,8 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.fundWallet) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
@@ -55,7 +58,8 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.withdrawalRefund) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.NGN),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,

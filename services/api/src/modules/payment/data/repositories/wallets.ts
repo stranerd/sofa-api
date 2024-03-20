@@ -1,3 +1,4 @@
+import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
 import { ClientSession } from 'mongodb'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
@@ -13,14 +14,14 @@ import {
 	WithdrawData,
 	WithdrawalStatus,
 } from '../../domain/types'
+import { FlutterwavePayment } from '../../utils/flutterwave'
 import { WalletMapper } from '../mappers/wallets'
 import { TransactionToModel } from '../models/transactions'
+import { WalletFromModel } from '../models/wallets'
+import { WithdrawalToModel } from '../models/withdrawals'
 import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
-import { WithdrawalToModel } from '../models/withdrawals'
 import { Withdrawal } from '../mongooseModels/withdrawals'
-import { WalletFromModel } from '../models/wallets'
-import { appInstance } from '@utils/types'
 
 export class WalletRepository implements IWalletRepository {
 	private static instance: WalletRepository
@@ -49,13 +50,14 @@ export class WalletRepository implements IWalletRepository {
 		return this.mapper.mapFrom(wallet)!
 	}
 
-	async updateAmount(userId: string, amount: number) {
+	async updateAmount(userId: string, amount: number, currency: Currencies) {
 		let res = false
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId, session))!
-			const updatedBalance = wallet.balance.amount + amount
+			const convertedAmount = await FlutterwavePayment.convertAmount(amount, currency, wallet.balance.currency)
+			const updatedBalance = wallet.balance.amount + convertedAmount
 			if (updatedBalance < 0) return false
-			res = !!(await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': amount } }, { new: true, session }))
+			res = !!(await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': convertedAmount } }, { new: true, session }))
 			return res
 		})
 		return res
