@@ -1,6 +1,5 @@
 import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
-import { ClientSession } from 'mongodb'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import {
 	AccountDetails,
@@ -36,7 +35,7 @@ export class WalletRepository implements IWalletRepository {
 		return WalletRepository.instance
 	}
 
-	private static async getUserWallet(userId: string, session?: ClientSession) {
+	private static async getUserWallet(userId: string, session?: any) {
 		const wallet = await Wallet.findOneAndUpdate(
 			{ userId },
 			{ $setOnInsert: { userId } },

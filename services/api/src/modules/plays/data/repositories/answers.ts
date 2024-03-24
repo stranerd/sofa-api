@@ -1,6 +1,5 @@
 import { appInstance } from '@utils/types'
 import { BadRequestError, QueryParams } from 'equipped'
-import { ClientSession } from 'mongodb'
 import { IAnswerRepository } from '../../domain/irepositories/answers'
 import { PlayStatus, PlayTypes } from '../../domain/types'
 import { AnswerMapper } from '../mappers/answers'
@@ -80,7 +79,7 @@ export class AnswerRepository implements IAnswerRepository {
 		return this.mapper.mapFrom(res)
 	}
 
-	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string; userId: string }, session: ClientSession) {
+	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string; userId: string }, session: any) {
 		const play = this.playMapper.mapFrom(await Play.findById(typeId, {}, { session }))
 		if (!play) return null
 		if (play.data.type !== type) return null
