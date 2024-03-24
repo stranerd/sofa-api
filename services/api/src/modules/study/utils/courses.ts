@@ -3,9 +3,10 @@ import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { PlaysUseCases } from '@modules/plays'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, AuthUser } from 'equipped'
-import { FilesUseCases, QuizEntity, QuizzesUseCases } from '..'
 import { FileEntity } from '../domain/entities/files'
+import { QuizEntity } from '../domain/entities/quizzes'
 import { Coursable } from '../domain/types'
+import { FilesUseCases, QuizzesUseCases } from '../init'
 
 const finders = {
 	[Coursable.quiz]: QuizzesUseCases,
