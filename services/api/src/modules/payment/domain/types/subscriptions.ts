@@ -2,7 +2,7 @@ import { SelectedPaymentMethod } from './purchases'
 
 export type Subscription = {
 	active: boolean
-	methodId: string | null
+	methodId: SelectedPaymentMethod
 	current: {
 		activatedAt: number
 		expiredAt: number

@@ -21,7 +21,7 @@ class SubError extends Error {
 	}
 }
 
-const charge = async (user: UserEntity, sub: Sub, data: Subscribable, method: MethodEntity) => {
+const charge = async (user: UserEntity, sub: Sub, data: Subscribable, method: MethodEntity | true) => {
 	if (sub.amount <= 0) return true
 	try {
 		const transaction = await TransactionsUseCases.create({
@@ -36,13 +36,20 @@ const charge = async (user: UserEntity, sub: Sub, data: Subscribable, method: Me
 					? { type: TransactionType.subscription, subscriptionId: data.planId, multiplier: sub.multiplier ?? 1 }
 					: { type: TransactionType.genericSubscription, data },
 		})
-		const successful = await FlutterwavePayment.chargeCard({
-			email: transaction.email,
-			amount: transaction.amount,
-			currency: transaction.currency,
-			token: method.token,
-			id: transaction.id,
-		})
+		const successful =
+			method === true
+				? await WalletsUseCases.updateAmount({
+						userId: transaction.userId,
+						amount: transaction.amount,
+						currency: transaction.currency,
+					})
+				: await FlutterwavePayment.chargeCard({
+						email: transaction.email,
+						amount: transaction.amount,
+						currency: transaction.currency,
+						token: method.token,
+						id: transaction.id,
+					})
 		await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: successful ? TransactionStatus.settled : TransactionStatus.failed },
@@ -112,11 +119,10 @@ export class Subscriptions {
 			const sub = await Subscriptions.verify(data, wallet, user)
 
 			const payWithWallet = methodId === true
-			if (payWithWallet) throw new SubError(sub, 'pay with wallet is not currently available for subscriptions')
 			const method = await MethodsUseCases.getForUser(userId, methodId)
-			if (!method) throw new SubError(sub, 'no method found')
+			if (!method && !payWithWallet) throw new SubError(sub, 'no method found')
 
-			const successful = await charge(user, sub, data, method)
+			const successful = await charge(user, sub, data, method ?? true)
 			if (!successful) throw new SubError(sub, 'charge failed')
 
 			const now = Date.now() + 3000
@@ -142,6 +148,7 @@ export class Subscriptions {
 					id: wallet.id,
 					data: {
 						active: true,
+						methodId,
 						current: { id: data.planId, activatedAt: now, expiredAt: renewedAt, jobId },
 						next: { id: data.planId, renewedAt },
 						data: sub.data,
@@ -152,7 +159,7 @@ export class Subscriptions {
 				id: wallet.id,
 				subscription: {
 					active: true,
-					methodId: method.id,
+					methodId,
 					current: { activatedAt: now, expiredAt: renewedAt, jobId },
 					next: { renewedAt },
 					data,
