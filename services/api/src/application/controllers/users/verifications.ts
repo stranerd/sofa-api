@@ -19,8 +19,8 @@ export class VerificationsController {
 		const { content } = validate(
 			{
 				content: Schema.object({
-					courses: Schema.array(Schema.string().min(1)).max(5),
-					quizzes: Schema.array(Schema.string().min(3)).max(5),
+					courses: Schema.array(Schema.string().min(1)).min(1).set(),
+					quizzes: Schema.array(Schema.string().min(1)).min(3).set(),
 				}),
 			},
 			req.body,
