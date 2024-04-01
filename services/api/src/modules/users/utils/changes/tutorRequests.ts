@@ -13,8 +13,8 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['users/tutorRequests', `users/tutorRequests/${after.id}`], after)
 
-		if (changes.pending && before.pending && !after.pending) {
-			if (after.accepted)
+		if (changes.pending && before.pending && !after.pending && after.accepted) {
+			if (after.accepted.is)
 				await UsersUseCases.updateTutorTopics({
 					userId: after.userId,
 					topicId: after.topicId,
@@ -23,7 +23,7 @@ export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromMo
 
 			await sendNotification([after.userId], {
 				title: 'Tutor Request Status',
-				body: `Your tutor request has been ${after.accepted ? 'accepted' : 'rejected'}`,
+				body: `Your tutor request has been ${after.accepted.is ? 'accepted' : 'rejected'}`,
 				sendEmail: true,
 				data: {
 					type: after.accepted ? NotificationType.TutorRequestAccepted : NotificationType.TutorRequestRejected,

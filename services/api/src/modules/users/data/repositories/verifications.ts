@@ -1,5 +1,6 @@
 import { appInstance } from '@utils/types'
 import { IVerificationRepository } from '../../domain/irepositories/verifications'
+import { AcceptVerificationInput } from '../../domain/types'
 import { VerificationMapper } from '../mappers/verifications'
 import { VerificationToModel } from '../models/verifications'
 import { Verification } from '../mongooseModels/verifications'
@@ -35,8 +36,12 @@ export class VerificationRepository implements IVerificationRepository {
 		return this.mapper.mapFrom(verification)!
 	}
 
-	async accept({ id, accept }: { id: string; accept: boolean }) {
-		const verification = await Verification.findOneAndUpdate({ _id: id, pending: true }, { $set: { accepted: accept, pending: false } })
+	async accept({ id, data }: { id: string; data: AcceptVerificationInput }) {
+		const verification = await Verification.findOneAndUpdate(
+			{ _id: id, pending: true },
+			{ $set: { accepted: { is: data.accept, message: data.message, at: Date.now() }, pending: false } },
+			{ new: true },
+		)
 		return !!verification
 	}
 }

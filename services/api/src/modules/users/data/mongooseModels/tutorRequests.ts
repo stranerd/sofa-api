@@ -31,9 +31,9 @@ const TutorRequestSchema = new appInstance.dbs.mongo.Schema<TutorRequestFromMode
 			default: true,
 		},
 		accepted: {
-			type: Boolean,
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: false,
+			default: null,
 		},
 		testId: {
 			type: String,

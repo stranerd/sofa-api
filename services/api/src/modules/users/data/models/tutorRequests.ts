@@ -1,9 +1,10 @@
 import { MediaOutput } from 'equipped'
+import { VerificationAcceptType } from '../../domain/types'
 
 export interface TutorRequestFromModel extends TutorRequestToModel {
 	_id: string
 	pending: boolean
-	accepted: boolean
+	accepted: VerificationAcceptType
 	testFinished: boolean
 	createdAt: number
 	updatedAt: number

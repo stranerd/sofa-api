@@ -1,4 +1,5 @@
 import { BaseEntity, MediaOutput } from 'equipped'
+import { VerificationAcceptType } from '../types'
 
 export class TutorRequestEntity extends BaseEntity<TutorRequestConstructorArgs> {
 	constructor(data: TutorRequestConstructorArgs) {
@@ -13,7 +14,7 @@ type TutorRequestConstructorArgs = {
 	verification: MediaOutput
 	qualification: MediaOutput[]
 	pending: boolean
-	accepted: boolean
+	accepted: VerificationAcceptType
 	testId: string
 	testFinished: boolean
 	createdAt: number

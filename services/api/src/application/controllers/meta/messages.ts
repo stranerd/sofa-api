@@ -7,7 +7,7 @@ export class MessageController {
 			{
 				name: Schema.string(),
 				email: Schema.string().email(),
-				phone: Schema.any().addRule(Validation.isValidPhone()),
+				phone: Schema.any().addRule(Validation.isValidPhone()).nullable(),
 				message: Schema.string().min(1),
 			},
 			req.body,
@@ -15,7 +15,7 @@ export class MessageController {
 
 		const content = await readEmailFromPug('emails/newFormMessage.pug', {
 			...data,
-			phone: `${data.phone.code}${data.phone.number}`,
+			phone: data.phone ? `${data.phone.code}${data.phone.number}` : '',
 		})
 		await publishers.SENDMAIL.publish({
 			from: EmailsList.NO_REPLY,

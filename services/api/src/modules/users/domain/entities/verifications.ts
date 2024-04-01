@@ -1,5 +1,5 @@
 import { BaseEntity } from 'equipped'
-import { VerificationContent } from '../types'
+import { VerificationAcceptType, VerificationContent } from '../types'
 
 export class VerificationEntity extends BaseEntity<VerificationConstructorArgs> {
 	constructor(data: VerificationConstructorArgs) {
@@ -12,7 +12,7 @@ type VerificationConstructorArgs = {
 	userId: string
 	content: VerificationContent
 	pending: boolean
-	accepted: boolean
+	accepted: VerificationAcceptType
 	createdAt: number
 	updatedAt: number
 }

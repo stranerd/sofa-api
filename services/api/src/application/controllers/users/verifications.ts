@@ -38,13 +38,14 @@ export class VerificationsController {
 	}
 
 	static async accept(req: Request) {
-		const { accept } = validate(
+		const { accept, message } = validate(
 			{
 				accept: Schema.boolean(),
+				message: Schema.string(),
 			},
 			req.body,
 		)
-		const isUpdated = await VerificationsUseCases.accept({ id: req.params.id, accept })
+		const isUpdated = await VerificationsUseCases.accept({ id: req.params.id, data: { accept, message } })
 		if (isUpdated) return isUpdated
 		throw new NotAuthorizedError()
 	}
