@@ -58,7 +58,7 @@ export class ClassesController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { title, description, price } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
 		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()
@@ -71,6 +71,7 @@ export class ClassesController {
 			data: {
 				title,
 				description,
+				price,
 				...(changedPhoto ? { photo } : {}),
 			},
 		})
