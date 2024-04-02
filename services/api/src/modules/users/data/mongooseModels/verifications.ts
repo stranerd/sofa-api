@@ -23,9 +23,9 @@ const VerificationSchema = new appInstance.dbs.mongo.Schema<VerificationFromMode
 			default: true,
 		},
 		accepted: {
-			type: Boolean,
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: false,
+			default: null,
 		},
 		createdAt: {
 			type: Number,

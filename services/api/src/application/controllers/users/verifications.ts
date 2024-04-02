@@ -19,8 +19,8 @@ export class VerificationsController {
 		const { content } = validate(
 			{
 				content: Schema.object({
-					courses: Schema.array(Schema.string().min(1)).max(5),
-					quizzes: Schema.array(Schema.string().min(3)).max(5),
+					courses: Schema.array(Schema.string().min(1)).min(1).set(),
+					quizzes: Schema.array(Schema.string().min(1)).min(3).set(),
 				}),
 			},
 			req.body,
@@ -38,13 +38,14 @@ export class VerificationsController {
 	}
 
 	static async accept(req: Request) {
-		const { accept } = validate(
+		const { accept, message } = validate(
 			{
 				accept: Schema.boolean(),
+				message: Schema.string(),
 			},
 			req.body,
 		)
-		const isUpdated = await VerificationsUseCases.accept({ id: req.params.id, accept })
+		const isUpdated = await VerificationsUseCases.accept({ id: req.params.id, data: { accept, message } })
 		if (isUpdated) return isUpdated
 		throw new NotAuthorizedError()
 	}

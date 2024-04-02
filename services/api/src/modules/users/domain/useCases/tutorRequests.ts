@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { TutorRequestToModel } from '../../data/models/tutorRequests'
 import { ITutorRequestRepository } from '../irepositories/tutorRequests'
+import { AcceptVerificationInput } from '../types'
 
 export class TutorRequestsUseCase {
 	repository: ITutorRequestRepository
@@ -21,7 +22,7 @@ export class TutorRequestsUseCase {
 		return await this.repository.create(input)
 	}
 
-	async accept(data: { id: string; accept: boolean }) {
+	async accept(data: { id: string; data: AcceptVerificationInput }) {
 		return await this.repository.accept(data)
 	}
 

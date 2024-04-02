@@ -12,8 +12,8 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(['users/verifications', `users/verifications/${after.id}`], after)
 
-		if (changes.pending && before.pending && !after.pending) {
-			if (after.accepted)
+		if (changes.pending && before.pending && !after.pending && after.accepted) {
+			if (after.accepted.is)
 				await AuthUsersUseCases.updateUserRole({
 					userId: after.userId,
 					roles: { [AuthRole.isVerified]: true },
@@ -21,7 +21,7 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 
 			await sendNotification([after.userId], {
 				title: 'Verification Status',
-				body: `Your verification request has been ${after.accepted ? 'accepted' : 'rejected'}`,
+				body: `Your verification request has been ${after.accepted.is ? 'accepted' : 'rejected'}`,
 				sendEmail: true,
 				data: {
 					type: after.accepted ? NotificationType.VerificationAccepted : NotificationType.VerificationRejected,

@@ -1,5 +1,6 @@
 import { appInstance } from '@utils/types'
 import { ITutorRequestRepository } from '../../domain/irepositories/tutorRequests'
+import { AcceptVerificationInput } from '../../domain/types'
 import { TutorRequestMapper } from '../mappers/tutorRequests'
 import { TutorRequestToModel } from '../models/tutorRequests'
 import { TutorRequest } from '../mongooseModels/tutorRequests'
@@ -35,13 +36,17 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 		return this.mapper.mapFrom(tutorRequest)!
 	}
 
-	async accept({ id, accept }: { id: string; accept: boolean }) {
-		const tutorRequest = await TutorRequest.findOneAndUpdate({ _id: id, pending: true }, { $set: { accepted: accept, pending: false } })
+	async accept({ id, data }: { id: string; data: AcceptVerificationInput }) {
+		const tutorRequest = await TutorRequest.findOneAndUpdate(
+			{ _id: id, pending: true },
+			{ $set: { accepted: { is: data.accept, message: data.message, at: Date.now() }, pending: false } },
+			{ new: true },
+		)
 		return !!tutorRequest
 	}
 
 	async markTestFinished(testId: string) {
-		const tutorRequest = await TutorRequest.findOneAndUpdate({ testId }, { $set: { testFinished: true } })
+		const tutorRequest = await TutorRequest.findOneAndUpdate({ testId }, { $set: { testFinished: true } }, { new: true })
 		return !!tutorRequest
 	}
 }

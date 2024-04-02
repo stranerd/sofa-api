@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { VerificationToModel } from '../../data/models/verifications'
 import { IVerificationRepository } from '../irepositories/verifications'
+import { AcceptVerificationInput } from '../types'
 
 export class VerificationsUseCase {
 	repository: IVerificationRepository
@@ -21,7 +22,7 @@ export class VerificationsUseCase {
 		return await this.repository.create(input)
 	}
 
-	async accept(data: { id: string; accept: boolean }) {
+	async accept(data: { id: string; data: AcceptVerificationInput }) {
 		return await this.repository.accept(data)
 	}
 }
