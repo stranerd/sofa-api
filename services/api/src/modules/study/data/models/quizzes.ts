@@ -13,4 +13,5 @@ export interface QuizFromModel extends QuizToModel {
 export interface QuizToModel extends Omit<CoursableData, 'ratings'> {
 	isForTutors: boolean
 	modes: Record<QuizModes, boolean>
+	timeLimit: number | null
 }
