@@ -5,11 +5,16 @@ import { FolderFromModel, FolderToModel } from '../models/folders'
 export class FolderMapper extends BaseMapper<FolderFromModel, FolderToModel, FolderEntity> {
 	mapFrom(model: FolderFromModel | null) {
 		if (!model) return null
-		const { _id, ...rest } = model
-		return new FolderEntity({
-			id: _id.toString(),
-			...rest,
-		})
+		return !model
+			? null
+			: new FolderEntity({
+					id: model._id.toString(),
+					title: model.title,
+					saved: model.saved,
+					user: model.user,
+					createdAt: model.createdAt,
+					updatedAt: model.updatedAt,
+				})
 	}
 
 	mapTo(entity: FolderEntity) {

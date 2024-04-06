@@ -5,11 +5,20 @@ import { QuestionFromModel, QuestionToModel } from '../models/questions'
 export class QuestionMapper extends BaseMapper<QuestionFromModel, QuestionToModel, QuestionEntity> {
 	mapFrom(model: QuestionFromModel | null) {
 		if (!model) return null
-		const { _id, ...rest } = model
-		return new QuestionEntity({
-			id: _id.toString(),
-			...rest,
-		})
+		return !model
+			? null
+			: new QuestionEntity({
+					id: model._id.toString(),
+					userId: model.userId,
+					quizId: model.quizId,
+					question: model.question,
+					explanation: model.explanation,
+					questionMedia: model.questionMedia,
+					timeLimit: model.timeLimit,
+					data: model.data,
+					createdAt: model.createdAt,
+					updatedAt: model.updatedAt,
+				})
 	}
 
 	mapTo(entity: QuestionEntity) {

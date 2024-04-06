@@ -5,11 +5,28 @@ import { QuizFromModel, QuizToModel } from '../models/quizzes'
 export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntity> {
 	mapFrom(model: QuizFromModel | null) {
 		if (!model) return null
-		const { _id, ...rest } = model
-		return new QuizEntity({
-			id: _id.toString(),
-			...rest,
-		})
+		return !model
+			? null
+			: new QuizEntity({
+					id: model._id.toString(),
+					title: model.title,
+					description: model.description,
+					photo: model.photo,
+					courseId: model.courseId,
+					user: model.user,
+					topicId: model.topicId,
+					tagIds: model.tagIds,
+					status: model.status,
+					isForTutors: model.isForTutors,
+					modes: model.modes,
+					ratings: model.ratings,
+					questions: model.questions,
+					access: model.access,
+					meta: model.meta,
+					timeLimit: model.timeLimit,
+					createdAt: model.createdAt,
+					updatedAt: model.updatedAt,
+				})
 	}
 
 	mapTo(entity: QuizEntity) {

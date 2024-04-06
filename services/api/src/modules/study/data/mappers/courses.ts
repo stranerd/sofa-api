@@ -5,11 +5,26 @@ import { CourseFromModel, CourseToModel } from '../models/courses'
 export class CourseMapper extends BaseMapper<CourseFromModel, CourseToModel, CourseEntity> {
 	mapFrom(model: CourseFromModel | null) {
 		if (!model) return null
-		const { _id, ...rest } = model
-		return new CourseEntity({
-			id: _id.toString(),
-			...rest,
-		})
+		return !model
+			? null
+			: new CourseEntity({
+					id: model._id.toString(),
+					coursables: model.coursables,
+					sections: model.sections,
+					title: model.title,
+					description: model.description,
+					photo: model.photo,
+					ratings: model.ratings,
+					user: model.user,
+					topicId: model.topicId,
+					tagIds: model.tagIds,
+					status: model.status,
+					frozen: model.frozen,
+					price: model.price,
+					meta: model.meta,
+					createdAt: model.createdAt,
+					updatedAt: model.updatedAt,
+				})
 	}
 
 	mapTo(entity: CourseEntity) {
