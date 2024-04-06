@@ -18,6 +18,7 @@ type QuizConstructorArgs = CoursableData & {
 	access: QuizAccess
 	isForTutors: boolean
 	modes: Record<QuizModes, boolean>
+	timeLimit: number | null
 	createdAt: number
 	updatedAt: number
 }
