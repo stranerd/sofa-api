@@ -52,7 +52,7 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>(
 		timeLimit: {
 			type: Number,
 			required: false,
-			timeLimit: null,
+			default: null,
 		},
 	},
 	{ timestamps: { currentTime: Date.now }, minimize: false },
