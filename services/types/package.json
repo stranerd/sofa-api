@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "build": "echo 'Built'",
-    "lint": "echo 'Linted'"
+    "build": "echo 'Built'"
   },
   "dependencies": {
     "equipped": "4.2.10"

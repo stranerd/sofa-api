@@ -9,8 +9,8 @@ if (fs.existsSync('env.json')) {
 	// For root
 	const entries = Object.entries({
 		...(envs['root'] ?? {}),
-		...(envs['general'] ?? {})
-	}).map(([key, value]) => ([key, typeof value === 'object' ? JSON.stringify(value) : value]))
+		...(envs['general'] ?? {}),
+	}).map(([key, value]) => [key, typeof value === 'object' ? JSON.stringify(value) : value])
 	const envFormattedEntries = entries.reduce((accumulator, currentValue) => {
 		const [key, value] = currentValue
 		return accumulator + `${key.toUpperCase()}=${value}\n`
@@ -22,12 +22,12 @@ if (fs.existsSync('env.json')) {
 		const entries = Object.entries({
 			...(envs['root'] ?? {}),
 			...(envs['general'] ?? {}),
-			...(envs[path] ?? {})
-		}).map(([key, value]) => ([key, typeof value === 'object' ? JSON.stringify(value) : value]))
+			...(envs[path] ?? {}),
+		}).map(([key, value]) => [key, typeof value === 'object' ? JSON.stringify(value) : value])
 		const envFormattedEntries = entries.reduce((accumulator, currentValue) => {
 			const [key, value] = currentValue
 			return accumulator + `${key.toUpperCase()}=${value}\n`
 		}, '')
 		fs.writeFileSync(`./services/${path}/.env`, envFormattedEntries)
 	})
-} else throw new Error('Env.json doesn\'t exist. Try creating one by copying the env.example.json')
+} else throw new Error("Env.json doesn't exist. Try creating one by copying the env.example.json")
