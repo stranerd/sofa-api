@@ -22,6 +22,7 @@ const Dj = makeEnum('DelayedJobs', {
 	RenewSubscription: 'RenewSubscription',
 	RenewGenericSubscription: 'RenewGenericSubscription',
 	PlayTimer: 'PlayTimer',
+	PlayAnswerTimer: 'PlayAnswerTimer',
 } as const)
 
 const Clj = makeEnum('CronLikeJobs', {} as const)

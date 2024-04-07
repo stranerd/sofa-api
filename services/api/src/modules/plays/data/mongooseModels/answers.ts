@@ -30,6 +30,11 @@ const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>(
 			required: false,
 			default: {},
 		},
+		timedOutAt: {
+			type: Number,
+			required: false,
+			default: null,
+		},
 		endedAt: {
 			type: Number,
 			required: false,

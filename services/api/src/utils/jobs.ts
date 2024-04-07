@@ -7,7 +7,7 @@ import {
 	sendTextAndCatchError,
 } from '@modules/notifications'
 import { MethodsUseCases, Subscriptions, processTransactions, processWithdrawals, updateOrgsMembersDays } from '@modules/payment'
-import { PlaysUseCases } from '@modules/plays'
+import { AnswersUseCases, PlaysUseCases } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { CronTypes, DelayedJobs } from 'equipped'
@@ -25,6 +25,8 @@ export const startJobs = async () => {
 				if (data.type === DelayedJobs.RenewSubscription) await Subscriptions.renewPlan(data.data.userId)
 				if (data.type === DelayedJobs.RenewGenericSubscription) await Subscriptions.renewGeneric(data.data.userId, data.data.data)
 				if (data.type === DelayedJobs.PlayTimer) await PlaysUseCases.end({ id: data.data.typeId, userId: data.data.userId })
+				if (data.type === DelayedJobs.PlayAnswerTimer)
+					await AnswersUseCases.end({ type: data.data.type, typeId: data.data.typeId, userId: data.data.userId })
 			},
 			onCronLike: async () => {},
 			onCron: async (type) => {

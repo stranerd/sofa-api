@@ -23,6 +23,7 @@ type AnswerConstructorArgs = {
 	typeUserId: string
 	userId: string
 	data: Record<string, { value: PlayAnswer; at: number }>
+	timedOutAt: number | null
 	endedAt: number | null
 	createdAt: number
 	updatedAt: number

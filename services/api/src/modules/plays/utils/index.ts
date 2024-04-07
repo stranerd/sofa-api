@@ -19,7 +19,7 @@ export const createPlay = async (
 		all: true,
 	})
 	const sources = quiz.questions.map((id) => questions.find((q) => q.id === id)!).filter(Boolean)
-	const totalTimeInSec = questions.reduce((acc, q) => acc + q.timeLimit, 0)
+	const totalTimeInSec = quiz.timeLimit ?? questions.reduce((acc, q) => acc + q.timeLimit, 0)
 	const play = await PlaysUseCases.add({
 		title: otherData.title ?? quiz.title,
 		quizId: quiz.id,

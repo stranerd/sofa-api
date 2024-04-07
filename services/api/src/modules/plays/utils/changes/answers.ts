@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+import { DbChangeCallbacks, DelayedJobs } from 'equipped'
 import { AnswerFromModel } from '../../data/models/answers'
 import { AnswerEntity } from '../../domain/entities/answers'
 
@@ -15,6 +15,23 @@ export const AnswerDbChangeCallbacks: DbChangeCallbacks<AnswerFromModel, AnswerE
 				.flat(),
 			after,
 		)
+
+		if (after.timedOutAt) {
+			const cacheKey = `plays-answers-${after.type}-${after.typeId}-timer`
+			const cachedJobId = await appInstance.cache.get(cacheKey)
+			if (!cachedJobId) {
+				let endsIn = after.timedOutAt - Date.now()
+				if (endsIn < 3000) endsIn = 3000
+				const jobId = await appInstance.job.addDelayedJob(
+					{
+						type: DelayedJobs.PlayAnswerTimer,
+						data: { type: after.type, typeId: after.typeId, userId: after.userId },
+					},
+					endsIn,
+				)
+				await appInstance.cache.set(cacheKey, jobId, Math.ceil(endsIn / 1000))
+			}
+		}
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.updated(

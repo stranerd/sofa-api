@@ -30,22 +30,22 @@ export class AnswerRepository implements IAnswerRepository {
 	async answer({ type, typeId, userId, questionId, answer }: AnswerToModel) {
 		let res = null as AnswerFromModel | null
 		await Answer.collection.conn.transaction(async (session) => {
-			const typeUserId = await this.#verifyType(type, typeId, { questionId, userId }, session)
-			if (!typeUserId) throw new BadRequestError('cannot answer this question')
+			const play = await this.#verifyType(type, typeId, { questionId, userId }, session)
+			if (!play) throw new BadRequestError('cannot answer this question')
+			const typeUserId = play.user.id
+			const now = Date.now()
+			const timedOutAt = play.getUsesTimer() ? now + play.totalTimeInSec * 1000 : null
 			const answerModel = await Answer.findOneAndUpdate(
 				{ type, typeId, typeUserId, userId },
-				{
-					$setOnInsert: { type, typeId, typeUserId, userId },
-				},
+				{ $setOnInsert: { type, typeId, typeUserId, userId, timedOutAt } },
 				{ upsert: true, new: true, session },
 			)
+			if (answerModel.timedOutAt && answerModel.timedOutAt < now) throw new BadRequestError('you have already played this')
 			if (answerModel.endedAt ?? 0 > 0) throw new BadRequestError('you have already played this')
 
 			const newAnswer = await Answer.findByIdAndUpdate(
 				answerModel._id,
-				{
-					$set: { [`data.${questionId}`]: { value: answer, at: Date.now() } },
-				},
+				{ $set: { [`data.${questionId}`]: { value: answer, at: now } } },
 				{ upsert: true, new: true, session },
 			)
 			res = newAnswer
@@ -86,6 +86,6 @@ export class AnswerRepository implements IAnswerRepository {
 		if (!play.questions.includes(data.questionId)) return null
 		if (!play.getActiveParticipants().includes(data.userId)) return null
 		if (play.status !== PlayStatus.started) return null
-		return play.user.id
+		return play
 	}
 }

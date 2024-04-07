@@ -1,5 +1,6 @@
-import { DelayedJobs } from 'equipped'
 import { Subscription } from '@modules/payment'
+import { PlayTypes } from '@modules/plays'
+import { DelayedJobs } from 'equipped'
 
 declare module 'equipped/lib/bull' {
 	interface DelayedJobEvents {
@@ -14,6 +15,10 @@ declare module 'equipped/lib/bull' {
 		[DelayedJobs.PlayTimer]: {
 			type: typeof DelayedJobs.PlayTimer
 			data: { type: string; typeId: string; userId: string }
+		}
+		[DelayedJobs.PlayAnswerTimer]: {
+			type: typeof DelayedJobs.PlayAnswerTimer
+			data: { type: PlayTypes; typeId: string; userId: string }
 		}
 	}
 
