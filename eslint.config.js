@@ -1,12 +1,12 @@
-import eslint from '@eslint/js'
-import stylistic from '@stylistic/eslint-plugin'
-import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
-import tsEslintParser from '@typescript-eslint/parser'
-import prettier from 'eslint-plugin-prettier/recommended'
-import promise from 'eslint-plugin-promise'
-import globals from 'globals'
+const eslint = require('@eslint/js')
+const stylistic = require('@stylistic/eslint-plugin')
+const tsEslintPlugin = require('@typescript-eslint/eslint-plugin')
+const tsEslintParser = require('@typescript-eslint/parser')
+const prettier = require('eslint-plugin-prettier/recommended')
+const promise = require('eslint-plugin-promise')
+const globals = require('globals')
 
-export default [
+module.exports = [
 	eslint.configs.recommended,
 	prettier,
 	{
@@ -17,7 +17,7 @@ export default [
 			parser: tsEslintParser,
 			parserOptions: {
 				project: ['./tsconfig.json', './services/*/tsconfig.json'],
-				tsconfigRootDir: import.meta.dirname,
+				tsconfigRootDir: __dirname,
 				sourceType: 'module',
 				ecmaVersion: 2021,
 			},

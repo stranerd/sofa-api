@@ -3,7 +3,7 @@
     "build": "echo 'Built'"
   },
   "dependencies": {
-    "equipped": "4.4.5"
+    "equipped": "4.4.6"
   },
   "devDependencies": {
     "@types/node": "^20.12.5"

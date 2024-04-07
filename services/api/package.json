@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "lib/index.js",
-	"type": "module",
+	"type": "commonjs",
 	"scripts": {
 		"start": "node lib/index.js",
 		"build": "tsc --build --force && resolve-tspaths",
@@ -14,7 +14,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"@google-cloud/storage": "^7.9.0",
-		"equipped": "4.4.5",
+		"equipped": "4.4.6",
 		"firebase-admin": "^12.0.0",
 		"googleapis": "^134.0.0",
 		"nodemailer": "^6.9.13",

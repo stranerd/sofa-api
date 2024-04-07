@@ -1,4 +1,4 @@
-import fs from 'fs'
+const fs = require('fs')
 
 const paths = process.argv.slice(2)
 

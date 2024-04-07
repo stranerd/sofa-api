@@ -48,8 +48,8 @@ importers:
         specifier: ^7.9.0
         version: 7.9.0
       equipped:
-        specifier: 4.4.5
-        version: 4.4.5
+        specifier: 4.4.6
+        version: 4.4.6
       firebase-admin:
         specifier: ^12.0.0
         version: 12.0.0
@@ -85,8 +85,8 @@ importers:
   services/types:
     dependencies:
       equipped:
-        specifier: 4.4.5
-        version: 4.4.5
+        specifier: 4.4.6
+        version: 4.4.6
     devDependencies:
       '@types/node':
         specifier: ^20.12.5
@@ -1850,8 +1850,8 @@ packages:
     resolution: {integrity: sha512-GHrMyVZQWvTIdDtpiEXdHZnFQKzeO09apj8Cbl4pKWy4i0Oprcq17usfDt5aO63swf0JOeMWjWQE/LzgSRuWpA==}
     dev: false
 
-  /equipped@4.4.5:
-    resolution: {integrity: sha512-ddq3lzD6wwZ+SbaSgPVAFcVVbAPha4cXUXuj6yhuymAdWYeTV/QIzUiXdQrcn/LQqi04wkfSuMx3vQpaPSmLpg==}
+  /equipped@4.4.6:
+    resolution: {integrity: sha512-LzmiPP7rrY/g3VHpaznD0t9jjt5QxHSyWMSxQEMyGymsDqpFJ+fksK8fRewGQx867EjJib3ngXcfSzzU85gmow==}
     dependencies:
       amqp-connection-manager: 4.1.14(amqplib@0.10.3)
       amqplib: 0.10.3
@@ -1877,12 +1877,12 @@ packages:
       mongoose-lean-virtuals: 0.9.1(mongoose@8.3.0)
       morgan: 1.10.0
       music-metadata: 7.14.0
-      path-to-regexp: 6.2.1
+      path-to-regexp: 6.2.2
       pug: 3.0.2
       redis: 4.6.13
       socket.io: 4.7.5
       supertest: 6.3.4
-      valleyed: 4.2.10
+      valleyed: 4.2.11
     transitivePeerDependencies:
       - '@aws-sdk/credential-providers'
       - '@mongodb-js/zstd'
@@ -3658,8 +3658,8 @@ packages:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
     dev: false
 
-  /path-to-regexp@6.2.1:
-    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
+  /path-to-regexp@6.2.2:
+    resolution: {integrity: sha512-GQX3SSMokngb36+whdpRXE+3f9V8UzyAorlYvOGx87ufGHehNTn5lCxrKtLyZ4Yl/wEKnNnr98ZzOwwDZV5ogw==}
     dev: false
 
   /path-type@4.0.0:
@@ -4563,8 +4563,8 @@ packages:
     hasBin: true
     dev: false
 
-  /valleyed@4.2.10:
-    resolution: {integrity: sha512-8dR/PmYrOv/YqgHhOjxLUzTKXt82aNHCmLBUSz54UUTh7J9RBsM38Pd0VqQa1uxd/nRf2P6qPhG0iQwiWh39og==}
+  /valleyed@4.2.11:
+    resolution: {integrity: sha512-jDk8EUIC8j32mjMim8sacBtAqNYildcjcMH2YhY3uLCVPCXRd3GLptByzz4BUWwG0jXi4AoxltlRTHzGGFnvrA==}
     dependencies:
       url-regex-safe: 4.0.0
     transitivePeerDependencies:
