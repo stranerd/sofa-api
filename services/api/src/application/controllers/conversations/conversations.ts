@@ -61,7 +61,7 @@ export class ConversationController {
 	}
 
 	static async update(req: Request) {
-		const { title } = validate(
+		const data = validate(
 			{
 				title: Schema.string().min(1),
 			},
@@ -71,7 +71,7 @@ export class ConversationController {
 		const updated = await ConversationsUseCases.update({
 			id: req.params.id,
 			userId: req.authUser!.id,
-			data: { title },
+			data,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
@@ -91,7 +91,7 @@ export class ConversationController {
 	}
 
 	static async end(req: Request) {
-		const { rating, message } = validate(
+		const data = validate(
 			{
 				rating: Schema.number().round(0).gte(0).lte(5),
 				message: Schema.string(),
@@ -100,8 +100,7 @@ export class ConversationController {
 		)
 
 		const updatedConversation = await ConversationsUseCases.end({
-			rating,
-			message,
+			...data,
 			conversationId: req.params.id,
 			userId: req.authUser!.id,
 		})

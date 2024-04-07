@@ -17,7 +17,7 @@ export class CommentsController {
 	}
 
 	static async create(req: Request) {
-		const { body, entity } = validate(
+		const data = validate(
 			{
 				...this.schema(),
 				entity: Schema.object({
@@ -28,24 +28,24 @@ export class CommentsController {
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'comments')
+		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'comments')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await CommentsUseCases.create({
-			body,
-			entity: { ...entity, userId },
+			...data,
+			entity: { ...data.entity, userId },
 			user: user.getEmbedded(),
 		})
 	}
 
 	static async update(req: Request) {
-		const { body } = validate(this.schema(), req.body)
+		const data = validate(this.schema(), req.body)
 
 		const updated = await CommentsUseCases.update({
 			id: req.params.id,
 			userId: req.authUser!.id,
-			data: { body },
+			data,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()

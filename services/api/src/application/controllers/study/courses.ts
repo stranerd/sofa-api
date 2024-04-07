@@ -50,7 +50,7 @@ export class CourseController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, price, topic, tags } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
+		const { photo: _, topic, tags, ...rest } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
 
 		const utags = await verifyTags(topic, tags)
 
@@ -61,9 +61,7 @@ export class CourseController {
 			userId: req.authUser!.id,
 			data: {
 				...utags,
-				title,
-				description,
-				price,
+				...rest,
 				...(changedPhoto ? { photo } : {}),
 			},
 		})

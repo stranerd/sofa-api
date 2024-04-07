@@ -105,7 +105,7 @@ export class FileController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, topic, tags } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { photo: _, topic, tags, ...rest } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
 
 		const utags = await verifyTags(topic, tags)
 
@@ -116,8 +116,7 @@ export class FileController {
 			userId: req.authUser!.id,
 			data: {
 				...utags,
-				title,
-				description,
+				...rest,
 				...(changedPhoto ? { photo } : {}),
 			},
 		})

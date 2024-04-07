@@ -65,7 +65,12 @@ export class QuizController {
 		const uploadedPhoto = req.files.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title, description, topic, tags, modes, isForTutors } = validate(this.schema(isAdmin), {
+		const {
+			photo: _,
+			topic,
+			tags,
+			...rest
+		} = validate(this.schema(isAdmin), {
 			...req.body,
 			photo: uploadedPhoto,
 		})
@@ -79,10 +84,7 @@ export class QuizController {
 			userId: req.authUser!.id,
 			data: {
 				...utags,
-				title,
-				description,
-				isForTutors,
-				modes,
+				...rest,
 				...(changedPhoto ? { photo } : {}),
 			},
 		})

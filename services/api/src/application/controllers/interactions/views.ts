@@ -13,7 +13,7 @@ export class ViewsController {
 	}
 
 	static async create(req: Request) {
-		const { entity } = validate(
+		const data = validate(
 			{
 				entity: Schema.object({
 					id: Schema.string().min(1),
@@ -23,12 +23,12 @@ export class ViewsController {
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'views')
+		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'views')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ViewsUseCases.create({
-			entity: { ...entity, userId },
+			entity: { ...data.entity, userId },
 			user: user.getEmbedded(),
 		})
 	}

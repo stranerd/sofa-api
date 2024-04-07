@@ -90,7 +90,7 @@ export class QuestionController {
 		const uploadedMedia = req.files.questionMedia?.at(0) ?? null
 		const changedMedia = !!uploadedMedia || req.body.photo === null
 
-		const { question, timeLimit, data, explanation } = validate(this.schema(req.body ?? {}), {
+		const { questionMedia: _, ...rest } = validate(this.schema(req.body ?? {}), {
 			...req.body,
 			questionMedia: uploadedMedia,
 		})
@@ -102,10 +102,7 @@ export class QuestionController {
 			id: req.params.id,
 			userId: req.authUser!.id,
 			data: {
-				question,
-				timeLimit,
-				data,
-				explanation,
+				...rest,
 				...(changedMedia ? { questionMedia: media } : {}),
 			},
 		})

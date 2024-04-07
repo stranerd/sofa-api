@@ -13,7 +13,7 @@ export class ReviewsController {
 	}
 
 	static async add(req: Request) {
-		const { rating, message, entity } = validate(
+		const data = validate(
 			{
 				rating: Schema.number().round(0).gte(0).lte(5),
 				message: Schema.string(),
@@ -25,14 +25,13 @@ export class ReviewsController {
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'reviews')
+		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'reviews')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ReviewsUseCases.add({
-			rating,
-			message,
-			entity: { ...entity, userId },
+			...data,
+			entity: { ...data.entity, userId },
 			user: user.getEmbedded(),
 		})
 	}

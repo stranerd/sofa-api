@@ -17,7 +17,7 @@ export class ReportController {
 	}
 
 	static async create(req: Request) {
-		const { entity, message } = validate(
+		const data = validate(
 			{
 				message: Schema.string().min(1),
 				entity: Schema.object({
@@ -28,13 +28,13 @@ export class ReportController {
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'reports')
+		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'reports')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ReportsUseCases.create({
-			message,
-			entity: { ...entity, userId },
+			...data,
+			entity: { ...data.entity, userId },
 			user: user.getEmbedded(),
 		})
 	}
