@@ -5,7 +5,6 @@ import {
 	BadRequestError,
 	NotAuthenticatedError,
 	NotAuthorizedError,
-	QueryKeys,
 	QueryParams,
 	Request,
 	Schema,
@@ -28,22 +27,11 @@ export class FileController {
 
 	static async find(req: Request) {
 		const file = await FilesUseCases.find(req.params.id)
-		if (!file) return null
-		if (file.user.id !== req.authUser?.id && file.status !== DraftStatus.published) return null
 		return file
 	}
 
 	static async get(req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [
-			{
-				condition: QueryKeys.or,
-				value: [
-					{ field: 'status', value: DraftStatus.published },
-					...(req.authUser ? [{ field: 'user.id', value: req.authUser.id }] : []),
-				],
-			},
-		]
 		return await FilesUseCases.get(query)
 	}
 
