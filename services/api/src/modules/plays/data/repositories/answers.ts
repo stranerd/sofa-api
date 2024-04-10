@@ -43,11 +43,13 @@ export class AnswerRepository implements IAnswerRepository {
 			if (answerModel.timedOutAt && answerModel.timedOutAt < now) throw new BadRequestError('you have already played this')
 			if (answerModel.endedAt ?? 0 > 0) throw new BadRequestError('you have already played this')
 
-			const newAnswer = await Answer.findByIdAndUpdate(
-				answerModel._id,
-				{ $set: { [`data.${questionId}`]: { value: answer, at: now } } },
-				{ upsert: true, new: true, session },
-			)
+			const newAnswer = questionId
+				? await Answer.findByIdAndUpdate(
+						answerModel._id,
+						{ $set: { [`data.${questionId}`]: { value: answer, at: now } } },
+						{ upsert: true, new: true, session },
+					)
+				: answerModel
 			res = newAnswer
 			return res
 		})
@@ -79,11 +81,11 @@ export class AnswerRepository implements IAnswerRepository {
 		return this.mapper.mapFrom(res)
 	}
 
-	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string; userId: string }, session: any) {
+	async #verifyType(type: PlayTypes, typeId: string, data: { questionId: string | null; userId: string }, session: any) {
 		const play = this.playMapper.mapFrom(await Play.findById(typeId, {}, { session }))
 		if (!play) return null
 		if (play.data.type !== type) return null
-		if (!play.questions.includes(data.questionId)) return null
+		if (data.questionId && !play.questions.includes(data.questionId)) return null
 		if (!play.getActiveParticipants().includes(data.userId)) return null
 		if (play.status !== PlayStatus.started) return null
 		return play

@@ -17,6 +17,6 @@ export interface AnswerToModel {
 	type: PlayTypes
 	typeId: string
 	userId: string
-	questionId: string
+	questionId: string | null
 	answer: PlayAnswer
 }

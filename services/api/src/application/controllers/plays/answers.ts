@@ -31,7 +31,7 @@ export class AnswerController {
 	static async answer(req: Request) {
 		const data = validate(
 			{
-				questionId: Schema.string().min(1),
+				questionId: Schema.string().min(1).nullable(),
 				answer: Schema.or([
 					Schema.array(Schema.number()),
 					Schema.array(Schema.string()),
