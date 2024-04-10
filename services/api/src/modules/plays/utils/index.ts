@@ -4,6 +4,7 @@ import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions } from 'equipped'
 import { PlaysUseCases } from '..'
 import { PlayToModel } from '../data/models/plays'
+import { PlayTiming } from '../domain/types'
 
 export const createPlay = async (
 	userId: string,
@@ -25,6 +26,7 @@ export const createPlay = async (
 		quizId: quiz.id,
 		user: user.getEmbedded(),
 		totalTimeInSec,
+		timing: quiz.timeLimit ? PlayTiming.general : PlayTiming.perQuestion,
 		data,
 		sources,
 	})

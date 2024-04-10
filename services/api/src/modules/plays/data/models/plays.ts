@@ -1,4 +1,4 @@
-import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus } from '../../domain/types'
+import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming } from '../../domain/types'
 
 export interface PlayFromModel extends PlayToModel {
 	_id: string
@@ -15,6 +15,7 @@ export interface PlayToModel {
 	quizId: string
 	user: EmbeddedUser
 	totalTimeInSec: number
+	timing: PlayTiming
 	data: PlayData
 	sources: PlaySources
 }

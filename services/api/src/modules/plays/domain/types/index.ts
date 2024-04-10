@@ -33,3 +33,8 @@ export type PlayData =
 	  }
 
 export type PlayScore = { userId: string; value: number }[]
+
+export enum PlayTiming {
+	general = 'general',
+	perQuestion = 'perQuestion',
+}

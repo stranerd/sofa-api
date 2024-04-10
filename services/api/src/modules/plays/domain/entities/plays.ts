@@ -1,7 +1,7 @@
 import { QuizMetaType } from '@modules/study'
 import { UserMeta, generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTypes } from '../types'
+import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming, PlayTypes } from '../types'
 
 export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 	constructor(data: PlayConstructorArgs) {
@@ -98,6 +98,7 @@ export type PlayConstructorArgs = {
 	status: PlayStatus
 	sources: PlaySources
 	totalTimeInSec: number
+	timing: PlayTiming
 	scores: PlayScore
 	startedAt: number | null
 	endedAt: number | null

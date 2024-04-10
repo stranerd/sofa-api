@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/types'
-import { PlayStatus } from '../../domain/types'
+import { PlayStatus, PlayTiming } from '../../domain/types'
 import { PlaysDbChangeCallbacks } from '../../utils/changes/plays'
 import { PlayMapper } from '../mappers/plays'
 import { PlayFromModel } from '../models/plays'
@@ -41,6 +41,11 @@ const Schema = new appInstance.dbs.mongo.Schema<PlayFromModel>(
 			type: Number,
 			required: false,
 			default: 0,
+		},
+		timing: {
+			type: String,
+			required: false,
+			default: PlayTiming.perQuestion,
 		},
 		scores: {
 			type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as PlayFromModel['scores'],
