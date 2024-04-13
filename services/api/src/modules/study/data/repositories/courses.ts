@@ -172,14 +172,7 @@ export class CourseRepository implements ICourseRepository {
 		await Course.collection.conn.transaction(async (session) => {
 			const course = await Course.findById(id, null, { session })
 			if (!course || course.user.id !== userId) return
-			const secs = [
-				...new Set(
-					sections
-						.map((s) => s.items)
-						.flat()
-						.map((s) => `${s.type}:${s.id}`),
-				),
-			]
+			const secs = sections.flatMap((s) => s.items).map((s) => `${s.type}:${s.id}`)
 			const coursables = course.coursables.map((c) => `${c.type}:${c.id}`)
 			if (!compareArrayContents(secs, coursables))
 				throw new BadRequestError('all items in the coursables list must appear in a section')

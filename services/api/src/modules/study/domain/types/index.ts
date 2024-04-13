@@ -42,9 +42,21 @@ export type CoursableData = Publishable & {
 	courseId: string | null
 }
 
+export type CourseSectionItem =
+	| {
+			id: string
+			type: Coursable.quiz
+			quizMode: QuizModes
+	  }
+	| {
+			id: string
+			type: Coursable.file
+			fileType: FileType
+	  }
+
 export type CourseSections = {
 	label: string
-	items: { id: string; type: Coursable }[]
+	items: CourseSectionItem[]
 }[]
 
 export enum QuizMeta {

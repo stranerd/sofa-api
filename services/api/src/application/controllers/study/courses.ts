@@ -1,9 +1,10 @@
 import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
-import { Coursable, CoursesUseCases, DraftStatus } from '@modules/study'
+import { Coursable, CoursesUseCases, DraftStatus, FileType, QuizModes, canAccessCoursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthUser, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
+import { makeSet } from '@utils/commons'
 
 export class CourseController {
 	private static schema = (user: AuthUser | null) => ({
@@ -140,9 +141,17 @@ export class CourseController {
 					Schema.object({
 						label: Schema.string().min(1),
 						items: Schema.array(
-							Schema.object({
-								id: Schema.string().min(1),
-								type: Schema.in(Object.values(Coursable)),
+							Schema.discriminate((d) => d.type, {
+								[Coursable.quiz]: Schema.object({
+									id: Schema.string().min(1),
+									type: Schema.is(Coursable.quiz as const),
+									quizMode: Schema.in(Object.values(QuizModes)),
+								}),
+								[Coursable.file]: Schema.object({
+									id: Schema.string().min(1),
+									type: Schema.is(Coursable.file as const),
+									fileType: Schema.in(Object.values(FileType)),
+								}),
 							}),
 						),
 					}),
@@ -150,6 +159,35 @@ export class CourseController {
 			},
 			req.body,
 		)
+
+		const allFiles = makeSet(
+			sections.flatMap((s) => s.items.filter((i) => i.type === Coursable.file)),
+			(f) => f.id,
+		)
+		const allQuizzes = makeSet(
+			sections.flatMap((s) => s.items.filter((i) => i.type === Coursable.quiz)),
+			(q) => q.id,
+		)
+
+		await Promise.all([
+			(async () => {
+				const accesses = await Promise.all(
+					allFiles.map(async (f) => {
+						if (f.type !== Coursable.file) return null
+						const access = await canAccessCoursable(Coursable.file, f.id, req.authUser!)
+						if (!access || access.type !== f.fileType) return null
+						return access
+					}),
+				)
+				if (accesses.every((a) => a)) return
+				throw new NotAuthorizedError('you have some invalid files')
+			})(),
+			(async () => {
+				const accesses = await Promise.all(allQuizzes.map((q) => canAccessCoursable(Coursable.quiz, q.id, req.authUser!)))
+				if (accesses.every((a) => a)) return
+				throw new NotAuthorizedError('you have some invalid quizzes')
+			})(),
+		])
 
 		const updatedCourse = await CoursesUseCases.updateSections({
 			id: req.params.id,

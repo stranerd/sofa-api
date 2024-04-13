@@ -50,10 +50,7 @@ export const canAccessCoursable = async <T extends Coursable>(
 		const play = await PlaysUseCases.find(playId)
 		if (play && play.canUserAccess(user.id)) return coursable as Type<T>
 	}
-	if (courseId && coursable.courseId === courseId) {
-		const purchase = await PurchasesUseCases.for({ userId: user.id, type: Purchasables.courses, itemId: courseId })
-		if (purchase) return coursable as Type<T>
-	}
+	if (courseId && coursable.courseId !== courseId) return null
 	// check if current user has purchased item
 	const purchase = await PurchasesUseCases.for({ userId: user.id, type: Purchasables.courses, itemId: coursable.courseId })
 	if (purchase) return coursable as Type<T>
