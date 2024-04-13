@@ -77,7 +77,7 @@ export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
 
 	getEndsAt() {
 		if (this.data.type === PlayTypes.assessments) return this.data.endedAt
-		return (this.startedAt ?? 0) + this.totalTimeInSec * 1000
+		return 10000 + (this.startedAt ?? 0) + this.totalTimeInSec * 1000
 	}
 
 	getUsesTimer() {

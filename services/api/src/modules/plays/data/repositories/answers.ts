@@ -34,7 +34,7 @@ export class AnswerRepository implements IAnswerRepository {
 			if (!play) throw new BadRequestError('cannot answer this question')
 			const typeUserId = play.user.id
 			const now = Date.now()
-			const timedOutAt = play.getUsesTimer() ? now + play.totalTimeInSec * 1000 : null
+			const timedOutAt = play.getUsesTimer() ? 10000 + now + play.totalTimeInSec * 1000 : null
 			const answerModel = await Answer.findOneAndUpdate(
 				{ type, typeId, typeUserId, userId },
 				{ $setOnInsert: { type, typeId, typeUserId, userId, timedOutAt } },
