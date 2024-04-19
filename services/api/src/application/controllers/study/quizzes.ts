@@ -35,6 +35,7 @@ export class QuizController {
 		const quiz = await QuizzesUseCases.find(req.params.id)
 		if (!quiz) return []
 		const { results } = await QuizzesUseCases.get({
+			where: [{ field: 'id', value: quiz.id, condition: Conditions.ne }],
 			authType: QueryKeys.or,
 			auth: [
 				{ field: 'topicId', value: quiz.topicId },

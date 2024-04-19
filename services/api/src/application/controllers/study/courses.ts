@@ -2,9 +2,9 @@ import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, CoursesUseCases, DraftStatus, FileType, QuizModes, canAccessCoursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
+import { makeSet } from '@utils/commons'
 import { AuthUser, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
-import { makeSet } from '@utils/commons'
 
 export class CourseController {
 	private static schema = (user: AuthUser | null) => ({
@@ -31,6 +31,7 @@ export class CourseController {
 		const course = await CoursesUseCases.find(req.params.id)
 		if (!course) return []
 		const { results } = await CoursesUseCases.get({
+			where: [{ field: 'id', value: course.id, condition: Conditions.ne }],
 			authType: QueryKeys.or,
 			auth: [
 				{ field: 'topicId', value: course.topicId },
