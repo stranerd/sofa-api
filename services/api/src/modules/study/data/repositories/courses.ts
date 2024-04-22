@@ -104,17 +104,13 @@ export class CourseRepository implements ICourseRepository {
 					[Coursable.file]: File,
 				}[type as Coursable.file]
 				if (!finder) throw new BadRequestError(`unknown type: ${type}`)
-				const coursable = await finder.findById(coursableId, null, { session })
-				if (add && !coursable) throw new BadRequestError(`${type} not found`)
-				if (coursable) {
-					await finder.findByIdAndUpdate(
-						coursableId,
-						{
-							[add ? '$addToSet' : '$pull']: { courseIds: courseId },
-						},
-						{ session },
-					)
-				}
+				await finder.findByIdAndUpdate(
+					coursableId,
+					{
+						[add ? '$addToSet' : '$pull']: { courseIds: courseId },
+					},
+					{ session },
+				)
 			}),
 		)
 	}
