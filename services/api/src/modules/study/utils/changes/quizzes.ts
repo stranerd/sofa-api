@@ -1,4 +1,5 @@
 import { InteractionEntities, ReviewsUseCases, TagMeta, TagsUseCases, ViewsUseCases } from '@modules/interactions'
+import { NotificationType, sendNotification } from '@modules/notifications'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
@@ -7,7 +8,6 @@ import { CoursesUseCases, FoldersUseCases, QuestionsUseCases } from '../..'
 import { QuizFromModel } from '../../data/models/quizzes'
 import { QuizEntity } from '../../domain/entities/quizzes'
 import { Coursable, DraftStatus, FolderSaved } from '../../domain/types'
-import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity> = {
 	created: async ({ after }) => {
@@ -98,14 +98,16 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 			: ['study/quizzes', `study/quizzes/${before.id}`]
 		await appInstance.listener.deleted(paths, before)
 
-		if (before.courseId)
-			await CoursesUseCases.move({
-				id: before.courseId,
-				type: Coursable.quiz,
-				coursableId: before.id,
-				userId: before.user.id,
-				add: false,
-			}).catch()
+		if (before.courseIds.length)
+			await Promise.all(
+				before.courseIds.map((id) =>
+					CoursesUseCases.move({
+						id,
+						data: [{ type: Coursable.file, id: before.id }],
+						add: false,
+					}),
+				),
+			).catch()
 		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,

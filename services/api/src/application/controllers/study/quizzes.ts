@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { Coursable, CoursesUseCases, DraftStatus, QuizModes, QuizzesUseCases } from '@modules/study'
+import { DraftStatus, QuizModes, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
@@ -110,25 +110,13 @@ export class QuizController {
 
 		const photo = data.photo ? await UploaderUseCases.upload('study/quizzes', data.photo) : null
 
-		const quiz = await QuizzesUseCases.add({
+		return await QuizzesUseCases.add({
 			...data,
 			...tags,
 			user: user.getEmbedded(),
 			photo,
 			status: DraftStatus.draft,
-			courseId: null,
 		})
-
-		if (data.courseId)
-			await CoursesUseCases.move({
-				id: data.courseId,
-				userId: quiz.user.id,
-				coursableId: quiz.id,
-				type: Coursable.file,
-				add: true,
-			}).catch()
-
-		return quiz
 	}
 
 	static async delete(req: Request) {

@@ -12,7 +12,7 @@ export interface ICourseRepository {
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	publish: (id: string, userId: string) => Promise<CourseEntity | null>
 	freeze: (id: string, userId: string) => Promise<CourseEntity | null>
-	move: (id: string, coursableId: string, type: Coursable, userId: string, add: boolean) => Promise<CourseEntity | null>
+	move: (id: string, data: { id: string; type: Coursable }[], add: boolean) => Promise<void>
 	updateSections: (id: string, userId: string, sections: CourseSections) => Promise<CourseEntity | null>
 	updateMeta: (id: string, property: CourseMeta, value: 1 | -1) => Promise<void>
 	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>

@@ -42,8 +42,8 @@ export class CoursesUseCase {
 		return await this.repository.freeze(input.id, input.userId)
 	}
 
-	async move(input: { id: string; userId: string; add: boolean; type: Coursable; coursableId: string }) {
-		return await this.repository.move(input.id, input.coursableId, input.type, input.userId, input.add)
+	async move(input: { id: string; add: boolean; data: { id: string; type: Coursable }[] }) {
+		return await this.repository.move(input.id, input.data, input.add)
 	}
 
 	async updateSections(input: { id: string; userId: string; sections: CourseSections }) {

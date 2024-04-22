@@ -1,6 +1,6 @@
 import { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../../domain/types'
 
-export interface QuizFromModel extends QuizToModel {
+export interface QuizFromModel extends QuizToModel, CoursableData {
 	_id: string
 	questions: string[]
 	access: QuizAccess
@@ -10,7 +10,7 @@ export interface QuizFromModel extends QuizToModel {
 	updatedAt: number
 }
 
-export interface QuizToModel extends Omit<CoursableData, 'ratings'> {
+export interface QuizToModel extends Omit<CoursableData, 'ratings' | 'courseIds'> {
 	isForTutors: boolean
 	modes: Record<QuizModes, boolean>
 	timeLimit: number | null

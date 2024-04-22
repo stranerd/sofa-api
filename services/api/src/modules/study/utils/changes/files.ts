@@ -54,14 +54,16 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['study/files', `study/files/${before.id}`], before)
 
-		if (before.courseId)
-			await CoursesUseCases.move({
-				id: before.courseId,
-				type: Coursable.file,
-				coursableId: before.id,
-				userId: before.user.id,
-				add: false,
-			}).catch()
+		if (before.courseIds.length)
+			await Promise.all(
+				before.courseIds.map((id) =>
+					CoursesUseCases.move({
+						id,
+						data: [{ type: Coursable.file, id: before.id }],
+						add: false,
+					}),
+				),
+			).catch()
 		await FoldersUseCases.removeProp({ prop: FolderSaved.files, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,

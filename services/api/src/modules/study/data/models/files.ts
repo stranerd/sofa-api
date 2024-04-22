@@ -1,6 +1,6 @@
 import { CoursableData, FileType, Media } from '../../domain/types'
 
-export interface FileFromModel extends FileToModel {
+export interface FileFromModel extends FileToModel, CoursableData {
 	_id: string
 	questions: string[]
 	ratings: CoursableData['ratings']
@@ -8,7 +8,7 @@ export interface FileFromModel extends FileToModel {
 	updatedAt: number
 }
 
-export interface FileToModel extends Omit<CoursableData, 'ratings'> {
+export interface FileToModel extends Omit<CoursableData, 'ratings' | 'courseIds'> {
 	type: FileType
 	media: Media
 }

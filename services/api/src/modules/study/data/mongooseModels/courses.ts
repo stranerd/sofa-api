@@ -7,11 +7,6 @@ import { CourseMeta } from '../../domain/types'
 
 const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>(
 	{
-		coursables: {
-			type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as CourseFromModel['coursables'],
-			required: false,
-			default: [],
-		},
 		sections: {
 			type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as CourseFromModel['sections'],
 			required: false,

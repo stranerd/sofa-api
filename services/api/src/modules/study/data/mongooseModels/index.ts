@@ -79,9 +79,9 @@ export const SaleableSchema = {
 
 export const CoursableDataSchema = {
 	...PublishableSchema,
-	courseId: {
-		type: String,
+	courseIds: {
+		type: [String],
 		required: false,
-		default: null,
+		default: [],
 	},
 }

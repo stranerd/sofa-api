@@ -39,7 +39,7 @@ export enum Coursable {
 }
 
 export type CoursableData = Publishable & {
-	courseId: string | null
+	courseIds: string[]
 }
 
 export type CourseSectionItem =

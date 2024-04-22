@@ -3,7 +3,7 @@ import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
-import { FoldersUseCases } from '../..'
+import { CoursesUseCases, FoldersUseCases } from '../..'
 import { CourseFromModel } from '../../data/models/courses'
 import { CourseEntity } from '../../domain/entities/courses'
 import { DraftStatus, FolderSaved } from '../../domain/types'
@@ -44,6 +44,11 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['study/courses', `study/courses/${before.id}`], before)
 
+		await CoursesUseCases.move({
+			id: before.id,
+			data: before.getCoursables(),
+			add: false,
+		}).catch()
 		await FoldersUseCases.removeProp({ prop: FolderSaved.courses, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,

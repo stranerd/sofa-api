@@ -15,14 +15,11 @@ type PublishableConstructorArgs = Publishable & {
 	updatedAt: number
 }
 
-export class CoursableEntity<T extends PublishableConstructorArgs & { courseId: string | null }>
+export class CoursableEntity<T extends PublishableConstructorArgs & { courseIds: string[] }>
 	extends PublishableEntity<T>
 	implements CoursableData
 {
-	public readonly courseId: string | null
-
-	constructor(data: T & { courseId: string | null }) {
+	constructor(data: T & { courseIds: string[] }) {
 		super(data)
-		this.courseId = data.courseId
 	}
 }

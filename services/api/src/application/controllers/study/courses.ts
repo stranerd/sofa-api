@@ -114,27 +114,6 @@ export class CourseController {
 		throw new NotAuthorizedError()
 	}
 
-	static async move(req: Request) {
-		const { coursableId, type, add } = validate(
-			{
-				type: Schema.in(Object.values(Coursable)),
-				coursableId: Schema.string().min(1),
-				add: Schema.boolean(),
-			},
-			req.body,
-		)
-
-		const updatedCourse = await CoursesUseCases.move({
-			id: req.params.id,
-			userId: req.authUser!.id,
-			add,
-			type,
-			coursableId,
-		})
-		if (updatedCourse) return updatedCourse
-		throw new NotAuthorizedError()
-	}
-
 	static async updateSections(req: Request) {
 		const { sections } = validate(
 			{

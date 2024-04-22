@@ -30,7 +30,7 @@ export const canAccessCoursable = async <T extends Coursable>(
 	// current user has been granted access
 	if (coursable instanceof QuizEntity && coursable.canUserAccess(user.id)) return coursable as Type<T>
 	// item is not in a course, so it is free
-	if (!coursable.courseId) return coursable as Type<T>
+	if (!coursable.courseIds.length) return coursable as Type<T>
 	// current user is subscribed to the items from stranerd official account
 	if (user.roles[AuthRole.isSubscribed] && coursable.user.roles[AuthRole.isOfficialAccount]) return coursable as Type<T>
 	// access checks based on query params
@@ -50,9 +50,9 @@ export const canAccessCoursable = async <T extends Coursable>(
 		const play = await PlaysUseCases.find(playId)
 		if (play && play.canUserAccess(user.id)) return coursable as Type<T>
 	}
-	if (courseId && coursable.courseId !== courseId) return null
-	// check if current user has purchased item
-	const purchase = await PurchasesUseCases.for({ userId: user.id, type: Purchasables.courses, itemId: coursable.courseId })
+	if (courseId && !coursable.courseIds.includes(courseId)) return null
+	// check if current user has purchased course
+	const purchase = await PurchasesUseCases.for({ userId: user.id, type: Purchasables.courses, itemId: courseId })
 	if (purchase) return coursable as Type<T>
 	const userDet = await UsersUseCases.find(user.id)
 	// check that the creator is an org and the user belongs in the org, and the org is subscribed

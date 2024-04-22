@@ -7,18 +7,19 @@ export class CourseEntity extends PublishableEntity<CourseConstructorArgs> imple
 	}
 
 	getCoursables() {
-		const obj = {} as Record<Coursable, string[]>
-		this.coursables.map(({ id, type }) => {
-			;(obj[type] ||= []).push(id)
-		})
-		return obj
+		const quizzes = this.sections.flatMap((section) =>
+			section.items.filter((item) => item.type === Coursable.quiz).map((item) => item.id),
+		)
+		const files = this.sections.flatMap((section) =>
+			section.items.filter((item) => item.type === Coursable.file).map((item) => item.id),
+		)
+		return [...quizzes.map((id) => ({ id, type: Coursable.quiz })), ...files.map((id) => ({ id, type: Coursable.file }))]
 	}
 }
 
 type CourseConstructorArgs = Publishable &
 	Saleable & {
 		id: string
-		coursables: { id: string; type: Coursable }[]
 		sections: CourseSections
 		meta: Record<CourseMeta, number>
 		createdAt: number

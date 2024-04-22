@@ -9,7 +9,6 @@ export class CourseMapper extends BaseMapper<CourseFromModel, CourseToModel, Cou
 			? null
 			: new CourseEntity({
 					id: model._id.toString(),
-					coursables: model.coursables,
 					sections: model.sections,
 					title: model.title,
 					description: model.description,

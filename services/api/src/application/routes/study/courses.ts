@@ -44,11 +44,6 @@ export const coursesRoutes = groupRoutes('/courses', [
 		controllers: [isAuthenticated, makeController(async (req) => CourseController.freeze(req))],
 	},
 	{
-		path: '/:id/move',
-		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.move(req))],
-	},
-	{
 		path: '/:id/sections',
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => CourseController.updateSections(req))],

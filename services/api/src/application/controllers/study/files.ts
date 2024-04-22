@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { canAccessCoursable, Coursable, CoursesUseCases, DraftStatus, FilesUseCases, FileType } from '@modules/study'
+import { canAccessCoursable, Coursable, DraftStatus, FilesUseCases, FileType } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
@@ -39,7 +39,6 @@ export class FileController {
 		const data = validate(
 			{
 				...this.schema(),
-				courseId: Schema.string().min(1).nullable().default(null),
 				media: Schema.or(
 					[Schema.file().video(), Schema.file().image(), Schema.file().custom((val) => allowedDocumentTypes.includes(val?.type))],
 					'unsupported file type',
@@ -66,7 +65,7 @@ export class FileController {
 				? FileType.video
 				: FileType.document
 
-		const file = await FilesUseCases.add({
+		return await FilesUseCases.add({
 			...data,
 			...tags,
 			user: user.getEmbedded(),
@@ -74,19 +73,7 @@ export class FileController {
 			media,
 			type,
 			status: DraftStatus.draft,
-			courseId: null,
 		})
-
-		if (data.courseId)
-			await CoursesUseCases.move({
-				id: data.courseId,
-				userId: file.user.id,
-				coursableId: file.id,
-				type: Coursable.file,
-				add: true,
-			}).catch()
-
-		return file
 	}
 
 	static async update(req: Request) {
