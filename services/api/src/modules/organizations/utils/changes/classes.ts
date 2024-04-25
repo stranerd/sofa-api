@@ -8,7 +8,11 @@ import { ClassEntity } from '../../domain/entities/classes'
 export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(
-			[`organizations/${after.organizationId}/classes`, `organizations/${after.organizationId}/classes/${after.id}`],
+			[
+				'organizations/classes',
+				`organizations/${after.organizationId}/classes`,
+				`organizations/${after.organizationId}/classes/${after.id}`,
+			],
 			after,
 		)
 
@@ -16,7 +20,11 @@ export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEnti
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
-			[`organizations/${after.organizationId}/classes`, `organizations/${after.organizationId}/classes/${after.id}`],
+			[
+				'organizations/classes',
+				`organizations/${after.organizationId}/classes`,
+				`organizations/${after.organizationId}/classes/${after.id}`,
+			],
 			after,
 		)
 
@@ -37,7 +45,11 @@ export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEnti
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
-			[`organizations/${before.organizationId}/classes`, `organizations/${before.organizationId}/classes/${before.id}`],
+			[
+				'organizations/classes',
+				`organizations/${before.organizationId}/classes`,
+				`organizations/${before.organizationId}/classes/${before.id}`,
+			],
 			before,
 		)
 
