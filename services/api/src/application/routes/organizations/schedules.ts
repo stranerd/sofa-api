@@ -6,12 +6,12 @@ export const schedulesRoutes = groupRoutes('/schedules', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => SchedulesController.get(req))],
+		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => SchedulesController.find(req))],
+		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.find(req))],
 	},
 	{
 		path: '/',

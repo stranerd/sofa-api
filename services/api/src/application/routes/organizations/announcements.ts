@@ -6,12 +6,12 @@ export const announcementsRoutes = groupRoutes('/announcements', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => AnnouncementsController.get(req))],
+		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => AnnouncementsController.find(req))],
+		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.find(req))],
 	},
 	{
 		path: '/',
