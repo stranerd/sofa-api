@@ -17,6 +17,6 @@ export const ClassesUseCases = new ClassesUseCase(classRepository)
 export const MembersUseCases = new MembersUseCase(memberRepository)
 export const SchedulesUseCases = new SchedulesUseCase(scheduleRepository)
 
-export { MemberTypes, ClassLessonable } from './domain/types'
+export { MemberTypes } from './domain/types'
 
 export { canAccessOrgClasses, canAccessOrgMembers, canModOrgs } from './utils'

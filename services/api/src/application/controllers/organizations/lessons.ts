@@ -1,13 +1,5 @@
-import {
-	ClassLessonable,
-	ClassesUseCases,
-	MemberTypes,
-	MembersUseCases,
-	SchedulesUseCases,
-	canAccessOrgClasses,
-} from '@modules/organizations'
-import { PlayTypes } from '@modules/plays'
-import { Coursable, FileType, canAccessCoursable } from '@modules/study'
+import { ClassesUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } from '@modules/organizations'
+import { Coursable, FileType, QuizModes, canAccessCoursable } from '@modules/study'
 import { makeSet } from '@utils/commons'
 import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
@@ -142,19 +134,15 @@ export class LessonsController {
 						label: Schema.string().min(1),
 						items: Schema.array(
 							Schema.discriminate((d) => d.type, {
-								[ClassLessonable.quiz]: Schema.object({
+								[Coursable.quiz]: Schema.object({
 									id: Schema.string().min(1),
-									type: Schema.is(ClassLessonable.quiz as const),
-									quizMode: Schema.in(Object.values(PlayTypes)),
+									type: Schema.is(Coursable.quiz as const),
+									quizMode: Schema.in(Object.values(QuizModes)),
 								}),
-								[ClassLessonable.file]: Schema.object({
+								[Coursable.file]: Schema.object({
 									id: Schema.string().min(1),
-									type: Schema.is(ClassLessonable.file as const),
+									type: Schema.is(Coursable.file as const),
 									fileType: Schema.in(Object.values(FileType)),
-								}),
-								[ClassLessonable.schedule]: Schema.object({
-									id: Schema.string().min(1),
-									type: Schema.is(ClassLessonable.schedule as const),
 								}),
 							}),
 						),
@@ -170,23 +158,19 @@ export class LessonsController {
 		if (!lesson?.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 
 		const allFiles = makeSet(
-			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.file)),
+			curriculum.flatMap((s) => s.items.filter((i) => i.type === Coursable.file)),
 			(f) => f.id,
 		)
 		const allQuizzes = makeSet(
-			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.quiz)),
+			curriculum.flatMap((s) => s.items.filter((i) => i.type === Coursable.quiz)),
 			(q) => q.id,
-		)
-		const allSchedules = makeSet(
-			curriculum.flatMap((s) => s.items.filter((i) => i.type === ClassLessonable.schedule)),
-			(s) => s.id,
 		)
 
 		await Promise.all([
 			(async () => {
 				const accesses = await Promise.all(
 					allFiles.map(async (f) => {
-						if (f.type !== ClassLessonable.file) return null
+						if (f.type !== Coursable.file) return null
 						const access = await canAccessCoursable(Coursable.file, f.id, req.authUser!)
 						if (!access || access.type !== f.fileType) return null
 						return access
@@ -199,19 +183,6 @@ export class LessonsController {
 				const accesses = await Promise.all(allQuizzes.map((q) => canAccessCoursable(Coursable.quiz, q.id, req.authUser!)))
 				if (accesses.every((a) => a)) return
 				throw new NotAuthorizedError('you have some invalid quizzes')
-			})(),
-			(async () => {
-				const schedulesIds = allSchedules.map((s) => s.id)
-				const { results: schedules } = await SchedulesUseCases.get({
-					where: [
-						{ field: 'organizationId', value: req.params.organizationId },
-						{ field: 'classId', value: req.params.classId },
-						{ field: 'id', condition: Conditions.in, value: schedulesIds },
-					],
-					all: true,
-				})
-				if (schedules.length === schedulesIds.length) return
-				throw new NotAuthorizedError('you have some invalid schedules')
 			})(),
 		])
 

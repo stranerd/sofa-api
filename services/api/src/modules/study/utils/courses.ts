@@ -1,9 +1,8 @@
-import { ClassLessonable, canAccessOrgClasses } from '@modules/organizations'
+import { canAccessOrgClasses } from '@modules/organizations'
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { PlaysUseCases } from '@modules/plays'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, AuthUser } from 'equipped'
-import { FileEntity } from '../domain/entities/files'
 import { QuizEntity } from '../domain/entities/quizzes'
 import { Coursable } from '../domain/types'
 import { FilesUseCases, QuizzesUseCases } from '../init'
@@ -35,15 +34,13 @@ export const canAccessCoursable = async <T extends Coursable>(
 	if (user.roles[AuthRole.isSubscribed] && coursable.user.roles[AuthRole.isOfficialAccount]) return coursable as Type<T>
 	// access checks based on query params
 	const isQuiz = coursable instanceof QuizEntity
-	const isFile = coursable instanceof FileEntity
 	const { lessonId, classId, organizationId, playId, courseId } = access ?? {}
 	if (lessonId && classId && organizationId) {
 		const hasAccess = await canAccessOrgClasses(user, organizationId, classId)
 		const lesson = hasAccess?.class.getLesson(lessonId)
 		if (lesson) {
 			const currItems = lesson.curriculum.flatMap((s) => s.items)
-			if (isQuiz && currItems.find((i) => i.id === coursableId && i.type === ClassLessonable.quiz)) return coursable as Type<T>
-			if (isFile && currItems.find((i) => i.id === coursableId && i.type === ClassLessonable.file)) return coursable as Type<T>
+			if (currItems.find((i) => i.id === coursableId && i.type === type)) return coursable as Type<T>
 		}
 	}
 	if (playId && isQuiz) {

@@ -1,5 +1,4 @@
-import { PlayTypes } from '@modules/plays'
-import { FileType } from '@modules/study'
+import { CourseSections } from '@modules/study'
 
 export { Saleable } from '@modules/payment'
 export { EmbeddedUser } from '@modules/users'
@@ -35,38 +34,11 @@ export type ClassLesson = {
 	id: string
 	title: string
 	users: LessonMembers
-	curriculum: ClassLessonCurriculumSection[]
+	curriculum: CourseSections
 }
 
 export type ClassMembers = {
 	students: string[]
-}
-
-export enum ClassLessonable {
-	quiz = 'quiz',
-	file = 'file',
-	schedule = 'schedule',
-}
-
-type ClassLessonCurriculumSectionItem =
-	| {
-			id: string
-			type: ClassLessonable.quiz
-			quizMode: PlayTypes
-	  }
-	| {
-			id: string
-			type: ClassLessonable.file
-			fileType: FileType
-	  }
-	| {
-			id: string
-			type: ClassLessonable.schedule
-	  }
-
-export type ClassLessonCurriculumSection = {
-	label: string
-	items: ClassLessonCurriculumSectionItem[]
 }
 
 export type ScheduleStream = {

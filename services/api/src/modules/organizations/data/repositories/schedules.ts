@@ -1,11 +1,10 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IScheduleRepository } from '../../domain/irepositories/schedules'
-import { ClassLessonable, EmbeddedUser, ScheduleStatus } from '../../domain/types'
+import { EmbeddedUser, ScheduleStatus } from '../../domain/types'
 import { createLiveStream, endLiveStream } from '../../utils/livestreams'
 import { ScheduleMapper } from '../mappers/schedules'
 import { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
-import { Class } from '../mongooseModels/classes'
 import { Schedule } from '../mongooseModels/schedules'
 
 export class ScheduleRepository implements IScheduleRepository {
@@ -60,34 +59,13 @@ export class ScheduleRepository implements IScheduleRepository {
 	}
 
 	async delete(organizationId: string, classId: string, id: string, lessons: string[] | undefined) {
-		let res = false
-		await Schedule.collection.conn.transaction(async (session) => {
-			const schedule = await Schedule.findOneAndDelete(
-				{
-					_id: id,
-					organizationId,
-					classId,
-					...(lessons ? { lessonId: { $in: lessons } } : {}),
-				},
-				{ session },
-			)
-			if (schedule) {
-				const classInst = await Class.findOne({ _id: classId, organizationId }, {}, { session })
-				if (classInst) {
-					const updatedLessons = classInst.lessons.map((l) => ({
-						...l,
-						curriculum: l.curriculum.map((c) => ({
-							...c,
-							items: c.items.filter((i) => !(i.id === id && i.type === ClassLessonable.schedule)),
-						})),
-					}))
-					await Class.findByIdAndUpdate(classId, { $set: { lessons: updatedLessons } }, { session })
-				}
-			}
-			res = !!schedule
-			return res
+		const schedule = await Schedule.findOneAndDelete({
+			_id: id,
+			organizationId,
+			classId,
+			...(lessons ? { lessonId: { $in: lessons } } : {}),
 		})
-		return res
+		return !!schedule
 	}
 
 	async start(organizationId: string, classId: string, id: string, lessons: string[] | undefined) {
