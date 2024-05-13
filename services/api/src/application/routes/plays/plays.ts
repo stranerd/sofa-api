@@ -39,6 +39,11 @@ export const playsRoutes = groupRoutes('/plays', [
 		controllers: [isAuthenticated, makeController(async (req) => PlayController.end(req))],
 	},
 	{
+		path: '/:id/export',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => PlayController.export(req))],
+	},
+	{
 		path: '/:id/questions',
 		method: 'get',
 		controllers: [isAuthenticated, makeController(async (req) => PlayController.getQuestions(req))],

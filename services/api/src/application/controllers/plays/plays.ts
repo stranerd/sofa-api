@@ -1,6 +1,18 @@
-import { PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
+import { PlayStatus, PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
 import { Coursable, canAccessCoursable } from '@modules/study'
-import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { UsersUseCases } from '@modules/users'
+import {
+	AuthRole,
+	Conditions,
+	NotAuthorizedError,
+	NotFoundError,
+	QueryKeys,
+	QueryParams,
+	Request,
+	Schema,
+	validate,
+	Validation,
+} from 'equipped'
 
 const publicTypes = [PlayTypes.games, PlayTypes.assessments]
 
@@ -89,5 +101,35 @@ export class PlayController {
 		const updated = await PlaysUseCases.join({ id: req.params.id, userId: req.authUser!.id, join })
 		if (updated) return updated
 		throw new NotAuthorizedError()
+	}
+
+	static async export(req: Request) {
+		const play = await PlaysUseCases.find(req.params.id)
+		if (!play || play.status !== PlayStatus.scored || play.user.id !== req.authUser!.id) throw new NotAuthorizedError()
+		const participants = [...new Set(play.scores.map((score) => score.userId))]
+		const { results: users } = await UsersUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: participants }],
+			all: true,
+		})
+		const usersMap = Object.fromEntries(users.map((u) => [u.id, u]))
+
+		const orderedUsers = play.scores
+			.map((score) => {
+				const user = usersMap[score.userId]
+				if (!user) return null
+				return {
+					name: user.bio.name.full,
+					email: user.bio.email,
+					score: score.value,
+				}
+			})
+			.filter(Boolean)
+			.map((user, i) => `${i + 1}. ${user!.name}(${user!.email}) - ${(user!.score * 100).toFixed(2)}%`)
+
+		return `${Validation.capitalize(play.title)}(#${play.id})
+Type: ${Validation.capitalize(play.data.type)}
+
+Participants:
+${orderedUsers.length ? orderedUsers.join('\n') : 'No participants'}`
 	}
 }
