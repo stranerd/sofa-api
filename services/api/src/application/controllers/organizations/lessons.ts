@@ -1,6 +1,5 @@
 import { ClassesUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } from '@modules/organizations'
-import { Coursable, FileType, QuizModes, canAccessCoursable } from '@modules/study'
-import { makeSet } from '@utils/commons'
+import { SectionsSchema, verifySections } from '@modules/study'
 import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
 export class LessonsController {
@@ -127,64 +126,18 @@ export class LessonsController {
 	}
 
 	static async updateCurriculum(req: Request) {
-		const { curriculum } = validate(
-			{
-				curriculum: Schema.array(
-					Schema.object({
-						label: Schema.string().min(1),
-						items: Schema.array(
-							Schema.discriminate((d) => d.type, {
-								[Coursable.quiz]: Schema.object({
-									id: Schema.string().min(1),
-									type: Schema.is(Coursable.quiz as const),
-									quizMode: Schema.in(Object.values(QuizModes)),
-								}),
-								[Coursable.file]: Schema.object({
-									id: Schema.string().min(1),
-									type: Schema.is(Coursable.file as const),
-									fileType: Schema.in(Object.values(FileType)),
-								}),
-							}),
-						),
-					}),
-				),
-			},
-			req.body,
-		)
+		const { curriculum } = validate({ curriculum: SectionsSchema }, req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()
 		const lesson = hasAccess.class.getLesson(req.params.id)
 		if (!lesson?.users.teachers.includes(req.authUser!.id)) throw new NotAuthorizedError()
 
-		const allFiles = makeSet(
-			curriculum.flatMap((s) => s.items.filter((i) => i.type === Coursable.file)),
-			(f) => f.id,
-		)
-		const allQuizzes = makeSet(
-			curriculum.flatMap((s) => s.items.filter((i) => i.type === Coursable.quiz)),
-			(q) => q.id,
-		)
-
-		await Promise.all([
-			(async () => {
-				const accesses = await Promise.all(
-					allFiles.map(async (f) => {
-						if (f.type !== Coursable.file) return null
-						const access = await canAccessCoursable(Coursable.file, f.id, req.authUser!)
-						if (!access || access.type !== f.fileType) return null
-						return access
-					}),
-				)
-				if (accesses.every((a) => a)) return
-				throw new NotAuthorizedError('you have some invalid files')
-			})(),
-			(async () => {
-				const accesses = await Promise.all(allQuizzes.map((q) => canAccessCoursable(Coursable.quiz, q.id, req.authUser!)))
-				if (accesses.every((a) => a)) return
-				throw new NotAuthorizedError('you have some invalid quizzes')
-			})(),
-		])
+		await verifySections(curriculum, req.authUser!, {
+			organizationId: req.params.organizationId,
+			classId: req.params.classId,
+			lessonId: req.params.id,
+		})
 
 		const updated = await ClassesUseCases.updateLessonCurriculum({
 			lessonId: req.params.id,

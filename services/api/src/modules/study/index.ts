@@ -12,6 +12,6 @@ export {
 	QuizMeta as QuizMetaType,
 	QuizModes,
 } from './domain/types'
-export type { QuestionAnswer, CourseSections } from './domain/types'
-export { canAccessCoursable } from './utils/courses'
+export type { CourseSections, QuestionAnswer } from './domain/types'
+export { SectionsSchema, canAccessCoursable, verifySections } from './utils/courses'
 export { verifyToBeSaved } from './utils/folders'
