@@ -42,7 +42,7 @@ export class TutorRequestRepository implements ITutorRequestRepository {
 			{ $set: { accepted: { is: data.accept, message: data.message, at: Date.now() }, pending: false } },
 			{ new: true },
 		)
-		return !!tutorRequest
+		return this.mapper.mapFrom(tutorRequest)
 	}
 
 	async markTestFinished(testId: string) {

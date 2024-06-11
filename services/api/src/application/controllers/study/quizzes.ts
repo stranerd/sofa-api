@@ -23,7 +23,7 @@ export class QuizController {
 			.default(false)
 			.custom((value) => (isAdmin ? true : value === false)),
 		modes: Schema.object(modesSchema),
-		timeLimit: Schema.number().gt(0).round().nullable(),
+		timeLimit: Schema.number().gt(0).int().nullable(),
 	})
 
 	static async find(req: Request) {

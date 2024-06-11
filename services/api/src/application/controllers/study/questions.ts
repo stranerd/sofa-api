@@ -14,12 +14,12 @@ export class QuestionController {
 			}, 'must contain the indicator'),
 		explanation: Schema.string(),
 		questionMedia: Schema.file().image().nullable(),
-		timeLimit: Schema.number().gt(0).lte(300).round(),
+		timeLimit: Schema.number().gt(0).lte(300).int(),
 		data: Schema.discriminate((d) => d.type, {
 			[QuestionTypes.multipleChoice]: Schema.object({
 				type: Schema.is(QuestionTypes.multipleChoice as const),
 				options: Schema.array(Schema.string().min(1, true)).min(2).max(6),
-				answers: Schema.array(Schema.number().gte(0).round()).min(1).set(),
+				answers: Schema.array(Schema.number().gte(0).int()).min(1).set(),
 			}).custom((value) => {
 				const length = value?.options?.length ?? 1
 				return Schema.array(Schema.number().lt(length)).max(length).parse(value.answers).valid

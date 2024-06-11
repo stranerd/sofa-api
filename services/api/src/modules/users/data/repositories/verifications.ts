@@ -42,6 +42,6 @@ export class VerificationRepository implements IVerificationRepository {
 			{ $set: { accepted: { is: data.accept, message: data.message, at: Date.now() }, pending: false } },
 			{ new: true },
 		)
-		return !!verification
+		return this.mapper.mapFrom(verification)
 	}
 }
