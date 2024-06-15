@@ -6,6 +6,8 @@ import { AuthRole, OnJoinFn } from 'equipped'
 
 export const registerSockets = () => {
 	const isAdmin: OnJoinFn = async ({ channel, user }) => (user?.roles?.[AuthRole.isAdmin] ? channel : null)
+	const isAdminOrMine: OnJoinFn = async ({ channel, user }) =>
+		!user ? null : user.roles?.[AuthRole.isAdmin] ? channel : `${channel}/${user.id}`
 	const isMine: OnJoinFn = async ({ channel, user }) => (user ? `${channel}/${user.id}` : null)
 	// const isSubbed: OnJoinFn = async ({ channel, user }) => user?.roles[AuthRole.isSubscribed] ? channel : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
@@ -37,11 +39,12 @@ export const registerSockets = () => {
 		.register('conversations/conversations/:conversationId/messages', conversationsCb)
 
 		.register('interactions/comments', isOpen)
-		.register('interactions/likes', isOpen)
-		.register('interactions/reports', isAdmin)
+		.register('interactions/likes', isMine)
+		.register('interactions/media', isOpen)
+		.register('interactions/reports', isAdminOrMine)
 		.register('interactions/reviews', isOpen)
 		.register('interactions/tags', isOpen)
-		.register('interactions/views', isOpen)
+		.register('interactions/views', isMine)
 
 		.register('notifications/notifications', isMine)
 

@@ -1,15 +1,29 @@
-import { InteractionEntities, ReportsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { InteractionEntities, ReportsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
+import { AuthRole, BadRequestError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ReportController {
 	static async get(req: Request) {
 		const query = req.query as QueryParams
+		const userId = req.authUser!.id
+		const isAdmin = req.authUser!.roles[AuthRole.isAdmin]
+		if (!isAdmin) {
+			query.authType = QueryKeys.or
+			query.auth = [
+				{ field: 'entity.userId', value: userId },
+				{ field: 'user.id', value: userId },
+			]
+		}
 		return await ReportsUseCases.get(query)
 	}
 
 	static async find(req: Request) {
-		return await ReportsUseCases.find(req.params.id)
+		const report = await ReportsUseCases.find(req.params.id)
+		const userId = req.authUser!.id
+		const isAdmin = req.authUser!.roles[AuthRole.isAdmin]
+		if (!report) return null
+		if (!isAdmin && report.user.id !== userId && report.entity.userId !== userId) return null
+		return report
 	}
 
 	static async delete(req: Request) {
@@ -28,13 +42,13 @@ export class ReportController {
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'reports')
+		const entity = await verifyInteraction(data.entity, 'reports')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ReportsUseCases.create({
 			...data,
-			entity: { ...data.entity, userId },
+			entity,
 			user: user.getEmbedded(),
 		})
 	}

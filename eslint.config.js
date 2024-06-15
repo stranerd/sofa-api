@@ -16,7 +16,7 @@ module.exports = [
 			},
 			parser: tsEslintParser,
 			parserOptions: {
-				project: ['./tsconfig.json', './services/*/tsconfig.json'],
+				project: ['./services/*/tsconfig.json'],
 				tsconfigRootDir: __dirname,
 				sourceType: 'module',
 				ecmaVersion: 2021,
@@ -47,6 +47,6 @@ module.exports = [
 	},
 ].map((config) => ({
 	...config,
-	files: ['**/*.ts', 'bin/*.js'],
+	files: ['**/*.ts'],
 	ignores: ["services/*/lib/**/*.js"],
 }))

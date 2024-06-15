@@ -14,7 +14,7 @@ export const hasRefreshToken = makeMiddleware(async (request) => {
 })
 
 export const isAdmin = makeMiddleware(async (request) => {
-	const isAdmin = request.authUser?.roles?.[AuthRole.isAdmin] || request.authUser?.roles?.[AuthRole.isSuperAdmin]
+	const isAdmin = request.authUser?.roles?.[AuthRole.isAdmin]
 	if (!request.authUser) throw new NotAuthenticatedError()
 	if (!isAdmin) throw new NotAuthorizedError()
 })

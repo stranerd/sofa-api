@@ -26,4 +26,4 @@ export const ViewsUseCases = new ViewsUseCase(viewRepository)
 export const TagsUseCases = new TagsUseCase(tagRepository)
 
 export { CommentMeta, InteractionEntities, TagMeta, TagTypes } from './domain/types'
-export { verifyInteractionAndGetUserId } from './utils'
+export { verifyInteraction } from './utils'

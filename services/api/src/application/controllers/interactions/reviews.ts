@@ -1,4 +1,4 @@
-import { InteractionEntities, ReviewsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { InteractionEntities, ReviewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
 
@@ -25,13 +25,13 @@ export class ReviewsController {
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'reviews')
+		const entity = await verifyInteraction(data.entity, 'reviews')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ReviewsUseCases.add({
 			...data,
-			entity: { ...data.entity, userId },
+			entity,
 			user: user.getEmbedded(),
 		})
 	}
