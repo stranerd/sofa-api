@@ -1,66 +1,75 @@
 import { QuizController } from '@application/controllers/study/quizzes'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const quizzesRoutes = groupRoutes('/quizzes', [
+export const quizzesRoutes = groupRoutes({ path: '/quizzes' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => QuizController.get(req))],
+		handler: QuizController.get,
 	},
 	{
 		path: '/tutors',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => QuizController.getForTutors(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: QuizController.getForTutors,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => QuizController.find(req))],
+		handler: QuizController.find,
 	},
 	{
 		path: '/:id/similar',
 		method: 'get',
-		controllers: [makeController(async (req) => QuizController.similar(req))],
+		handler: QuizController.similar,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.update(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.update,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.create(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.delete(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.delete,
 	},
 	{
 		path: '/:id/publish',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.publish(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.publish,
 	},
 	{
 		path: '/:id/reorder',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.reorder(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.reorder,
 	},
 	{
 		path: '/:id/access/request',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.requestAccess(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.requestAccess,
 	},
 	{
 		path: '/:id/access/grant',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.grantAccess(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.grantAccess,
 	},
 	{
 		path: '/:id/access/members/manage',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuizController.addMembers(req))],
+		middlewares: [isAuthenticated],
+		handler: QuizController.addMembers,
 	},
 ])

@@ -15,8 +15,8 @@ import {
 	UserTypeData,
 } from '../types'
 
-export class UserEntity extends BaseEntity<UserConstructorArgs> {
-	ignoreInJSON = ['type.code', 'bio.email', 'bio.phone']
+export class UserEntity extends BaseEntity<UserConstructorArgs, 'type.code' | 'bio.email' | 'bio.phone'> {
+	__ignoreInJSON = ['type.code' as const, 'bio.email' as const, 'bio.phone' as const]
 
 	constructor(data: UserConstructorArgs) {
 		data.bio = generateDefaultBio(data.bio)

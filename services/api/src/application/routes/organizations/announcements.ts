@@ -1,31 +1,31 @@
 import { AnnouncementsController } from '@application/controllers/organizations/announcements'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const announcementsRoutes = groupRoutes('/announcements', [
+export const announcementsRoutes = groupRoutes({ path: '/announcements', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.get(req))],
+		handler: AnnouncementsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.find(req))],
+		handler: AnnouncementsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.create(req))],
+		handler: AnnouncementsController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.delete(req))],
+		handler: AnnouncementsController.delete,
 	},
 	{
 		path: '/read',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => AnnouncementsController.markRead(req))],
+		handler: AnnouncementsController.markRead,
 	},
 ])

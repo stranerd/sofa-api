@@ -1,26 +1,27 @@
 import { VerificationsController } from '@application/controllers/users/verifications'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const verificationsRoutes = groupRoutes('/verifications', [
+export const verificationsRoutes = groupRoutes({ path: '/verifications', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => VerificationsController.get(req))],
+		handler: VerificationsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => VerificationsController.find(req))],
+		handler: VerificationsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => VerificationsController.create(req))],
+		handler: VerificationsController.create,
 	},
 	{
 		path: '/:id/accept',
 		method: 'put',
-		controllers: [isAdmin, makeController(async (req) => VerificationsController.accept(req))],
+		middlewares: [isAdmin],
+		handler: VerificationsController.accept,
 	},
 ])

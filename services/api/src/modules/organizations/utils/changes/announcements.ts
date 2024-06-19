@@ -29,13 +29,13 @@ export const AnnouncementDbChangeCallbacks: DbChangeCallbacks<AnnouncementFromMo
 				},
 			})
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[
 				`organizations/${after.organizationId}/classes/${after.classId}/announcements`,
 				`organizations/${after.organizationId}/classes/${after.classId}/announcements/${after.id}`,
 			],
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

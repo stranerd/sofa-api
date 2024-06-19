@@ -1,31 +1,31 @@
 import { ConnectsController } from '@application/controllers/users/connects'
-import { isAuthenticated, isSubscribed } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { isAuthenticated } from '@application/middlewares'
+import { groupRoutes } from 'equipped'
 
-export const connectsRoutes = groupRoutes('/connects', [
+export const connectsRoutes = groupRoutes({ path: '/connects', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ConnectsController.get(req))],
+		handler: ConnectsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ConnectsController.find(req))],
+		handler: ConnectsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, isSubscribed, makeController(async (req) => ConnectsController.create(req))],
+		handler: ConnectsController.create,
 	},
 	{
 		path: '/:id/accept',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => ConnectsController.accept(req))],
+		handler: ConnectsController.accept,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => ConnectsController.delete(req))],
+		handler: ConnectsController.delete,
 	},
 ])

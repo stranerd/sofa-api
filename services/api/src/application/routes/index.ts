@@ -1,3 +1,4 @@
+import { Router } from 'equipped'
 import { authRoutes } from './auth'
 import { conversationRoutes } from './conversations'
 import { interactionRoutes } from './interactions'
@@ -10,7 +11,8 @@ import { schoolRoutes } from './school'
 import { studyRoutes } from './study'
 import { userRoutes } from './users'
 
-export const routes = [
+export const router = new Router()
+router.add(
 	...authRoutes,
 	...conversationRoutes,
 	...interactionRoutes,
@@ -22,4 +24,4 @@ export const routes = [
 	...schoolRoutes,
 	...studyRoutes,
 	...userRoutes,
-]
+)

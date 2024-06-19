@@ -1,50 +1,52 @@
 import { FileController } from '@application/controllers/study/files'
 import { isAuthenticated } from '@application/middlewares'
 import axios from 'axios'
-import { BadRequestError, groupRoutes, makeController } from 'equipped'
+import { BadRequestError, groupRoutes } from 'equipped'
 
-export const filesRoutes = groupRoutes('/files', [
+export const filesRoutes = groupRoutes({ path: '/files' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => FileController.get(req))],
+		handler: FileController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => FileController.find(req))],
+		handler: FileController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => FileController.create(req))],
+		middlewares: [isAuthenticated],
+		handler: FileController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => FileController.update(req))],
+		middlewares: [isAuthenticated],
+		handler: FileController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => FileController.delete(req))],
+		middlewares: [isAuthenticated],
+		handler: FileController.delete,
 	},
 	{
 		path: '/:id/publish',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => FileController.publish(req))],
+		middlewares: [isAuthenticated],
+		handler: FileController.publish,
 	},
 	{
 		path: '/:id/media',
 		method: 'get',
-		controllers: [
-			makeController(async (req) => {
-				const media = await FileController.media(req)
-				const response = await axios.get(media.link, { baseURL: '', responseType: 'stream' }).catch(() => {
-					throw new BadRequestError('failed to fetch file')
-				})
-				return req.pipe((stream) => response.data.pipe(stream))
-			}),
-		],
+		handler: async (req) => {
+			const media = await FileController.media(req)
+			const response = await axios.get(media.link, { baseURL: '', responseType: 'stream' }).catch(() => {
+				throw new BadRequestError('failed to fetch file')
+			})
+			return req.pipe(response.data.pipe)
+		},
 	},
 ])

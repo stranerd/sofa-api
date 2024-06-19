@@ -3,12 +3,12 @@ import { UserMeta, generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming, PlayTypes } from '../types'
 
-export class PlayEntity extends BaseEntity<PlayConstructorArgs> {
+export class PlayEntity extends BaseEntity<PlayConstructorArgs, 'sources'> {
 	constructor(data: PlayConstructorArgs) {
 		data.user = generateDefaultUser(data.user)
 		super(data)
 		this.sources['']
-		if (!this.isPractice() && !this.isFlashcard()) this.ignoreInJSON.push('sources')
+		if (!this.isPractice() && !this.isFlashcard()) this.__ignoreInJSON.push('sources')
 	}
 
 	isPublic() {

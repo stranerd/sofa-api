@@ -1,21 +1,21 @@
 import { ViewsController } from '@application/controllers/interactions/views'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const viewsRoutes = groupRoutes('/views', [
+export const viewsRoutes = groupRoutes({ path: '/views', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => ViewsController.get(req))],
+		handler: ViewsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => ViewsController.find(req))],
+		handler: ViewsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => ViewsController.create(req))],
+		handler: ViewsController.create,
 	},
 ])

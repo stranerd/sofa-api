@@ -1,3 +1,5 @@
+import { NotificationType, sendNotification } from '@modules/notifications'
+import { CourseMetaType, CoursesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { appInstance as purchases } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
@@ -5,8 +7,6 @@ import { TransactionsUseCases } from '../../'
 import { PurchaseFromModel } from '../../data/models/purchases'
 import { PurchaseEntity } from '../../domain/entities/purchases'
 import { Purchasables, TransactionStatus, TransactionType } from '../../domain/types'
-import { NotificationType, sendNotification } from '@modules/notifications'
-import { CourseMetaType, CoursesUseCases } from '@modules/study'
 
 const serviceCharge = PurchaseEntity.serviceCharge
 
@@ -71,7 +71,7 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 			}),
 		])
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await purchases.listener.updated(
 			[
 				`payment/purchases/${after.userId}`,
@@ -79,7 +79,7 @@ export const PurchaseDbChangeCallbacks: DbChangeCallbacks<PurchaseFromModel, Pur
 				`payment/purchases/${after.id}/${after.userId}`,
 				`payment/purchases/${after.id}/${after.data.userId}`,
 			],
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

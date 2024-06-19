@@ -28,7 +28,7 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 		await TagsUseCases.updateMeta({ ids: after.tagIds.concat(after.topicId), property: tagType, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['study/files', `study/files/${after.id}`], after)
+		await appInstance.listener.updated(['study/files', `study/files/${after.id}`], { after, before })
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 		if (changes.media) await publishers.DELETEFILE.publish(before.media)
 

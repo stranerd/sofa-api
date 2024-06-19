@@ -1,46 +1,51 @@
 import { ClassesController } from '@application/controllers/organizations/classes'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const classesRoutes = groupRoutes('/classes', [
+export const classesRoutes = groupRoutes({ path: '/classes' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => ClassesController.get(req))],
+		handler: async (req) => ClassesController.get(req, false),
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => ClassesController.find(req))],
+		handler: ClassesController.find,
 	},
 	{
 		path: '/:id/similar',
 		method: 'get',
-		controllers: [makeController(async (req) => ClassesController.similar(req))],
+		handler: ClassesController.similar,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => ClassesController.update(req))],
+		middlewares: [isAuthenticated],
+		handler: ClassesController.update,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => ClassesController.create(req))],
+		middlewares: [isAuthenticated],
+		handler: ClassesController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => ClassesController.delete(req))],
+		middlewares: [isAuthenticated],
+		handler: ClassesController.delete,
 	},
 	{
 		path: '/:id/purchase',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => ClassesController.purchase(req))],
+		middlewares: [isAuthenticated],
+		handler: ClassesController.purchase,
 	},
 	{
 		path: '/:id/purchase',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => ClassesController.cancelPurchase(req))],
+		middlewares: [isAuthenticated],
+		handler: ClassesController.cancelPurchase,
 	},
 ])

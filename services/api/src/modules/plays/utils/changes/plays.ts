@@ -26,7 +26,7 @@ export const PlaysDbChangeCallbacks: DbChangeCallbacks<PlayFromModel, PlayEntity
 				.getMembers()
 				.map((uid) => [`plays/plays/${uid}`, `plays/plays/${after.id}/${uid}`])
 				.flat(),
-			after,
+			{ after, before },
 		)
 
 		if (before.status === PlayStatus.created && after.status === PlayStatus.started) await startPlayTimer(after)

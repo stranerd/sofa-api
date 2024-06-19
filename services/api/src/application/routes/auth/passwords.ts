@@ -1,21 +1,22 @@
 import { PasswordsController } from '@application/controllers/auth/passwords'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const passwordsRoutes = groupRoutes('/passwords', [
+export const passwordsRoutes = groupRoutes({ path: '/passwords' }, [
 	{
 		path: '/reset/mail',
 		method: 'post',
-		controllers: [makeController(async (req) => PasswordsController.sendResetMail(req))],
+		handler: async (req) => PasswordsController.sendResetMail(req),
 	},
 	{
 		path: '/reset',
 		method: 'post',
-		controllers: [makeController(async (req) => PasswordsController.resetPassword(req))],
+		handler: async (req) => PasswordsController.resetPassword(req),
 	},
 	{
 		path: '/update',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => PasswordsController.updatePassword(req))],
+		middlewares: [isAuthenticated],
+		handler: async (req) => PasswordsController.updatePassword(req),
 	},
 ])

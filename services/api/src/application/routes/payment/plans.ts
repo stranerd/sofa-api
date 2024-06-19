@@ -1,15 +1,15 @@
 import { PlansController } from '@application/controllers/payment/plans'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const plansRoutes = groupRoutes('/plans', [
+export const plansRoutes = groupRoutes({ path: '/plans' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => PlansController.get(req))],
+		handler: PlansController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => PlansController.find(req))],
+		handler: PlansController.find,
 	},
 ])

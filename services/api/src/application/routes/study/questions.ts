@@ -1,31 +1,31 @@
 import { QuestionController } from '@application/controllers/study/questions'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const questionsRoutes = groupRoutes('/quizzes/:quizId/questions', [
+export const questionsRoutes = groupRoutes({ path: '/quizzes/:quizId/questions', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => QuestionController.get(req))],
+		handler: QuestionController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => QuestionController.find(req))],
+		handler: QuestionController.find,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => QuestionController.update(req))],
+		handler: QuestionController.update,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => QuestionController.create(req))],
+		handler: QuestionController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => QuestionController.delete(req))],
+		handler: QuestionController.delete,
 	},
 ])

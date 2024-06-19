@@ -8,8 +8,8 @@ export const DepartmentDbChangeCallbacks: DbChangeCallbacks<DepartmentFromModel,
 	created: async ({ after }) => {
 		await appInstance.listener.created(['school/departments', `school/departments/${after.id}`], after)
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated(['school/departments', `school/departments/${after.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated(['school/departments', `school/departments/${after.id}`], { after, before })
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['school/departments', `school/departments/${before.id}`], before)

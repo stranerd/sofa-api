@@ -1,10 +1,10 @@
+import { InteractionEntities } from '@modules/interactions/domain/types'
+import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
+import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { ReviewFromModel } from '../../data/models/reviews'
 import { ReviewEntity } from '../../domain/entities/reviews'
-import { InteractionEntities } from '@modules/interactions/domain/types'
-import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
-import { UsersUseCases } from '@modules/users'
 
 export const ReviewDbChangeCallbacks: DbChangeCallbacks<ReviewFromModel, ReviewEntity> = {
 	created: async ({ after }) => {
@@ -18,7 +18,7 @@ export const ReviewDbChangeCallbacks: DbChangeCallbacks<ReviewFromModel, ReviewE
 			await UsersUseCases.updateRatings({ id: after.entity.userId, ratings: after.rating, add: true })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['interactions/reviews', `interactions/reviews/${after.id}`], after)
+		await appInstance.listener.updated(['interactions/reviews', `interactions/reviews/${after.id}`], { after, before })
 
 		if (changes.rating) {
 			if (after.entity.type === InteractionEntities.courses)

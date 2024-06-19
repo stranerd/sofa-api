@@ -25,7 +25,7 @@ export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEnti
 				`organizations/${after.organizationId}/classes`,
 				`organizations/${after.organizationId}/classes/${after.id}`,
 			],
-			after,
+			{ after, before },
 		)
 
 		const beforeLessonsIds = before.lessons.map((lesson) => lesson.id)

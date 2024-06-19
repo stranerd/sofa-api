@@ -33,7 +33,7 @@ export const AnswerDbChangeCallbacks: DbChangeCallbacks<AnswerFromModel, AnswerE
 			}
 		}
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			after
 				.getMembers()
@@ -42,7 +42,7 @@ export const AnswerDbChangeCallbacks: DbChangeCallbacks<AnswerFromModel, AnswerE
 					`plays/${after.type}/${after.typeId}/answers/${after.id}/${uid}`,
 				])
 				.flat(),
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

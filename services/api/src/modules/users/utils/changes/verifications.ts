@@ -10,7 +10,7 @@ export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromMo
 		await appInstance.listener.created(['users/verifications', `users/verifications/${after.id}`], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['users/verifications', `users/verifications/${after.id}`], after)
+		await appInstance.listener.updated(['users/verifications', `users/verifications/${after.id}`], { after, before })
 
 		if (changes.pending && before.pending && !after.pending && after.accepted) {
 			if (after.accepted.is)

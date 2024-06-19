@@ -2,8 +2,8 @@ import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { WithdrawalFromModel } from '../../data/models/withdrawals'
 import { WithdrawalEntity } from '../../domain/entities/withdrawals'
-import { processCompletedWithdrawal, processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
 import { WithdrawalStatus } from '../../domain/types'
+import { processCompletedWithdrawal, processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
 
 export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel, WithdrawalEntity> = {
 	created: async ({ after }) => {
@@ -15,10 +15,10 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 		await processCreatedWithdrawal(after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(
-			[`payment/withdrawals/${after.userId}`, `payment/withdrawals/${after.id}/${after.userId}`],
+		await appInstance.listener.updated([`payment/withdrawals/${after.userId}`, `payment/withdrawals/${after.id}/${after.userId}`], {
 			after,
-		)
+			before,
+		})
 
 		if (changes.status) {
 			if (before.status === WithdrawalStatus.created && after.status === WithdrawalStatus.inProgress)

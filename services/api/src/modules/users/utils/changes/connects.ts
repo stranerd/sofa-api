@@ -17,7 +17,7 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 			after,
 		)
 	},
-	updated: async ({ after, changes }) => {
+	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(
 			[
 				`users/connects/${after.from.id}`,
@@ -25,7 +25,7 @@ export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, Conne
 				`users/connects/${after.id}/${after.from.id}`,
 				`users/connects/${after.id}/${after.to.id}`,
 			],
-			after,
+			{ after, before },
 		)
 
 		if (changes.pending && !after.pending)

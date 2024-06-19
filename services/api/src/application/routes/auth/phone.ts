@@ -1,16 +1,17 @@
 import { PhoneController } from '@application/controllers/auth/phone'
 import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const phoneRoutes = groupRoutes('/phone', [
+export const phoneRoutes = groupRoutes({ path: '/phone' }, [
 	{
 		path: '/verify/text',
 		method: 'post',
-		controllers: [isAuthenticatedButIgnoreVerified, makeController(async (req) => PhoneController.sendVerificationText(req))],
+		middlewares: [isAuthenticatedButIgnoreVerified],
+		handler: async (req) => PhoneController.sendVerificationText(req),
 	},
 	{
 		path: '/verify',
 		method: 'post',
-		controllers: [makeController(async (req) => PhoneController.verifyPhone(req))],
+		handler: async (req) => PhoneController.verifyPhone(req),
 	},
 ])

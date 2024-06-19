@@ -1,15 +1,15 @@
 import { IdentitiesController } from '@application/controllers/auth/identities'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const identitiesRoutes = groupRoutes('/identities', [
+export const identitiesRoutes = groupRoutes({ path: '/identities' }, [
 	{
 		path: '/google',
 		method: 'post',
-		controllers: [makeController(async (req) => IdentitiesController.googleSignIn(req))],
+		handler: async (req) => IdentitiesController.googleSignIn(req),
 	},
 	{
 		path: '/apple',
 		method: 'post',
-		controllers: [makeController(async (req) => IdentitiesController.appleSignIn(req))],
+		handler: async (req) => IdentitiesController.appleSignIn(req),
 	},
 ])

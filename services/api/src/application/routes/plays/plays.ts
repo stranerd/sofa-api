@@ -1,51 +1,51 @@
 import { PlayController } from '@application/controllers/plays/plays'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const playsRoutes = groupRoutes('/plays', [
+export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.get(req))],
+		handler: PlayController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.find(req))],
+		handler: PlayController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.create(req))],
+		handler: PlayController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.delete(req))],
+		handler: PlayController.delete,
 	},
 	{
 		path: '/:id/start',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.start(req))],
+		handler: PlayController.start,
 	},
 	{
 		path: '/:id/join',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.join(req))],
+		handler: PlayController.join,
 	},
 	{
 		path: '/:id/end',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.end(req))],
+		handler: PlayController.end,
 	},
 	{
 		path: '/:id/export',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.export(req))],
+		handler: PlayController.export,
 	},
 	{
 		path: '/:id/questions',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => PlayController.getQuestions(req))],
+		handler: PlayController.getQuestions,
 	},
 ])

@@ -8,8 +8,8 @@ export const FacultyDbChangeCallbacks: DbChangeCallbacks<FacultyFromModel, Facul
 	created: async ({ after }) => {
 		await appInstance.listener.created(['school/faculties', `school/faculties/${after.id}`], after)
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated(['school/faculties', `school/faculties/${after.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated(['school/faculties', `school/faculties/${after.id}`], { after, before })
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['school/faculties', `school/faculties/${before.id}`], before)

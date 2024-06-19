@@ -1,36 +1,36 @@
 import { FolderController } from '@application/controllers/study/folders'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const foldersRoutes = groupRoutes('/folders', [
+export const foldersRoutes = groupRoutes({ path: '/folders', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => FolderController.get(req))],
+		handler: FolderController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => FolderController.find(req))],
+		handler: FolderController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => FolderController.create(req))],
+		handler: FolderController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => FolderController.update(req))],
+		handler: FolderController.update,
 	},
 	{
 		path: '/:id/save',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => FolderController.saveProp(req))],
+		handler: FolderController.saveProp,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => FolderController.delete(req))],
+		handler: FolderController.delete,
 	},
 ])

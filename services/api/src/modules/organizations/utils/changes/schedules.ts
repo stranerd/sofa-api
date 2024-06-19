@@ -13,13 +13,13 @@ export const ScheduleDbChangeCallbacks: DbChangeCallbacks<ScheduleFromModel, Sch
 			after,
 		)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[
 				`organizations/${after.organizationId}/classes/${after.classId}/schedules`,
 				`organizations/${after.organizationId}/classes/${after.classId}/schedules/${after.id}`,
 			],
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

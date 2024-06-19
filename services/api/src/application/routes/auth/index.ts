@@ -6,7 +6,7 @@ import { phoneRoutes } from './phone'
 import { tokenRoutes } from './token'
 import { userRoutes } from './user'
 
-export const authRoutes = groupRoutes('/auth', [
+export const authRoutes = groupRoutes({ path: '/auth' }, [
 	...emailRoutes,
 	...identitiesRoutes,
 	...passwordsRoutes,

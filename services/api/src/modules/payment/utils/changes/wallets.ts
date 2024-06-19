@@ -16,7 +16,10 @@ export const WalletDbChangeCallbacks: DbChangeCallbacks<WalletFromModel, WalletE
 		})
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated([`payment/wallets/${after.userId}`, `payment/wallets/${after.id}/${after.userId}`], after)
+		await appInstance.listener.updated([`payment/wallets/${after.userId}`, `payment/wallets/${after.id}/${after.userId}`], {
+			after,
+			before,
+		})
 
 		if (changes.subscription?.active)
 			await AuthUsersUseCases.updateUserRole({

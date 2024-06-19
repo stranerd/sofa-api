@@ -17,13 +17,13 @@ export const MessageDbChangeCallbacks: DbChangeCallbacks<MessageFromModel, Messa
 
 		await generateResponse(after)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[
 				`conversations/conversations/${after.conversationId}/messages`,
 				`conversations/conversations/${after.conversationId}/messages/${after.id}`,
 			],
-			after,
+			{ before, after },
 		)
 	},
 	deleted: async ({ before }) => {

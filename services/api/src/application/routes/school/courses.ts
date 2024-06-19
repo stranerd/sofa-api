@@ -1,31 +1,34 @@
 import { CourseController } from '@application/controllers/school/courses'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const coursesRoutes = groupRoutes('/courses', [
+export const coursesRoutes = groupRoutes({ path: '/courses' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => CourseController.get(req))],
+		handler: CourseController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => CourseController.find(req))],
+		handler: CourseController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => CourseController.create(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: CourseController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => CourseController.update(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: CourseController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => CourseController.delete(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: CourseController.delete,
 	},
 ])

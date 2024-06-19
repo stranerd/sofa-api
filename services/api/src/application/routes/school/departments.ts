@@ -1,31 +1,34 @@
 import { DepartmentController } from '@application/controllers/school/departments'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const departmentsRoutes = groupRoutes('/departments', [
+export const departmentsRoutes = groupRoutes({ path: '/departments' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => DepartmentController.get(req))],
+		handler: DepartmentController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => DepartmentController.find(req))],
+		handler: DepartmentController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => DepartmentController.create(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: DepartmentController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => DepartmentController.update(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: DepartmentController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => DepartmentController.delete(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: DepartmentController.delete,
 	},
 ])

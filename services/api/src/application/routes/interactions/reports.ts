@@ -1,26 +1,29 @@
 import { ReportController } from '@application/controllers/interactions/reports'
-import { groupRoutes, makeController } from 'equipped'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
+import { groupRoutes } from 'equipped'
 
-export const reportsRoutes = groupRoutes('/reports', [
+export const reportsRoutes = groupRoutes({ path: '/reports', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => ReportController.get(req))],
+		handler: ReportController.get,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => ReportController.find(req))],
+		handler: ReportController.find,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => ReportController.delete(req))],
+		handler: ReportController.delete,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => ReportController.create(req))],
+		handler: ReportController.create,
 	},
 ])

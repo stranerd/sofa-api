@@ -1,16 +1,16 @@
 import { WithdrawalsController } from '@application/controllers/payment/withdrawals'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const withdrawalsRoutes = groupRoutes('/withdrawals', [
+export const withdrawalsRoutes = groupRoutes({ path: '/withdrawals', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WithdrawalsController.get(req))],
+		handler: WithdrawalsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WithdrawalsController.find(req))],
+		handler: WithdrawalsController.find,
 	},
 ])

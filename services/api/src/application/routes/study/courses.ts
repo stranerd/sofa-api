@@ -1,51 +1,57 @@
 import { CourseController } from '@application/controllers/study/courses'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const coursesRoutes = groupRoutes('/courses', [
+export const coursesRoutes = groupRoutes({ path: '/courses' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => CourseController.get(req))],
+		handler: CourseController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => CourseController.find(req))],
+		handler: CourseController.find,
 	},
 	{
 		path: '/:id/similar',
 		method: 'get',
-		controllers: [makeController(async (req) => CourseController.similar(req))],
+		handler: CourseController.similar,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.update(req))],
+		middlewares: [isAuthenticated],
+		handler: CourseController.update,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.create(req))],
+		middlewares: [isAuthenticated],
+		handler: CourseController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.delete(req))],
+		middlewares: [isAuthenticated],
+		handler: CourseController.delete,
 	},
 	{
 		path: '/:id/publish',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.publish(req))],
+		middlewares: [isAuthenticated],
+		handler: CourseController.publish,
 	},
 	{
 		path: '/:id/freeze',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.freeze(req))],
+		middlewares: [isAuthenticated],
+		handler: CourseController.freeze,
 	},
 	{
 		path: '/:id/sections',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CourseController.updateSections(req))],
+		middlewares: [isAuthenticated],
+		handler: CourseController.updateSections,
 	},
 ])

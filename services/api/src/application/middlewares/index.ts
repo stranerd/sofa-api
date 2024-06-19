@@ -1,26 +1,27 @@
-import { AuthRole, makeMiddleware, NotAuthenticatedError, NotAuthorizedError, requireAuthUser, requireRefreshUser } from 'equipped'
+import { AuthRole, makeMiddleware, NotAuthenticatedError, NotAuthorizedError, requireAuthUser } from 'equipped'
 
-export const isAuthenticatedButIgnoreVerified = makeMiddleware(async (request) => {
-	await requireAuthUser(request)
-})
+export const isAuthenticatedButIgnoreVerified = requireAuthUser
 
-export const isAuthenticated = makeMiddleware(async (request) => {
-	await requireAuthUser(request)
-	if (!request.authUser?.isEmailVerified) throw new NotAuthenticatedError('verify your email address to proceed')
-})
+export const isAuthenticated = makeMiddleware(
+	async (request) => {
+		await requireAuthUser.cb(request)
+		if (!request.authUser?.isEmailVerified) throw new NotAuthenticatedError('verify your account to proceed')
+	},
+	(route) => {
+		requireAuthUser.onSetup?.(route)
+		route.descriptions ??= []
+		route.descriptions.push('Requires auth user to be verified')
+	},
+)
 
-export const hasRefreshToken = makeMiddleware(async (request) => {
-	await requireRefreshUser(request)
-})
-
-export const isAdmin = makeMiddleware(async (request) => {
-	const isAdmin = request.authUser?.roles?.[AuthRole.isAdmin]
-	if (!request.authUser) throw new NotAuthenticatedError()
-	if (!isAdmin) throw new NotAuthorizedError()
-})
-
-export const isSubscribed = makeMiddleware(async (request) => {
-	const isSubscribed = request.authUser?.roles?.[AuthRole.isSubscribed]
-	if (!request.authUser) throw new NotAuthenticatedError()
-	if (!isSubscribed) throw new NotAuthorizedError('You need an active subscription to proceed')
-})
+export const isAdmin = makeMiddleware(
+	async (request) => {
+		const isAdmin = request.authUser?.roles?.[AuthRole.isAdmin]
+		if (!request.authUser) throw new NotAuthenticatedError()
+		if (!isAdmin) throw new NotAuthorizedError()
+	},
+	(route) => {
+		route.descriptions ??= []
+		route.descriptions.push('Requires auth user to be an admin')
+	},
+)

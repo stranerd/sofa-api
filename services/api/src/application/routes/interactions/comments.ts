@@ -1,31 +1,34 @@
 import { CommentsController } from '@application/controllers/interactions/comments'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const commentsRoutes = groupRoutes('/comments', [
+export const commentsRoutes = groupRoutes({ path: '/comments' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => CommentsController.get(req))],
+		handler: CommentsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => CommentsController.find(req))],
+		handler: CommentsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CommentsController.create(req))],
+		middlewares: [isAuthenticated],
+		handler: CommentsController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => CommentsController.update(req))],
+		middlewares: [isAuthenticated],
+		handler: CommentsController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => CommentsController.delete(req))],
+		middlewares: [isAuthenticated],
+		handler: CommentsController.delete,
 	},
 ])

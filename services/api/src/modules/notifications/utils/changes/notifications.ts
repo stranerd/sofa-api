@@ -41,10 +41,10 @@ export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromMo
 			}
 		}
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[`notifications/notifications/${after.userId}`, `notifications/notifications/${after.id}/${after.userId}`],
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

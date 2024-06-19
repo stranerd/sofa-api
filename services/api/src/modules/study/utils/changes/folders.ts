@@ -14,8 +14,11 @@ export const FolderDbChangeCallbacks: DbChangeCallbacks<FolderFromModel, FolderE
 		})
 		await UsersUseCases.incrementMeta({ id: after.user.id, value: 1, property: UserMeta.folders })
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated([`study/folders/${after.user.id}`, `study/folders/${after.id}/${after.user.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated([`study/folders/${after.user.id}`, `study/folders/${after.id}/${after.user.id}`], {
+			after,
+			before,
+		})
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([`study/folders/${before.user.id}`, `study/folders/${before.id}/${before.user.id}`], before)

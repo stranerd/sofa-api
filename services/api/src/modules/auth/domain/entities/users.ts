@@ -1,8 +1,8 @@
 import { AuthRoles, AuthTypes, BaseEntity, Enum, MediaOutput } from 'equipped'
 import { Phone, UserUpdateInput } from '../types'
 
-export class AuthUserEntity extends BaseEntity<UserConstructorArgs> {
-	ignoreInJSON = ['password']
+export class AuthUserEntity extends BaseEntity<UserConstructorArgs, 'password'> {
+	__ignoreInJSON = ['password' as const]
 
 	constructor(data: UserConstructorArgs) {
 		data.roles ??= {}

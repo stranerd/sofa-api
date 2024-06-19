@@ -1,41 +1,45 @@
 import { UserController } from '@application/controllers/auth/user'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '../../middlewares'
 
-export const userRoutes = groupRoutes('/user', [
+export const userRoutes = groupRoutes({ path: '/user' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticatedButIgnoreVerified, makeController(async (req) => UserController.find(req))],
+		handler: async (req) => UserController.find(req),
+		middlewares: [isAuthenticatedButIgnoreVerified],
 	},
 	{
 		path: '/',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => UserController.update(req))],
+		middlewares: [isAuthenticated],
+		handler: async (req) => UserController.update(req),
 	},
 	{
 		path: '/roles',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => UserController.updateRole(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: async (req) => UserController.updateRole(req),
 	},
 	{
 		path: '/signout',
 		method: 'post',
-		controllers: [makeController(async (req) => UserController.signout(req))],
+		handler: async (req) => UserController.signout(req),
 	},
 	{
 		path: '/superAdmin',
 		method: 'get',
-		controllers: [makeController(async (req) => UserController.superAdmin(req))],
+		handler: async (req) => UserController.superAdmin(req),
 	},
 	{
 		path: '/officialAccount',
 		method: 'get',
-		controllers: [makeController(async (req) => UserController.officialAccount(req))],
+		handler: async (req) => UserController.officialAccount(req),
 	},
 	{
 		path: '/',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => UserController.delete(req))],
+		middlewares: [isAuthenticated],
+		handler: async (req) => UserController.delete(req),
 	},
 ])

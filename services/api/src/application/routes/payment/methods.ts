@@ -1,26 +1,26 @@
 import { MethodsController } from '@application/controllers/payment/methods'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const methodsRoutes = groupRoutes('/methods', [
+export const methodsRoutes = groupRoutes({ path: '/methods', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MethodsController.get(req))],
+		handler: MethodsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MethodsController.find(req))],
+		handler: MethodsController.find,
 	},
 	{
 		path: '/:id/primary',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => MethodsController.makePrimary(req))],
+		handler: MethodsController.makePrimary,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => MethodsController.delete(req))],
+		handler: MethodsController.delete,
 	},
 ])

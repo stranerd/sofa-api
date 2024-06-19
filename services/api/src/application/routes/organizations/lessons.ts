@@ -1,36 +1,36 @@
 import { LessonsController } from '@application/controllers/organizations/lessons'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const lessonsRoutes = groupRoutes('/lessons', [
+export const lessonsRoutes = groupRoutes({ path: '/lessons', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => LessonsController.create(req))],
+		handler: LessonsController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => LessonsController.update(req))],
+		handler: LessonsController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => LessonsController.delete(req))],
+		handler: LessonsController.delete,
 	},
 	{
 		path: '/:id/members/join',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => LessonsController.join(req))],
+		handler: LessonsController.join,
 	},
 	{
 		path: '/:id/members/teachers',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => LessonsController.manageTeachers(req))],
+		handler: LessonsController.manageTeachers,
 	},
 	{
 		path: '/:id/curriculum',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => LessonsController.updateCurriculum(req))],
+		handler: LessonsController.updateCurriculum,
 	},
 ])

@@ -33,7 +33,7 @@ export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberE
 				`organizations/${after.organizationId}/members/${after.email}`,
 				`organizations/${after.organizationId}/members/${after.id}/${after.email}`,
 			],
-			after,
+			{ after, before },
 		)
 
 		if (!after.pending && after.accepted?.is && before.pending && !before.accepted) await updateMetas(after, true)

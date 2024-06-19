@@ -1,10 +1,10 @@
 import { TokenController } from '@application/controllers/auth/token'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const tokenRoutes = groupRoutes('/token', [
+export const tokenRoutes = groupRoutes({ path: '/token' }, [
 	{
 		path: '/',
 		method: 'post',
-		controllers: [makeController(async (req) => TokenController.getNewTokens(req))],
+		handler: async (req) => TokenController.getNewTokens(req),
 	},
 ])

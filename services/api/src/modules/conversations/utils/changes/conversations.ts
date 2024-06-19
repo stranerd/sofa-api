@@ -30,7 +30,7 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 					? [`conversations/conversations/${after.tutor.id}`, `conversations/conversations/${after.id}/${after.tutor.id}`]
 					: []),
 			],
-			after,
+			{ before, after },
 		)
 
 		const justAccepted = changes.accepted && !before.accepted && after.accepted

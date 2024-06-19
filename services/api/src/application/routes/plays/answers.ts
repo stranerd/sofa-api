@@ -1,33 +1,33 @@
 import { AnswerController } from '@application/controllers/plays/answers'
 import { isAuthenticated } from '@application/middlewares'
 import { PlayTypes } from '@modules/plays'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
 const types = Object.values(PlayTypes).join('|')
-export const answersRoutes = groupRoutes(`/:type(${types})/:typeId/answers`, [
+export const answersRoutes = groupRoutes({ path: `/:type(${types})/:typeId/answers`, middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => AnswerController.get(req))],
+		handler: AnswerController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => AnswerController.find(req))],
+		handler: AnswerController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => AnswerController.answer(req))],
+		handler: AnswerController.answer,
 	},
 	{
 		path: '/end',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => AnswerController.end(req))],
+		handler: AnswerController.end,
 	},
 	{
 		path: '/reset',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => AnswerController.reset(req))],
+		handler: AnswerController.reset,
 	},
 ])

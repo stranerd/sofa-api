@@ -1,36 +1,36 @@
 import { MyStudyController } from '@application/controllers/study/myStudy'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const myStudyRoutes = groupRoutes('/my', [
+export const myStudyRoutes = groupRoutes({ path: '/my', middlewares: [isAuthenticated] }, [
 	{
 		path: '/recent',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyStudyController.recent(req))],
+		handler: MyStudyController.recent,
 	},
 	{
 		path: '/byMyOrgs',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyStudyController.byMyOrgs(req))],
+		handler: MyStudyController.byMyOrgs,
 	},
 	{
 		path: '/suggested',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyStudyController.suggested(req))],
+		handler: MyStudyController.suggested,
 	},
 	{
 		path: '/latest',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyStudyController.latest(req))],
+		handler: MyStudyController.latest,
 	},
 	{
 		path: '/rated',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyStudyController.rated(req))],
+		handler: MyStudyController.rated,
 	},
 	{
 		path: '/popular',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyStudyController.popular(req))],
+		handler: MyStudyController.popular,
 	},
 ])

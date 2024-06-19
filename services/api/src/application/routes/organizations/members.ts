@@ -1,36 +1,36 @@
 import { MembersController } from '@application/controllers/organizations/members'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const membersRoutes = groupRoutes('/members', [
+export const membersRoutes = groupRoutes({ path: '/members', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MembersController.get(req))],
+		handler: MembersController.get,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MembersController.add(req))],
+		handler: MembersController.add,
 	},
 	{
 		path: '/request',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MembersController.request(req))],
+		handler: MembersController.request,
 	},
 	{
 		path: '/accept',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MembersController.accept(req))],
+		handler: MembersController.accept,
 	},
 	{
 		path: '/leave',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MembersController.leave(req))],
+		handler: MembersController.leave,
 	},
 	{
 		path: '/remove',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MembersController.remove(req))],
+		handler: MembersController.remove,
 	},
 ])

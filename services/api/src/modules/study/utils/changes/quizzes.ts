@@ -25,9 +25,9 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 	},
 	updated: async ({ after, before, changes }) => {
 		const paths = after.isForTutors
-			? ['study/quizzes/tutors', `study/quizzes/tutors/${after.id}`]
+			? ['study/quizzes/tutors', `study/quizzes/${after.id}`]
 			: ['study/quizzes', `study/quizzes/${after.id}`]
-		await appInstance.listener.updated(paths, after)
+		await appInstance.listener.updated(paths, { after, before })
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 
 		if (changes.topicId || changes.tagIds) {

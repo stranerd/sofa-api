@@ -17,7 +17,7 @@ export const QuestionDbChangeCallbacks: DbChangeCallbacks<QuestionFromModel, Que
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(
 			[`study/quizzes/${after.quizId}/questions`, `study/quizzes/${after.quizId}/questions/${after.id}`],
-			after,
+			{ after, before },
 		)
 		if (changes.questionMedia && before.questionMedia) await publishers.DELETEFILE.publish(before.questionMedia)
 	},

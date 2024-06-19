@@ -1,17 +1,17 @@
 import { NotificationType, sendNotification } from '@modules/notifications'
+import { UsersUseCases } from '@modules/users'
+import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
 import { DbChangeCallbacks } from 'equipped'
 import { TutorRequestFromModel } from '../../data/models/tutorRequests'
 import { TutorRequestEntity } from '../../domain/entities/tutorRequests'
-import { publishers } from '@utils/events'
-import { UsersUseCases } from '@modules/users'
 
 export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromModel, TutorRequestEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(['users/tutorRequests', `users/tutorRequests/${after.id}`], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['users/tutorRequests', `users/tutorRequests/${after.id}`], after)
+		await appInstance.listener.updated(['users/tutorRequests', `users/tutorRequests/${after.id}`], { after, before })
 
 		if (changes.pending && before.pending && !after.pending && after.accepted) {
 			if (after.accepted.is)

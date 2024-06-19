@@ -1,56 +1,64 @@
 import { WalletsController } from '@application/controllers/payment/wallets'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const walletsRoutes = groupRoutes('/wallets', [
+export const walletsRoutes = groupRoutes({ path: '/wallets' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.get(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.get,
 	},
 	{
 		path: '/subscriptions',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.subscribeToPlan(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.subscribeToPlan,
 	},
 	{
 		path: '/subscriptions/renew',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.renewPlan(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.renewPlan,
 	},
 	{
 		path: '/subscriptions/renew/toggle',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.toggleRenewSubscription(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.toggleRenewSubscription,
 	},
 	{
 		path: '/transfer',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.transfer(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.transfer,
 	},
 	{
 		path: '/account/banks/:country',
 		method: 'get',
-		controllers: [makeController(async (req) => WalletsController.getBanks(req))],
+		handler: WalletsController.getBanks,
 	},
 	{
 		path: '/account',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.updateAccount(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.updateAccount,
 	},
 	{
 		path: '/account/verify',
 		method: 'post',
-		controllers: [makeController(async (req) => WalletsController.verifyAccount(req))],
+		handler: WalletsController.verifyAccount,
 	},
 	{
 		path: '/fund',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.fund(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.fund,
 	},
 	{
 		path: '/withdraw',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.withdraw(req))],
+		middlewares: [isAuthenticated],
+		handler: WalletsController.withdraw,
 	},
 ])

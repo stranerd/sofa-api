@@ -1,31 +1,34 @@
 import { FacultyController } from '@application/controllers/school/faculties'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const facultiesRoutes = groupRoutes('/faculties', [
+export const facultiesRoutes = groupRoutes({ path: '/faculties' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => FacultyController.get(req))],
+		handler: FacultyController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => FacultyController.find(req))],
+		handler: FacultyController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => FacultyController.create(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: FacultyController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => FacultyController.update(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: FacultyController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => FacultyController.delete(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: FacultyController.delete,
 	},
 ])

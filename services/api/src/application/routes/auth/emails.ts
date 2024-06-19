@@ -1,26 +1,27 @@
-import { groupRoutes, makeController } from 'equipped'
 import { EmailsController } from '@application/controllers/auth/emails'
 import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
+import { groupRoutes } from 'equipped'
 
-export const emailRoutes = groupRoutes('/emails', [
+export const emailRoutes = groupRoutes({ path: '/emails' }, [
 	{
 		path: '/signin',
 		method: 'post',
-		controllers: [makeController(async (req) => EmailsController.signin(req))],
+		handler: async (req) => EmailsController.signin(req),
 	},
 	{
 		path: '/signup',
 		method: 'post',
-		controllers: [makeController(async (req) => EmailsController.signup(req))],
+		handler: async (req) => EmailsController.signup(req),
 	},
 	{
 		path: '/verify/mail',
 		method: 'post',
-		controllers: [isAuthenticatedButIgnoreVerified, makeController(async (req) => EmailsController.sendVerificationMail(req))],
+		middlewares: [isAuthenticatedButIgnoreVerified],
+		handler: async (req) => EmailsController.sendVerificationMail(req),
 	},
 	{
 		path: '/verify',
 		method: 'post',
-		controllers: [makeController(async (req) => EmailsController.verifyEmail(req))],
+		handler: async (req) => EmailsController.verifyEmail(req),
 	},
 ])

@@ -1,51 +1,58 @@
 import { UsersController } from '@application/controllers/users/users'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const usersRoutes = groupRoutes('/users', [
+export const usersRoutes = groupRoutes({ path: '/users' }, [
 	{
 		path: '/type',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateType(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateType,
 	},
 	{
 		path: '/organization/code',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateOrgCode(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateOrgCode,
 	},
 	{
 		path: '/ai',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateAi(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateAi,
 	},
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => UsersController.get(req))],
+		handler: UsersController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => UsersController.find(req))],
+		handler: UsersController.find,
 	},
 	{
 		path: '/socials',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateSocials(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateSocials,
 	},
 	{
 		path: '/location',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateLocation(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateLocation,
 	},
 	{
 		path: '/editing/quizzes',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateEditingQuizzes(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateEditingQuizzes,
 	},
 	{
 		path: '/saved/classes',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateSavedClasses(req))],
+		middlewares: [isAuthenticated],
+		handler: UsersController.updateSavedClasses,
 	},
 ])

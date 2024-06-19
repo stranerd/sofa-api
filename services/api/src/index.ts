@@ -1,4 +1,4 @@
-import { routes } from '@application/routes'
+import { router } from '@application/routes'
 import { PlansUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { isProd, port } from '@utils/environment'
@@ -31,7 +31,7 @@ const start = async () => {
 		},
 	}
 	const app = appInstance.server
-	app.routes = routes
+	app.addRouter(router)
 	await app.start(port)
 	await startJobs()
 }

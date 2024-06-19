@@ -1,26 +1,27 @@
 import { TutorRequestsController } from '@application/controllers/users/tutorRequests'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const tutorRequestsRoutes = groupRoutes('/tutorRequests', [
+export const tutorRequestsRoutes = groupRoutes({ path: '/tutorRequests', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TutorRequestsController.get(req))],
+		handler: TutorRequestsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TutorRequestsController.find(req))],
+		handler: TutorRequestsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TutorRequestsController.create(req))],
+		handler: TutorRequestsController.create,
 	},
 	{
 		path: '/:id/accept',
 		method: 'put',
-		controllers: [isAdmin, makeController(async (req) => TutorRequestsController.accept(req))],
+		middlewares: [isAdmin],
+		handler: TutorRequestsController.accept,
 	},
 ])

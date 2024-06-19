@@ -1,41 +1,41 @@
 import { SchedulesController } from '@application/controllers/organizations/schedules'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const schedulesRoutes = groupRoutes('/schedules', [
+export const schedulesRoutes = groupRoutes({ path: '/schedules', middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.get(req))],
+		handler: SchedulesController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.find(req))],
+		handler: SchedulesController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.create(req))],
+		handler: SchedulesController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.update(req))],
+		handler: SchedulesController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.delete(req))],
+		handler: SchedulesController.delete,
 	},
 	{
 		path: '/:id/start',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.start(req))],
+		handler: SchedulesController.start,
 	},
 	{
 		path: '/:id/end',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => SchedulesController.end(req))],
+		handler: SchedulesController.end,
 	},
 ])

@@ -20,7 +20,7 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 		await TagsUseCases.updateMeta({ ids: after.tagIds.concat(after.topicId), property: TagMeta.courses, value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['study/courses', `study/courses/${after.id}`], after)
+		await appInstance.listener.updated(['study/courses', `study/courses/${after.id}`], { after, before })
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 
 		if (changes.topicId || changes.tagIds) {

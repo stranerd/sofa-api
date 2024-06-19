@@ -6,7 +6,7 @@ import { myStudyRoutes } from './myStudy'
 import { questionsRoutes } from './questions'
 import { quizzesRoutes } from './quizzes'
 
-export const studyRoutes = groupRoutes('/study', [
+export const studyRoutes = groupRoutes({ path: '/study' }, [
 	...quizzesRoutes,
 	...questionsRoutes,
 	...foldersRoutes,

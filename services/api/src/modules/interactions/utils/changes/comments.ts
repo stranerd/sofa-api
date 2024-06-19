@@ -16,8 +16,8 @@ export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, Comme
 				value: 1,
 			})
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated(['interactions/comments', `interactions/comments/${after.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated(['interactions/comments', `interactions/comments/${after.id}`], { before, after })
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/comments', `interactions/comments/${before.id}`], before)

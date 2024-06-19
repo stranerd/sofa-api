@@ -1,31 +1,34 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { InstitutionController } from '../../controllers/school/institutions'
 
-export const institutionsRoutes = groupRoutes('/institutions', [
+export const institutionsRoutes = groupRoutes({ path: '/institutions' }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => InstitutionController.get(req))],
+		handler: InstitutionController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => InstitutionController.find(req))],
+		handler: InstitutionController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => InstitutionController.create(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: InstitutionController.create,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => InstitutionController.update(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: InstitutionController.update,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => InstitutionController.delete(req))],
+		middlewares: [isAuthenticated, isAdmin],
+		handler: InstitutionController.delete,
 	},
 ])
