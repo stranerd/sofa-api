@@ -7,6 +7,8 @@ import { registerSockets } from '@utils/sockets'
 import { appInstance } from '@utils/types'
 import { initializeApp } from 'firebase-admin/app'
 
+import schemas from '@application/schema.json'
+
 const start = async () => {
 	if (isProd) initializeApp()
 	await appInstance.startConnections()
@@ -31,6 +33,7 @@ const start = async () => {
 		},
 	}
 	const app = appInstance.server
+	app.addSchema(schemas)
 	app.addRouter(router)
 	await app.start(port)
 	await startJobs()
