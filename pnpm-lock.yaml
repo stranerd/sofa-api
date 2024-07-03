@@ -21,8 +21,8 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0(eslint@9.0.0)(typescript@5.4.4)
       equipped:
-        specifier: 5.0.0-alpha.9
-        version: 5.0.0-alpha.9
+        specifier: 5.0.0-alpha.11
+        version: 5.0.0-alpha.11
       eslint:
         specifier: ^9.0.0
         version: 9.0.0
@@ -54,8 +54,8 @@ importers:
         specifier: ^7.9.0
         version: 7.9.0
       equipped:
-        specifier: 5.0.0-alpha.9
-        version: 5.0.0-alpha.9
+        specifier: 5.0.0-alpha.11
+        version: 5.0.0-alpha.11
       firebase-admin:
         specifier: ^12.0.0
         version: 12.0.0
@@ -2105,8 +2105,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /equipped@5.0.0-alpha.9:
-    resolution: {integrity: sha512-rbVs15ltRrNtPpH5vTZlzCwMr9tgl4N8v3d9rnrCFvbG10ZDF+vs1MdO6mH5uyjLqILne+xzzXH3KxLZwkDsjg==}
+  /equipped@5.0.0-alpha.11:
+    resolution: {integrity: sha512-7OEJog8EU+5sZveILXPMgYi9hT9JK1RkYsZg5LK29bclSiu/+DxsokEotdIYvo18QlVMkvEoYiUWZK0axyCV9A==}
     dependencies:
       '@fastify/cookie': 9.3.1
       '@fastify/cors': 9.0.1
