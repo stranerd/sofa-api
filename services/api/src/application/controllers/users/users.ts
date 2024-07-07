@@ -115,7 +115,7 @@ export class UsersController {
 	}
 
 	static async updateAi(req: Request) {
-		const uploadedPhoto = req.files.photo?.at(0) ?? null
+		const uploadedPhoto = req.body.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 		const { name, tagline } = validate(

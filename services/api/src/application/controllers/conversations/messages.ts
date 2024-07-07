@@ -25,7 +25,7 @@ export class MessageController {
 				body: Schema.string(),
 				media: Schema.file().nullable(),
 			},
-			{ ...req.body, media: req.files.media?.at(0) ?? null },
+			{ ...req.body, media: req.body.media?.at(0) ?? null },
 		)
 
 		const conversation = await canAccessConversation(req.params.conversationId, req.authUser!.id)

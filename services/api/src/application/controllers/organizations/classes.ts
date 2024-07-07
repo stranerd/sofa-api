@@ -55,7 +55,7 @@ export class ClassesController {
 	}
 
 	static async update(req: Request) {
-		const uploadedPhoto = req.files.photo?.at(0) ?? null
+		const uploadedPhoto = req.body.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 		const { photo: _, ...rest } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
@@ -78,7 +78,7 @@ export class ClassesController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(this.schema(), { ...req.body, photo: req.files.photo?.at(0) ?? null })
+		const data = validate(this.schema(), { ...req.body, photo: req.body.photo?.at(0) ?? null })
 
 		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()

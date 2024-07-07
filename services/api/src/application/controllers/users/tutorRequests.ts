@@ -27,8 +27,8 @@ export class TutorRequestsController {
 			},
 			{
 				...req.body,
-				verification: req.files.verification?.at(0) ?? null,
-				qualification: req.files.qualification ?? [],
+				verification: req.body.verification?.at(0) ?? null,
+				qualification: req.body.qualification ?? [],
 			},
 		)
 
