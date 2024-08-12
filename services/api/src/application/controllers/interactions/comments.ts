@@ -2,11 +2,11 @@ import { CommentsUseCases, InteractionEntities, verifyInteraction } from '@modul
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class CommentsController {
-	private static schema = () => ({
-		body: Schema.string().min(1),
-	})
+const schema = () => ({
+	body: Schema.string().min(1),
+})
 
+export class CommentsController {
 	static async get(req: Request) {
 		const query = req.query as QueryParams
 		return await CommentsUseCases.get(query)
@@ -19,7 +19,7 @@ export class CommentsController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				entity: Schema.object({
 					id: Schema.string().min(1),
 					type: Schema.in(Object.values(InteractionEntities)),
@@ -40,7 +40,7 @@ export class CommentsController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const updated = await CommentsUseCases.update({
 			id: req.params.id,

@@ -2,13 +2,13 @@ import { SchedulesUseCases, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class SchedulesController {
-	private static schema = () => ({
-		title: Schema.string().min(1),
-		description: Schema.string().min(1),
-		time: Schema.object({ start: Schema.number(), end: Schema.number() }).custom((v) => v.end > v.start, 'end must be after start'),
-	})
+const schema = () => ({
+	title: Schema.string().min(1),
+	description: Schema.string().min(1),
+	time: Schema.object({ start: Schema.number(), end: Schema.number() }).custom((v) => v.end > v.start, 'end must be after start'),
+})
 
+export class SchedulesController {
 	static async find(req: Request) {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (!hasAccess?.role) throw new NotAuthorizedError()
@@ -34,7 +34,7 @@ export class SchedulesController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				lessonId: Schema.string().min(1),
 			},
 			req.body,
@@ -57,7 +57,7 @@ export class SchedulesController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin' && hasAccess?.role !== 'teacher') throw new NotAuthorizedError()

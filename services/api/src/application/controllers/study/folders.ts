@@ -2,11 +2,10 @@ import { FolderSaved, FoldersUseCases, verifyToBeSaved } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
+const schema = () => ({
+	title: Schema.string().min(1),
+})
 export class FolderController {
-	private static schema = () => ({
-		title: Schema.string().min(1),
-	})
-
 	static async find(req: Request) {
 		const folder = await FoldersUseCases.find(req.params.id)
 		if (!folder || folder.user.id !== req.authUser!.id) return null
@@ -20,7 +19,7 @@ export class FolderController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const authUserId = req.authUser!.id
 		const user = await UsersUseCases.find(authUserId)
@@ -30,7 +29,7 @@ export class FolderController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const updatedFolder = await FoldersUseCases.update({ id: req.params.id, userId: req.authUser!.id, data })
 		if (updatedFolder) return updatedFolder

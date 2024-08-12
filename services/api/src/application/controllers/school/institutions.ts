@@ -1,12 +1,11 @@
 import { InstitutionsUseCases } from '@modules/school'
 import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
+const schema = () => ({
+	title: Schema.string().min(3),
+	isGateway: Schema.boolean(),
+})
 export class InstitutionController {
-	private static schema = () => ({
-		title: Schema.string().min(3),
-		isGateway: Schema.boolean(),
-	})
-
 	static async find(req: Request) {
 		return await InstitutionsUseCases.find(req.params.id)
 	}
@@ -17,12 +16,12 @@ export class InstitutionController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 		return await InstitutionsUseCases.add(data)
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 		const updatedInstitution = await InstitutionsUseCases.update({ id: req.params.id, data })
 		if (updatedInstitution) return updatedInstitution
 		throw new NotAuthorizedError()

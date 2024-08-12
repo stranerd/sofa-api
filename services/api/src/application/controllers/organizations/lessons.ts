@@ -2,15 +2,15 @@ import { ClassesUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } fr
 import { SectionsSchema, verifySections } from '@modules/study'
 import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
-export class LessonsController {
-	private static schema = () => ({
-		title: Schema.string().min(1),
-	})
+const schema = () => ({
+	title: Schema.string().min(1),
+})
 
+export class LessonsController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				teachers: Schema.array(Schema.string().min(1)),
 			},
 			req.body,
@@ -43,7 +43,7 @@ export class LessonsController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()

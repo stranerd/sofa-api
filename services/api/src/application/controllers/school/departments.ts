@@ -1,11 +1,11 @@
 import { DepartmentsUseCases, FacultiesUseCases } from '@modules/school'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class DepartmentController {
-	private static schema = () => ({
-		title: Schema.string().min(3),
-	})
+const schema = () => ({
+	title: Schema.string().min(3),
+})
 
+export class DepartmentController {
 	static async find(req: Request) {
 		return await DepartmentsUseCases.find(req.params.id)
 	}
@@ -18,7 +18,7 @@ export class DepartmentController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				facultyId: Schema.string().min(1),
 			},
 			req.body,
@@ -30,7 +30,7 @@ export class DepartmentController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 		const updatedDepartment = await DepartmentsUseCases.update({ id: req.params.id, data })
 		if (updatedDepartment) return updatedDepartment
 		throw new NotAuthorizedError()

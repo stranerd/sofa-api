@@ -1,11 +1,10 @@
 import { TagsUseCases, TagTypes } from '@modules/interactions'
 import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
+const schema = () => ({
+	title: Schema.string().min(1),
+})
 export class TagController {
-	private static schema = () => ({
-		title: Schema.string().min(1),
-	})
-
 	static async find(req: Request) {
 		return await TagsUseCases.find(req.params.id)
 	}
@@ -16,7 +15,7 @@ export class TagController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const updatedTag = await TagsUseCases.update({ id: req.params.id, data })
 		if (updatedTag) return updatedTag
@@ -26,7 +25,7 @@ export class TagController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				type: Schema.in(Object.values(TagTypes)),
 			},
 			req.body,

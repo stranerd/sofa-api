@@ -1,11 +1,11 @@
 import { CoursesUseCases, DepartmentsUseCases, InstitutionsUseCases } from '@modules/school'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
-export class CourseController {
-	private static schema = () => ({
-		title: Schema.string().min(3),
-	})
+const schema = () => ({
+	title: Schema.string().min(3),
+})
 
+export class CourseController {
 	static async find(req: Request) {
 		return await CoursesUseCases.find(req.params.id)
 	}
@@ -18,7 +18,7 @@ export class CourseController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				institutionId: Schema.string().min(1),
 				departmentId: Schema.string().min(1).nullable(),
 			},
@@ -40,7 +40,7 @@ export class CourseController {
 	}
 
 	static async update(req: Request) {
-		const data = validate(this.schema(), req.body)
+		const data = validate(schema(), req.body)
 		const updatedCourse = await CoursesUseCases.update({ id: req.params.id, data })
 		if (updatedCourse) return updatedCourse
 		throw new NotAuthorizedError()

@@ -5,22 +5,21 @@ import { UsersUseCases } from '@modules/users'
 import { AuthUser, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
 
+const schema = (user: AuthUser | null) => ({
+	title: Schema.string().min(1),
+	description: Schema.string().min(1),
+	photo: Schema.file().image().nullable(),
+	topic: Schema.string().min(1),
+	tags: Schema.array(Schema.string().min(1).lower().trim()).set(),
+	price: Schema.object({
+		amount: Schema.number()
+			.gte(0)
+			.lte(user?.roles.isVerified ? Number.POSITIVE_INFINITY : 0)
+			.default(0),
+		currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN),
+	}),
+})
 export class CourseController {
-	private static schema = (user: AuthUser | null) => ({
-		title: Schema.string().min(1),
-		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable(),
-		topic: Schema.string().min(1),
-		tags: Schema.array(Schema.string().min(1).lower().trim()).set(),
-		price: Schema.object({
-			amount: Schema.number()
-				.gte(0)
-				.lte(user?.roles.isVerified ? Number.POSITIVE_INFINITY : 0)
-				.default(0),
-			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN),
-		}),
-	})
-
 	static async find(req: Request) {
 		const course = await CoursesUseCases.find(req.params.id)
 		return course
@@ -51,7 +50,7 @@ export class CourseController {
 		const uploadedPhoto = req.body.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { photo: _, topic, tags, ...rest } = validate(this.schema(req.authUser), { ...req.body, photo: uploadedPhoto })
+		const { photo: _, topic, tags, ...rest } = validate(schema(req.authUser), { ...req.body, photo: uploadedPhoto })
 
 		const utags = await verifyTags(topic, tags)
 
@@ -73,7 +72,7 @@ export class CourseController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(req.authUser),
+				...schema(req.authUser),
 			},
 			{ ...req.body, photo: req.body.photo?.at(0) ?? null },
 		)

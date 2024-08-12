@@ -1,4 +1,4 @@
-import { ClassesUseCases, canModOrgs } from '@modules/organizations'
+import { canModOrgs, ClassesUseCases } from '@modules/organizations'
 import { Currencies, Subscription, Subscriptions } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
@@ -6,17 +6,17 @@ import { makeSet } from '@utils/commons'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
 import { SelectedPaymentMethodSchema } from '../payment'
 
-export class ClassesController {
-	private static schema = () => ({
-		title: Schema.string().min(1),
-		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable(),
-		price: Schema.object({
-			amount: Schema.number().gte(0),
-			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN),
-		}),
-	})
+const schema = () => ({
+	title: Schema.string().min(1),
+	description: Schema.string().min(1),
+	photo: Schema.file().image().nullable(),
+	price: Schema.object({
+		amount: Schema.number().gte(0),
+		currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN),
+	}),
+})
 
+export class ClassesController {
 	static async find(req: Request) {
 		const classIns = await ClassesUseCases.find(req.params.id)
 		if (!classIns || classIns.organizationId !== req.params.organizationId) return null
@@ -58,7 +58,7 @@ export class ClassesController {
 		const uploadedPhoto = req.body.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { photo: _, ...rest } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { photo: _, ...rest } = validate(schema(), { ...req.body, photo: uploadedPhoto })
 
 		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()
@@ -78,7 +78,7 @@ export class ClassesController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(this.schema(), { ...req.body, photo: req.body.photo?.at(0) ?? null })
+		const data = validate(schema(), { ...req.body, photo: req.body.photo?.at(0) ?? null })
 
 		const hasAccess = await canModOrgs(req.authUser!, req.params.organizationId)
 		if (!hasAccess) throw new NotAuthorizedError()

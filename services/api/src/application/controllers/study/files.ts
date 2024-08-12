@@ -16,15 +16,15 @@ import { verifyTags } from './tags'
 
 const allowedDocumentTypes = ['application/pdf']
 
-export class FileController {
-	private static schema = () => ({
-		title: Schema.string().min(1),
-		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable(),
-		topic: Schema.string().min(1),
-		tags: Schema.array(Schema.string().min(1)).set(),
-	})
+const schema = () => ({
+	title: Schema.string().min(1),
+	description: Schema.string().min(1),
+	photo: Schema.file().image().nullable(),
+	topic: Schema.string().min(1),
+	tags: Schema.array(Schema.string().min(1)).set(),
+})
 
+export class FileController {
 	static async find(req: Request) {
 		const file = await FilesUseCases.find(req.params.id)
 		return file
@@ -38,7 +38,7 @@ export class FileController {
 	static async create(req: Request) {
 		const data = validate(
 			{
-				...this.schema(),
+				...schema(),
 				media: Schema.or(
 					[Schema.file().video(), Schema.file().image(), Schema.file().custom((val) => allowedDocumentTypes.includes(val?.type))],
 					'unsupported file type',
@@ -80,7 +80,7 @@ export class FileController {
 		const uploadedPhoto = req.body.photo?.at(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { photo: _, topic, tags, ...rest } = validate(this.schema(), { ...req.body, photo: uploadedPhoto })
+		const { photo: _, topic, tags, ...rest } = validate(schema(), { ...req.body, photo: uploadedPhoto })
 
 		const utags = await verifyTags(topic, tags)
 

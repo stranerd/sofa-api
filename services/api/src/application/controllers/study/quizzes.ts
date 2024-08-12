@@ -12,20 +12,20 @@ const modesSchema = Object.values(QuizModes).reduce(
 	{} as Record<QuizModes, ReturnType<typeof Schema.boolean>>,
 )
 
-export class QuizController {
-	private static schema = (isAdmin: boolean) => ({
-		title: Schema.string().min(1),
-		description: Schema.string().min(1),
-		photo: Schema.file().image().nullable(),
-		topic: Schema.string().min(1),
-		tags: Schema.array(Schema.string().min(1)).set(),
-		isForTutors: Schema.boolean()
-			.default(false)
-			.custom((value) => (isAdmin ? true : value === false)),
-		modes: Schema.object(modesSchema),
-		timeLimit: Schema.number().gt(0).int().nullable(),
-	})
+const schema = (isAdmin: boolean) => ({
+	title: Schema.string().min(1),
+	description: Schema.string().min(1),
+	photo: Schema.file().image().nullable(),
+	topic: Schema.string().min(1),
+	tags: Schema.array(Schema.string().min(1)).set(),
+	isForTutors: Schema.boolean()
+		.default(false)
+		.custom((value) => (isAdmin ? true : value === false)),
+	modes: Schema.object(modesSchema),
+	timeLimit: Schema.number().gt(0).int().nullable(),
+})
 
+export class QuizController {
 	static async find(req: Request) {
 		const quiz = await QuizzesUseCases.find(req.params.id)
 		return quiz
@@ -71,7 +71,7 @@ export class QuizController {
 			topic,
 			tags,
 			...rest
-		} = validate(this.schema(isAdmin), {
+		} = validate(schema(isAdmin), {
 			...req.body,
 			photo: uploadedPhoto,
 		})
@@ -97,7 +97,7 @@ export class QuizController {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
 		const data = validate(
 			{
-				...this.schema(isAdmin),
+				...schema(isAdmin),
 				courseId: Schema.string().min(1).nullable().default(null),
 			},
 			{ ...req.body, photo: req.body.photo?.at(0) ?? null },
