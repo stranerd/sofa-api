@@ -87,7 +87,7 @@ export class QuestionController {
 	}
 
 	static async update(req: Request) {
-		const uploadedMedia = req.body.questionMedia?.at(0) ?? null
+		const uploadedMedia = req.body.questionMedia?.at?.(0) ?? null
 		const changedMedia = !!uploadedMedia || req.body.photo === null
 
 		const { questionMedia: _, ...rest } = validate(schema(req.body ?? {}), {
@@ -116,7 +116,7 @@ export class QuestionController {
 				...schema(req.body),
 				quizId: Schema.string().min(1),
 			},
-			{ ...req.body, quizId: req.params.quizId, questionMedia: req.body.photo?.at(0) ?? null },
+			{ ...req.body, quizId: req.params.quizId, questionMedia: req.body.photo?.at?.(0) ?? null },
 		)
 
 		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)

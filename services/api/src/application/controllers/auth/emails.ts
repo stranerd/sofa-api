@@ -7,7 +7,7 @@ export class EmailsController {
 		const userCredential = {
 			...req.body,
 			email: req.body.email ?? '',
-			photo: req.body.photo?.at(0) ?? null,
+			photo: req.body.photo?.at?.(0) ?? null,
 		}
 
 		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)

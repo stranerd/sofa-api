@@ -11,7 +11,7 @@ export class UserController {
 
 	static async update(req: Request) {
 		const userId = req.authUser!.id
-		const uploadedPhoto = req.body.photo?.at(0) ?? null
+		const uploadedPhoto = req.body.photo?.at?.(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 		const data = validate(
 			{

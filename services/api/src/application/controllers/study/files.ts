@@ -46,8 +46,8 @@ export class FileController {
 			},
 			{
 				...req.body,
-				media: req.body.media?.at(0) ?? null,
-				photo: req.body.photo?.at(0) ?? null,
+				media: req.body.media?.at?.(0) ?? null,
+				photo: req.body.photo?.at?.(0) ?? null,
 			},
 		)
 
@@ -77,7 +77,7 @@ export class FileController {
 	}
 
 	static async update(req: Request) {
-		const uploadedPhoto = req.body.photo?.at(0) ?? null
+		const uploadedPhoto = req.body.photo?.at?.(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 		const { photo: _, topic, tags, ...rest } = validate(schema(), { ...req.body, photo: uploadedPhoto })

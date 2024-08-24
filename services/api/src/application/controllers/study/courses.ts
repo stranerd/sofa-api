@@ -47,7 +47,7 @@ export class CourseController {
 	}
 
 	static async update(req: Request) {
-		const uploadedPhoto = req.body.photo?.at(0) ?? null
+		const uploadedPhoto = req.body.photo?.at?.(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 		const { photo: _, topic, tags, ...rest } = validate(schema(req.authUser), { ...req.body, photo: uploadedPhoto })
@@ -74,7 +74,7 @@ export class CourseController {
 			{
 				...schema(req.authUser),
 			},
-			{ ...req.body, photo: req.body.photo?.at(0) ?? null },
+			{ ...req.body, photo: req.body.photo?.at?.(0) ?? null },
 		)
 
 		const tags = await verifyTags(data.topic, data.tags)

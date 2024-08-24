@@ -63,7 +63,7 @@ export class QuizController {
 
 	static async update(req: Request) {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
-		const uploadedPhoto = req.body.photo?.at(0) ?? null
+		const uploadedPhoto = req.body.photo?.at?.(0) ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 		const {
@@ -100,7 +100,7 @@ export class QuizController {
 				...schema(isAdmin),
 				courseId: Schema.string().min(1).nullable().default(null),
 			},
-			{ ...req.body, photo: req.body.photo?.at(0) ?? null },
+			{ ...req.body, photo: req.body.photo?.at?.(0) ?? null },
 		)
 
 		const tags = await verifyTags(data.topic, data.tags)

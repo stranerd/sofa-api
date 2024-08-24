@@ -27,7 +27,7 @@ export class TutorRequestsController {
 			},
 			{
 				...req.body,
-				verification: req.body.verification?.at(0) ?? null,
+				verification: req.body.verification?.at?.(0) ?? null,
 				qualification: req.body.qualification ?? [],
 			},
 		)
@@ -50,7 +50,7 @@ export class TutorRequestsController {
 			],
 			all: true,
 		})
-		const request = pendingRequests.at(0)
+		const request = pendingRequests.at?.(0)
 		if (request) return request
 
 		const { results: quizzes } = await QuizzesUseCases.get({
