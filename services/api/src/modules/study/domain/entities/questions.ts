@@ -3,12 +3,11 @@ import stringSimilarity from 'string-similarity'
 import { Media, QuestionAnswer, QuestionData, QuestionTypes, StrippedQuestionData } from '../types'
 
 export class QuestionEntity extends BaseEntity<QuestionConstructorArgs> {
+	public strippedData: StrippedQuestionData
+
 	constructor(data: QuestionConstructorArgs) {
 		super(data)
-	}
-
-	get strippedData() {
-		return this.stripAnswers(this.data)
+		this.strippedData = this.stripAnswers(data.data)
 	}
 
 	strip() {
