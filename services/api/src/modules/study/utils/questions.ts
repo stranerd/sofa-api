@@ -128,7 +128,7 @@ const parsers: Record<string, TypeParser> = {
 	},
 }
 
-export const generateQuestions = async ({
+export const generateAiQuestions = async ({
 	quiz,
 	userId,
 	amount,

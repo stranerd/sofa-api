@@ -24,6 +24,11 @@ export const questionsRoutes = groupRoutes({ path: '/quizzes/:quizId/questions',
 		handler: QuestionController.create,
 	},
 	{
+		path: '/ai',
+		method: 'post',
+		handler: QuestionController.aiGen,
+	},
+	{
 		path: '/:id',
 		method: 'delete',
 		handler: QuestionController.delete,

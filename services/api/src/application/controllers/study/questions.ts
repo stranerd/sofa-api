@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { canAccessCoursable, Coursable, QuestionsUseCases, QuestionTypes } from '@modules/study'
+import { canAccessCoursable, Coursable, generateAiQuestions, questionsLimits, QuestionsUseCases, QuestionTypes } from '@modules/study'
 import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = (body: Record<string, any>) => ({
@@ -17,7 +17,9 @@ const schema = (body: Record<string, any>) => ({
 	data: Schema.discriminate((d) => d.type, {
 		[QuestionTypes.multipleChoice]: Schema.object({
 			type: Schema.is(QuestionTypes.multipleChoice as const),
-			options: Schema.array(Schema.string().min(1, true)).min(2).max(6),
+			options: Schema.array(Schema.string().min(1, true))
+				.min(questionsLimits.multipleChoice.min)
+				.max(questionsLimits.multipleChoice.max),
 			answers: Schema.array(Schema.number().gte(0).int()).min(1).set(),
 		}).custom((value) => {
 			const length = value?.options?.length ?? 1
@@ -29,12 +31,12 @@ const schema = (body: Record<string, any>) => ({
 		}),
 		[QuestionTypes.writeAnswer]: Schema.object({
 			type: Schema.is(QuestionTypes.writeAnswer as const),
-			answers: Schema.array(Schema.string().min(1, true)).min(1).max(6),
+			answers: Schema.array(Schema.string().min(1, true)).min(questionsLimits.writeAnswer.min).max(questionsLimits.writeAnswer.max),
 		}),
 		[QuestionTypes.fillInBlanks]: Schema.object({
 			type: Schema.is(QuestionTypes.fillInBlanks as const),
 			indicator: Schema.string().min(1),
-			answers: Schema.array(Schema.string().min(1, true)).min(1).max(6),
+			answers: Schema.array(Schema.string().min(1, true)).min(questionsLimits.fillInBlanks.min).max(questionsLimits.fillInBlanks.max),
 		}).custom((value) => {
 			const length = body?.question?.split(value.indicator).length ?? 1
 			return Schema.array(Schema.any())
@@ -44,7 +46,7 @@ const schema = (body: Record<string, any>) => ({
 		[QuestionTypes.dragAnswers]: Schema.object({
 			type: Schema.is(QuestionTypes.dragAnswers as const),
 			indicator: Schema.string().min(1),
-			answers: Schema.array(Schema.string().min(1, true)).min(1).max(6),
+			answers: Schema.array(Schema.string().min(1, true)).min(questionsLimits.dragAnswers.min).max(questionsLimits.dragAnswers.max),
 		}).custom((value) => {
 			const length = body?.question?.split(value.indicator).length ?? 1
 			return Schema.array(Schema.any())
@@ -53,7 +55,7 @@ const schema = (body: Record<string, any>) => ({
 		}),
 		[QuestionTypes.sequence]: Schema.object({
 			type: Schema.is(QuestionTypes.sequence as const),
-			answers: Schema.array(Schema.string().min(1, true)).min(2).max(6),
+			answers: Schema.array(Schema.string().min(1, true)).min(questionsLimits.sequence.min).max(questionsLimits.sequence.max),
 		}),
 		[QuestionTypes.match]: Schema.object({
 			type: Schema.is(QuestionTypes.match as const),
@@ -63,8 +65,8 @@ const schema = (body: Record<string, any>) => ({
 					a: Schema.string().min(1, true),
 				}),
 			)
-				.min(2)
-				.max(10),
+				.min(questionsLimits.match.min)
+				.max(questionsLimits.match.max),
 		}),
 	}),
 })
@@ -111,13 +113,7 @@ export class QuestionController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(
-			{
-				...schema(req.body),
-				quizId: Schema.string().min(1),
-			},
-			{ ...req.body, quizId: req.params.quizId, questionMedia: req.body.photo?.at?.(0) ?? null },
-		)
+		const data = validate(schema(req.body), { ...req.body, questionMedia: req.body.photo?.at?.(0) ?? null })
 
 		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)
 		if (!hasAccess) throw new NotAuthorizedError()
@@ -130,6 +126,25 @@ export class QuestionController {
 			userId: hasAccess.user.id,
 			quizId: hasAccess.id,
 			isAiGenerated: false,
+		})
+	}
+
+	static async aiGen(req: Request) {
+		const data = validate(
+			{
+				amount: Schema.number().int().gt(0).lte(10),
+				questionType: Schema.in(Object.values(QuestionTypes)),
+			},
+			req.body,
+		)
+
+		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)
+		if (!hasAccess) throw new NotAuthorizedError()
+
+		return await generateAiQuestions({
+			...data,
+			quiz: hasAccess,
+			userId: req.authUser!.id,
 		})
 	}
 
