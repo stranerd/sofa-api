@@ -23,18 +23,19 @@ export class LikesController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(
+		const { action, ...data } = validate(
 			{
 				value: Schema.boolean(),
 				entity: Schema.object({
 					id: Schema.string().min(1),
 					type: Schema.in(Object.values(InteractionEntities)),
 				}),
+				action: Schema.in(['likes' as const, 'dislikes' as const]).default('likes'),
 			},
 			req.body,
 		)
 
-		const entity = await verifyInteraction(data.entity, data.value ? 'likes' : 'dislikes')
+		const entity = await verifyInteraction(data.entity, action)
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
