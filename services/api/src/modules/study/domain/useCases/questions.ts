@@ -10,6 +10,11 @@ export class QuestionsUseCase {
 	}
 
 	async add(data: QuestionToModel) {
+		const questions = await this.addMany([data])
+		return questions[0]
+	}
+
+	async addMany(data: QuestionToModel[]) {
 		return await this.repository.add(data)
 	}
 

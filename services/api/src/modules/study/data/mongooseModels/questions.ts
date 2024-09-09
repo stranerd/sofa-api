@@ -40,6 +40,11 @@ const Schema = new appInstance.dbs.mongo.Schema<QuestionFromModel>(
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
+		isAiGenerated: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 		createdAt: {
 			type: Number,
 			required: false,

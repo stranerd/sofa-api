@@ -29,9 +29,8 @@ export class QuestionRepository implements IQuestionRepository {
 		}
 	}
 
-	async add(data: QuestionToModel) {
-		const question = await new Question(data).save()
-		return this.mapper.mapFrom(question)!
+	async add(data: QuestionToModel[]) {
+		return Promise.all(data.map(async (d) => this.mapper.mapFrom(await new Question(d).save())!))
 	}
 
 	async find(id: string) {

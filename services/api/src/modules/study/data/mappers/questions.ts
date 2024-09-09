@@ -16,6 +16,7 @@ export class QuestionMapper extends BaseMapper<QuestionFromModel, QuestionToMode
 					questionMedia: model.questionMedia,
 					timeLimit: model.timeLimit,
 					data: model.data,
+					isAiGenerated: model.isAiGenerated,
 					createdAt: model.createdAt,
 					updatedAt: model.updatedAt,
 				})
@@ -30,6 +31,7 @@ export class QuestionMapper extends BaseMapper<QuestionFromModel, QuestionToMode
 			questionMedia: entity.questionMedia,
 			timeLimit: entity.timeLimit,
 			data: entity.data,
+			isAiGenerated: entity.isAiGenerated,
 		}
 	}
 }

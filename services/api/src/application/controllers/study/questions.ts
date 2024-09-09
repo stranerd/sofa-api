@@ -34,7 +34,7 @@ const schema = (body: Record<string, any>) => ({
 		[QuestionTypes.fillInBlanks]: Schema.object({
 			type: Schema.is(QuestionTypes.fillInBlanks as const),
 			indicator: Schema.string().min(1),
-			answers: Schema.array(Schema.string().min(1, true)).min(1),
+			answers: Schema.array(Schema.string().min(1, true)).min(1).max(6),
 		}).custom((value) => {
 			const length = body?.question?.split(value.indicator).length ?? 1
 			return Schema.array(Schema.any())
@@ -44,7 +44,7 @@ const schema = (body: Record<string, any>) => ({
 		[QuestionTypes.dragAnswers]: Schema.object({
 			type: Schema.is(QuestionTypes.dragAnswers as const),
 			indicator: Schema.string().min(1),
-			answers: Schema.array(Schema.string().min(1, true)).min(1),
+			answers: Schema.array(Schema.string().min(1, true)).min(1).max(6),
 		}).custom((value) => {
 			const length = body?.question?.split(value.indicator).length ?? 1
 			return Schema.array(Schema.any())
@@ -124,7 +124,13 @@ export class QuestionController {
 
 		const questionMedia = data.questionMedia ? await UploaderUseCases.upload('study/questions', data.questionMedia) : null
 
-		return await QuestionsUseCases.add({ ...data, questionMedia, userId: hasAccess.user.id, quizId: hasAccess.id })
+		return await QuestionsUseCases.add({
+			...data,
+			questionMedia,
+			userId: hasAccess.user.id,
+			quizId: hasAccess.id,
+			isAiGenerated: false,
+		})
 	}
 
 	static async delete(req: Request) {

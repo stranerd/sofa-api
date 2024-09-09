@@ -105,6 +105,7 @@ type QuestionConstructorArgs = {
 	questionMedia: Media | null
 	timeLimit: number
 	data: QuestionData
+	isAiGenerated: boolean
 	createdAt: number
 	updatedAt: number
 }

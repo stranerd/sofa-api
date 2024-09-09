@@ -14,4 +14,5 @@ export interface QuestionToModel {
 	questionMedia: Media | null
 	timeLimit: number
 	data: QuestionData
+	isAiGenerated: boolean
 }
