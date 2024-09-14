@@ -140,7 +140,7 @@ export const generateAiQuestions = async ({
 	questionType: QuestionTypes
 }) => {
 	const { results: tags } = await TagsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: quiz.tagIds }],
+		where: [{ field: 'id', condition: Conditions.in, value: quiz.tagIds.concat(quiz.topicId) }],
 		all: true,
 	})
 

@@ -12,7 +12,7 @@ export class AI {
 			const response = await this.#client.chat.completions.create({
 				temperature: 0.2,
 				...options,
-				model: 'gpt-4o',
+				model: 'gpt-4o-2024-08-06',
 			})
 			return response.choices.at(0)?.message?.content?.trim() ?? ''
 		} catch (err) {
