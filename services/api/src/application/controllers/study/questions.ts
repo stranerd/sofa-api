@@ -132,7 +132,7 @@ export class QuestionController {
 	static async aiGen(req: Request) {
 		const data = validate(
 			{
-				amount: Schema.number().int().gt(0).lte(10),
+				amount: Schema.number().int().gt(0).lte(5),
 				questionType: Schema.in(Object.values(QuestionTypes)),
 			},
 			req.body,
