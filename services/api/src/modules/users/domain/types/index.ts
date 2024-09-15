@@ -53,11 +53,14 @@ export type UserAccount = {
 
 export type EmbeddedUser = {
 	id: string
-	bio: Pick<UserBio, 'name' | 'photo'> & {
-		publicName: string
-	}
+	bio: Pick<UserBio, 'name' | 'photo'> & { publicName: string }
 	roles: UserRoles
-	type: UserTypeData | null
+	type:
+		| Pick<Extract<UserTypeData, { type: UserType.agent }>, 'type'>
+		| Pick<Extract<UserTypeData, { type: UserType.student }>, 'type'>
+		| Pick<Extract<UserTypeData, { type: UserType.teacher }>, 'type'>
+		| Pick<Extract<UserTypeData, { type: UserType.organization }>, 'type' | 'name'>
+		| null
 }
 
 export enum UserMeta {
