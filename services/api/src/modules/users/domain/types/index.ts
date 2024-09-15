@@ -106,6 +106,7 @@ export enum ScoreRewards {
 }
 
 export enum UserType {
+	agent = 'agent',
 	student = 'student',
 	teacher = 'teacher',
 	organization = 'organization',
@@ -114,39 +115,53 @@ export enum UserType {
 export enum UserSchoolType {
 	'aspirant' = 'aspirant',
 	'college' = 'college',
-	'university' = 'university',
+	'graduate' = 'graduate',
 }
 
-type AspirantType = {
-	type: UserSchoolType.aspirant
-	exams: {
-		institutionId: string
-		courseIds: string[]
-		startDate: number
-		endDate: number
-	}[]
-}
-
-type CollegeType = {
-	type: UserSchoolType.college
-	institutionId: string
-	facultyId: string
-	departmentId: string
-}
+export type UserSchool =
+	| {
+			type: UserSchoolType.aspirant
+			exams: {
+				institutionId: string
+				courseIds: string[]
+			}[]
+	  }
+	| {
+			type: UserSchoolType.college
+			institutionId: string
+			facultyId: string
+			departmentId: string
+	  }
+	| {
+			type: UserSchoolType.graduate
+	  }
+	| null
 
 export type UserTypeData =
 	| {
 			type: UserType.student
-			school: AspirantType | CollegeType | { type: UserSchoolType.university }
+			school: UserSchool
 	  }
 	| {
 			type: UserType.teacher
-			school: string
+			degree: string
+			workplace: string
+			opLength: string
+			sellsMaterials: boolean
+			school: UserSchool
 	  }
 	| {
 			type: UserType.organization
 			name: string
 			code: string
+			opLength: string
+			teachersSize: string
+			studentsSize: string
+			sellsMaterials: boolean
+			school: UserSchool
+	  }
+	| {
+			type: UserType.agent
 	  }
 
 export type UserTutor = {

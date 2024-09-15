@@ -2,8 +2,60 @@ import { ClassesUseCases } from '@modules/organizations'
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, canAccessCoursable } from '@modules/study'
-import { UserSchoolType, UserSocials, UserType, UsersUseCases } from '@modules/users'
+import { UserSchool, UserSchoolType, UserSocials, UserType, UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+
+const schoolSchema = Schema.discriminate((s) => s.type, {
+	[UserSchoolType.college]: Schema.object({
+		type: Schema.is(UserSchoolType.college as const),
+		departmentId: Schema.string().min(1),
+		facultyId: Schema.string().min(1),
+		institutionId: Schema.string().min(1),
+	}),
+	[UserSchoolType.aspirant]: Schema.object({
+		type: Schema.is(UserSchoolType.aspirant as const),
+		exams: Schema.array(
+			Schema.object({
+				institutionId: Schema.string().min(1),
+				courseIds: Schema.array(Schema.string().min(1)),
+			}),
+		),
+	}),
+	[UserSchoolType.graduate]: Schema.object({
+		type: Schema.is(UserSchoolType.graduate as const),
+	}),
+}).nullable()
+
+const verifySchool = async (school: UserSchool): Promise<UserSchool> => {
+	if (school?.type === UserSchoolType.graduate) return school
+	if (school?.type === UserSchoolType.college) {
+		const department = await DepartmentsUseCases.find(school.departmentId)
+		if (!department) throw new BadRequestError('department not found')
+		return {
+			...school,
+			institutionId: department.institutionId,
+			facultyId: department.facultyId,
+		}
+	}
+	if (school?.type === UserSchoolType.aspirant) {
+		const exams = await Promise.all(
+			school.exams.map(async (exam) => {
+				const { results: courses } = await CoursesUseCases.get({
+					where: [
+						{ field: 'id', condition: Conditions.in, value: exam.courseIds },
+						{ field: 'institutionId', value: exam.institutionId },
+					],
+				})
+				return {
+					...exam,
+					courseIds: courses.map((c) => c.id),
+				}
+			}),
+		)
+		return { ...school, exams }
+	}
+	return null
+}
 
 export class UsersController {
 	static async get(req: Request) {
@@ -24,80 +76,47 @@ export class UsersController {
 				data: Schema.discriminate((d) => d.type, {
 					[UserType.student]: Schema.object({
 						type: Schema.is(UserType.student as const),
-						school: Schema.discriminate((s) => s.type, {
-							[UserSchoolType.college]: Schema.object({
-								type: Schema.is(UserSchoolType.college as const),
-								departmentId: Schema.string().min(1),
-							}),
-							[UserSchoolType.aspirant]: Schema.object({
-								type: Schema.is(UserSchoolType.aspirant as const),
-								exams: Schema.array(
-									Schema.object({
-										institutionId: Schema.string().min(1),
-										startDate: Schema.time().asStamp(),
-										endDate: Schema.time().asStamp(),
-										courseIds: Schema.array(Schema.string().min(1)),
-									}).custom((exam) => exam.endDate >= exam.startDate, 'end date cannot be less than start date'),
-								),
-							}),
-							[UserSchoolType.university]: Schema.object({
-								type: Schema.is(UserSchoolType.university as const),
-							}),
-						}),
+						school: schoolSchema,
 					}),
 					[UserType.teacher]: Schema.object({
 						type: Schema.is(UserType.teacher as const),
-						school: Schema.string().min(1),
+						degree: Schema.string().min(1),
+						workplace: Schema.string().min(1),
+						opLength: Schema.string().min(1),
+						sellsMaterials: Schema.boolean(),
+						school: schoolSchema,
 					}),
 					[UserType.organization]: Schema.object({
 						type: Schema.is(UserType.organization as const),
 						name: Schema.string().min(1),
 						code: Schema.string().min(6),
+						teachersSize: Schema.string().min(1),
+						studentsSize: Schema.string().min(1),
+						opLength: Schema.string().min(1),
+						sellsMaterials: Schema.boolean(),
+						school: schoolSchema,
+					}),
+					[UserType.agent]: Schema.object({
+						type: Schema.is(UserType.agent as const),
 					}),
 				}),
 			},
 			req.body,
 		)
 
-		if (data.type === UserType.student) {
-			if (data.school.type === UserSchoolType.college) {
-				const department = await DepartmentsUseCases.find(data.school.departmentId)
-				if (!department) throw new BadRequestError('department not found')
-				const updated = await UsersUseCases.updateType({
-					userId: req.authUser!.id,
-					data: {
+		const cleaned =
+			'school' in data
+				? {
 						...data,
-						school: {
-							...data.school,
-							institutionId: department.institutionId,
-							facultyId: department.facultyId,
-						},
-					},
-				})
-				if (updated) return updated
-			} else if (data.school.type === UserSchoolType.aspirant) {
-				for (const exam of data.school.exams) {
-					const { results: courses } = await CoursesUseCases.get({
-						where: [{ field: 'id', condition: Conditions.in, value: exam.courseIds }],
-						all: true,
-					})
-					if (courses.length !== exam.courseIds.length) throw new BadRequestError('courses not found')
-					if (courses.find((c) => c.institutionId !== exam.institutionId))
-						throw new BadRequestError('mismatched courses and institutions')
-				}
-				const updated = await UsersUseCases.updateType({
-					userId: req.authUser!.id,
-					data: { ...data, school: data.school },
-				})
-				if (updated) return updated
-			} else if (data.school.type === UserSchoolType.university) {
-				const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, school: data.school } })
-				if (updated) return updated
-			}
-		} else {
-			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data })
-			if (updated) return updated
-		}
+						school: await verifySchool(data.school),
+					}
+				: data
+
+		const updated = await UsersUseCases.updateType({
+			userId: req.authUser!.id,
+			data: cleaned,
+		})
+		if (updated) return updated
 		throw new NotAuthorizedError('cannot update user type')
 	}
 
