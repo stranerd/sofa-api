@@ -1,24 +1,11 @@
 import { AuthUseCases, AuthUsersUseCases, generateAuthOutput } from '@modules/auth'
-import { UploaderUseCases } from '@modules/storage'
 import { AuthTypes, BadRequestError, Request, Schema, validate, Validation } from 'equipped'
 
 export class EmailsController {
 	static async signup(req: Request) {
-		const userCredential = {
-			...req.body,
-			email: req.body.email ?? '',
-			photo: req.body.photo?.at?.(0) ?? null,
-		}
+		const user = await AuthUsersUseCases.findUserByEmail(req.body.email || '')
 
-		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)
-
-		const {
-			email,
-			name,
-			description,
-			password,
-			photo: userPhoto,
-		} = validate(
+		const data = validate(
 			{
 				email: Schema.string()
 					.email()
@@ -27,30 +14,16 @@ export class EmailsController {
 						if (!user) return Validation.isValid(email)
 						if (user.authTypes.includes(AuthTypes.email))
 							return Validation.isInvalid(['this email already exists with a password attached'], email)
-						if (user.authTypes.includes(AuthTypes.google))
-							return Validation.isInvalid(
-								['this email is associated with a google account. Try signing in with google'],
-								email,
-							)
-						return Validation.isInvalid(['email already in use'], email)
+						return Validation.isValid(email)
 					}),
 				password: Schema.string().min(8).max(16),
-				description: Schema.string(),
-				photo: Schema.file().image().nullable(),
-				name: Schema.object({
-					first: Schema.string().min(1),
-					last: Schema.string(),
-				}),
 			},
-			userCredential,
+			req.body,
 		)
 
-		const photo = userPhoto ? await UploaderUseCases.upload('profiles/photos', userPhoto) : null
-		const validateData = { name, email, password, photo, description }
-
 		const updatedUser = user
-			? await AuthUsersUseCases.updateUserDetails({ userId: user.id, data: validateData })
-			: await AuthUseCases.registerUser(validateData)
+			? await AuthUsersUseCases.updateUserDetails({ userId: user.id, data })
+			: await AuthUseCases.registerUser(data)
 
 		return await generateAuthOutput(updatedUser)
 	}

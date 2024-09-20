@@ -24,10 +24,13 @@ export class AuthUseCase {
 
 	async registerUser(params: RegisterInput) {
 		const userModel: UserToModel = {
-			...params,
+			name: { first: '', last: '' },
+			description: '',
+			photo: null,
 			phone: null,
 			isEmailVerified: false,
 			authTypes: [AuthTypes.email],
+			...params,
 		}
 
 		return await this.repository.addNewUser(userModel, AuthTypes.email)

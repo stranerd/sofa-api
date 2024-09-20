@@ -16,7 +16,7 @@ export interface RoleInput {
 	roles: Record<string, boolean>
 }
 
-export interface RegisterInput extends UserUpdateInput {
+export interface RegisterInput {
 	email: string
 	password: string
 }
