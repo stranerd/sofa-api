@@ -18,18 +18,10 @@ const start = async () => {
 	await PlansUseCases.init()
 	appInstance.listener.callers = {
 		onConnect: async (userId, socketId) => {
-			await UsersUseCases.updateStatus({
-				userId,
-				socketId,
-				add: true,
-			})
+			await UsersUseCases.updateStatus({ userId, socketId, add: true })
 		},
 		onDisconnect: async (userId, socketId) => {
-			await UsersUseCases.updateStatus({
-				userId,
-				socketId,
-				add: false,
-			})
+			await UsersUseCases.updateStatus({ userId, socketId, add: false })
 		},
 	}
 	const app = appInstance.server
