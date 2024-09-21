@@ -9,4 +9,7 @@ const messageRepository = MessageRepository.getInstance()
 export const ConversationsUseCases = new ConversationsUseCase(conversationRepository)
 export const MessagesUseCases = new MessagesUseCase(messageRepository)
 
+export { ConversationEntity } from './domain/entities/conversations'
+export { MessageEntity } from './domain/entities/messages'
+
 export { canAccessConversation } from './utils'

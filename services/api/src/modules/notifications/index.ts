@@ -17,6 +17,8 @@ export const PhoneErrorsUseCases = new PhoneErrorsUseCase(phoneErrorRepository)
 export const TokensUseCases = new TokensUseCase(tokenRepository)
 export const NotificationsUseCases = new NotificationsUseCase(notificationRepository)
 
+export { NotificationEntity } from './domain/entities/notifications'
+
 export { NotificationType } from './domain/types'
 export { sendMailAndCatchError } from './utils/email'
 export { sendNotification } from './utils/notifications'
