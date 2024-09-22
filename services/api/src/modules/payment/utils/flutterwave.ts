@@ -36,7 +36,7 @@ type TransferRate = {
 	destination: { currency: Currencies; amount: number }
 }
 
-type Bank = {
+export type Bank = {
 	id: number
 	code: string
 	name: string
@@ -105,7 +105,7 @@ export class FlutterwavePayment {
 		const cachedBanks = await appInstance.cache.get(key)
 		if (cachedBanks) return JSON.parse(cachedBanks) as Bank[]
 		const res = await axios.get(`/banks/${country}`).catch(() => null)
-		const banks = (res?.data?.data as Bank[]) ?? []
+		const banks: Bank[] = ((res?.data?.data as Bank[]) ?? []).map((bank) => ({ id: bank.id, code: bank.code, name: bank.name }))
 		await appInstance.cache.set(key, JSON.stringify(banks), 60 * 60 * 24)
 		return banks
 	}

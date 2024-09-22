@@ -25,6 +25,13 @@ export const MethodsUseCases = new MethodsUseCase(methodRepository)
 export const WalletsUseCases = new WalletsUseCase(walletRepository)
 export const WithdrawalsUseCases = new WithdrawalsUseCase(withdrawalRepository)
 
+export { MethodEntity } from './domain/entities/methods'
+export { PlanEntity } from './domain/entities/plans'
+export { PurchaseEntity } from './domain/entities/purchases'
+export { TransactionEntity } from './domain/entities/transactions'
+export { WalletEntity } from './domain/entities/wallets'
+export { WithdrawalEntity } from './domain/entities/withdrawals'
+
 export {
 	Currencies,
 	CurrencyCountries,
@@ -36,7 +43,9 @@ export {
 	TransactionType,
 } from './domain/types'
 export type { SelectedPaymentMethod } from './domain/types'
+export type { Bank } from './utils/flutterwave'
 export { FlutterwavePayment } from './utils/flutterwave'
+export { SelectedPaymentMethodSchema } from './utils'
 export { updateOrgsMembersDays } from './utils/plans'
 export { findPurchasable } from './utils/purchases'
 export { Subscriptions } from './utils/subscriptions'

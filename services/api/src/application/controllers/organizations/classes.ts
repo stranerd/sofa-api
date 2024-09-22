@@ -1,10 +1,9 @@
 import { canModOrgs, ClassesUseCases } from '@modules/organizations'
-import { Currencies, Subscription, Subscriptions } from '@modules/payment'
+import { Currencies, SelectedPaymentMethodSchema, Subscription, Subscriptions } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import { makeSet } from '@utils/commons'
 import { BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
-import { SelectedPaymentMethodSchema } from '../payment'
 
 const schema = () => ({
 	title: Schema.string().min(1),
