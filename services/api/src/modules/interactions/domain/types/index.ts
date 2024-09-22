@@ -9,12 +9,40 @@ export enum InteractionEntities {
 	conversations = 'conversations',
 }
 
-export type Interaction = {
-	type: InteractionEntities
+type BaseInteractionEntity = {
 	id: string
+	userId: string
 }
 
-export type InteractionEntity = Interaction & { userId: string }
+export type InteractionEntity = BaseInteractionEntity &
+	(
+		| {
+				type: InteractionEntities.comments
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.courses
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.quizzes
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.users
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.quizQuestions
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.conversations
+				relations: {}
+		  }
+	)
+
+export type Interaction = Omit<InteractionEntity, 'userId' | 'relations'>
 
 export enum CommentMeta {
 	comments = 'comments',

@@ -33,7 +33,7 @@ export const createPlay = async (
 	if (view)
 		await ViewsUseCases.create({
 			user: user.getEmbedded(),
-			entity: { id: quiz.id, type: InteractionEntities.quizzes, userId: quiz.user.id },
+			entity: { id: quiz.id, type: InteractionEntities.quizzes, userId: quiz.user.id, relations: {} },
 		})
 	return play
 }

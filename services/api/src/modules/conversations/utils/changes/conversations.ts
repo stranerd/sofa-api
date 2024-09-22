@@ -67,7 +67,7 @@ export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromMo
 					user: after.user,
 					rating: after.ended!.rating,
 					message: after.ended!.message,
-					entity: { type: InteractionEntities.conversations, id: after.id, userId: before.tutor.id },
+					entity: { type: InteractionEntities.conversations, id: after.id, userId: before.tutor.id, relations: {} },
 				}),
 			])
 
