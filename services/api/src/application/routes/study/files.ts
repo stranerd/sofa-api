@@ -46,7 +46,7 @@ export const filesRoutes = groupRoutes({ path: '/files' }, [
 			const response = await axios.get(media.link, { baseURL: '', responseType: 'stream' }).catch(() => {
 				throw new BadRequestError('failed to fetch file')
 			})
-			return req.pipe(response.data.pipe)
+			return req.pipe(response.data, { headers: response.headers as any })
 		},
 	},
 ])
