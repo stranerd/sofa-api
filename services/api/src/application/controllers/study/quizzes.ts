@@ -1,5 +1,5 @@
 import { UploaderUseCases } from '@modules/storage'
-import { DraftStatus, QuizModes, QuizzesUseCases } from '@modules/study'
+import { DraftStatus, generateAiQuizAndQuestions, QuestionsUseCases, QuestionTypes, QuizModes, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 import { verifyTags } from './tags'
@@ -95,13 +95,7 @@ export class QuizController {
 
 	static async create(req: Request) {
 		const isAdmin = !!(req.authUser?.roles?.[AuthRole.isAdmin] || req.authUser?.roles?.[AuthRole.isSuperAdmin])
-		const data = validate(
-			{
-				...schema(isAdmin),
-				courseId: Schema.string().min(1).nullable().default(null),
-			},
-			{ ...req.body, photo: req.body.photo?.at?.(0) ?? null },
-		)
+		const data = validate(schema(isAdmin), { ...req.body, photo: req.body.photo?.at?.(0) ?? null })
 
 		const tags = await verifyTags(data.topic, data.tags)
 
@@ -187,5 +181,48 @@ export class QuizController {
 		const updatedQuiz = await QuizzesUseCases.addMembers({ id: req.params.id, ownerId: req.authUser!.id, userIds, grant })
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
+	}
+
+	static async aiGen(req: Request) {
+		const data = validate(
+			{
+				content: Schema.string(),
+			},
+			req.body,
+		)
+
+		const response = await generateAiQuizAndQuestions({
+			finalPrompt: data.content,
+			questionAmount: 5,
+			questionType: QuestionTypes.multipleChoice,
+		})
+
+		const tags = await verifyTags(response.quiz.topic, response.quiz.tags)
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+
+		const quiz = await QuizzesUseCases.add({
+			...tags,
+			title: response.quiz.title,
+			description: response.quiz.description,
+			photo: null,
+			user: user.getEmbedded(),
+			status: DraftStatus.draft,
+			isForTutors: false,
+			timeLimit: null,
+			modes: Object.fromEntries(Object.values(QuizModes).map((mode) => [mode, true])) as any,
+		})
+
+		await QuestionsUseCases.addMany(
+			response.questions.map((q) => ({
+				...q,
+				userId: user.id,
+				quizId: quiz.id,
+				timeLimit: 30,
+				isAiGenerated: true,
+			})),
+		)
+
+		return quiz
 	}
 }

@@ -1,9 +1,5 @@
-import { TagsUseCases } from '@modules/interactions'
 import { AI } from '@utils/ai'
-import { Conditions } from 'equipped'
-import { QuizEntity } from '../domain/entities/quizzes'
 import { QuestionData, QuestionTypes } from '../domain/types'
-import { QuestionsUseCases } from '../init'
 
 export const questionsLimits = {
 	[QuestionTypes.multipleChoice]: { min: 2, max: 6 },
@@ -128,70 +124,81 @@ const parsers: Record<string, TypeParser> = {
 	},
 }
 
-export const generateAiQuestions = async ({
-	quiz,
-	userId,
-	amount,
+export const generateAiQuizAndQuestions = async ({
+	finalPrompt,
+	questionAmount,
 	questionType,
 }: {
-	quiz: QuizEntity
-	userId: string
-	amount: number
+	finalPrompt: string
+	questionAmount: number
 	questionType: QuestionTypes
 }) => {
-	const { results: tags } = await TagsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: quiz.tagIds.concat(quiz.topicId) }],
-		all: true,
-	})
-
 	const type = parsers[questionType]
-	if (!type) return []
+	if (!type) throw new Error(`${questionType} questions not supported`)
 
 	const { prompt, schema: schemaProperties } = type.getPrompt()
 
 	const content = [
-		`Generate ${amount} questions based on the topic "${quiz.title}", description "${quiz.description}" and tags - ${tags.map((t) => t.title).join(', ')}.`,
-		`For each question:  Include a detailed explanation of the solution.`,
+		`Generate a quiz with a concise title, a full description, a concise 1/2-word topic closely relevant to the title, 5 relevant tags, and ${questionAmount} questions, based off the following content`,
+		`For each question: Include a detailed explanation of the solution.`,
 		prompt,
-		`Do not include any bullet indicators or labels for the question, explanation or any of the options or answers. Do not start the explanation with Explanation or any other indicator. Do not start the questionBody with any indicator as well`,
-	].join(' ')
+		`Do not include any bullet indicators or labels for the question, explanation or any of the options or answers. Do not start the explanation with Explanation or any other indicator. Do not start the questionBody with any indicator as well.`,
+		finalPrompt,
+	].join('\n')
 
-	const response = await AI.generateQuestion<{ questions: (Record<string, any> & { questionBody: string; explanation: string })[] }>(
-		content,
-		{
-			type: 'object',
-			properties: {
-				questions: {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: {
-							questionBody: { type: 'string' },
-							explanation: { type: 'string' },
-							...schemaProperties,
-						},
-						required: Object.keys(schemaProperties).concat('questionBody', 'explanation'),
-						additionalProperties: false,
+	const quizProperties = {
+		title: { type: 'string' },
+		description: { type: 'string' },
+		topic: { type: 'string' },
+		tags: {
+			type: 'array',
+			items: { type: 'string' },
+		},
+	}
+
+	const response = await AI.getSchemaResponse<{
+		quiz: { title: string; description: string; topic: string; tags: string[] }
+		questions: (Record<string, any> & { questionBody: string; explanation: string })[]
+	}>(content, {
+		type: 'object',
+		properties: {
+			quiz: {
+				type: 'object',
+				properties: quizProperties,
+				required: Object.keys(quizProperties),
+				additionalProperties: false,
+			},
+			questions: {
+				type: 'array',
+				items: {
+					type: 'object',
+					properties: {
+						questionBody: { type: 'string' },
+						explanation: { type: 'string' },
+						...schemaProperties,
 					},
+					required: Object.keys(schemaProperties).concat('questionBody', 'explanation'),
+					additionalProperties: false,
 				},
 			},
-			required: ['questions'],
-			additionalProperties: false,
 		},
-	)
+		required: ['quiz', 'questions'],
+		additionalProperties: false,
+	})
 
-	if (!response) return []
-
-	return QuestionsUseCases.addMany(
-		response.questions.map((q) => ({
+	if (!response) throw new Error('failed to generate questions')
+	return {
+		quiz: {
+			title: response.quiz.title,
+			description: response.quiz.description,
+			topic: response.quiz.topic,
+			tags: response.quiz.tags,
+		},
+		questions: response.questions.map((q) => ({
 			question: q.questionBody,
 			questionMedia: null,
 			explanation: q.explanation,
 			data: type.getQuestionData(q),
-			userId,
-			quizId: quiz.id,
-			timeLimit: 30,
-			isAiGenerated: true,
 		})),
-	)
+	}
 }

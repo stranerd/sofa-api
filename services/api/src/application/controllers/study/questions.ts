@@ -1,6 +1,14 @@
+import { TagsUseCases } from '@modules/interactions'
 import { UploaderUseCases } from '@modules/storage'
-import { canAccessCoursable, Coursable, generateAiQuestions, questionsLimits, QuestionsUseCases, QuestionTypes } from '@modules/study'
-import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import {
+	canAccessCoursable,
+	Coursable,
+	generateAiQuizAndQuestions,
+	questionsLimits,
+	QuestionsUseCases,
+	QuestionTypes,
+} from '@modules/study'
+import { Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = (body: Record<string, any>) => ({
 	question: Schema.string()
@@ -138,14 +146,34 @@ export class QuestionController {
 			req.body,
 		)
 
-		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, req.authUser!)
+		const user = req.authUser!
+		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, user)
 		if (!hasAccess) throw new NotAuthorizedError()
 
-		return await generateAiQuestions({
-			...data,
-			quiz: hasAccess,
-			userId: req.authUser!.id,
+		const { results: tags } = await TagsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: hasAccess.tagIds.concat(hasAccess.topicId) }],
+			all: true,
 		})
+
+		const response = await generateAiQuizAndQuestions({
+			finalPrompt: `
+Title: ${hasAccess.title}
+Description: ${hasAccess.description}
+Tags: ${tags.map((t) => t.title)}
+`,
+			questionAmount: data.amount,
+			questionType: data.questionType,
+		})
+
+		return QuestionsUseCases.addMany(
+			response.questions.map((q) => ({
+				...q,
+				userId: user.id,
+				quizId: hasAccess.id,
+				timeLimit: 30,
+				isAiGenerated: true,
+			})),
+		)
 	}
 
 	static async delete(req: Request) {

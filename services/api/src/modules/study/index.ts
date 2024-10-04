@@ -15,4 +15,4 @@ export {
 export type { CourseSections, QuestionAnswer } from './domain/types'
 export { SectionsSchema, canAccessCoursable, verifySections } from './utils/courses'
 export { verifyToBeSaved } from './utils/folders'
-export { generateAiQuestions, questionsLimits } from './utils/questions'
+export { generateAiQuizAndQuestions, questionsLimits } from './utils/questions'

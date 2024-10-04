@@ -53,10 +53,10 @@ export class AI {
 		return reply
 	}
 
-	static async generateQuestion<T>(prompt: string, schema: Record<string, unknown>) {
+	static async getSchemaResponse<T>(prompt: string, schema: Record<string, unknown>) {
 		const response = await this.#getResponse({
 			messages: [{ role: 'user', content: prompt }],
-			response_format: { type: 'json_schema', json_schema: { name: 'question-schema', strict: true, schema } },
+			response_format: { type: 'json_schema', json_schema: { name: 'schema', strict: true, schema } },
 		})
 		return response ? (JSON.parse(response) as T) : null
 	}
