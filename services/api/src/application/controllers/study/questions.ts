@@ -1,14 +1,6 @@
-import { TagsUseCases } from '@modules/interactions'
 import { UploaderUseCases } from '@modules/storage'
-import {
-	canAccessCoursable,
-	Coursable,
-	generateAiQuizAndQuestions,
-	questionsLimits,
-	QuestionsUseCases,
-	QuestionTypes,
-} from '@modules/study'
-import { Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { canAccessCoursable, Coursable, questionsLimits, QuestionsUseCases, QuestionTypes } from '@modules/study'
+import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = (body: Record<string, any>) => ({
 	question: Schema.string()
@@ -22,6 +14,7 @@ const schema = (body: Record<string, any>) => ({
 	explanation: Schema.string(),
 	questionMedia: Schema.file().image().nullable(),
 	timeLimit: Schema.number().gt(0).lte(300).int(),
+	isAiGenerated: Schema.boolean().default(false),
 	data: Schema.discriminate((d) => d.type, {
 		[QuestionTypes.multipleChoice]: Schema.object({
 			type: Schema.is(QuestionTypes.multipleChoice as const),
@@ -133,47 +126,7 @@ export class QuestionController {
 			questionMedia,
 			userId: hasAccess.user.id,
 			quizId: hasAccess.id,
-			isAiGenerated: false,
 		})
-	}
-
-	static async aiGen(req: Request) {
-		const data = validate(
-			{
-				amount: Schema.number().int().gt(0).lte(5),
-				questionType: Schema.in(Object.values(QuestionTypes)),
-			},
-			req.body,
-		)
-
-		const user = req.authUser!
-		const hasAccess = await canAccessCoursable(Coursable.quiz, req.params.quizId, user)
-		if (!hasAccess) throw new NotAuthorizedError()
-
-		const { results: tags } = await TagsUseCases.get({
-			where: [{ field: 'id', condition: Conditions.in, value: hasAccess.tagIds.concat(hasAccess.topicId) }],
-			all: true,
-		})
-
-		const response = await generateAiQuizAndQuestions({
-			finalPrompt: `
-Title: ${hasAccess.title}
-Description: ${hasAccess.description}
-Tags: ${tags.map((t) => t.title)}
-`,
-			questionAmount: data.amount,
-			questionType: data.questionType,
-		})
-
-		return QuestionsUseCases.addMany(
-			response.questions.map((q) => ({
-				...q,
-				userId: user.id,
-				quizId: hasAccess.id,
-				timeLimit: 30,
-				isAiGenerated: true,
-			})),
-		)
 	}
 
 	static async delete(req: Request) {

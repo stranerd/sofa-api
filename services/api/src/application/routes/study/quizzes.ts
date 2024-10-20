@@ -37,6 +37,12 @@ export const quizzesRoutes = groupRoutes({ path: '/quizzes' }, [
 		handler: QuizController.create,
 	},
 	{
+		path: '/ai',
+		method: 'post',
+		middlewares: [isAuthenticated],
+		handler: QuizController.aiGen,
+	},
+	{
 		path: '/:id',
 		method: 'delete',
 		middlewares: [isAuthenticated],
