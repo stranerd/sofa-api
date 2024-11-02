@@ -4,17 +4,12 @@ import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, valid
 
 const schema = () => ({
 	title: Schema.string().min(1),
+	teachers: Schema.array(Schema.string().min(1)),
 })
 
 export class LessonsController {
 	static async create(req: Request) {
-		const data = validate(
-			{
-				...schema(),
-				teachers: Schema.array(Schema.string().min(1)),
-			},
-			req.body,
-		)
+		const data = validate(schema(), req.body)
 
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
@@ -33,11 +28,7 @@ export class LessonsController {
 			classId: req.params.classId,
 			data: {
 				title: data.title,
-				curriculum: [],
-				users: {
-					students: [],
-					teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[],
-				},
+				teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[],
 			},
 		})
 	}
@@ -48,11 +39,23 @@ export class LessonsController {
 		const hasAccess = await canAccessOrgClasses(req.authUser!, req.params.organizationId, req.params.classId)
 		if (hasAccess?.role !== 'admin') throw new NotAuthorizedError()
 
+		const { results: teachers } = await MembersUseCases.get({
+			where: [
+				{ field: 'organizationId', value: req.params.organizationId },
+				{ field: 'classId', value: req.params.classId },
+				{ field: 'type', value: MemberTypes.teacher },
+				{ field: 'user.id', condition: Conditions.in, value: data.teachers },
+			],
+		})
+
 		const lesson = await ClassesUseCases.updateLesson({
-			data,
 			organizationId: req.params.organizationId,
 			classId: req.params.classId,
 			lessonId: req.params.id,
+			data: {
+				title: data.title,
+				teachers: teachers.map((m) => m.user?.id).filter(Boolean) as string[],
+			},
 		})
 
 		return lesson

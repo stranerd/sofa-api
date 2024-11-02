@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IClassRepository } from '../../domain/irepositories/classes'
-import { ClassLesson, ClassMembers, EmbeddedUser, LessonMembers } from '../../domain/types'
+import { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../../domain/types'
 import { ClassMapper } from '../mappers/classes'
 import { ClassToModel } from '../models/classes'
 import { Class } from '../mongooseModels/classes'
@@ -60,20 +60,29 @@ export class ClassRepository implements IClassRepository {
 		return !!classIns
 	}
 
-	async addLesson(organizationId: string, classId: string, data: Omit<ClassLesson, 'id'>) {
-		const lesson = {
-			...data,
+	async addLesson(organizationId: string, classId: string, data: ClassLessonInput) {
+		const lesson: ClassLesson = {
 			id: appInstance.dbs.mongo.Id.toString(),
+			title: data.title,
+			curriculum: [],
+			users: {
+				students: [],
+				teachers: data.teachers,
+			},
 		}
 		const classInst = await Class.findOneAndUpdate({ organizationId, _id: classId }, { $push: { lessons: lesson } }, { new: true })
 		return this.mapper.mapFrom(classInst)
 	}
 
-	async updateLesson(organizationId: string, classId: string, lessonId: string, data: Partial<ClassLesson>) {
-		data = Object.fromEntries(Object.entries(data).map(([key, value]) => [`lessons.$.${key}`, value]))
+	async updateLesson(organizationId: string, classId: string, lessonId: string, data: ClassLessonInput) {
 		const classInst = await Class.findOneAndUpdate(
 			{ organizationId, _id: classId, 'lessons.id': lessonId },
-			{ $set: data },
+			{
+				$set: {
+					[`lessons.$.title`]: data.title,
+					[`lessons.$.users.teachers`]: data.teachers,
+				},
+			},
 			{ new: true },
 		)
 		return this.mapper.mapFrom(classInst)

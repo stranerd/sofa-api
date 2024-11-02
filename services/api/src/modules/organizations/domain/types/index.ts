@@ -37,6 +37,11 @@ export type ClassLesson = {
 	curriculum: CourseSections
 }
 
+export type ClassLessonInput = {
+	title: string
+	teachers: string[]
+}
+
 export type ClassMembers = {
 	students: string[]
 }

@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { ClassToModel } from '../../data/models/classes'
 import { IClassRepository } from '../irepositories/classes'
-import { ClassLesson, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
+import { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
 
 export class ClassesUseCase {
 	private repository: IClassRepository
@@ -34,7 +34,7 @@ export class ClassesUseCase {
 		return await this.repository.updateUserBio(user)
 	}
 
-	async addLesson(data: { organizationId: string; classId: string; data: Omit<ClassLesson, 'id'> }) {
+	async addLesson(data: { organizationId: string; classId: string; data: ClassLessonInput }) {
 		return await this.repository.addLesson(data.organizationId, data.classId, data.data)
 	}
 
@@ -42,7 +42,7 @@ export class ClassesUseCase {
 		return await this.repository.deleteLesson(data.organizationId, data.classId, data.lessonId)
 	}
 
-	async updateLesson(input: { organizationId: string; classId: string; lessonId: string; data: Partial<ClassLesson> }) {
+	async updateLesson(input: { organizationId: string; classId: string; lessonId: string; data: ClassLessonInput }) {
 		return await this.repository.updateLesson(input.organizationId, input.classId, input.lessonId, input.data)
 	}
 
