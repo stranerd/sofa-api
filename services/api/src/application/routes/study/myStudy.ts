@@ -1,36 +1,14 @@
 import { MyStudyController } from '@application/controllers/study/myStudy'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 
-export const myStudyRoutes = groupRoutes({ path: '/my', middlewares: [isAuthenticated] }, [
-	{
-		path: '/recent',
-		method: 'get',
-		handler: MyStudyController.recent,
-	},
-	{
-		path: '/byMyOrgs',
-		method: 'get',
-		handler: MyStudyController.byMyOrgs,
-	},
-	{
-		path: '/suggested',
-		method: 'get',
-		handler: MyStudyController.suggested,
-	},
-	{
-		path: '/latest',
-		method: 'get',
-		handler: MyStudyController.latest,
-	},
-	{
-		path: '/rated',
-		method: 'get',
-		handler: MyStudyController.rated,
-	},
-	{
-		path: '/popular',
-		method: 'get',
-		handler: MyStudyController.popular,
-	},
-])
+const router = new Router({ path: '/my', groups: ['My'], middlewares: [isAuthenticated] })
+
+router.get({ path: '/recent', key: 'study-my-recent' })(MyStudyController.recent)
+router.get({ path: '/byMyOrgs', key: 'study-my-byMyOrgs' })(MyStudyController.byMyOrgs)
+router.get({ path: '/suggested', key: 'study-my-suggested' })(MyStudyController.suggested)
+router.get({ path: '/latest', key: 'study-my-latest' })(MyStudyController.latest)
+router.get({ path: '/rated', key: 'study-my-rated' })(MyStudyController.rated)
+router.get({ path: '/popular', key: 'study-my-popular' })(MyStudyController.popular)
+
+export default router

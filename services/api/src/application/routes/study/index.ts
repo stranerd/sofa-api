@@ -1,13 +1,12 @@
 import { Router } from 'equipped'
-import { coursesRoutes } from './courses'
-import { filesRoutes } from './files'
-import { foldersRoutes } from './folders'
-import { myStudyRoutes } from './myStudy'
-import { questionsRoutes } from './questions'
-import { quizzesRoutes } from './quizzes'
+import courses from './courses'
+import files from './files'
+import folders from './folders'
+import myStudy from './myStudy'
+import questions from './questions'
+import quizzes from './quizzes'
 
 const router = new Router({ path: '/study', groups: ['Study'] })
-router.nest()
-router.add(...quizzesRoutes, ...questionsRoutes, ...foldersRoutes, ...coursesRoutes, ...filesRoutes, ...myStudyRoutes)
+router.nest(courses, files, folders, myStudy, questions, quizzes)
 
 export default router

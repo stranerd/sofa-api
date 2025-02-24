@@ -1,34 +1,13 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 import { InstitutionController } from '../../controllers/school/institutions'
 
-export const institutionsRoutes = groupRoutes({ path: '/institutions' }, [
-	{
-		path: '/',
-		method: 'get',
-		handler: InstitutionController.get,
-	},
-	{
-		path: '/:id',
-		method: 'get',
-		handler: InstitutionController.find,
-	},
-	{
-		path: '/',
-		method: 'post',
-		middlewares: [isAuthenticated, isAdmin],
-		handler: InstitutionController.create,
-	},
-	{
-		path: '/:id',
-		method: 'put',
-		middlewares: [isAuthenticated, isAdmin],
-		handler: InstitutionController.update,
-	},
-	{
-		path: '/:id',
-		method: 'delete',
-		middlewares: [isAuthenticated, isAdmin],
-		handler: InstitutionController.delete,
-	},
-])
+const router = new Router({ path: '/institutions', groups: ['Institutions'] })
+
+router.get({ path: '/', key: 'school-institutions-get' })(InstitutionController.get)
+router.get({ path: '/:id', key: 'school-institutions-find' })(InstitutionController.find)
+router.post({ path: '/', key: 'school-institutions-create', middlewares: [isAuthenticated, isAdmin] })(InstitutionController.create)
+router.put({ path: '/:id', key: 'school-institutions-update', middlewares: [isAuthenticated, isAdmin] })(InstitutionController.update)
+router.delete({ path: '/:id', key: 'school-institutions-delete', middlewares: [isAuthenticated, isAdmin] })(InstitutionController.delete)
+
+export default router

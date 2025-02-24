@@ -1,27 +1,12 @@
 import { VerificationsController } from '@application/controllers/users/verifications'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 
-export const verificationsRoutes = groupRoutes({ path: '/verifications', middlewares: [isAuthenticated] }, [
-	{
-		path: '/',
-		method: 'get',
-		handler: VerificationsController.get,
-	},
-	{
-		path: '/:id',
-		method: 'get',
-		handler: VerificationsController.find,
-	},
-	{
-		path: '/',
-		method: 'post',
-		handler: VerificationsController.create,
-	},
-	{
-		path: '/:id/accept',
-		method: 'put',
-		middlewares: [isAdmin],
-		handler: VerificationsController.accept,
-	},
-])
+const router = new Router({ path: '/verifications', groups: ['Verifications'], middlewares: [isAuthenticated] })
+
+router.get({ path: '/', key: 'users-verifications-get' })(VerificationsController.get)
+router.get({ path: '/:id', key: 'users-verifications-find' })(VerificationsController.find)
+router.post({ path: '/', key: 'users-verifications-create' })(VerificationsController.create)
+router.put({ path: '/:id/accept', key: 'users-verifications-accept', middlewares: [isAdmin] })(VerificationsController.accept)
+
+export default router

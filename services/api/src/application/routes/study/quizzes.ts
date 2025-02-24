@@ -1,75 +1,24 @@
 import { QuizController } from '@application/controllers/study/quizzes'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 
-export const quizzesRoutes = groupRoutes({ path: '/quizzes' }, [
-	{
-		path: '/',
-		method: 'get',
-		handler: QuizController.get,
-	},
-	{
-		path: '/tutors',
-		method: 'get',
-		middlewares: [isAuthenticated, isAdmin],
-		handler: QuizController.getForTutors,
-	},
-	{
-		path: '/:id',
-		method: 'get',
-		handler: QuizController.find,
-	},
-	{
-		path: '/:id/similar',
-		method: 'get',
-		handler: QuizController.similar,
-	},
-	{
-		path: '/:id',
-		method: 'put',
-		middlewares: [isAuthenticated],
-		handler: QuizController.update,
-	},
-	{
-		path: '/',
-		method: 'post',
-		middlewares: [isAuthenticated],
-		handler: QuizController.create,
-	},
-	{
-		path: '/:id',
-		method: 'delete',
-		middlewares: [isAuthenticated],
-		handler: QuizController.delete,
-	},
-	{
-		path: '/:id/publish',
-		method: 'post',
-		middlewares: [isAuthenticated],
-		handler: QuizController.publish,
-	},
-	{
-		path: '/:id/reorder',
-		method: 'post',
-		middlewares: [isAuthenticated],
-		handler: QuizController.reorder,
-	},
-	{
-		path: '/:id/access/request',
-		method: 'post',
-		middlewares: [isAuthenticated],
-		handler: QuizController.requestAccess,
-	},
-	{
-		path: '/:id/access/grant',
-		method: 'post',
-		middlewares: [isAuthenticated],
-		handler: QuizController.grantAccess,
-	},
-	{
-		path: '/:id/access/members/manage',
-		method: 'post',
-		middlewares: [isAuthenticated],
-		handler: QuizController.addMembers,
-	},
-])
+const router = new Router({ path: '/quizzes', groups: ['Quizzes'] })
+
+router.get({ path: '/', key: 'study-quizzes-get' })(QuizController.get)
+router.get({ path: '/tutors', key: 'study-quizzes-getForTutors', middlewares: [isAuthenticated, isAdmin] })(QuizController.getForTutors)
+router.get({ path: '/:id', key: 'study-quizzes-find' })(QuizController.find)
+router.get({ path: '/:id/similar', key: 'study-quizzes-similar' })(QuizController.similar)
+router.put({ path: '/:id', key: 'study-quizzes-update', middlewares: [isAuthenticated] })(QuizController.update)
+router.post({ path: '/', key: 'study-quizzes-create', middlewares: [isAuthenticated] })(QuizController.create)
+router.delete({ path: '/:id', key: 'study-quizzes-delete', middlewares: [isAuthenticated] })(QuizController.delete)
+router.post({ path: '/:id/publish', key: 'study-quizzes-publish', middlewares: [isAuthenticated] })(QuizController.publish)
+router.post({ path: '/:id/reorder', key: 'study-quizzes-reorder', middlewares: [isAuthenticated] })(QuizController.reorder)
+router.post({ path: '/:id/access/request', key: 'study-quizzes-requestAccess', middlewares: [isAuthenticated] })(
+	QuizController.requestAccess,
+)
+router.post({ path: '/:id/access/grant', key: 'study-quizzes-grantAccess', middlewares: [isAuthenticated] })(QuizController.grantAccess)
+router.post({ path: '/:id/access/members/manage', key: 'study-quizzes-addMembers', middlewares: [isAuthenticated] })(
+	QuizController.addMembers,
+)
+
+export default router

@@ -1,33 +1,15 @@
 import { AnswerController } from '@application/controllers/plays/answers'
 import { isAuthenticated } from '@application/middlewares'
 import { PlayTypes } from '@modules/plays'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 
 const types = Object.values(PlayTypes).join('|')
-export const answersRoutes = groupRoutes({ path: `/:type(${types})/:typeId/answers`, middlewares: [isAuthenticated] }, [
-	{
-		path: '/',
-		method: 'get',
-		handler: AnswerController.get,
-	},
-	{
-		path: '/:id',
-		method: 'get',
-		handler: AnswerController.find,
-	},
-	{
-		path: '/',
-		method: 'post',
-		handler: AnswerController.answer,
-	},
-	{
-		path: '/end',
-		method: 'post',
-		handler: AnswerController.end,
-	},
-	{
-		path: '/reset',
-		method: 'post',
-		handler: AnswerController.reset,
-	},
-])
+const router = new Router({ path: `/:type(${types})/:typeId/answers`, groups: ['Answers'], middlewares: [isAuthenticated] })
+
+router.get({ path: '/', key: 'plays-answers-get' })(AnswerController.get)
+router.get({ path: '/:id', key: 'plays-answers-find' })(AnswerController.find)
+router.post({ path: '/', key: 'plays-answers-create' })(AnswerController.answer)
+router.post({ path: '/end', key: 'plays-answers-end' })(AnswerController.end)
+router.post({ path: '/reset', key: 'plays-answers-reset' })(AnswerController.reset)
+
+export default router

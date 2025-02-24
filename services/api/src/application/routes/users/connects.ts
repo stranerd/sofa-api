@@ -1,31 +1,13 @@
 import { ConnectsController } from '@application/controllers/users/connects'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 
-export const connectsRoutes = groupRoutes({ path: '/connects', middlewares: [isAuthenticated] }, [
-	{
-		path: '/',
-		method: 'get',
-		handler: ConnectsController.get,
-	},
-	{
-		path: '/:id',
-		method: 'get',
-		handler: ConnectsController.find,
-	},
-	{
-		path: '/',
-		method: 'post',
-		handler: ConnectsController.create,
-	},
-	{
-		path: '/:id/accept',
-		method: 'put',
-		handler: ConnectsController.accept,
-	},
-	{
-		path: '/:id',
-		method: 'delete',
-		handler: ConnectsController.delete,
-	},
-])
+const router = new Router({ path: '/connects', groups: ['Connects'], middlewares: [isAuthenticated] })
+
+router.get({ path: '/', key: 'users-connects-get' })(ConnectsController.get)
+router.get({ path: '/:id', key: 'users-connects-find' })(ConnectsController.find)
+router.post({ path: '/', key: 'users-connects-create' })(ConnectsController.create)
+router.put({ path: '/:id/accept', key: 'users-connects-accept' })(ConnectsController.accept)
+router.delete({ path: '/:id', key: 'users-connects-delete' })(ConnectsController.delete)
+
+export default router

@@ -1,36 +1,14 @@
 import { QuestionController } from '@application/controllers/study/questions'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 
-export const questionsRoutes = groupRoutes({ path: '/quizzes/:quizId/questions', middlewares: [isAuthenticated] }, [
-	{
-		path: '/',
-		method: 'get',
-		handler: QuestionController.get,
-	},
-	{
-		path: '/:id',
-		method: 'get',
-		handler: QuestionController.find,
-	},
-	{
-		path: '/:id',
-		method: 'put',
-		handler: QuestionController.update,
-	},
-	{
-		path: '/',
-		method: 'post',
-		handler: QuestionController.create,
-	},
-	{
-		path: '/ai',
-		method: 'post',
-		handler: QuestionController.aiGen,
-	},
-	{
-		path: '/:id',
-		method: 'delete',
-		handler: QuestionController.delete,
-	},
-])
+const router = new Router({ path: '/quizzes/:quizId/questions', groups: ['Questions'], middlewares: [isAuthenticated] })
+
+router.get({ path: '/', key: 'study-questions-get' })(QuestionController.get)
+router.get({ path: '/:id', key: 'study-questions-find' })(QuestionController.find)
+router.put({ path: '/:id', key: 'study-questions-update' })(QuestionController.update)
+router.post({ path: '/', key: 'study-questions-create' })(QuestionController.create)
+router.post({ path: '/ai', key: 'study-questions-aiGen' })(QuestionController.aiGen)
+router.delete({ path: '/:id', key: 'study-questions-delete' })(QuestionController.delete)
+
+export default router
