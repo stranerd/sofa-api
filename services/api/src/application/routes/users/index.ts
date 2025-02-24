@@ -1,12 +1,11 @@
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 import { connectsRoutes } from './connects'
 import { tutorRequestsRoutes } from './tutorRequests'
 import { usersRoutes } from './users'
 import { verificationsRoutes } from './verifications'
 
-export const userRoutes = groupRoutes({ path: '/users' }, [
-	...connectsRoutes,
-	...usersRoutes,
-	...tutorRequestsRoutes,
-	...verificationsRoutes,
-])
+const router = new Router({ path: '/users', groups: ['Users'] })
+router.nest()
+router.add(...connectsRoutes, ...usersRoutes, ...tutorRequestsRoutes, ...verificationsRoutes)
+
+export default router

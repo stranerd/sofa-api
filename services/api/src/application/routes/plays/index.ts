@@ -1,5 +1,9 @@
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 import { answersRoutes } from './answers'
 import { playsRoutes } from './plays'
 
-export const playRoutes = groupRoutes({ path: '/plays' }, [...playsRoutes, ...answersRoutes])
+const router = new Router({ path: '/plays', groups: ['Plays'] })
+router.nest()
+router.add(...playsRoutes, ...answersRoutes)
+
+export default router
