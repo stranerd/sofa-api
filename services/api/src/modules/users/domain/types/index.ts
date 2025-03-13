@@ -116,12 +116,19 @@ export enum UserType {
 }
 
 export enum UserSchoolType {
+	'secondary' = 'secondary',
 	'aspirant' = 'aspirant',
 	'college' = 'college',
 	'graduate' = 'graduate',
 }
 
 export type UserSchool =
+	| {
+			type: UserSchoolType.secondary
+			schoolName: string
+			schoolLocation: string
+			choiceCourse: string
+	  }
 	| {
 			type: UserSchoolType.aspirant
 			exams: {

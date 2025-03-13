@@ -6,6 +6,12 @@ import { UserSchool, UserSchoolType, UserSocials, UserType, UsersUseCases } from
 import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schoolSchema = Schema.discriminate((s) => s.type, {
+	[UserSchoolType.secondary]: Schema.object({
+		type: Schema.is(UserSchoolType.secondary as const),
+		schoolName: Schema.string().min(1),
+		schoolLocation: Schema.string().min(1),
+		choiceCourse: Schema.string().min(1),
+	}),
 	[UserSchoolType.college]: Schema.object({
 		type: Schema.is(UserSchoolType.college as const),
 		departmentId: Schema.string().min(1),
