@@ -1,5 +1,6 @@
 import { canAccessOrgClasses } from '@modules/organizations'
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
+import { PlayEntity, PlaysUseCases } from '@modules/plays'
 import { UsersUseCases } from '@modules/users'
 import { makeSet } from '@utils/commons'
 import { AuthRole, AuthUser, NotAuthorizedError, Schema } from 'equipped'
@@ -9,6 +10,7 @@ import { FilesUseCases, QuizzesUseCases } from '../init'
 
 const finders = {
 	[Coursable.quiz]: QuizzesUseCases,
+	[Coursable.play]: PlaysUseCases,
 	[Coursable.file]: FilesUseCases,
 }
 
@@ -33,6 +35,7 @@ export const canAccessCoursable = async <T extends Coursable>(
 ): Promise<Type<T> | null> => {
 	const coursable = (await finders[type]?.find(coursableId)) ?? null
 	if (!coursable) return null
+	if (coursable instanceof PlayEntity) return coursable as Type<T>
 	const isQuiz = coursable instanceof QuizEntity
 	// current user owns the item
 	if (coursable.user.id === user.id) return coursable as Type<T>
@@ -77,6 +80,12 @@ export const SectionsSchema = Schema.array(
 					type: Schema.is(Coursable.quiz as const),
 					quizMode: Schema.in(Object.values(QuizModes)),
 				}),
+				[Coursable.play]: Schema.object({
+					id: Schema.string().min(1),
+					type: Schema.is(Coursable.play as const),
+					quizId: Schema.string().min(1),
+					quizMode: Schema.in(Object.values(QuizModes)),
+				}),
 				[Coursable.file]: Schema.object({
 					id: Schema.string().min(1),
 					type: Schema.is(Coursable.file as const),
@@ -97,6 +106,11 @@ export const verifySections = async (sections: CourseSections, user: AuthUser, a
 		(q) => q.id,
 	)
 
+	const allPlays = makeSet(
+		sections.flatMap((s) => s.items.filter((i) => i.type === Coursable.play)),
+		(q) => q.id,
+	)
+
 	await Promise.all([
 		(async () => {
 			const accesses = await Promise.all(
@@ -114,6 +128,18 @@ export const verifySections = async (sections: CourseSections, user: AuthUser, a
 			const accesses = await Promise.all(allQuizzes.map((q) => canAccessCoursable(Coursable.quiz, q.id, user, access)))
 			if (accesses.every((a) => a)) return
 			throw new NotAuthorizedError('you have some invalid quizzes')
+		})(),
+		(async () => {
+			const accesses = await Promise.all(
+				allPlays.map(async (p) => {
+					if (p.type !== Coursable.play) return null
+					const play = await canAccessCoursable(Coursable.play, p.id, user, access)
+					if (!play || play.quizId !== p.quizId || play.data.type !== p.quizMode) return null
+					return access
+				}),
+			)
+			if (accesses.every((a) => a)) return
+			throw new NotAuthorizedError('you have some invalid files')
 		})(),
 	])
 }

@@ -36,6 +36,7 @@ export type Publishable = {
 export enum Coursable {
 	quiz = 'quiz',
 	file = 'file',
+	play = 'play',
 }
 
 export type CoursableData = Publishable & {
@@ -46,6 +47,12 @@ export type CourseSectionItem =
 	| {
 			id: string
 			type: Coursable.quiz
+			quizMode: QuizModes
+	  }
+	| {
+			id: string
+			type: Coursable.play
+			quizId: string
 			quizMode: QuizModes
 	  }
 	| {

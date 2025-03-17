@@ -9,5 +9,6 @@ const playRepository = PlayRepository.getInstance()
 export const AnswersUseCases = new AnswersUseCase(answerRepository)
 export const PlaysUseCases = new PlaysUseCase(playRepository)
 
+export { PlayEntity } from './domain/entities/plays'
 export { PlayStatus, PlayTypes } from './domain/types'
 export { createPlay } from './utils'
