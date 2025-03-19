@@ -2,7 +2,6 @@ import { emails, isDev } from '@utils/environment'
 import { appInstance } from '@utils/types'
 import { Email, EmailsList } from 'equipped'
 import { createTransport } from 'nodemailer'
-import path from 'path'
 import { EmailErrorsUseCases } from '../'
 
 const sendMail = async (email: Email) => {
@@ -16,20 +15,11 @@ const sendMail = async (email: Email) => {
 	})
 	await transporter.verify()
 
-	const attachments = [] as { filename: string; path: string; cid: string }[]
-
-	attachments.push({
-		filename: 'logo.png',
-		path: path.join('emails/attachments/logo.png'),
-		cid: 'logo',
-	})
-
 	await transporter.sendMail({
 		from: `Stranerd ${from}`,
 		html: content,
 		to,
 		subject,
-		attachments,
 	})
 }
 

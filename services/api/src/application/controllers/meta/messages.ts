@@ -1,5 +1,6 @@
+import { renderEmail } from '@utils/emails'
 import { publishers } from '@utils/events'
-import { EmailsList, Request, Schema, readEmailFromPug, validate, Validation } from 'equipped'
+import { EmailsList, Request, Schema, validate, Validation } from 'equipped'
 
 export class MessageController {
 	static async createMessage(req: Request) {
@@ -13,9 +14,9 @@ export class MessageController {
 			req.body,
 		)
 
-		const content = await readEmailFromPug('emails/newFormMessage.pug', {
+		const content = await renderEmail('NewFormMessage', {
 			...data,
-			phone: data.phone ? `${data.phone.code}${data.phone.number}` : '',
+			phone: data.phone ? `${data.phone.code}-${data.phone.number}` : '',
 		})
 		await publishers.SENDMAIL.publish({
 			from: EmailsList.NO_REPLY,

@@ -14,12 +14,17 @@
 	"license": "ISC",
 	"dependencies": {
 		"@google-cloud/storage": "^7.9.0",
+		"@vitejs/plugin-vue": "^5.2.3",
+		"@vue-email/components": "^0.0.21",
+		"@vue-email/render": "^0.0.9",
 		"equipped": "5.0.0-rc.8",
 		"firebase-admin": "^12.0.0",
 		"googleapis": "^134.0.0",
 		"nodemailer": "^6.9.13",
 		"openai": "^4.58.1",
-		"string-similarity": "^4.0.4"
+		"string-similarity": "^4.0.4",
+		"vite": "^6.2.2",
+		"vue": "^3.5.13"
 	},
 	"devDependencies": {
 		"@types/node": "^20.12.5",

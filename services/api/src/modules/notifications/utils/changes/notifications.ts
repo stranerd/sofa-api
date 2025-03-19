@@ -2,10 +2,11 @@ import { UsersUseCases } from '@modules/users'
 import { clientDomain } from '@utils/environment'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks, EmailsList, readEmailFromPug } from 'equipped'
+import { DbChangeCallbacks, EmailsList } from 'equipped'
 import { NotificationFromModel } from '../../data/models/notifications'
 import { NotificationEntity } from '../../domain/entities/notifications'
 import { sendPushNotification } from '../push'
+import { renderEmail } from '@utils/emails'
 
 export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromModel, NotificationEntity> = {
 	created: async ({ after }) => {
@@ -27,9 +28,10 @@ export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromMo
 		if (after.sendEmail) {
 			const user = await UsersUseCases.find(after.userId)
 			if (user) {
-				const content = await readEmailFromPug('emails/newNotification.pug', {
-					notification: after,
-					meta: { link: `${clientDomain}${after.link}` },
+				const content = await renderEmail('NewNotification', {
+					title: after.title,
+					body: after.body,
+					link: `${clientDomain}${after.link}`,
 				})
 				await publishers.SENDMAIL.publish({
 					from: EmailsList.NO_REPLY,

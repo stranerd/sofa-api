@@ -1,4 +1,5 @@
-import { Router } from 'equipped'
+import { PropTypes, renderEmail } from '@utils/emails'
+import { ApiDef, Router } from 'equipped'
 import { authRoutes } from './auth'
 import { conversationRoutes } from './conversations'
 import { interactionRoutes } from './interactions'
@@ -25,3 +26,19 @@ router.add(
 	...studyRoutes,
 	...userRoutes,
 )
+
+router.post<EmailContentTestRouteDef>({ key: 'emails-content-test', path: '/emails-content/test' })(async (req) => {
+	const emailContent = await renderEmail(req.body.email as any, req.body.props)
+	return req.res({
+		headers: { 'Content-Type': 'text/html' },
+		body: emailContent,
+	})
+})
+
+type EmailContentTestRouteDef = ApiDef<{
+	key: 'emails-content-test'
+	method: 'post'
+	body: { email: keyof PropTypes; props: Record<string, unknown> }
+	response: string
+	responseHeaders: { 'Content-Type': 'text/html' }
+}>
