@@ -5,6 +5,7 @@ import { createServer } from 'vite'
 export interface PropTypes {
 	AccountCreated: {}
 	AccountDeleted: {}
+	NewFormMessage: { name: string; email: string; message: string; phone: string }
 	NewNotification: { title: string; body: string; link: string }
 	OrgMemberRequest: { name: string }
 	OrgMemberRequestAccepted: { orgName: string }
@@ -19,6 +20,7 @@ export interface PropTypes {
 export const emails: (keyof PropTypes)[] = [
 	'AccountCreated',
 	'AccountDeleted',
+	'NewFormMessage',
 	'NewNotification',
 	'OrgMemberRequest',
 	'OrgMemberRequestAccepted',
