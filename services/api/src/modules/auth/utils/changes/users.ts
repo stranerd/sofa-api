@@ -1,10 +1,11 @@
 import { UsersUseCases } from '@modules/users'
 import { isProd } from '@utils/environment'
 import { publishers } from '@utils/events'
-import { DbChangeCallbacks, EmailsList, deleteCachedAccessToken, readEmailFromPug } from 'equipped'
+import { DbChangeCallbacks, EmailsList, deleteCachedAccessToken } from 'equipped'
 import { UserFromModel } from '../../data/models/users'
 import { AuthUserEntity } from '../../domain/entities/users'
 import { subscribeToMailingList } from '../mailing'
+import { renderEmail } from '@utils/emails'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEntity> = {
 	created: async ({ after }) => {
@@ -22,12 +23,12 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 		await UsersUseCases.updateRoles({ id: after.id, data: after.roles, timestamp: Date.now() })
 		if (isProd) await subscribeToMailingList(after.email)
 
-		const emailContent = await readEmailFromPug('emails/newUser.pug', {})
+		const content = await renderEmail('AccountCreated', {})
 		await publishers.SENDMAIL.publish({
 			to: after.email,
 			subject: 'Welcome To Stranerd',
 			from: EmailsList.NO_REPLY,
-			content: emailContent,
+			content,
 			data: {},
 		})
 	},
@@ -57,12 +58,12 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 		await UsersUseCases.markDeleted({ id: before.id, timestamp: Date.now() })
 		await UsersUseCases.updateRoles({ id: before.id, data: {}, timestamp: Date.now() })
 
-		const emailContent = await readEmailFromPug('emails/deleteUser.pug', {})
+		const content = await renderEmail('AccountDeleted', {})
 		await publishers.SENDMAIL.publish({
 			to: before.email,
 			subject: 'Sad to see you go',
 			from: EmailsList.NO_REPLY,
-			content: emailContent,
+			content,
 			data: {},
 		})
 	},

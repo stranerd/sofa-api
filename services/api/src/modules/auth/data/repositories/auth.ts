@@ -8,7 +8,6 @@ import {
 	Hash,
 	MediaOutput,
 	Random,
-	readEmailFromPug,
 	signinWithApple,
 	signinWithGoogle,
 	ValidationError,
@@ -18,6 +17,7 @@ import { Credential, PasswordResetInput, Phone } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel, UserToModel } from '../models/users'
 import { User } from '../mongooseModels/users'
+import { renderEmail } from '@utils/emails'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -65,12 +65,12 @@ export class AuthRepository implements IAuthRepository {
 		await appInstance.cache.set('email-verification-token-' + token, email, TOKENS_TTL_IN_SECS)
 
 		// send verification mail
-		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
+		const content = await renderEmail('SendOTP', { token })
 		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Verify Your Email',
 			from: EmailsList.NO_REPLY,
-			content: emailContent,
+			content,
 			data: {},
 		})
 
@@ -127,12 +127,12 @@ export class AuthRepository implements IAuthRepository {
 		await appInstance.cache.set('password-reset-token-' + token, email, TOKENS_TTL_IN_SECS)
 
 		// send reset password mail
-		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
+		const content = await renderEmail('SendOTP', { token })
 		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Reset Your Password',
 			from: EmailsList.NO_REPLY,
-			content: emailContent,
+			content,
 			data: {},
 		})
 
