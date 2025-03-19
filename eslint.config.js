@@ -48,5 +48,5 @@ module.exports = [
 ].map((config) => ({
 	...config,
 	files: ['**/*.ts'],
-	ignores: ["services/*/lib/**/*.js"],
+	ignores: ['services/*/lib/**/*.js', 'services/*/emails/**/*'],
 }))

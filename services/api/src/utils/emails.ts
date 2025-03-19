@@ -1,11 +1,36 @@
 import { render } from '@vue-email/render'
 import path from 'path'
 import { createServer } from 'vite'
-import { emails, type PropTypes } from './types'
 
-export { emails, type PropTypes }
+export interface PropTypes {
+	AccountCreated: {}
+	AccountDeleted: {}
+	NewNotification: { title: string; body: string; link: string }
+	OrgMemberRequest: { name: string }
+	OrgMemberRequestAccepted: { orgName: string }
+	SendOTP: { token: string }
+	SubscriptionExpiringSoon: { name: string; planName: string }
+	SubscriptionPaymentSuccessful: { planName: string }
+	TutorApplicationRequest: { name: string }
+	TutorApplicationRequestAccepted: {}
+	WithdrawalRequested: {}
+}
 
-const dirname = __dirname
+export const emails: (keyof PropTypes)[] = [
+	'AccountCreated',
+	'AccountDeleted',
+	'NewNotification',
+	'OrgMemberRequest',
+	'OrgMemberRequestAccepted',
+	'SendOTP',
+	'SubscriptionExpiringSoon',
+	'SubscriptionPaymentSuccessful',
+	'TutorApplicationRequest',
+	'TutorApplicationRequestAccepted',
+	'WithdrawalRequested',
+]
+
+const dirname = path.join(process.cwd(), 'emails')
 
 async function loadEmails() {
 	const server = await createServer({
