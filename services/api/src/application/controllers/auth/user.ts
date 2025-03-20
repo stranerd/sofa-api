@@ -1,7 +1,7 @@
 import { AuthUsersUseCases, signOutUser } from '@modules/auth'
 import { UploaderUseCases } from '@modules/storage'
 import { officialAccountEmail, superAdminEmail } from '@utils/environment'
-import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
+import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
 
 export class UserController {
 	static async find(req: Request) {
@@ -21,10 +21,11 @@ export class UserController {
 				}),
 				description: Schema.string(),
 				photo: Schema.file().image().nullable(),
+				phone: Schema.any().addRule(Validation.isValidPhone()).nullable(),
 			},
 			{ ...req.body, photo: uploadedPhoto },
 		)
-		const { name, description } = data
+		const { name, description, phone } = data
 		const photo = uploadedPhoto ? await UploaderUseCases.upload('profiles/photos', uploadedPhoto) : undefined
 
 		return await AuthUsersUseCases.updateUserProfile({
@@ -32,6 +33,7 @@ export class UserController {
 			data: {
 				name,
 				description,
+				phone,
 				...((changedPhoto ? { photo } : {}) as any),
 			},
 		})
