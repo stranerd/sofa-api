@@ -1,18 +1,23 @@
-import { openAIKey } from '@utils/environment'
 import { BadRequestError } from 'equipped'
-import OpenAI from 'openai'
+import OpenAI, { AzureOpenAI } from 'openai'
+import { openaiConfig } from './environment'
 
 type Message = { role: 'system' | 'user' | 'assistant'; content: string }
 
 export class AI {
-	static #client = new OpenAI({ apiKey: openAIKey })
+	static #client = new AzureOpenAI({
+		apiKey: openaiConfig.apiKey,
+		deployment: openaiConfig.deployment,
+		apiVersion: openaiConfig.apiVersion,
+		endpoint: openaiConfig.endpoint,
+	})
 
 	static async #getResponse(options: Omit<OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, 'model'>) {
 		try {
 			const response = await this.#client.chat.completions.create({
 				temperature: 0.2,
 				...options,
-				model: 'gpt-4o-2024-08-06',
+				model: '',
 			})
 			return response.choices.at(0)?.message?.content?.trim() ?? ''
 		} catch (err) {

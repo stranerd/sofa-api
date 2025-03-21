@@ -45,6 +45,12 @@ export const youtubeConfig = {
 export const superAdminEmail = getEnvOrFail('SUPER_ADMIN')
 export const officialAccountEmail = getEnvOrFail('OFFICIAL_ACCOUNT')
 
-export const openAIKey = getEnvOrFail('OPEN_AI_KEY')
-
 export const termiiAPIKey = getEnvOrFail('TERMII_API_KEY')
+
+const openai = JSON.parse(getEnvOrFail('OPENAI') || '{}')
+export const openaiConfig = {
+	apiKey: openai.apiKey,
+	endpoint: openai.endpoint,
+	deployment: openai.deployment,
+	apiVersion: openai.apiVersion,
+}
