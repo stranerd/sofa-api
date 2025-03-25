@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
 import { QuizToModel } from '../../data/models/quizzes'
 import { IQuizRepository } from '../irepositories/quizzes'
-import { EmbeddedUser, QuizMeta } from '../types'
+import { EmbeddedUser, QuizMeta, QuizQuestions } from '../types'
 
 export class QuizzesUseCase {
 	private repository: IQuizRepository
@@ -42,8 +42,8 @@ export class QuizzesUseCase {
 		return await this.repository.toggleQuestion(input.quizId, input.userId, input.questionId, input.add)
 	}
 
-	async reorder(input: { id: string; userId: string; questionIds: string[] }) {
-		return await this.repository.reorder(input.id, input.userId, input.questionIds)
+	async updateQuestions(input: { id: string; userId: string; questions: QuizQuestions }) {
+		return await this.repository.updateQuestions(input.id, input.userId, input.questions)
 	}
 
 	async updateMeta(data: { id: string; property: QuizMeta; value: 1 | -1 }) {

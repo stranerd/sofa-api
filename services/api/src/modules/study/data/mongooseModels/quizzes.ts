@@ -9,7 +9,7 @@ const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>(
 	{
 		...CoursableDataSchema,
 		questions: {
-			type: [String],
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed],
 			required: true,
 		},
 		access: {

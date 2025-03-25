@@ -66,6 +66,14 @@ export type CourseSections = {
 	items: CourseSectionItem[]
 }[]
 
+export type QuizQuestions = (
+	| {
+			label: string
+			items: string[]
+	  }
+	| string
+)[]
+
 export enum QuizMeta {
 	games = 'games',
 	tests = 'tests',

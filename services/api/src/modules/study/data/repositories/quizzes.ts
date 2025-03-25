@@ -1,11 +1,18 @@
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
+import { BadRequestError, QueryParams, Validation } from 'equipped'
 import { IQuizRepository } from '../../domain/irepositories/quizzes'
-import { DraftStatus, EmbeddedUser, QuizMeta } from '../../domain/types'
-import { compareArrayContents } from '../../utils'
+import { DraftStatus, EmbeddedUser, QuizMeta, QuizQuestions } from '../../domain/types'
 import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel, QuizToModel } from '../models/quizzes'
 import { Quiz } from '../mongooseModels/quizzes'
+
+const compareQuizSections = (arr1: QuizQuestions, arr2: QuizQuestions): boolean => {
+	const [sorted1, sorted2] = [arr1, arr2]
+		.map((arr) => arr.flatMap((i) => (typeof i === 'string' ? [i] : i.items)))
+		.map((arr) => [...new Set(arr)].sort())
+	if (sorted1.length !== sorted2.length) return false
+	return Validation.Differ.equal(sorted1, sorted2)
+}
 
 export class QuizRepository implements IQuizRepository {
 	private static instance: QuizRepository
@@ -91,7 +98,7 @@ export class QuizRepository implements IQuizRepository {
 		return this.mapper.mapFrom(quiz)
 	}
 
-	async reorder(id: string, userId: string, questionIds: string[]) {
+	async updateQuestions(id: string, userId: string, questions: QuizQuestions) {
 		let res = null as QuizFromModel | null
 		await Quiz.collection.conn.transaction(async (session) => {
 			const quiz = await Quiz.findOne(
@@ -103,8 +110,8 @@ export class QuizRepository implements IQuizRepository {
 				{ session },
 			)
 			if (!quiz) throw new BadRequestError('quiz not found')
-			if (!compareArrayContents(quiz.questions, questionIds)) return
-			res = await Quiz.findByIdAndUpdate(id, { $set: { questions: questionIds } }, { new: true, session })
+			if (!compareQuizSections(quiz.questions, questions)) return
+			res = await Quiz.findByIdAndUpdate(id, { $set: { questions } }, { new: true, session })
 		})
 		return this.mapper.mapFrom(res)
 	}

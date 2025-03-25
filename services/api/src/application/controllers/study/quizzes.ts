@@ -126,15 +126,24 @@ export class QuizController {
 		throw new NotAuthorizedError()
 	}
 
-	static async reorder(req: Request) {
+	static async updateQuestions(req: Request) {
+		const requiredString = Schema.string().min(1)
 		const { questions } = validate(
 			{
-				questions: Schema.array(Schema.string().min(1)).min(1),
+				questions: Schema.array(
+					Schema.or([
+						requiredString,
+						Schema.object({
+							label: requiredString,
+							items: Schema.array(requiredString),
+						}),
+					]),
+				).min(1),
 			},
 			req.body,
 		)
 
-		const updatedQuiz = await QuizzesUseCases.reorder({ id: req.params.id, userId: req.authUser!.id, questionIds: questions })
+		const updatedQuiz = await QuizzesUseCases.updateQuestions({ id: req.params.id, userId: req.authUser!.id, questions })
 		if (updatedQuiz) return updatedQuiz
 		throw new NotAuthorizedError()
 	}

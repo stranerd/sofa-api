@@ -1,7 +1,7 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { QuizToModel } from '../../data/models/quizzes'
 import { QuizEntity } from '../entities/quizzes'
-import { EmbeddedUser, QuizMeta } from '../types'
+import { EmbeddedUser, QuizMeta, QuizQuestions } from '../types'
 
 export interface IQuizRepository {
 	add: (data: QuizToModel) => Promise<QuizEntity>
@@ -12,7 +12,7 @@ export interface IQuizRepository {
 	updateUserBio: (user: EmbeddedUser) => Promise<boolean>
 	publish: (id: string, userId: string) => Promise<QuizEntity | null>
 	toggleQuestion: (id: string, userId: string, questionId: string, add: boolean) => Promise<QuizEntity | null>
-	reorder: (id: string, userId: string, questionIds: string[]) => Promise<QuizEntity | null>
+	updateQuestions: (id: string, userId: string, questions: QuizQuestions) => Promise<QuizEntity | null>
 	updateMeta: (id: string, property: QuizMeta, value: 1 | -1) => Promise<void>
 	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
 	requestAccess(id: string, userId: string, add: boolean): Promise<boolean>
