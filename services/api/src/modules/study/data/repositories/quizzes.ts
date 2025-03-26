@@ -92,7 +92,12 @@ export class QuizRepository implements IQuizRepository {
 				_id: id,
 				'user.id': userId,
 			},
-			{ [add ? '$addToSet' : '$pull']: { questions: questionId } },
+			{
+				[add ? '$addToSet' : '$pull']: {
+					questions: questionId,
+					...(add ? {} : { 'questions.$[].items': questionId }),
+				},
+			},
 			{ new: true },
 		)
 		return this.mapper.mapFrom(quiz)
