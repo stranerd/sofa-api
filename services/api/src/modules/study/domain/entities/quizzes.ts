@@ -9,6 +9,10 @@ export class QuizEntity extends CoursableEntity<QuizConstructorArgs> implements 
 	canUserAccess(userId: string) {
 		return this.user.id === userId || this.access.members.includes(userId)
 	}
+
+	getQuestionIds() {
+		return this.questions.flatMap((s) => s.items)
+	}
 }
 
 type QuizConstructorArgs = CoursableData & {

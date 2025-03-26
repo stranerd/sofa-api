@@ -6,7 +6,7 @@ import { QuizMapper } from '../mappers/quizzes'
 import { QuizFromModel, QuizToModel } from '../models/quizzes'
 import { Quiz } from '../mongooseModels/quizzes'
 
-const compareQuizSections = (arr1: QuizQuestions, arr2: QuizQuestions): boolean => {
+const compareQuizSections = (arr1: QuizFromModel['questions'], arr2: QuizFromModel['questions']): boolean => {
 	const [sorted1, sorted2] = [arr1, arr2]
 		.map((arr) => arr.flatMap((i) => (typeof i === 'string' ? [i] : i.items)))
 		.map((arr) => [...new Set(arr)].sort())
@@ -93,10 +93,12 @@ export class QuizRepository implements IQuizRepository {
 				'user.id': userId,
 			},
 			{
-				[add ? '$addToSet' : '$pull']: {
-					questions: questionId,
-					...(add ? {} : { 'questions.$[].items': questionId }),
-				},
+				[add ? '$addToSet' : '$pull']: add
+					? { label: '', items: [questionId] }
+					: {
+							questions: questionId,
+							'questions.$[].items': questionId,
+						},
 			},
 			{ new: true },
 		)

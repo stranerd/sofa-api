@@ -20,7 +20,7 @@ export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntit
 					isForTutors: model.isForTutors,
 					modes: model.modes,
 					ratings: model.ratings,
-					questions: model.questions,
+					questions: model.questions.map((q) => (typeof q === 'string' ? { label: '', items: [q] } : q)),
 					access: model.access,
 					meta: model.meta,
 					timeLimit: model.timeLimit,

@@ -16,11 +16,14 @@ export const createPlay = async (
 	const user = await UsersUseCases.find(userId)
 	if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 	const { results: questions } = await QuestionsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: quiz.questions }],
+		where: [{ field: 'id', condition: Conditions.in, value: quiz.getQuestionIds() }],
 		all: true,
 	})
-	const sources = quiz.questions.map((id) => questions.find((q) => q.id === id)!).filter(Boolean)
-	const totalTimeInSec = quiz.timeLimit ?? questions.reduce((acc, q) => acc + q.timeLimit, 0)
+	const sources = quiz
+		.getQuestionIds()
+		.map((id) => questions.find((q) => q.id === id)!)
+		.filter(Boolean)
+	const totalTimeInSec = quiz.timeLimit ?? sources.reduce((acc, q) => acc + q.timeLimit, 0)
 	const play = await PlaysUseCases.add({
 		title: otherData.title ?? quiz.title,
 		quizId: quiz.id,

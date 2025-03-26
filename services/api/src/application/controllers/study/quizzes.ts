@@ -127,17 +127,13 @@ export class QuizController {
 	}
 
 	static async updateQuestions(req: Request) {
-		const requiredString = Schema.string().min(1)
 		const { questions } = validate(
 			{
 				questions: Schema.array(
-					Schema.or([
-						requiredString,
-						Schema.object({
-							label: requiredString,
-							items: Schema.array(requiredString),
-						}),
-					]),
+					Schema.object({
+						label: Schema.string().min(1),
+						items: Schema.array(Schema.string().min(1)),
+					}),
 				).min(1),
 			},
 			req.body,

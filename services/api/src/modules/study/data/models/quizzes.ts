@@ -2,7 +2,7 @@ import { CoursableData, QuizAccess, QuizMeta, QuizModes, QuizQuestions } from '.
 
 export interface QuizFromModel extends QuizToModel, CoursableData {
 	_id: string
-	questions: QuizQuestions
+	questions: QuizQuestions | string[]
 	access: QuizAccess
 	ratings: CoursableData['ratings']
 	meta: Record<QuizMeta, number>
