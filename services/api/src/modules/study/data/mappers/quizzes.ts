@@ -5,6 +5,8 @@ import { QuizFromModel, QuizToModel } from '../models/quizzes'
 export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntity> {
 	mapFrom(model: QuizFromModel | null) {
 		if (!model) return null
+		const sectioned = model.questions.filter((q) => typeof q !== 'string')
+		const unsectioned = model.questions.filter((q) => typeof q === 'string')
 		return !model
 			? null
 			: new QuizEntity({
@@ -20,7 +22,7 @@ export class QuizMapper extends BaseMapper<QuizFromModel, QuizToModel, QuizEntit
 					isForTutors: model.isForTutors,
 					modes: model.modes,
 					ratings: model.ratings,
-					questions: model.questions.map((q) => (typeof q === 'string' ? { label: '', items: [q] } : q)),
+					questions: sectioned.concat({ label: '', items: unsectioned }),
 					access: model.access,
 					meta: model.meta,
 					timeLimit: model.timeLimit,

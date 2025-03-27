@@ -94,7 +94,7 @@ export class QuizRepository implements IQuizRepository {
 			},
 			{
 				[add ? '$addToSet' : '$pull']: add
-					? { label: '', items: [questionId] }
+					? questionId
 					: {
 							questions: questionId,
 							'questions.$[].items': questionId,
