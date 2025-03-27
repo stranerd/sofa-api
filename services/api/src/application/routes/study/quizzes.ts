@@ -55,7 +55,7 @@ export const quizzesRoutes = groupRoutes({ path: '/quizzes' }, [
 		handler: QuizController.publish,
 	},
 	{
-		path: '/:id/questions',
+		path: '/:id/sections',
 		method: 'post',
 		middlewares: [isAuthenticated],
 		handler: QuizController.updateQuestions,
