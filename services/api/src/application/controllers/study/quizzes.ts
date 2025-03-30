@@ -187,7 +187,7 @@ export class QuizController {
 		const data = validate(
 			{
 				content: Schema.string(),
-				amount: Schema.number().int().gt(0).lte(10),
+				amount: Schema.number().int().gt(0).lte(20),
 				questionType: Schema.in(Object.values(QuestionTypes)),
 			},
 			req.body,
