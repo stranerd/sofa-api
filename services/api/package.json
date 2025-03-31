@@ -17,7 +17,7 @@
 		"@vitejs/plugin-vue": "^5.2.3",
 		"@vue-email/components": "^0.0.21",
 		"@vue-email/render": "^0.0.9",
-		"equipped": "5.0.0-rc.8",
+		"equipped": "5.0.0-rc.11",
 		"firebase-admin": "^12.0.0",
 		"googleapis": "^134.0.0",
 		"nodemailer": "^6.9.13",
