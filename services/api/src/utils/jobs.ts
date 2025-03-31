@@ -31,15 +31,12 @@ export const startJobs = async () => {
 			onCronLike: async () => {},
 			onCron: async (type) => {
 				if (type === CronTypes.hourly) {
-					const [emails, texts] = await Promise.all([
-						EmailErrorsUseCases.getAndDeleteAll(),
-						PhoneErrorsUseCases.getAndDeleteAll(),
-					])
+					const [emails, texts] = await Promise.all([EmailErrorsUseCases.get(), PhoneErrorsUseCases.get()])
 					await Promise.all([
 						processTransactions(60 * 60 * 1000),
 						processWithdrawals(60 * 60 * 1000),
 						appInstance.job.retryAllFailedJobs(),
-						...emails.map((e) => sendMailAndCatchError(e as any)),
+						...emails.map((e) => sendMailAndCatchError(e)),
 						...texts.map((t) => sendTextAndCatchError(t)),
 					])
 				}

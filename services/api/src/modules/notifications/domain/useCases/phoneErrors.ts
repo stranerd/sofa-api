@@ -1,5 +1,5 @@
-import { IPhoneErrorRepository } from '../irepositories/phoneErrors'
 import { PhoneErrorToModel } from '../../data/models/phoneErrors'
+import { IPhoneErrorRepository } from '../irepositories/phoneErrors'
 
 export class PhoneErrorsUseCase {
 	private repository: IPhoneErrorRepository
@@ -8,11 +8,15 @@ export class PhoneErrorsUseCase {
 		this.repository = repository
 	}
 
-	async add(data: PhoneErrorToModel) {
-		return await this.repository.add(data)
+	async add({ data, parentId }: { data: PhoneErrorToModel; parentId?: string }) {
+		return await this.repository.add(data, parentId)
 	}
 
-	async getAndDeleteAll() {
-		return await this.repository.getAndDeleteAll()
+	async get() {
+		return await this.repository.get()
+	}
+
+	async delete(id: string) {
+		return await this.repository.delete(id)
 	}
 }

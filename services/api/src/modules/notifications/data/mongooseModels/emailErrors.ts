@@ -34,6 +34,11 @@ const Schema = new appInstance.dbs.mongo.Schema<EmailErrorFromModel>(
 			required: false,
 			default: {},
 		},
+		tries: {
+			type: Number,
+			required: false,
+			default: 0,
+		},
 		createdAt: {
 			type: Number,
 			required: false,

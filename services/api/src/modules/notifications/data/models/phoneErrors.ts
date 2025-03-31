@@ -1,5 +1,6 @@
 export interface PhoneErrorFromModel extends PhoneErrorToModel {
 	_id: string
+	tries: number
 	createdAt: number
 	updatedAt: number
 }

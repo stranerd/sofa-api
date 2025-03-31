@@ -12,6 +12,7 @@ type ErrorConstructor = {
 	to: string
 	content: string
 	from: string
+	tries: number
 	createdAt: number
 	updatedAt: number
 }

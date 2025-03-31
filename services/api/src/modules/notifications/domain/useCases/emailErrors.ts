@@ -1,5 +1,5 @@
-import { IEmailErrorRepository } from '../irepositories/emailErrors'
 import { EmailErrorToModel } from '../../data/models/emailErrors'
+import { IEmailErrorRepository } from '../irepositories/emailErrors'
 
 export class EmailErrorsUseCase {
 	private repository: IEmailErrorRepository
@@ -8,11 +8,15 @@ export class EmailErrorsUseCase {
 		this.repository = repository
 	}
 
-	async add(data: EmailErrorToModel) {
-		return await this.repository.add(data)
+	async add({ data, parentId }: { data: EmailErrorToModel; parentId?: string }) {
+		return await this.repository.add(data, parentId)
 	}
 
-	async getAndDeleteAll() {
-		return await this.repository.getAndDeleteAll()
+	async get() {
+		return await this.repository.get()
+	}
+
+	async delete(id: string) {
+		return await this.repository.delete(id)
 	}
 }

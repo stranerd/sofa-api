@@ -3,6 +3,7 @@ import { appInstance } from '@utils/types'
 import axios from 'axios'
 import { BadRequestError, PhoneText } from 'equipped'
 import { PhoneErrorsUseCases } from '../'
+import { PhoneErrorEntity } from '../domain/entities/phoneErrors'
 
 const sendText = async (text: PhoneText) => {
 	await axios
@@ -19,14 +20,16 @@ const sendText = async (text: PhoneText) => {
 		})
 }
 
-export const sendTextAndCatchError = async (text: PhoneText) => {
-	try {
-		if (isDev) await appInstance.logger.info(text.to, text.content)
-		else await sendText(text)
-	} catch (e) {
+export const sendTextAndCatchError = async (text: PhoneText | PhoneErrorEntity) => {
+	const parentId = text instanceof PhoneErrorEntity ? text.id : undefined
+	if (text instanceof PhoneErrorEntity && text.tries >= 3) return
+	if (isDev) await appInstance.logger.info(text.to, text.content)
+	const successful = await sendText(text).catch(async (e) => {
 		await PhoneErrorsUseCases.add({
-			...text,
-			error: (e as Error).message,
+			data: { to: text.to, from: text.from, content: text.content, error: e.message },
+			parentId,
 		})
-	}
+		return false
+	})
+	if (successful && parentId) await PhoneErrorsUseCases.delete(parentId).catch(() => {})
 }

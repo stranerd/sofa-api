@@ -5,7 +5,7 @@ import { EmailErrorFromModel, EmailErrorToModel } from '../models/emailErrors'
 export class EmailErrorMapper extends BaseMapper<EmailErrorFromModel, EmailErrorToModel, EmailErrorEntity> {
 	mapFrom(model: EmailErrorFromModel | null) {
 		if (!model) return null
-		const { _id, content, subject, to, from, error, data, createdAt, updatedAt } = model
+		const { _id, content, subject, to, from, error, data, tries, createdAt, updatedAt } = model
 		return new EmailErrorEntity({
 			id: _id.toString(),
 			content,
@@ -14,6 +14,7 @@ export class EmailErrorMapper extends BaseMapper<EmailErrorFromModel, EmailError
 			from,
 			error,
 			data,
+			tries,
 			createdAt,
 			updatedAt,
 		})

@@ -3,6 +3,7 @@ import { appInstance } from '@utils/types'
 import { Email, EmailsList } from 'equipped'
 import { createTransport } from 'nodemailer'
 import { EmailErrorsUseCases } from '../'
+import { EmailErrorEntity } from '../domain/entities/emailErrors'
 
 const sendMail = async (email: Email) => {
 	const { to, subject, content, from = EmailsList.NO_REPLY } = email
@@ -21,16 +22,20 @@ const sendMail = async (email: Email) => {
 		to,
 		subject,
 	})
+
+	return true
 }
 
-export const sendMailAndCatchError = async (email: Email) => {
-	try {
-		if (isDev) await appInstance.logger.info(email.to, email.content)
-		await sendMail(email)
-	} catch (e) {
+export const sendMailAndCatchError = async (email: Email | EmailErrorEntity) => {
+	const parentId = email instanceof EmailErrorEntity ? email.id : undefined
+	if (email instanceof EmailErrorEntity && email.tries >= 3) return
+	if (isDev) await appInstance.logger.info(email.to, email.content)
+	const successful = await sendMail(email).catch(async (e) => {
 		await EmailErrorsUseCases.add({
-			...email,
-			error: (e as Error).message,
+			data: { to: email.to, from: email.from, content: email.content, data: email.data, subject: email.subject, error: e.message },
+			parentId,
 		})
-	}
+		return false
+	})
+	if (successful && parentId) await EmailErrorsUseCases.delete(parentId).catch(() => {})
 }

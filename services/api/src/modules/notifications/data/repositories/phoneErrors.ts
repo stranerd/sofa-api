@@ -16,14 +16,18 @@ export class PhoneErrorRepository implements IPhoneErrorRepository {
 		return PhoneErrorRepository.instance
 	}
 
-	async add(data: PhoneErrorToModel) {
-		const error = await new PhoneError(data).save()
+	async add(data: PhoneErrorToModel, id: string | undefined) {
+		const error = await PhoneError.findByIdAndUpdate(id, { $set: data, $inc: { tries: 1 } }, { upsert: true, new: true })
 		return this.mapper.mapFrom(error)!
 	}
 
-	async getAndDeleteAll() {
+	async get() {
 		const errors = await PhoneError.find()
-		await PhoneError.deleteMany()
 		return errors.map((error) => this.mapper.mapFrom(error)!)
+	}
+
+	async delete(id: string) {
+		const error = await PhoneError.findByIdAndDelete(id)
+		return !!error
 	}
 }

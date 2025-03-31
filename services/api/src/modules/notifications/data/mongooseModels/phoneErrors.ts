@@ -25,6 +25,11 @@ const Schema = new appInstance.dbs.mongo.Schema<PhoneErrorFromModel>(
 			type: String,
 			required: true,
 		},
+		tries: {
+			type: Number,
+			required: false,
+			default: 0,
+		},
 		createdAt: {
 			type: Number,
 			required: false,

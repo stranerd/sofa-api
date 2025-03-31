@@ -16,14 +16,18 @@ export class EmailErrorRepository implements IEmailErrorRepository {
 		return EmailErrorRepository.instance
 	}
 
-	async add(data: EmailErrorToModel) {
-		const error = await new EmailError(data).save()
+	async add(data: EmailErrorToModel, id: string | undefined) {
+		const error = await EmailError.findByIdAndUpdate(id, { $set: data, $inc: { tries: 1 } }, { upsert: true, new: true })
 		return this.mapper.mapFrom(error)!
 	}
 
-	async getAndDeleteAll() {
+	async get() {
 		const errors = await EmailError.find()
-		await EmailError.deleteMany()
 		return errors.map((error) => this.mapper.mapFrom(error)!)
+	}
+
+	async delete(id: string) {
+		const error = await EmailError.findByIdAndDelete(id)
+		return !!error
 	}
 }
