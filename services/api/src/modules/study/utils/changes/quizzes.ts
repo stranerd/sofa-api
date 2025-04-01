@@ -107,7 +107,7 @@ export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity>
 						add: false,
 					}),
 				),
-			).catch()
+			).catch(() => {})
 		await FoldersUseCases.removeProp({ prop: FolderSaved.quizzes, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,

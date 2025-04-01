@@ -48,7 +48,7 @@ export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseE
 			id: before.id,
 			data: before.getCoursables(),
 			add: false,
-		}).catch()
+		}).catch(() => {})
 		await FoldersUseCases.removeProp({ prop: FolderSaved.courses, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,

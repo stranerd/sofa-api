@@ -63,7 +63,7 @@ export const FileDbChangeCallbacks: DbChangeCallbacks<FileFromModel, FileEntity>
 						add: false,
 					}),
 				),
-			).catch()
+			).catch(() => {})
 		await FoldersUseCases.removeProp({ prop: FolderSaved.files, value: before.id })
 		await UsersUseCases.updateNerdScore({
 			userId: before.user.id,
