@@ -96,6 +96,13 @@ export class PlayController {
 		return play.sources.map((q) => q.strip())
 	}
 
+	static async getCorrections(req: Request) {
+		const play = await PlaysUseCases.find(req.params.id)
+		if (!play) throw new NotFoundError()
+		if (!play.endedAt) throw new NotAuthorizedError()
+		return play.sources
+	}
+
 	static async join(req: Request) {
 		const { join } = validate({ join: Schema.boolean() }, req.body)
 		const updated = await PlaysUseCases.join({ id: req.params.id, userId: req.authUser!.id, join })

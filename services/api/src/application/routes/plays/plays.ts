@@ -48,4 +48,9 @@ export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthent
 		method: 'get',
 		handler: PlayController.getQuestions,
 	},
+	{
+		path: '/:id/corrections',
+		method: 'get',
+		handler: PlayController.getCorrections,
+	},
 ])
