@@ -80,6 +80,12 @@ export class PlayEntity extends BaseEntity<PlayConstructorArgs, 'sources'> {
 		return 10000 + (this.startedAt ?? 0) + this.totalTimeInSec * 1000
 	}
 
+	getAnswerEndsAt() {
+		const timeoutAt = 10000 + Date.now() + this.totalTimeInSec * 1000
+		const playEndsAt = this.getEndsAt()
+		return timeoutAt <= playEndsAt ? timeoutAt : playEndsAt
+	}
+
 	getUsesTimer() {
 		return ![PlayTypes.practice, PlayTypes.flashcards].includes(this.data.type)
 	}

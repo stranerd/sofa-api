@@ -34,20 +34,20 @@ export class AnswerRepository implements IAnswerRepository {
 			if (!play) throw new BadRequestError('cannot answer this question')
 			const typeUserId = play.user.id
 			const now = Date.now()
-			const timedOutAt = play.getUsesTimer() ? 10000 + now + play.totalTimeInSec * 1000 : null
+			const timedOutAt = play.getUsesTimer() ? play.getAnswerEndsAt() : null
 			const answerModel = await Answer.findOneAndUpdate(
 				{ type, typeId, typeUserId, userId },
 				{ $setOnInsert: { type, typeId, typeUserId, userId, timedOutAt } },
 				{ upsert: true, new: true, session },
 			)
-			if (answerModel.timedOutAt && answerModel.timedOutAt < now) throw new BadRequestError('you have already played this')
-			if (answerModel.endedAt ?? 0 > 0) throw new BadRequestError('you have already played this')
+			if ((answerModel.timedOutAt && answerModel.timedOutAt < now) || !!answerModel.endedAt)
+				throw new BadRequestError('your answers have been submitted already')
 
 			const newAnswer = questionId
 				? await Answer.findByIdAndUpdate(
 						answerModel._id,
 						{ $set: { [`data.${questionId}`]: { value: answer, at: now } } },
-						{ upsert: true, new: true, session },
+						{ new: true, session },
 					)
 				: answerModel
 			res = newAnswer
