@@ -21,6 +21,7 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 	questions.forEach((question) => {
 		answers.forEach((answer) => {
 			const userId = answer.userId
+			if (!(userId in scoresPool)) return
 			if (!(question.id in answer.data)) return
 			const correct = question.checkAnswer(answer.data[question.id].value)
 			if (!correct) return
@@ -33,8 +34,9 @@ export const calculatePlayResults = async (play: PlayEntity) => {
 		.sort((a, b) => {
 			if (a[1].value > b[1].value) return -1
 			if (a[1].value < b[1].value) return 1
-			if (a[1].at <= b[1].at) return -1
-			return 1
+			if (a[1].at < b[1].at) return -1
+			if (a[1].at > b[1].at) return 1
+			return 0
 		})
 		.map(([userId, { value }]) => ({ userId, value: parseFloat(Validation.divideByZero(value, questions.length).toFixed(6)) }))
 
