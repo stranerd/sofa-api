@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { PhoneErrorEntity } from '../../domain/entities/phoneErrors'
-import { PhoneErrorFromModel, PhoneErrorToModel } from '../models/phoneErrors'
+import type { PhoneErrorFromModel, PhoneErrorToModel } from '../models/phoneErrors'
 
 export class PhoneErrorMapper extends BaseMapper<PhoneErrorFromModel, PhoneErrorToModel, PhoneErrorEntity> {
 	mapFrom(model: PhoneErrorFromModel | null) {

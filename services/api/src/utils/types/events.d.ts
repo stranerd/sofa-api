@@ -1,4 +1,4 @@
-import { Email, EventTypes, MediaOutput, PhoneText } from 'equipped'
+import type { Email, EventTypes, MediaOutput, PhoneText } from 'equipped'
 
 declare module 'equipped/lib/events' {
 	interface Events {

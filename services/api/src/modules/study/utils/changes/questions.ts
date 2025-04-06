@@ -1,9 +1,11 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { QuizzesUseCases } from '../..'
-import { QuestionFromModel } from '../../data/models/questions'
-import { QuestionEntity } from '../../domain/entities/questions'
+import type { QuestionFromModel } from '../../data/models/questions'
+import type { QuestionEntity } from '../../domain/entities/questions'
 
 export const QuestionDbChangeCallbacks: DbChangeCallbacks<QuestionFromModel, QuestionEntity> = {
 	created: async ({ after }) => {

@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { ClassLesson, ClassMembers, EmbeddedUser, Media, Saleable } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { ClassLesson, ClassMembers, EmbeddedUser, Media, Saleable } from '../types'
 
 export class ClassEntity extends BaseEntity<ClassConstructorArgs> implements Saleable {
 	constructor(data: ClassConstructorArgs) {

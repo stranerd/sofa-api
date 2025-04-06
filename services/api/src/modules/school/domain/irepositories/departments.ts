@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { DepartmentToModel } from '../../data/models/departments'
-import { DepartmentEntity } from '../entities/departments'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { DepartmentToModel } from '../../data/models/departments'
+import type { DepartmentEntity } from '../entities/departments'
 
 export interface IDepartmentRepository {
 	add: (data: DepartmentToModel) => Promise<DepartmentEntity>

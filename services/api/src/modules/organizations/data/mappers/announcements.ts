@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { AnnouncementEntity } from '../../domain/entities/announcements'
-import { AnnouncementFromModel, AnnouncementToModel } from '../models/announcements'
+import type { AnnouncementFromModel, AnnouncementToModel } from '../models/announcements'
 
 export class AnnouncementMapper extends BaseMapper<AnnouncementFromModel, AnnouncementToModel, AnnouncementEntity> {
 	mapFrom(model: AnnouncementFromModel | null) {

@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { VerificationToModel } from '../../data/models/verifications'
-import { VerificationEntity } from '../entities/verifications'
-import { AcceptVerificationInput } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { VerificationToModel } from '../../data/models/verifications'
+import type { VerificationEntity } from '../entities/verifications'
+import type { AcceptVerificationInput } from '../types'
 
 export interface IVerificationRepository {
 	find: (id: string) => Promise<VerificationEntity | null>

@@ -1,5 +1,5 @@
-import { EmailErrorToModel } from '../../data/models/emailErrors'
-import { IEmailErrorRepository } from '../irepositories/emailErrors'
+import type { EmailErrorToModel } from '../../data/models/emailErrors'
+import type { IEmailErrorRepository } from '../irepositories/emailErrors'
 
 export class EmailErrorsUseCase {
 	private repository: IEmailErrorRepository

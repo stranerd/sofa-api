@@ -1,6 +1,8 @@
-import { QueryKeys, QueryParams } from 'equipped'
-import { MethodToModel } from '../../data/models/methods'
-import { IMethodRepository } from '../irepositories/methods'
+import type { QueryParams } from 'equipped'
+import { QueryKeys } from 'equipped'
+
+import type { MethodToModel } from '../../data/models/methods'
+import type { IMethodRepository } from '../irepositories/methods'
 
 export class MethodsUseCase {
 	repository: IMethodRepository

@@ -1,5 +1,6 @@
-import { UserType } from '@modules/users'
-import { Currencies, Interval, PlanData } from '../../domain/types'
+import type { UserType } from '@modules/users'
+
+import type { Currencies, Interval, PlanData } from '../../domain/types'
 
 export interface PlanFromModel extends PlanToModel {
 	createdAt: number

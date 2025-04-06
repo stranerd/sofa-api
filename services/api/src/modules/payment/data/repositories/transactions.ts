@@ -1,8 +1,10 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { ITransactionRepository } from '../../domain/irepositories/transactions'
+
+import type { ITransactionRepository } from '../../domain/irepositories/transactions'
 import { TransactionMapper } from '../mappers/transactions'
-import { TransactionToModel } from '../models/transactions'
+import type { TransactionToModel } from '../models/transactions'
 import { Transaction } from '../mongooseModels/transactions'
 
 export class TransactionRepository implements ITransactionRepository {

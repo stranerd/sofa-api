@@ -1,5 +1,6 @@
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser } from '../types'
+
+import type { EmbeddedUser } from '../types'
 import { generateDefaultUser } from './users'
 
 export class ConnectEntity extends BaseEntity<ConnectConstructorArgs> {

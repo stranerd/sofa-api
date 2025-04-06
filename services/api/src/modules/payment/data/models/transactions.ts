@@ -1,4 +1,4 @@
-import { Currencies, TransactionData, TransactionStatus } from '../../domain/types'
+import type { Currencies, TransactionData, TransactionStatus } from '../../domain/types'
 
 export interface TransactionFromModel extends TransactionToModel {
 	_id: string

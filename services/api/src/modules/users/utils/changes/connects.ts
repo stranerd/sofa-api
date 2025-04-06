@@ -1,8 +1,10 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { UsersUseCases } from '../../'
-import { ConnectFromModel } from '../../data/models/connects'
-import { ConnectEntity } from '../../domain/entities/connects'
+import type { ConnectFromModel } from '../../data/models/connects'
+import type { ConnectEntity } from '../../domain/entities/connects'
 import { UserMeta } from '../../domain/types'
 
 export const ConnectDbChangeCallbacks: DbChangeCallbacks<ConnectFromModel, ConnectEntity> = {

@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryKeys, Schema, validate } from 'equipped'
+
 import { InteractionEntities, verifyInteraction, ViewsUseCases } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ViewsController {
 	static async get(req: Request) {

@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { TutorRequestToModel } from '../../data/models/tutorRequests'
-import { ITutorRequestRepository } from '../irepositories/tutorRequests'
-import { AcceptVerificationInput } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { TutorRequestToModel } from '../../data/models/tutorRequests'
+import type { ITutorRequestRepository } from '../irepositories/tutorRequests'
+import type { AcceptVerificationInput } from '../types'
 
 export class TutorRequestsUseCase {
 	repository: ITutorRequestRepository

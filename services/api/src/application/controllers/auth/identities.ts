@@ -1,5 +1,7 @@
+import type { Request } from 'equipped'
+import { Schema, validate } from 'equipped'
+
 import { AuthUseCases, generateAuthOutput } from '@modules/auth'
-import { Request, Schema, validate } from 'equipped'
 
 export class IdentitiesController {
 	static async googleSignIn(req: Request) {

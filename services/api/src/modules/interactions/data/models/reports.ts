@@ -1,4 +1,4 @@
-import { EmbeddedUser, InteractionEntity } from '../../domain/types'
+import type { EmbeddedUser, InteractionEntity } from '../../domain/types'
 
 export interface ReportFromModel extends ReportToModel {
 	_id: string

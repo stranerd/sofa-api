@@ -1,5 +1,9 @@
-import { PropTypes, renderEmail } from '@utils/emails'
-import { ApiDef, Router } from 'equipped'
+import type { ApiDef } from 'equipped'
+import { Router } from 'equipped'
+
+import type { PropTypes } from '@utils/emails'
+import { renderEmail } from '@utils/emails'
+
 import { authRoutes } from './auth'
 import { conversationRoutes } from './conversations'
 import { interactionRoutes } from './interactions'

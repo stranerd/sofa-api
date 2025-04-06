@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { NotificationDbChangeCallbacks } from '../../utils/changes/notifications'
 import { NotificationMapper } from '../mappers/notifications'
-import { NotificationFromModel } from '../models/notifications'
+import type { NotificationFromModel } from '../models/notifications'
 
 const NotificationSchema = new appInstance.dbs.mongo.Schema<NotificationFromModel>(
 	{

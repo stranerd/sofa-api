@@ -1,3 +1,3 @@
-import { MediaOutput, StorageFile } from 'equipped'
+import type { MediaOutput, StorageFile } from 'equipped'
 
-export { MediaOutput, StorageFile as MediaInput }
+export type { MediaOutput, StorageFile as MediaInput }

@@ -1,10 +1,13 @@
+import type { QueryParams } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
-import { IConversationRepository } from '../../domain/irepositories/conversations'
-import { EmbeddedUser } from '../../domain/types'
+
+import type { IConversationRepository } from '../../domain/irepositories/conversations'
+import type { EmbeddedUser } from '../../domain/types'
 import { ConversationMapper } from '../mappers/conversations'
-import { ConversationToModel } from '../models/conversations'
-import { MessageFromModel } from '../models/messages'
+import type { ConversationToModel } from '../models/conversations'
+import type { MessageFromModel } from '../models/messages'
 import { Conversation } from '../mongooseModels/conversations'
 import { Message } from '../mongooseModels/messages'
 

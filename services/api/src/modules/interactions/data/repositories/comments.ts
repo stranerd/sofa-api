@@ -1,9 +1,12 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { ICommentRepository } from '../../domain/irepositories/comments'
-import { CommentMeta, Interaction } from '../../domain/types'
+
+import type { ICommentRepository } from '../../domain/irepositories/comments'
+import type { Interaction } from '../../domain/types'
+import { CommentMeta } from '../../domain/types'
 import { CommentMapper } from '../mappers/comments'
-import { CommentToModel } from '../models/comments'
+import type { CommentToModel } from '../models/comments'
 import { Comment } from '../mongooseModels/comments'
 
 export class CommentRepository implements ICommentRepository {

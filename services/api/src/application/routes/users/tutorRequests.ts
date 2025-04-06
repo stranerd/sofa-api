@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { TutorRequestsController } from '@application/controllers/users/tutorRequests'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const tutorRequestsRoutes = groupRoutes({ path: '/tutorRequests', middlewares: [isAuthenticated] }, [
 	{

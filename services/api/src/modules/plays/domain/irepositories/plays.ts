@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { PlayToModel } from '../../data/models/plays'
-import { PlayEntity } from '../entities/plays'
-import { EmbeddedUser, PlayScore } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { PlayToModel } from '../../data/models/plays'
+import type { PlayEntity } from '../entities/plays'
+import type { EmbeddedUser, PlayScore } from '../types'
 
 export interface IPlayRepository {
 	add: (data: PlayToModel) => Promise<PlayEntity>

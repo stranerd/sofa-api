@@ -1,23 +1,15 @@
+import type { Enum, MediaOutput } from 'equipped'
+import { AuthTypes, BadRequestError, EmailsList, Hash, Random, signinWithApple, signinWithGoogle, ValidationError } from 'equipped'
+
+import { renderEmail } from '@utils/emails'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import {
-	AuthTypes,
-	BadRequestError,
-	EmailsList,
-	Enum,
-	Hash,
-	MediaOutput,
-	Random,
-	signinWithApple,
-	signinWithGoogle,
-	ValidationError,
-} from 'equipped'
-import { IAuthRepository } from '../../domain/irepositories/auth'
-import { Credential, PasswordResetInput, Phone } from '../../domain/types'
+
+import type { IAuthRepository } from '../../domain/irepositories/auth'
+import type { Credential, PasswordResetInput, Phone } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
-import { UserFromModel, UserToModel } from '../models/users'
+import type { UserFromModel, UserToModel } from '../models/users'
 import { User } from '../mongooseModels/users'
-import { renderEmail } from '@utils/emails'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 

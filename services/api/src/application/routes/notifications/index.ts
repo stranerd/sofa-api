@@ -1,4 +1,5 @@
 import { groupRoutes } from 'equipped'
+
 import { notificationsRoutes } from './notifications'
 import { tokenRoutes } from './tokens'
 

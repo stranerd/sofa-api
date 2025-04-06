@@ -1,11 +1,13 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { TagMeta, TagsUseCases } from '@modules/interactions'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { CoursesUseCases, FoldersUseCases } from '../..'
-import { FileFromModel } from '../../data/models/files'
-import { FileEntity } from '../../domain/entities/files'
+import type { FileFromModel } from '../../data/models/files'
+import type { FileEntity } from '../../domain/entities/files'
 import { Coursable, DraftStatus, FileType, FolderSaved } from '../../domain/types'
 
 const getProp = (type: FileType) =>

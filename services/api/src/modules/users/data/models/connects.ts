@@ -1,4 +1,4 @@
-import { EmbeddedUser } from '../../domain/types'
+import type { EmbeddedUser } from '../../domain/types'
 
 export interface ConnectFromModel extends ConnectToModel {
 	_id: string

@@ -1,9 +1,12 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IPlayRepository } from '../../domain/irepositories/plays'
-import { EmbeddedUser, PlayScore, PlayStatus, PlayTypes } from '../../domain/types'
+
+import type { IPlayRepository } from '../../domain/irepositories/plays'
+import type { EmbeddedUser, PlayScore } from '../../domain/types'
+import { PlayStatus, PlayTypes } from '../../domain/types'
 import { PlayMapper } from '../mappers/plays'
-import { PlayFromModel, PlayToModel } from '../models/plays'
+import type { PlayFromModel, PlayToModel } from '../models/plays'
 import { Play } from '../mongooseModels/plays'
 
 export class PlayRepository implements IPlayRepository {

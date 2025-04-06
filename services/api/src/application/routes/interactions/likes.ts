@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { LikesController } from '@application/controllers/interactions/likes'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const likesRoutes = groupRoutes({ path: '/likes', middlewares: [isAuthenticated] }, [
 	{

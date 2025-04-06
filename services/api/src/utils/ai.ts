@@ -1,5 +1,7 @@
 import { BadRequestError } from 'equipped'
-import OpenAI, { AzureOpenAI } from 'openai'
+import type OpenAI from 'openai'
+import { AzureOpenAI } from 'openai'
+
 import { openaiConfig } from './environment'
 
 type Message = { role: 'system' | 'user' | 'assistant'; content: string }
@@ -20,7 +22,7 @@ export class AI {
 				model: '',
 			})
 			return response.choices.at(0)?.message?.content?.trim() ?? ''
-		} catch (err) {
+		} catch {
 			throw new BadRequestError('failed to generate response')
 		}
 	}

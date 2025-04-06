@@ -1,7 +1,10 @@
+import type { QueryParams } from 'equipped'
+import { AuthTypes, Hash, NotFoundError } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { AuthTypes, Hash, NotFoundError, QueryParams } from 'equipped'
-import { IUserRepository } from '../../domain/irepositories/users'
-import { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
+
+import type { IUserRepository } from '../../domain/irepositories/users'
+import type { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
 

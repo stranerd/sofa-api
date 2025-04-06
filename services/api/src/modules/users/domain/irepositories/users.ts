@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { UserEntity } from '../entities/users'
-import { ScoreRewards, UserAccount, UserAi, UserBio, UserLocation, UserRoles, UserSocialsType, UserTypeData } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { UserEntity } from '../entities/users'
+import type { ScoreRewards, UserAccount, UserAi, UserBio, UserLocation, UserRoles, UserSocialsType, UserTypeData } from '../types'
 
 export interface IUserRepository {
 	getUsers(query: QueryParams): Promise<QueryResults<UserEntity>>

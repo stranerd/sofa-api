@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { DepartmentController } from '@application/controllers/school/departments'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const departmentsRoutes = groupRoutes({ path: '/departments' }, [
 	{

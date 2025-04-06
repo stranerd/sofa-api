@@ -1,11 +1,14 @@
+import type { DbChangeCallbacks } from 'equipped'
+import { EmailsList, deleteCachedAccessToken } from 'equipped'
+
 import { UsersUseCases } from '@modules/users'
+import { renderEmail } from '@utils/emails'
 import { isProd } from '@utils/environment'
 import { publishers } from '@utils/events'
-import { DbChangeCallbacks, EmailsList, deleteCachedAccessToken } from 'equipped'
-import { UserFromModel } from '../../data/models/users'
+
+import type { UserFromModel } from '../../data/models/users'
 import { AuthUserEntity } from '../../domain/entities/users'
 import { subscribeToMailingList } from '../mailing'
-import { renderEmail } from '@utils/emails'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEntity> = {
 	created: async ({ after }) => {

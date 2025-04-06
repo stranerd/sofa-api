@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IAnnouncementRepository } from '../../domain/irepositories/announcements'
-import { EmbeddedUser } from '../../domain/types'
+
+import type { IAnnouncementRepository } from '../../domain/irepositories/announcements'
+import type { EmbeddedUser } from '../../domain/types'
 import { AnnouncementMapper } from '../mappers/announcements'
-import { AnnouncementToModel } from '../models/announcements'
+import type { AnnouncementToModel } from '../models/announcements'
 import { Announcement } from '../mongooseModels/announcements'
 
 export class AnnouncementRepository implements IAnnouncementRepository {

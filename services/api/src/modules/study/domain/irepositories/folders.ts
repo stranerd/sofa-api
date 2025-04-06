@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { FolderToModel } from '../../data/models/folders'
-import { FolderEntity } from '../entities/folders'
-import { EmbeddedUser, FolderSaved } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { FolderToModel } from '../../data/models/folders'
+import type { FolderEntity } from '../entities/folders'
+import type { EmbeddedUser, FolderSaved } from '../types'
 
 export interface IFolderRepository {
 	add: (data: FolderToModel) => Promise<FolderEntity>

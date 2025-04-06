@@ -1,4 +1,5 @@
 import { groupRoutes } from 'equipped'
+
 import { commentsRoutes } from './comments'
 import { likesRoutes } from './likes'
 import { reportsRoutes } from './reports'

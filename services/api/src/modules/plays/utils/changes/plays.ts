@@ -1,11 +1,13 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { QuizzesUseCases } from '@modules/study'
 import { TutorRequestsUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { AnswersUseCases } from '../..'
-import { PlayFromModel } from '../../data/models/plays'
-import { PlayEntity } from '../../domain/entities/plays'
+import type { PlayFromModel } from '../../data/models/plays'
+import type { PlayEntity } from '../../domain/entities/plays'
 import { PlayStatus } from '../../domain/types'
 import { calculatePlayResults, postPlayScored, startPlayTimer } from '../plays'
 

@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { FacultyDbChangeCallbacks } from '../../utils/changes/faculties'
 import { FacultyMapper } from '../mappers/faculties'
-import { FacultyFromModel } from '../models/faculties'
+import type { FacultyFromModel } from '../models/faculties'
 
 const Schema = new appInstance.dbs.mongo.Schema<FacultyFromModel>(
 	{

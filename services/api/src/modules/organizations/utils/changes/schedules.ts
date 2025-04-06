@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { ScheduleFromModel } from '../../data/models/schedules'
-import { ScheduleEntity } from '../../domain/entities/schedules'
+
+import type { ScheduleFromModel } from '../../data/models/schedules'
+import type { ScheduleEntity } from '../../domain/entities/schedules'
 
 export const ScheduleDbChangeCallbacks: DbChangeCallbacks<ScheduleFromModel, ScheduleEntity> = {
 	created: async ({ after }) => {

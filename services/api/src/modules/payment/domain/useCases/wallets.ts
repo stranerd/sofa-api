@@ -1,5 +1,5 @@
-import { IWalletRepository } from '../irepositories/wallets'
-import { AccountDetails, Currencies, PlanDataType, Subscription, SubscriptionModel, TransferData, WithdrawData } from '../types'
+import type { IWalletRepository } from '../irepositories/wallets'
+import type { AccountDetails, Currencies, PlanDataType, Subscription, SubscriptionModel, TransferData, WithdrawData } from '../types'
 
 export class WalletsUseCase {
 	repository: IWalletRepository

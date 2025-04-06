@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { VerificationToModel } from '../../data/models/verifications'
-import { IVerificationRepository } from '../irepositories/verifications'
-import { AcceptVerificationInput } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { VerificationToModel } from '../../data/models/verifications'
+import type { IVerificationRepository } from '../irepositories/verifications'
+import type { AcceptVerificationInput } from '../types'
 
 export class VerificationsUseCase {
 	repository: IVerificationRepository

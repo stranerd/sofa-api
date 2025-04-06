@@ -1,6 +1,6 @@
-import { IPhoneErrorRepository } from '../../domain/irepositories/phoneErrors'
+import type { IPhoneErrorRepository } from '../../domain/irepositories/phoneErrors'
 import { PhoneErrorMapper } from '../mappers/phoneErrors'
-import { PhoneErrorToModel } from '../models/phoneErrors'
+import type { PhoneErrorToModel } from '../models/phoneErrors'
 import { PhoneError } from '../mongooseModels/phoneErrors'
 
 export class PhoneErrorRepository implements IPhoneErrorRepository {

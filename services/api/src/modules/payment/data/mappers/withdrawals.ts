@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { WithdrawalEntity } from '../../domain/entities/withdrawals'
-import { WithdrawalFromModel, WithdrawalToModel } from '../models/withdrawals'
+import type { WithdrawalFromModel, WithdrawalToModel } from '../models/withdrawals'
 
 export class WithdrawalMapper extends BaseMapper<WithdrawalFromModel, WithdrawalToModel, WithdrawalEntity> {
 	mapFrom(param: WithdrawalFromModel | null) {

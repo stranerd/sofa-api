@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { Currencies, PlanDataType } from '../../domain/types'
 import { WalletDbChangeCallbacks } from '../../utils/changes/wallets'
 import { WalletMapper } from '../mappers/wallets'
-import { WalletFromModel } from '../models/wallets'
+import type { WalletFromModel } from '../models/wallets'
 
 const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>(
 	{

@@ -1,3 +1,6 @@
+import type { Request } from 'equipped'
+import { BadRequestError, Schema, validate, ValidationError } from 'equipped'
+
 import {
 	CurrencyCountries,
 	FlutterwavePayment,
@@ -9,7 +12,7 @@ import {
 	WalletsUseCases,
 } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, Request, Schema, validate, ValidationError } from 'equipped'
+
 import { SelectedPaymentMethodSchema } from '.'
 
 export class WalletsController {

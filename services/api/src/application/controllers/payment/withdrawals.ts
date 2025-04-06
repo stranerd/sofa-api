@@ -1,5 +1,6 @@
+import type { QueryParams, Request } from 'equipped'
+
 import { WithdrawalsUseCases } from '@modules/payment'
-import { QueryParams, Request } from 'equipped'
 
 export class WithdrawalsController {
 	static async find(req: Request) {

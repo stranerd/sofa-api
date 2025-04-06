@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { IMemberRepository } from '../irepositories/members'
-import { EmbeddedUser, MemberTypes } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { IMemberRepository } from '../irepositories/members'
+import type { EmbeddedUser, MemberTypes } from '../types'
 
 export class MembersUseCase {
 	repository: IMemberRepository

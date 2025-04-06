@@ -1,5 +1,7 @@
+import type { Request } from 'equipped'
+import { Schema, validate, Validation } from 'equipped'
+
 import { AuthUseCases, generateAuthOutput } from '@modules/auth'
-import { Request, Schema, validate, Validation } from 'equipped'
 
 export class PhoneController {
 	static async sendVerificationText(req: Request) {

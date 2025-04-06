@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IClassRepository } from '../../domain/irepositories/classes'
-import { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../../domain/types'
+
+import type { IClassRepository } from '../../domain/irepositories/classes'
+import type { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../../domain/types'
 import { ClassMapper } from '../mappers/classes'
-import { ClassToModel } from '../models/classes'
+import type { ClassToModel } from '../models/classes'
 import { Class } from '../mongooseModels/classes'
 
 export class ClassRepository implements IClassRepository {

@@ -1,4 +1,4 @@
-import { AccountDetails, Currencies, WithdrawalStatus } from '../../domain/types'
+import type { AccountDetails, Currencies, WithdrawalStatus } from '../../domain/types'
 
 export interface WithdrawalFromModel extends WithdrawalToModel {
 	_id: string

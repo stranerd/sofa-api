@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { ClassDbChangeCallbacks } from '../../utils/changes/classes'
 import { ClassMapper } from '../mappers/classes'
-import { ClassFromModel } from '../models/classes'
+import type { ClassFromModel } from '../models/classes'
 
 const ClassSchema = new appInstance.dbs.mongo.Schema<ClassFromModel>(
 	{

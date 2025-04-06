@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { TransactionToModel } from '../../data/models/transactions'
-import { ITransactionRepository } from '../irepositories/transactions'
+import type { QueryParams } from 'equipped'
+
+import type { TransactionToModel } from '../../data/models/transactions'
+import type { ITransactionRepository } from '../irepositories/transactions'
 
 export class TransactionsUseCase {
 	repository: ITransactionRepository

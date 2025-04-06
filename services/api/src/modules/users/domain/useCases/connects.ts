@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { ConnectToModel } from '../../data/models/connects'
-import { IConnectRepository } from '../irepositories/connects'
-import { EmbeddedUser } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ConnectToModel } from '../../data/models/connects'
+import type { IConnectRepository } from '../irepositories/connects'
+import type { EmbeddedUser } from '../types'
 
 export class ConnectsUseCase {
 	repository: IConnectRepository

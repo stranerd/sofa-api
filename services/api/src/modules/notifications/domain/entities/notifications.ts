@@ -1,6 +1,9 @@
-import { Purchasables } from '@modules/payment'
 import { BaseEntity } from 'equipped'
-import { NotificationData, NotificationType } from '../types'
+
+import { Purchasables } from '@modules/payment'
+
+import type { NotificationData } from '../types'
+import { NotificationType } from '../types'
 
 export class NotificationEntity extends BaseEntity<NotificationConstructorArgs> {
 	constructor(data: NotificationConstructorArgs) {

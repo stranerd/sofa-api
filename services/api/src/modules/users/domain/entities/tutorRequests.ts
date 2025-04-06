@@ -1,5 +1,7 @@
-import { BaseEntity, MediaOutput } from 'equipped'
-import { VerificationAcceptType } from '../types'
+import type { MediaOutput } from 'equipped'
+import { BaseEntity } from 'equipped'
+
+import type { VerificationAcceptType } from '../types'
 
 export class TutorRequestEntity extends BaseEntity<TutorRequestConstructorArgs> {
 	constructor(data: TutorRequestConstructorArgs) {

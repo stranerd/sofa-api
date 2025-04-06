@@ -1,9 +1,10 @@
 import { appInstance } from '@utils/types'
+
 import { PublishableSchema, SaleableSchema } from '.'
+import { CourseMeta } from '../../domain/types'
 import { CourseDbChangeCallbacks } from '../../utils/changes/courses'
 import { CourseMapper } from '../mappers/courses'
-import { CourseFromModel } from '../models/courses'
-import { CourseMeta } from '../../domain/types'
+import type { CourseFromModel } from '../models/courses'
 
 const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>(
 	{

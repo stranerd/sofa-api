@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { PlayController } from '@application/controllers/plays/plays'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthenticated] }, [
 	{

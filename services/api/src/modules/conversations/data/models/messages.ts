@@ -1,4 +1,4 @@
-import { Media } from '../../domain/types'
+import type { Media } from '../../domain/types'
 
 export interface MessageFromModel extends MessageToModel {
 	_id: string

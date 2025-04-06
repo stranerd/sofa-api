@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { CommentsController } from '@application/controllers/interactions/comments'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const commentsRoutes = groupRoutes({ path: '/comments' }, [
 	{

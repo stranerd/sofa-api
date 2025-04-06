@@ -1,5 +1,6 @@
-import { render } from '@vue-email/render'
 import path from 'path'
+
+import { render } from '@vue-email/render'
 import { createServer } from 'vite'
 
 export interface PropTypes {

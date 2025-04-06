@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { CoursableData, Publishable } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { CoursableData, Publishable } from '../types'
 
 export class PublishableEntity<T extends PublishableConstructorArgs, I extends string = never>
 	extends BaseEntity<T, I>

@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { ReviewToModel } from '../../data/models/reviews'
-import { IReviewRepository } from '../irepositories/reviews'
-import { EmbeddedUser, Interaction } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ReviewToModel } from '../../data/models/reviews'
+import type { IReviewRepository } from '../irepositories/reviews'
+import type { EmbeddedUser, Interaction } from '../types'
 
 export class ReviewsUseCase {
 	private repository: IReviewRepository

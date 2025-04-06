@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, ScheduleStatus, ScheduleStream, ScheduleTime } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { EmbeddedUser, ScheduleStatus, ScheduleStream, ScheduleTime } from '../types'
 
 export class ScheduleEntity extends BaseEntity<ScheduleConstructorArgs> {
 	constructor(data: ScheduleConstructorArgs) {

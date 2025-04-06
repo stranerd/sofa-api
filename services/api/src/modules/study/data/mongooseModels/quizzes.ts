@@ -1,9 +1,10 @@
 import { appInstance } from '@utils/types'
+
 import { CoursableDataSchema } from '.'
 import { QuizMeta, QuizModes } from '../../domain/types'
 import { QuizDbChangeCallbacks } from '../../utils/changes/quizzes'
 import { QuizMapper } from '../mappers/quizzes'
-import { QuizFromModel } from '../models/quizzes'
+import type { QuizFromModel } from '../models/quizzes'
 
 const Schema = new appInstance.dbs.mongo.Schema<QuizFromModel>(
 	{

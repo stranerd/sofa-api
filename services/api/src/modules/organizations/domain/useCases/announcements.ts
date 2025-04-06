@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { AnnouncementToModel } from '../../data/models/announcements'
-import { IAnnouncementRepository } from '../irepositories/announcements'
-import { EmbeddedUser } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { AnnouncementToModel } from '../../data/models/announcements'
+import type { IAnnouncementRepository } from '../irepositories/announcements'
+import type { EmbeddedUser } from '../types'
 
 export class AnnouncementsUseCase {
 	private repository: IAnnouncementRepository

@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { LikeDbChangeCallbacks } from '../../utils/changes/likes'
 import { LikeMapper } from '../mappers/likes'
-import { LikeFromModel } from '../models/likes'
+import type { LikeFromModel } from '../models/likes'
 
 const LikeSchema = new appInstance.dbs.mongo.Schema<LikeFromModel>(
 	{

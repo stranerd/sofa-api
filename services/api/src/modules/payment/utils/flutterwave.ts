@@ -1,8 +1,11 @@
+import a from 'axios'
+
 import { flutterwaveConfig } from '@utils/environment'
 import { appInstance } from '@utils/types'
-import a from 'axios'
-import { MethodToModel } from '../data/models/methods'
-import { Currencies, CurrencyCountries, MethodType } from '../domain/types'
+
+import type { MethodToModel } from '../data/models/methods'
+import type { Currencies, CurrencyCountries } from '../domain/types'
+import { MethodType } from '../domain/types'
 
 const axios = a.create({
 	baseURL: 'https://api.flutterwave.com/v3',

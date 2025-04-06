@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { PhoneErrorDbChangeCallbacks } from '../../utils/changes/phoneErrors'
 import { PhoneErrorMapper } from '../mappers/phoneErrors'
-import { PhoneErrorFromModel } from '../models/phoneErrors'
+import type { PhoneErrorFromModel } from '../models/phoneErrors'
 
 const Schema = new appInstance.dbs.mongo.Schema<PhoneErrorFromModel>(
 	{

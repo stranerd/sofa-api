@@ -1,8 +1,10 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IPlanRepository } from '../../domain/irepositories/plans'
+
+import type { IPlanRepository } from '../../domain/irepositories/plans'
 import { PlanMapper } from '../mappers/plans'
-import { PlanToModel } from '../models/plans'
+import type { PlanToModel } from '../models/plans'
 import { Plan } from '../mongooseModels/plans'
 
 export class PlanRepository implements IPlanRepository {

@@ -1,9 +1,12 @@
+import type { QueryParams } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { DraftStatus } from '@modules/study'
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
-import { IQuestionRepository } from '../../domain/irepositories/questions'
+
+import type { IQuestionRepository } from '../../domain/irepositories/questions'
 import { QuestionMapper } from '../mappers/questions'
-import { QuestionFromModel, QuestionToModel } from '../models/questions'
+import type { QuestionFromModel, QuestionToModel } from '../models/questions'
 import { Question } from '../mongooseModels/questions'
 import { Quiz } from '../mongooseModels/quizzes'
 

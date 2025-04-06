@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { NotificationEntity } from '../../domain/entities/notifications'
-import { NotificationFromModel, NotificationToModel } from '../models/notifications'
+import type { NotificationFromModel, NotificationToModel } from '../models/notifications'
 
 export class NotificationMapper extends BaseMapper<NotificationFromModel, NotificationToModel, NotificationEntity> {
 	mapFrom(param: NotificationFromModel | null) {

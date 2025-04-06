@@ -1,8 +1,9 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ConversationToModel } from '../../data/models/conversations'
-import { MessageFromModel } from '../../data/models/messages'
-import { ConversationEntity } from '../entities/conversations'
-import { EmbeddedUser } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ConversationToModel } from '../../data/models/conversations'
+import type { MessageFromModel } from '../../data/models/messages'
+import type { ConversationEntity } from '../entities/conversations'
+import type { EmbeddedUser } from '../types'
 
 export interface IConversationRepository {
 	add: (data: ConversationToModel) => Promise<ConversationEntity>

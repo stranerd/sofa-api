@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { TokenDbChangeCallbacks } from '../../utils/changes/tokens'
 import { TokenMapper } from '../mappers/tokens'
-import { TokenFromModel } from '../models/tokens'
+import type { TokenFromModel } from '../models/tokens'
 
 const Schema = new appInstance.dbs.mongo.Schema<TokenFromModel>(
 	{

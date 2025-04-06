@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IReviewRepository } from '../../domain/irepositories/reviews'
-import { EmbeddedUser, Interaction } from '../../domain/types'
+
+import type { IReviewRepository } from '../../domain/irepositories/reviews'
+import type { EmbeddedUser, Interaction } from '../../domain/types'
 import { ReviewMapper } from '../mappers/reviews'
-import { ReviewToModel } from '../models/reviews'
+import type { ReviewToModel } from '../models/reviews'
 import { Review } from '../mongooseModels/reviews'
 
 export class ReviewRepository implements IReviewRepository {

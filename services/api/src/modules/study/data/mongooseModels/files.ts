@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { CoursableDataSchema } from '.'
 import { FileDbChangeCallbacks } from '../../utils/changes/files'
 import { FileMapper } from '../mappers/files'
-import { FileFromModel } from '../models/files'
+import type { FileFromModel } from '../models/files'
 
 const Schema = new appInstance.dbs.mongo.Schema<FileFromModel>(
 	{

@@ -1,7 +1,10 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { AnnouncementFilter, EmbeddedUser, MemberTypes } from '../types'
-import { ClassEntity } from './classes'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { AnnouncementFilter, EmbeddedUser } from '../types'
+import { MemberTypes } from '../types'
+import type { ClassEntity } from './classes'
 
 export class AnnouncementEntity extends BaseEntity<AnnouncementConstructorArgs> {
 	constructor(data: AnnouncementConstructorArgs) {

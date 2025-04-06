@@ -1,5 +1,6 @@
-import { MediaOutput } from 'equipped'
-import { VerificationAcceptType } from '../../domain/types'
+import type { MediaOutput } from 'equipped'
+
+import type { VerificationAcceptType } from '../../domain/types'
 
 export interface TutorRequestFromModel extends TutorRequestToModel {
 	_id: string

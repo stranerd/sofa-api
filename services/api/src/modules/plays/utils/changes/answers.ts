@@ -1,7 +1,10 @@
+import type { DbChangeCallbacks } from 'equipped'
+import { DelayedJobs } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks, DelayedJobs } from 'equipped'
-import { AnswerFromModel } from '../../data/models/answers'
-import { AnswerEntity } from '../../domain/entities/answers'
+
+import type { AnswerFromModel } from '../../data/models/answers'
+import type { AnswerEntity } from '../../domain/entities/answers'
 
 export const AnswerDbChangeCallbacks: DbChangeCallbacks<AnswerFromModel, AnswerEntity> = {
 	created: async ({ after }) => {

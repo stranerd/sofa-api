@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { TransactionDbChangeCallbacks } from '../../utils/changes/transactions'
 import { TransactionMapper } from '../mappers/transactions'
-import { TransactionFromModel } from '../models/transactions'
+import type { TransactionFromModel } from '../models/transactions'
 
 const TransactionSchema = new appInstance.dbs.mongo.Schema<TransactionFromModel>(
 	{

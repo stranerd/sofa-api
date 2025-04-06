@@ -1,5 +1,7 @@
+import type { QueryParams, Request } from 'equipped'
+import { NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { TagsUseCases, TagTypes } from '@modules/interactions'
-import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = () => ({
 	title: Schema.string().min(1),

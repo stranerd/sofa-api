@@ -1,9 +1,11 @@
-import { NotificationType, sendNotification } from '@modules/notifications'
 import { Conditions } from 'equipped'
+
+import { NotificationType, sendNotification } from '@modules/notifications'
+
 import { MethodsUseCases, PurchasesUseCases, TransactionsUseCases, WalletsUseCases } from '../'
-import { TransactionEntity } from '../domain/entities/transactions'
-import { TransactionStatus, TransactionType } from '../domain/types'
 import { FlutterwavePayment } from './flutterwave'
+import type { TransactionEntity } from '../domain/entities/transactions'
+import { TransactionStatus, TransactionType } from '../domain/types'
 
 export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.newCard) {

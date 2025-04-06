@@ -1,6 +1,8 @@
+import type { Request } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { ClassesUseCases, MemberTypes, MembersUseCases, canAccessOrgClasses } from '@modules/organizations'
 import { SectionsSchema, verifySections } from '@modules/study'
-import { BadRequestError, Conditions, NotAuthorizedError, Request, Schema, validate } from 'equipped'
 
 const schema = () => ({
 	title: Schema.string().min(1),

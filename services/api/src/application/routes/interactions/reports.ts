@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { ReportController } from '@application/controllers/interactions/reports'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const reportsRoutes = groupRoutes({ path: '/reports', middlewares: [isAuthenticated] }, [
 	{

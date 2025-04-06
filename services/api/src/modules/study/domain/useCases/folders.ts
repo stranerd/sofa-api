@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { FolderToModel } from '../../data/models/folders'
-import { IFolderRepository } from '../irepositories/folders'
-import { EmbeddedUser, FolderSaved } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { FolderToModel } from '../../data/models/folders'
+import type { IFolderRepository } from '../irepositories/folders'
+import type { EmbeddedUser, FolderSaved } from '../types'
 
 export class FoldersUseCase {
 	private repository: IFolderRepository

@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IFolderRepository } from '../../domain/irepositories/folders'
-import { EmbeddedUser, FolderSaved } from '../../domain/types'
+
+import type { IFolderRepository } from '../../domain/irepositories/folders'
+import type { EmbeddedUser, FolderSaved } from '../../domain/types'
 import { FolderMapper } from '../mappers/folders'
-import { FolderToModel } from '../models/folders'
+import type { FolderToModel } from '../models/folders'
 import { Folder } from '../mongooseModels/folders'
 
 export class FolderRepository implements IFolderRepository {

@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { DepartmentEntity } from '../../domain/entities/departments'
-import { IDepartmentRepository } from '../../domain/irepositories/departments'
+
+import type { DepartmentEntity } from '../../domain/entities/departments'
+import type { IDepartmentRepository } from '../../domain/irepositories/departments'
 import { DepartmentMapper } from '../mappers/departments'
-import { DepartmentToModel } from '../models/departments'
+import type { DepartmentToModel } from '../models/departments'
 import { Department } from '../mongooseModels/departments'
 
 export class DepartmentRepository implements IDepartmentRepository {

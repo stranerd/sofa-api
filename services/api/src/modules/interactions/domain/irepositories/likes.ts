@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { LikeToModel } from '../../data/models/likes'
-import { LikeEntity } from '../entities/likes'
-import { Interaction } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { LikeToModel } from '../../data/models/likes'
+import type { LikeEntity } from '../entities/likes'
+import type { Interaction } from '../types'
 
 export interface ILikeRepository {
 	like: (data: LikeToModel) => Promise<LikeEntity | null>

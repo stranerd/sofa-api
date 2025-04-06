@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { NotificationToModel } from '../../data/models/notifications'
-import { INotificationRepository } from '../irepositories/notifications'
+import type { QueryParams } from 'equipped'
+
+import type { NotificationToModel } from '../../data/models/notifications'
+import type { INotificationRepository } from '../irepositories/notifications'
 
 export class NotificationsUseCase {
 	repository: INotificationRepository

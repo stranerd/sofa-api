@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { TransactionToModel } from '../../data/models/transactions'
-import { TransactionEntity } from '../entities/transactions'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { TransactionToModel } from '../../data/models/transactions'
+import type { TransactionEntity } from '../entities/transactions'
 
 export interface ITransactionRepository {
 	create: (data: TransactionToModel) => Promise<TransactionEntity>

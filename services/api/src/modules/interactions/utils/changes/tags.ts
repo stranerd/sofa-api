@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { TagFromModel } from '../../data/models/tags'
-import { TagEntity } from '../../domain/entities/tags'
+
+import type { TagFromModel } from '../../data/models/tags'
+import type { TagEntity } from '../../domain/entities/tags'
 
 export const TagDbChangeCallbacks: DbChangeCallbacks<TagFromModel, TagEntity> = {
 	created: async ({ after }) => {

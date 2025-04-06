@@ -1,5 +1,6 @@
-import { IdentitiesController } from '@application/controllers/auth/identities'
 import { groupRoutes } from 'equipped'
+
+import { IdentitiesController } from '@application/controllers/auth/identities'
 
 export const identitiesRoutes = groupRoutes({ path: '/identities' }, [
 	{

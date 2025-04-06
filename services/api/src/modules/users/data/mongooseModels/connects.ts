@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { ConnectDbChangeCallbacks } from '../../utils/changes/connects'
 import { ConnectMapper } from '../mappers/connects'
-import { ConnectFromModel } from '../models/connects'
+import type { ConnectFromModel } from '../models/connects'
 
 const ConnectSchema = new appInstance.dbs.mongo.Schema<ConnectFromModel>(
 	{

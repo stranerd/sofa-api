@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { QuestionToModel } from '../../data/models/questions'
-import { QuestionEntity } from '../entities/questions'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { QuestionToModel } from '../../data/models/questions'
+import type { QuestionEntity } from '../entities/questions'
 
 export interface IQuestionRepository {
 	add: (data: QuestionToModel[]) => Promise<QuestionEntity[]>

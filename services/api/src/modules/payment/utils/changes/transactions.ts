@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { TransactionFromModel } from '../../data/models/transactions'
-import { TransactionEntity } from '../../domain/entities/transactions'
+
+import type { TransactionFromModel } from '../../data/models/transactions'
+import type { TransactionEntity } from '../../domain/entities/transactions'
 import { TransactionStatus } from '../../domain/types'
 import { settleTransaction } from '../transactions'
 

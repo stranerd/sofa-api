@@ -1,7 +1,10 @@
+import type { QueryParams, Request } from 'equipped'
+import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, Schema, validate } from 'equipped'
+
 import { UploaderUseCases } from '@modules/storage'
 import { DraftStatus, generateAiQuizAndQuestions, QuestionTypes, QuizModes, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { AuthRole, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+
 import { verifyTags } from './tags'
 
 const modesSchema = Object.values(QuizModes).reduce(

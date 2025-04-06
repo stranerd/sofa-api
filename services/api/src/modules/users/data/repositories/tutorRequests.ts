@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
-import { ITutorRequestRepository } from '../../domain/irepositories/tutorRequests'
-import { AcceptVerificationInput } from '../../domain/types'
+
+import type { ITutorRequestRepository } from '../../domain/irepositories/tutorRequests'
+import type { AcceptVerificationInput } from '../../domain/types'
 import { TutorRequestMapper } from '../mappers/tutorRequests'
-import { TutorRequestToModel } from '../models/tutorRequests'
+import type { TutorRequestToModel } from '../models/tutorRequests'
 import { TutorRequest } from '../mongooseModels/tutorRequests'
 
 export class TutorRequestRepository implements ITutorRequestRepository {

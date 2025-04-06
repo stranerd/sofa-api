@@ -1,12 +1,14 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { InteractionEntities, ReviewsUseCases, TagMeta, TagsUseCases, ViewsUseCases } from '@modules/interactions'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { CoursesUseCases, FoldersUseCases, QuestionsUseCases } from '../..'
-import { QuizFromModel } from '../../data/models/quizzes'
-import { QuizEntity } from '../../domain/entities/quizzes'
+import type { QuizFromModel } from '../../data/models/quizzes'
+import type { QuizEntity } from '../../domain/entities/quizzes'
 import { Coursable, DraftStatus, FolderSaved } from '../../domain/types'
 
 export const QuizDbChangeCallbacks: DbChangeCallbacks<QuizFromModel, QuizEntity> = {

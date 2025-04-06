@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { TagEntity } from '../../domain/entities/tags'
-import { TagFromModel, TagToModel } from '../models/tags'
+import type { TagFromModel, TagToModel } from '../models/tags'
 
 export class TagMapper extends BaseMapper<TagFromModel, TagToModel, TagEntity> {
 	mapFrom(model: TagFromModel | null) {

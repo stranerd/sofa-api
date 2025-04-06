@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { VerificationDbChangeCallbacks } from '../../utils/changes/verifications'
 import { VerificationMapper } from '../mappers/verifications'
-import { VerificationFromModel } from '../models/verifications'
+import type { VerificationFromModel } from '../models/verifications'
 
 const VerificationSchema = new appInstance.dbs.mongo.Schema<VerificationFromModel>(
 	{

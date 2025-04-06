@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ViewToModel } from '../../data/models/views'
-import { ViewEntity } from '../entities/views'
-import { Interaction } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ViewToModel } from '../../data/models/views'
+import type { ViewEntity } from '../entities/views'
+import type { Interaction } from '../types'
 
 export interface IViewRepository {
 	add: (data: ViewToModel) => Promise<ViewEntity>

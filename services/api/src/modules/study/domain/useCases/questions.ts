@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { QuestionToModel } from '../../data/models/questions'
-import { IQuestionRepository } from '../irepositories/questions'
+import type { QueryParams } from 'equipped'
+
+import type { QuestionToModel } from '../../data/models/questions'
+import type { IQuestionRepository } from '../irepositories/questions'
 
 export class QuestionsUseCase {
 	private repository: IQuestionRepository

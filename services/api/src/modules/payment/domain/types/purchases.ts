@@ -1,4 +1,4 @@
-import { Currencies } from '.'
+import type { Currencies } from '.'
 
 export type Saleable = {
 	frozen: boolean

@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { ReviewsController } from '@application/controllers/interactions/reviews'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const reviewsRoutes = groupRoutes({ path: '/reviews' }, [
 	{

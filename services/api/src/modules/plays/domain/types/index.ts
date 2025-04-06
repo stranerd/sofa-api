@@ -1,9 +1,10 @@
-export { QuestionAnswer as PlayAnswer } from '@modules/study'
-import { QuizModes as PlayTypes, QuestionEntity } from '@modules/study'
+export type { QuestionAnswer as PlayAnswer } from '@modules/study'
+import type { QuestionEntity } from '@modules/study'
+import { QuizModes as PlayTypes } from '@modules/study'
 
 export { PlayTypes }
 
-export { EmbeddedUser } from '@modules/users'
+export type { EmbeddedUser } from '@modules/users'
 
 export type PlaySources = QuestionEntity[]
 

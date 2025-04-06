@@ -1,10 +1,12 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { TutorRequestFromModel } from '../../data/models/tutorRequests'
-import { TutorRequestEntity } from '../../domain/entities/tutorRequests'
+
+import type { TutorRequestFromModel } from '../../data/models/tutorRequests'
+import type { TutorRequestEntity } from '../../domain/entities/tutorRequests'
 
 export const TutorRequestDbChangeCallbacks: DbChangeCallbacks<TutorRequestFromModel, TutorRequestEntity> = {
 	created: async ({ after }) => {

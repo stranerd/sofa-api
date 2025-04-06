@@ -1,8 +1,9 @@
 export * from './purchases'
 export * from './subscriptions'
-import { CronTypes, Enum } from 'equipped'
-import { PurchaseToModel } from '../../data/models/purchases'
-import { Subscription } from './subscriptions'
+import type { CronTypes, Enum } from 'equipped'
+
+import type { Subscription } from './subscriptions'
+import type { PurchaseToModel } from '../../data/models/purchases'
 
 export enum Currencies {
 	NGN = 'NGN',

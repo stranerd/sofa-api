@@ -1,5 +1,6 @@
 import { BaseEntity } from 'equipped'
-import { AccountDetails, Currencies, WithdrawalStatus } from '../types'
+
+import type { AccountDetails, Currencies, WithdrawalStatus } from '../types'
 
 export class WithdrawalEntity extends BaseEntity<WithdrawalConstructorArgs> {
 	constructor(data: WithdrawalConstructorArgs) {

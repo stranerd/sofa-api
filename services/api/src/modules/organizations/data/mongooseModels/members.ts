@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { MemberTypes } from '../../domain/types'
 import { MemberDbChangeCallbacks } from '../../utils/changes/members'
 import { MemberMapper } from '../mappers/members'
-import { MemberFromModel } from '../models/members'
+import type { MemberFromModel } from '../models/members'
 
 const MemberSchema = new appInstance.dbs.mongo.Schema<MemberFromModel>(
 	{

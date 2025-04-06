@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { FolderController } from '@application/controllers/study/folders'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const foldersRoutes = groupRoutes({ path: '/folders', middlewares: [isAuthenticated] }, [
 	{

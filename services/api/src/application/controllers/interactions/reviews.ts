@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, Schema, validate } from 'equipped'
+
 import { InteractionEntities, ReviewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ReviewsController {
 	static async get(req: Request) {

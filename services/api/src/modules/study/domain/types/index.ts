@@ -1,9 +1,10 @@
-export { Saleable } from '@modules/payment'
+export type { Saleable } from '@modules/payment'
 export * from './questions'
-export { EmbeddedUser, Media }
-import { EmbeddedUser } from '@modules/users'
-import { Ratings } from '@utils/commons'
-import { MediaOutput as Media } from 'equipped'
+export type { EmbeddedUser, Media }
+import type { MediaOutput as Media } from 'equipped'
+
+import type { EmbeddedUser } from '@modules/users'
+import type { Ratings } from '@utils/commons'
 
 export enum FileType {
 	video = 'video',

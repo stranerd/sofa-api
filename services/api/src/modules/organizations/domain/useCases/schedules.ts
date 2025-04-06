@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { ScheduleToModel } from '../../data/models/schedules'
-import { IScheduleRepository } from '../irepositories/schedules'
-import { EmbeddedUser } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ScheduleToModel } from '../../data/models/schedules'
+import type { IScheduleRepository } from '../irepositories/schedules'
+import type { EmbeddedUser } from '../types'
 
 export class SchedulesUseCase {
 	private repository: IScheduleRepository

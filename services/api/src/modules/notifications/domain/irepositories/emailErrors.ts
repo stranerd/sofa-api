@@ -1,5 +1,5 @@
-import { EmailErrorToModel } from '../../data/models/emailErrors'
-import { EmailErrorEntity } from '../entities/emailErrors'
+import type { EmailErrorToModel } from '../../data/models/emailErrors'
+import type { EmailErrorEntity } from '../entities/emailErrors'
 
 export interface IEmailErrorRepository {
 	add: (data: EmailErrorToModel, id: string | undefined) => Promise<EmailErrorEntity>

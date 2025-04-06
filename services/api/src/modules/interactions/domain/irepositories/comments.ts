@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { CommentToModel } from '../../data/models/comments'
-import { CommentEntity } from '../entities/comments'
-import { CommentMeta, Interaction } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { CommentToModel } from '../../data/models/comments'
+import type { CommentEntity } from '../entities/comments'
+import type { CommentMeta, Interaction } from '../types'
 
 export interface ICommentRepository {
 	add: (data: CommentToModel) => Promise<CommentEntity>

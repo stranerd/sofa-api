@@ -1,4 +1,4 @@
-import { MediaOutput } from 'equipped'
+import type { MediaOutput } from 'equipped'
 
 export type Phone = {
 	code: string

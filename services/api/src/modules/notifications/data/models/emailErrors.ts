@@ -1,4 +1,4 @@
-import { EmailsList, Enum } from 'equipped'
+import type { EmailsList, Enum } from 'equipped'
 
 export interface EmailErrorFromModel extends EmailErrorToModel {
 	_id: string

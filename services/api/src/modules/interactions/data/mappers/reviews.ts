@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { ReviewEntity } from '../../domain/entities/reviews'
-import { ReviewFromModel, ReviewToModel } from '../models/reviews'
+import type { ReviewFromModel, ReviewToModel } from '../models/reviews'
 
 export class ReviewMapper extends BaseMapper<ReviewFromModel, ReviewToModel, ReviewEntity> {
 	mapFrom(param: ReviewFromModel | null) {

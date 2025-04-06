@@ -1,4 +1,4 @@
-import { PlayAnswer, PlayTypes } from '../../domain/types'
+import type { PlayAnswer, PlayTypes } from '../../domain/types'
 
 export interface AnswerFromModel extends Omit<AnswerToModel, 'questionId' | 'answer'> {
 	_id: string

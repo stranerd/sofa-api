@@ -7,9 +7,10 @@ import {
 	makeAccessToken,
 	makeRefreshToken,
 } from 'equipped'
+
 import { AuthUsersUseCases } from '../'
-import { AuthUserEntity } from '../domain/entities/users'
-import { AuthOutput } from '../domain/types'
+import type { AuthUserEntity } from '../domain/entities/users'
+import type { AuthOutput } from '../domain/types'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {
 	await deleteCachedAccessToken(userId)

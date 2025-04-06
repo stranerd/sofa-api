@@ -1,5 +1,7 @@
-import { UserController } from '@application/controllers/auth/user'
 import { groupRoutes } from 'equipped'
+
+import { UserController } from '@application/controllers/auth/user'
+
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '../../middlewares'
 
 export const userRoutes = groupRoutes({ path: '/user' }, [

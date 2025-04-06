@@ -1,7 +1,10 @@
+import type { Email } from 'equipped'
+import { EmailsList } from 'equipped'
+import { createTransport } from 'nodemailer'
+
 import { emails, isDev } from '@utils/environment'
 import { appInstance } from '@utils/types'
-import { Email, EmailsList } from 'equipped'
-import { createTransport } from 'nodemailer'
+
 import { EmailErrorsUseCases } from '../'
 import { EmailErrorEntity } from '../domain/entities/emailErrors'
 

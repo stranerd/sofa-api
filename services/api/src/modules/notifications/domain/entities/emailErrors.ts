@@ -1,4 +1,5 @@
-import { BaseEntity, EmailsList, Enum } from 'equipped'
+import type { EmailsList, Enum } from 'equipped'
+import { BaseEntity } from 'equipped'
 
 export class EmailErrorEntity extends BaseEntity<ErrorConstructor> {
 	constructor(data: ErrorConstructor) {

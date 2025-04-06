@@ -1,7 +1,8 @@
 import { AuthTypes } from 'equipped'
-import { UserToModel } from '../../data/models/users'
-import { IAuthRepository } from '../irepositories/auth'
-import { Credential, PasswordResetInput, Phone, RegisterInput } from '../types'
+
+import type { UserToModel } from '../../data/models/users'
+import type { IAuthRepository } from '../irepositories/auth'
+import type { Credential, PasswordResetInput, Phone, RegisterInput } from '../types'
 
 export class AuthUseCase {
 	repository: IAuthRepository

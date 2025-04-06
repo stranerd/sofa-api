@@ -1,4 +1,4 @@
-import { ITokenRepository } from '../irepositories/tokens'
+import type { ITokenRepository } from '../irepositories/tokens'
 
 export class TokensUseCase {
 	private repository: ITokenRepository

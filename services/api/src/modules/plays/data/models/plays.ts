@@ -1,4 +1,4 @@
-import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming } from '../../domain/types'
+import type { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming } from '../../domain/types'
 
 export interface PlayFromModel extends PlayToModel {
 	_id: string

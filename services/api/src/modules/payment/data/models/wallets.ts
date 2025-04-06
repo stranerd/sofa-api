@@ -1,4 +1,4 @@
-import { AccountDetails, Currencies, Subscription, SubscriptionModel } from '../../domain/types'
+import type { AccountDetails, Currencies, Subscription, SubscriptionModel } from '../../domain/types'
 
 export interface WalletFromModel extends WalletToModel {
 	_id: string

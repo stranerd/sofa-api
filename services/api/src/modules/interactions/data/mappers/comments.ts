@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { CommentEntity } from '../../domain/entities/comments'
-import { CommentFromModel, CommentToModel } from '../models/comments'
+import type { CommentFromModel, CommentToModel } from '../models/comments'
 
 export class CommentMapper extends BaseMapper<CommentFromModel, CommentToModel, CommentEntity> {
 	mapFrom(param: CommentFromModel | null) {

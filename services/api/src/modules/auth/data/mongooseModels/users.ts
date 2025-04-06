@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { UserDbChangeCallbacks } from '../../utils/changes/users'
 import { UserMapper } from '../mappers/users'
-import { UserFromModel } from '../models/users'
+import type { UserFromModel } from '../models/users'
 
 const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 	_id: {

@@ -1,8 +1,9 @@
-import { QueryParams } from 'equipped'
-import { ConversationToModel } from '../../data/models/conversations'
-import { MessageFromModel } from '../../data/models/messages'
-import { IConversationRepository } from '../irepositories/conversations'
-import { EmbeddedUser } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ConversationToModel } from '../../data/models/conversations'
+import type { MessageFromModel } from '../../data/models/messages'
+import type { IConversationRepository } from '../irepositories/conversations'
+import type { EmbeddedUser } from '../types'
 
 export class ConversationsUseCase {
 	private repository: IConversationRepository

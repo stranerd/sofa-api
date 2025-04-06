@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { PlanToModel } from '../../data/models/plans'
-import { PlanEntity } from '../entities/plans'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { PlanToModel } from '../../data/models/plans'
+import type { PlanEntity } from '../entities/plans'
 
 export interface IPlanRepository {
 	init: (data: PlanToModel[]) => Promise<PlanEntity[]>

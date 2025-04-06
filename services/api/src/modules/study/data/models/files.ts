@@ -1,4 +1,4 @@
-import { CoursableData, FileType, Media } from '../../domain/types'
+import type { CoursableData, FileType, Media } from '../../domain/types'
 
 export interface FileFromModel extends FileToModel, CoursableData {
 	_id: string

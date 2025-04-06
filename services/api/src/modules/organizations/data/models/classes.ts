@@ -1,4 +1,4 @@
-import { ClassLesson, ClassMembers, EmbeddedUser, Media, Saleable } from '../../domain/types'
+import type { ClassLesson, ClassMembers, EmbeddedUser, Media, Saleable } from '../../domain/types'
 
 export interface ClassFromModel extends ClassToModel {
 	_id: string

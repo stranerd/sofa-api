@@ -1,8 +1,10 @@
+import { CronTypes } from 'equipped'
+
 import { MembersUseCases } from '@modules/organizations'
 import { UserType } from '@modules/users'
-import { CronTypes } from 'equipped'
+
 import { WalletsUseCases } from '..'
-import { PlanToModel } from '../data/models/plans'
+import type { PlanToModel } from '../data/models/plans'
 import { Currencies } from '../domain/types'
 
 const studentFeatures = [

@@ -1,8 +1,10 @@
-import { appId, baseDomain, environment } from '@utils/environment'
 import fs from 'fs/promises'
 import { dirname, join, resolve } from 'path'
-import { IUploaderRepository } from '../../domain/irepositories/uploader'
-import { MediaInput } from '../models/media'
+
+import { appId, baseDomain, environment } from '@utils/environment'
+
+import type { IUploaderRepository } from '../../domain/irepositories/uploader'
+import type { MediaInput } from '../models/media'
 
 export class LocalUploaderRepository implements IUploaderRepository {
 	async delete(path: string) {

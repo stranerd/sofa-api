@@ -1,6 +1,7 @@
 import { appInstance } from '@utils/types'
+
 import { ViewDbChangeCallbacks } from '../../utils/changes/views'
-import { ViewFromModel } from '../models/views'
+import type { ViewFromModel } from '../models/views'
 import { ViewMapper } from './../mappers/views'
 
 const ViewSchema = new appInstance.dbs.mongo.Schema<ViewFromModel>(

@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { ReportEntity } from '../../domain/entities/reports'
-import { ReportFromModel, ReportToModel } from '../models/reports'
+import type { ReportFromModel, ReportToModel } from '../models/reports'
 
 export class ReportMapper extends BaseMapper<ReportFromModel, ReportToModel, ReportEntity> {
 	mapFrom(param: ReportFromModel | null) {

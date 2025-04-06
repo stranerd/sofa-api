@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { MessageDbChangeCallbacks } from '../../utils/changes/messages'
 import { MessageMapper } from '../mappers/messages'
-import { MessageFromModel } from '../models/messages'
+import type { MessageFromModel } from '../models/messages'
 
 const Schema = new appInstance.dbs.mongo.Schema<MessageFromModel>(
 	{

@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { WithdrawalToModel } from '../../data/models/withdrawals'
-import { IWithdrawalRepository } from '../irepositories/withdrawals'
+import type { QueryParams } from 'equipped'
+
+import type { WithdrawalToModel } from '../../data/models/withdrawals'
+import type { IWithdrawalRepository } from '../irepositories/withdrawals'
 
 export class WithdrawalsUseCase {
 	repository: IWithdrawalRepository

@@ -1,6 +1,8 @@
-import { UserType } from '@modules/users'
 import { BaseEntity, CronTypes } from 'equipped'
-import { Currencies, Interval, PlanData } from '../types'
+
+import type { UserType } from '@modules/users'
+
+import type { Currencies, Interval, PlanData } from '../types'
 
 export class PlanEntity extends BaseEntity<PlanConstructorArgs> {
 	constructor(data: PlanConstructorArgs) {

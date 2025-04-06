@@ -1,7 +1,8 @@
-import { ReportMapper } from '../mappers/reports'
-import { ReportFromModel, ReportToModel } from '../models/reports'
 import { appInstance } from '@utils/types'
+
 import { ReportDbChangeCallbacks } from '../../utils/changes/reports'
+import { ReportMapper } from '../mappers/reports'
+import type { ReportFromModel, ReportToModel } from '../models/reports'
 
 const ReportSchema = new appInstance.dbs.mongo.Schema<ReportFromModel>(
 	{

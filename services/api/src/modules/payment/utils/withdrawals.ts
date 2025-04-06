@@ -1,9 +1,11 @@
 import { Conditions } from 'equipped'
-import { TransactionsUseCases, WithdrawalsUseCases } from '..'
-import { WithdrawalEntity } from '../domain/entities/withdrawals'
-import { TransactionStatus, TransactionType, WithdrawalStatus } from '../domain/types'
-import { FlutterwavePayment } from './flutterwave'
+
 import { NotificationType, sendNotification } from '@modules/notifications'
+
+import { TransactionsUseCases, WithdrawalsUseCases } from '..'
+import { FlutterwavePayment } from './flutterwave'
+import type { WithdrawalEntity } from '../domain/entities/withdrawals'
+import { TransactionStatus, TransactionType, WithdrawalStatus } from '../domain/types'
 
 export const processCreatedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	if (withdrawal.externalId || withdrawal.status !== WithdrawalStatus.created) return

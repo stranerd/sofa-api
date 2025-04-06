@@ -1,6 +1,8 @@
+import type { Request } from 'equipped'
+import { EmailsList, Schema, validate, Validation } from 'equipped'
+
 import { renderEmail } from '@utils/emails'
 import { publishers } from '@utils/events'
-import { EmailsList, Request, Schema, validate, Validation } from 'equipped'
 
 export class MessageController {
 	static async createMessage(req: Request) {

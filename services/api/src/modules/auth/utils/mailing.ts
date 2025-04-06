@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { mailchimpConfig } from '@utils/environment'
 import { appInstance } from '@utils/types'
 

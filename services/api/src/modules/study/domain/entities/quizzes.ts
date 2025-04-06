@@ -1,4 +1,4 @@
-import { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../types'
+import type { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../types'
 import { CoursableEntity } from './coursables'
 
 export class QuizEntity extends CoursableEntity<QuizConstructorArgs> implements CoursableData {

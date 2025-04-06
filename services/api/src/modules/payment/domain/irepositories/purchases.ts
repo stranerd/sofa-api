@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { PurchaseToModel } from '../../data/models/purchases'
-import { PurchaseEntity } from '../entities/purchases'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { PurchaseToModel } from '../../data/models/purchases'
+import type { PurchaseEntity } from '../entities/purchases'
 
 export interface IPurchaseRepository {
 	create: (data: PurchaseToModel) => Promise<PurchaseEntity>

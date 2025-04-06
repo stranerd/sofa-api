@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { WithdrawalToModel } from '../../data/models/withdrawals'
-import { WithdrawalEntity } from '../entities/withdrawals'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { WithdrawalToModel } from '../../data/models/withdrawals'
+import type { WithdrawalEntity } from '../entities/withdrawals'
 
 export interface IWithdrawalRepository {
 	get: (query: QueryParams) => Promise<QueryResults<WithdrawalEntity>>

@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { UploaderUseCases } from '@modules/storage'
 import { canAccessCoursable, Coursable, questionsLimits, QuestionsUseCases, QuestionTypes } from '@modules/study'
-import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = (body: Record<string, any>) => ({
 	question: Schema.string()

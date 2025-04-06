@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { ReportToModel } from '../../data/models/reports'
-import { IReportRepository } from '../irepositories/reports'
-import { EmbeddedUser, Interaction } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ReportToModel } from '../../data/models/reports'
+import type { IReportRepository } from '../irepositories/reports'
+import type { EmbeddedUser, Interaction } from '../types'
 
 export class ReportsUseCase {
 	repository: IReportRepository

@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { CommentMetaType, EmbeddedUser, InteractionEntity } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { CommentMetaType, EmbeddedUser, InteractionEntity } from '../types'
 
 export class CommentEntity extends BaseEntity<CommentConstructorArgs> {
 	constructor(data: CommentConstructorArgs) {

@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { ConversationController } from '@application/controllers/conversations/conversations'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const conversationsRoutes = groupRoutes({ path: '/conversations', middlewares: [isAuthenticated] }, [
 	{

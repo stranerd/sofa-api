@@ -1,5 +1,7 @@
 import { BaseEntity } from 'equipped'
-import { TagMetaType, TagTypes } from '../types'
+
+import type { TagMetaType } from '../types'
+import { TagTypes } from '../types'
 
 export class TagEntity extends BaseEntity<TagConstructorArgs> {
 	constructor(data: TagConstructorArgs) {

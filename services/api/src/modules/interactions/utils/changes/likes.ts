@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { LikeFromModel } from '../../data/models/likes'
-import { LikeEntity } from '../../domain/entities/likes'
+
+import type { LikeFromModel } from '../../data/models/likes'
+import type { LikeEntity } from '../../domain/entities/likes'
 
 export const LikeDbChangeCallbacks: DbChangeCallbacks<LikeFromModel, LikeEntity> = {
 	created: async ({ after }) => {

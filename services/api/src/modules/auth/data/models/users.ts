@@ -1,5 +1,6 @@
-import { AuthRoles, AuthTypes, Enum, MediaOutput } from 'equipped'
-import { Phone } from '../../domain/types'
+import type { AuthRoles, AuthTypes, Enum, MediaOutput } from 'equipped'
+
+import type { Phone } from '../../domain/types'
 
 export interface UserFromModel extends UserToModel {
 	_id: string

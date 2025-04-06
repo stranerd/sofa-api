@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { MethodDbChangeCallbacks } from '../../utils/changes/methods'
 import { MethodMapper } from '../mappers/methods'
-import { MethodFromModel } from '../models/methods'
+import type { MethodFromModel } from '../models/methods'
 
 const MethodSchema = new appInstance.dbs.mongo.Schema<MethodFromModel>(
 	{

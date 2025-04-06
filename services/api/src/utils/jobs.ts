@@ -1,3 +1,5 @@
+import { CronTypes, DelayedJobs } from 'equipped'
+
 import { deleteUnverifiedUsers } from '@modules/auth'
 import {
 	EmailErrorsUseCases,
@@ -10,7 +12,6 @@ import { MethodsUseCases, Subscriptions, processTransactions, processWithdrawals
 import { AnswersUseCases, PlaysUseCases } from '@modules/plays'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { CronTypes, DelayedJobs } from 'equipped'
 
 export const startJobs = async () => {
 	await appInstance.job.startProcessingQueues(

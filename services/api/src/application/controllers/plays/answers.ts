@@ -1,5 +1,8 @@
-import { AnswersUseCases, PlayTypes } from '@modules/plays'
-import { QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import type { QueryParams, Request } from 'equipped'
+import { QueryKeys, Schema, validate } from 'equipped'
+
+import type { PlayTypes } from '@modules/plays'
+import { AnswersUseCases } from '@modules/plays'
 
 export class AnswerController {
 	static async find(req: Request) {

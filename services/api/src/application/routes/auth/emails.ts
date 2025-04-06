@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { EmailsController } from '@application/controllers/auth/emails'
 import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const emailRoutes = groupRoutes({ path: '/emails' }, [
 	{

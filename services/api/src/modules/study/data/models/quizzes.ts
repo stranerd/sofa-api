@@ -1,4 +1,4 @@
-import { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../../domain/types'
+import type { CoursableData, QuizAccess, QuizMeta, QuizModes } from '../../domain/types'
 
 export interface QuizFromModel extends QuizToModel, CoursableData {
 	_id: string

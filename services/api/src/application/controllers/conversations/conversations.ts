@@ -1,7 +1,9 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryKeys, Schema, validate } from 'equipped'
+
 import { ConversationsUseCases, MessagesUseCases } from '@modules/conversations'
 import { UsersUseCases } from '@modules/users'
 import { AI } from '@utils/ai'
-import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ConversationController {
 	static async find(req: Request) {

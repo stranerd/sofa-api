@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { FacultyEntity } from '../../domain/entities/faculties'
-import { IFacultyRepository } from '../../domain/irepositories/faculties'
+
+import type { FacultyEntity } from '../../domain/entities/faculties'
+import type { IFacultyRepository } from '../../domain/irepositories/faculties'
 import { FacultyMapper } from '../mappers/faculties'
-import { FacultyToModel } from '../models/faculties'
+import type { FacultyToModel } from '../models/faculties'
 import { Faculty } from '../mongooseModels/faculties'
 
 export class FacultyRepository implements IFacultyRepository {

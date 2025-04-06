@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryKeys, Schema, validate } from 'equipped'
+
 import { AnnouncementsUseCases, MemberTypes, canAccessOrgClasses } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = (role: 'teacher' | 'admin') => {
 	const lessonIds = Schema.array(Schema.string().min(1))

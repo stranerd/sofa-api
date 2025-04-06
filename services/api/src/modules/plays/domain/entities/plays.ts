@@ -1,7 +1,10 @@
+import { BaseEntity } from 'equipped'
+
 import { QuizMetaType } from '@modules/study'
 import { UserMeta, generateDefaultUser } from '@modules/users'
-import { BaseEntity } from 'equipped'
-import { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming, PlayTypes } from '../types'
+
+import type { EmbeddedUser, PlayData, PlayScore, PlaySources, PlayStatus, PlayTiming } from '../types'
+import { PlayTypes } from '../types'
 
 export class PlayEntity extends BaseEntity<PlayConstructorArgs, 'sources'> {
 	constructor(data: PlayConstructorArgs) {

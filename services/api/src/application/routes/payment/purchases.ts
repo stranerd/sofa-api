@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { PurchasesController } from '@application/controllers/payment/purchases'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const purchasesRoutes = groupRoutes({ path: '/purchases', middlewares: [isAuthenticated] }, [
 	{

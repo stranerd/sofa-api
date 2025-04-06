@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { PhoneController } from '@application/controllers/auth/phone'
 import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const phoneRoutes = groupRoutes({ path: '/phone' }, [
 	{

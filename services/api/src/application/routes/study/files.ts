@@ -1,7 +1,8 @@
-import { FileController } from '@application/controllers/study/files'
-import { isAuthenticated } from '@application/middlewares'
 import axios from 'axios'
 import { BadRequestError, groupRoutes } from 'equipped'
+
+import { FileController } from '@application/controllers/study/files'
+import { isAuthenticated } from '@application/middlewares'
 
 export const filesRoutes = groupRoutes({ path: '/files' }, [
 	{

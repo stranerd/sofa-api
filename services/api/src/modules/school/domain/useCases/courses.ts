@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { CourseToModel } from '../../data/models/courses'
-import { ICourseRepository } from '../irepositories/courses'
+import type { QueryParams } from 'equipped'
+
+import type { CourseToModel } from '../../data/models/courses'
+import type { ICourseRepository } from '../irepositories/courses'
 
 export class CoursesUseCase {
 	private repository: ICourseRepository

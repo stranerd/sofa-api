@@ -1,5 +1,6 @@
 import { BaseEntity } from 'equipped'
-import { VerificationAcceptType, VerificationContent } from '../types'
+
+import type { VerificationAcceptType, VerificationContent } from '../types'
 
 export class VerificationEntity extends BaseEntity<VerificationConstructorArgs> {
 	constructor(data: VerificationConstructorArgs) {

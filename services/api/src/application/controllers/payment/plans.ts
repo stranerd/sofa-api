@@ -1,5 +1,6 @@
+import type { QueryParams, Request } from 'equipped'
+
 import { PlansUseCases } from '@modules/payment'
-import { QueryParams, Request } from 'equipped'
 
 export class PlansController {
 	static async find(req: Request) {

@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { DepartmentToModel } from '../../data/models/departments'
-import { IDepartmentRepository } from '../irepositories/departments'
+import type { QueryParams } from 'equipped'
+
+import type { DepartmentToModel } from '../../data/models/departments'
+import type { IDepartmentRepository } from '../irepositories/departments'
 
 export class DepartmentsUseCase {
 	private repository: IDepartmentRepository

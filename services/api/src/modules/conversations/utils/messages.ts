@@ -1,8 +1,10 @@
+import { Conditions, QueryKeys } from 'equipped'
+
 import { AI } from '@utils/ai'
+
 import { MessagesUseCases } from '..'
 import { ConversationEntity } from '../domain/entities/conversations'
-import { MessageEntity } from '../domain/entities/messages'
-import { Conditions, QueryKeys } from 'equipped'
+import type { MessageEntity } from '../domain/entities/messages'
 
 export const generateResponse = async (message: MessageEntity) => {
 	if (!message.tags.includes(ConversationEntity.AI_Id)) return

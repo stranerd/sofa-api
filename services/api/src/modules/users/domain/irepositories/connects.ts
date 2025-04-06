@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ConnectToModel } from '../../data/models/connects'
-import { ConnectEntity } from '../entities/connects'
-import { EmbeddedUser } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ConnectToModel } from '../../data/models/connects'
+import type { ConnectEntity } from '../entities/connects'
+import type { EmbeddedUser } from '../types'
 
 export interface IConnectRepository {
 	find: (id: string) => Promise<ConnectEntity | null>

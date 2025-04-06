@@ -1,5 +1,6 @@
+import type { Request } from 'equipped'
+
 import { getNewTokens } from '@modules/auth'
-import { Request } from 'equipped'
 
 export class TokenController {
 	static async getNewTokens(req: Request) {

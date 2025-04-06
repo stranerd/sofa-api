@@ -1,4 +1,4 @@
-import { CourseMeta, CourseSections, Publishable, Saleable } from '../../domain/types'
+import type { CourseMeta, CourseSections, Publishable, Saleable } from '../../domain/types'
 
 export interface CourseFromModel extends CourseToModel {
 	_id: string

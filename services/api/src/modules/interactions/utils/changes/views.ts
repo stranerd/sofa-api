@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { ViewFromModel } from '../../data/models/views'
-import { ViewEntity } from '../../domain/entities/views'
+
+import type { ViewFromModel } from '../../data/models/views'
+import type { ViewEntity } from '../../domain/entities/views'
 
 export const ViewDbChangeCallbacks: DbChangeCallbacks<ViewFromModel, ViewEntity> = {
 	created: async ({ after }) => {

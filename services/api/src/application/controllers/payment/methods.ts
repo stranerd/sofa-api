@@ -1,5 +1,7 @@
+import type { QueryParams, Request } from 'equipped'
+import { NotAuthorizedError } from 'equipped'
+
 import { MethodsUseCases } from '@modules/payment'
-import { NotAuthorizedError, QueryParams, Request } from 'equipped'
 
 export class MethodsController {
 	static async find(req: Request) {

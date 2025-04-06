@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
-import { IConnectRepository } from '../../domain/irepositories/connects'
-import { EmbeddedUser } from '../../domain/types'
+
+import type { IConnectRepository } from '../../domain/irepositories/connects'
+import type { EmbeddedUser } from '../../domain/types'
 import { ConnectMapper } from '../mappers/connects'
-import { ConnectToModel } from '../models/connects'
+import type { ConnectToModel } from '../models/connects'
 import { Connect } from '../mongooseModels/connects'
 
 export class ConnectRepository implements IConnectRepository {

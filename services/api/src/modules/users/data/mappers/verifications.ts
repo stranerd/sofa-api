@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { VerificationEntity } from '../../domain/entities/verifications'
-import { VerificationFromModel, VerificationToModel } from '../models/verifications'
+import type { VerificationFromModel, VerificationToModel } from '../models/verifications'
 
 export class VerificationMapper extends BaseMapper<VerificationFromModel, VerificationToModel, VerificationEntity> {
 	mapFrom(param: VerificationFromModel | null) {

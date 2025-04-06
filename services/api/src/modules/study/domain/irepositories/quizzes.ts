@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { QuizToModel } from '../../data/models/quizzes'
-import { QuizEntity } from '../entities/quizzes'
-import { EmbeddedUser, QuizMeta } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { QuizToModel } from '../../data/models/quizzes'
+import type { QuizEntity } from '../entities/quizzes'
+import type { EmbeddedUser, QuizMeta } from '../types'
 
 export interface IQuizRepository {
 	add: (data: QuizToModel) => Promise<QuizEntity>

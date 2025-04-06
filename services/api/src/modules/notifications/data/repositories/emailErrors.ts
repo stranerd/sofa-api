@@ -1,6 +1,6 @@
-import { IEmailErrorRepository } from '../../domain/irepositories/emailErrors'
+import type { IEmailErrorRepository } from '../../domain/irepositories/emailErrors'
 import { EmailErrorMapper } from '../mappers/emailErrors'
-import { EmailErrorToModel } from '../models/emailErrors'
+import type { EmailErrorToModel } from '../models/emailErrors'
 import { EmailError } from '../mongooseModels/emailErrors'
 
 export class EmailErrorRepository implements IEmailErrorRepository {

@@ -1,10 +1,13 @@
+import type { QueryParams } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
-import { IAnswerRepository } from '../../domain/irepositories/answers'
+
+import type { IAnswerRepository } from '../../domain/irepositories/answers'
 import { PlayStatus, PlayTypes } from '../../domain/types'
 import { AnswerMapper } from '../mappers/answers'
 import { PlayMapper } from '../mappers/plays'
-import { AnswerFromModel, AnswerToModel } from '../models/answers'
+import type { AnswerFromModel, AnswerToModel } from '../models/answers'
 import { Answer } from '../mongooseModels/answers'
 import { Play } from '../mongooseModels/plays'
 

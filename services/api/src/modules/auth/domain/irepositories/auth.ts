@@ -1,7 +1,8 @@
-import { AuthTypes, Enum } from 'equipped'
-import { UserToModel } from '../../data/models/users'
-import { AuthUserEntity } from '../entities/users'
-import { Credential, PasswordResetInput, Phone } from '../types'
+import type { AuthTypes, Enum } from 'equipped'
+
+import type { UserToModel } from '../../data/models/users'
+import type { AuthUserEntity } from '../entities/users'
+import type { Credential, PasswordResetInput, Phone } from '../types'
 
 export interface IAuthRepository {
 	addNewUser(user: UserToModel, type: Enum<typeof AuthTypes>): Promise<AuthUserEntity>

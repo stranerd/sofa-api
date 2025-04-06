@@ -1,8 +1,10 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { DepartmentsUseCases } from '../..'
-import { FacultyFromModel } from '../../data/models/faculties'
-import { FacultyEntity } from '../../domain/entities/faculties'
+import type { FacultyFromModel } from '../../data/models/faculties'
+import type { FacultyEntity } from '../../domain/entities/faculties'
 
 export const FacultyDbChangeCallbacks: DbChangeCallbacks<FacultyFromModel, FacultyEntity> = {
 	created: async ({ after }) => {

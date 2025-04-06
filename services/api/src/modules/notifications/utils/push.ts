@@ -1,8 +1,11 @@
-import { appInstance, PushNotification } from '@utils/types'
-import { messaging } from 'firebase-admin'
-import { TokensUseCases } from '../'
 import { Validation } from 'equipped'
+import { messaging } from 'firebase-admin'
+
 import { UsersUseCases } from '@modules/users'
+import type { PushNotification } from '@utils/types'
+import { appInstance } from '@utils/types'
+
+import { TokensUseCases } from '../'
 
 export const sendPushNotification = async (notification: PushNotification) => {
 	try {

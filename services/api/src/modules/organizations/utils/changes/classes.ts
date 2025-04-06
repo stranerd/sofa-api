@@ -1,9 +1,11 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { AnnouncementsUseCases, SchedulesUseCases } from '../..'
-import { ClassFromModel } from '../../data/models/classes'
-import { ClassEntity } from '../../domain/entities/classes'
+import type { ClassFromModel } from '../../data/models/classes'
+import type { ClassEntity } from '../../domain/entities/classes'
 
 export const ClassDbChangeCallbacks: DbChangeCallbacks<ClassFromModel, ClassEntity> = {
 	created: async ({ after }) => {

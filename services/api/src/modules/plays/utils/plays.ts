@@ -1,8 +1,10 @@
+import { DelayedJobs, Validation } from 'equipped'
+
 import { UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DelayedJobs, Validation } from 'equipped'
+
 import { AnswersUseCases, PlaysUseCases } from '..'
-import { PlayEntity } from '../domain/entities/plays'
+import type { PlayEntity } from '../domain/entities/plays'
 
 export const calculatePlayResults = async (play: PlayEntity) => {
 	const questions = play.sources

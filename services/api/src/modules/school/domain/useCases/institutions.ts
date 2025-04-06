@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { InstitutionToModel } from '../../data/models/institutions'
-import { IInstitutionRepository } from '../irepositories/institutions'
+import type { QueryParams } from 'equipped'
+
+import type { InstitutionToModel } from '../../data/models/institutions'
+import type { IInstitutionRepository } from '../irepositories/institutions'
 
 export class InstitutionsUseCase {
 	private repository: IInstitutionRepository

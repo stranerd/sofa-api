@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { TagMeta } from '../../domain/types'
 import { TagDbChangeCallbacks } from '../../utils/changes/tags'
 import { TagMapper } from '../mappers/tags'
-import { TagFromModel } from '../models/tags'
+import type { TagFromModel } from '../models/tags'
 
 const Schema = new appInstance.dbs.mongo.Schema<TagFromModel>(
 	{

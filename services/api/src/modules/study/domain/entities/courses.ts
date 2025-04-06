@@ -1,4 +1,5 @@
-import { Coursable, CourseMeta, CourseSections, Publishable, Saleable } from '../types'
+import type { CourseMeta, CourseSections, Publishable, Saleable } from '../types'
+import { Coursable } from '../types'
 import { PublishableEntity } from './coursables'
 
 export class CourseEntity extends PublishableEntity<CourseConstructorArgs> implements Publishable, Saleable {

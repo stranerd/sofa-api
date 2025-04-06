@@ -1,4 +1,5 @@
 import { groupRoutes } from 'equipped'
+
 import { emailRoutes } from './emails'
 import { identitiesRoutes } from './identities'
 import { passwordsRoutes } from './passwords'

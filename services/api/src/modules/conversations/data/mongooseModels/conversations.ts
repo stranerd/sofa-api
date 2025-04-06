@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { ConversationDbChangeCallbacks } from '../../utils/changes/conversations'
 import { ConversationMapper } from '../mappers/conversations'
-import { ConversationFromModel } from '../models/conversations'
+import type { ConversationFromModel } from '../models/conversations'
 
 const Schema = new appInstance.dbs.mongo.Schema<ConversationFromModel>(
 	{

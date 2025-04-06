@@ -1,4 +1,4 @@
-import { MediaInput, MediaOutput } from '../../data/models/media'
+import type { MediaInput, MediaOutput } from '../../data/models/media'
 
 export interface IUploaderRepository {
 	upload: (path: string, media: MediaInput) => Promise<MediaOutput>

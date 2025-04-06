@@ -1,9 +1,11 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { ClassesUseCases } from '../../'
-import { AnnouncementFromModel } from '../../data/models/announcements'
-import { AnnouncementEntity } from '../../domain/entities/announcements'
+import type { AnnouncementFromModel } from '../../data/models/announcements'
+import type { AnnouncementEntity } from '../../domain/entities/announcements'
 
 export const AnnouncementDbChangeCallbacks: DbChangeCallbacks<AnnouncementFromModel, AnnouncementEntity> = {
 	created: async ({ after }) => {

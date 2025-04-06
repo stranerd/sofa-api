@@ -1,4 +1,4 @@
-import { EmbeddedUser, MemberTypes } from '../../domain/types'
+import type { EmbeddedUser, MemberTypes } from '../../domain/types'
 
 export interface MemberFromModel extends MemberToModel {
 	_id: string

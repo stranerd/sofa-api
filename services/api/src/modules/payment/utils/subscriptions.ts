@@ -1,13 +1,17 @@
+import { BadRequestError, DelayedJobs } from 'equipped'
+
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { canAccessOrgClasses } from '@modules/organizations'
-import { UserEntity, UsersUseCases } from '@modules/users'
+import type { UserEntity } from '@modules/users'
+import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { BadRequestError, DelayedJobs } from 'equipped'
+
 import { FlutterwavePayment, MethodsUseCases, PlansUseCases, TransactionsUseCases, WalletsUseCases } from '..'
-import { MethodEntity } from '../domain/entities/methods'
+import type { MethodEntity } from '../domain/entities/methods'
 import { PurchaseEntity } from '../domain/entities/purchases'
-import { WalletEntity } from '../domain/entities/wallets'
-import { Interval, SelectedPaymentMethod, Subscription, TransactionStatus, TransactionType } from '../domain/types'
+import type { WalletEntity } from '../domain/entities/wallets'
+import type { Interval, SelectedPaymentMethod, Subscription } from '../domain/types'
+import { TransactionStatus, TransactionType } from '../domain/types'
 
 type PlanSubscribable = { type: 'plans'; planId: string }
 type Subscribable = Subscription['data'] | PlanSubscribable

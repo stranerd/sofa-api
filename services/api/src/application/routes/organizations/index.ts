@@ -1,5 +1,7 @@
-import { ClassesController } from '@application/controllers/organizations/classes'
 import { groupRoutes } from 'equipped'
+
+import { ClassesController } from '@application/controllers/organizations/classes'
+
 import { announcementsRoutes } from './announcements'
 import { classesRoutes } from './classes'
 import { lessonsRoutes } from './lessons'

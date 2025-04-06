@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { LikeEntity } from '../../domain/entities/likes'
-import { LikeFromModel, LikeToModel } from '../models/likes'
+import type { LikeFromModel, LikeToModel } from '../models/likes'
 
 export class LikeMapper extends BaseMapper<LikeFromModel, LikeToModel, LikeEntity> {
 	mapFrom(param: LikeFromModel | null) {

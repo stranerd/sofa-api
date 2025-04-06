@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { MethodEntity } from '../../domain/entities/methods'
-import { MethodFromModel, MethodToModel } from '../models/methods'
+import type { MethodFromModel, MethodToModel } from '../models/methods'
 
 export class MethodMapper extends BaseMapper<MethodFromModel, MethodToModel, MethodEntity> {
 	mapFrom(param: MethodFromModel | null) {

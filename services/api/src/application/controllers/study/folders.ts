@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { FolderSaved, FoldersUseCases, verifyToBeSaved } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = () => ({
 	title: Schema.string().min(1),

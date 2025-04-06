@@ -1,4 +1,4 @@
-import { CoursableData, FileType, Media } from '../types'
+import type { CoursableData, FileType, Media } from '../types'
 import { CoursableEntity } from './coursables'
 
 export class FileEntity extends CoursableEntity<FileConstructorArgs, 'media.link'> implements CoursableData {

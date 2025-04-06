@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { ReportFromModel } from '../../data/models/reports'
-import { ReportEntity } from '../../domain/entities/reports'
+
+import type { ReportFromModel } from '../../data/models/reports'
+import type { ReportEntity } from '../../domain/entities/reports'
 
 export const ReportDbChangeCallbacks: DbChangeCallbacks<ReportFromModel, ReportEntity> = {
 	created: async ({ after }) => {

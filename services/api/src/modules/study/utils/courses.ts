@@ -1,11 +1,15 @@
+import type { AuthUser } from 'equipped'
+import { AuthRole, NotAuthorizedError, Schema } from 'equipped'
+
 import { canAccessOrgClasses } from '@modules/organizations'
 import { Purchasables, PurchasesUseCases } from '@modules/payment'
 import { PlayEntity, PlaysUseCases } from '@modules/plays'
 import { UsersUseCases } from '@modules/users'
 import { makeSet } from '@utils/commons'
-import { AuthRole, AuthUser, NotAuthorizedError, Schema } from 'equipped'
+
 import { QuizEntity } from '../domain/entities/quizzes'
-import { Coursable, CourseSections, FileType, QuizModes } from '../domain/types'
+import type { CourseSections } from '../domain/types'
+import { Coursable, FileType, QuizModes } from '../domain/types'
 import { FilesUseCases, QuizzesUseCases } from '../init'
 
 const finders = {

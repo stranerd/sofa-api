@@ -1,5 +1,7 @@
 import { AI } from '@utils/ai'
-import { QuestionData, QuestionTypes } from '../domain/types'
+
+import type { QuestionData } from '../domain/types'
+import { QuestionTypes } from '../domain/types'
 
 export const questionsLimits = {
 	[QuestionTypes.multipleChoice]: { min: 2, max: 6 },

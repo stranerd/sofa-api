@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { FolderEntity } from '../../domain/entities/folders'
-import { FolderFromModel, FolderToModel } from '../models/folders'
+import type { FolderFromModel, FolderToModel } from '../models/folders'
 
 export class FolderMapper extends BaseMapper<FolderFromModel, FolderToModel, FolderEntity> {
 	mapFrom(model: FolderFromModel | null) {

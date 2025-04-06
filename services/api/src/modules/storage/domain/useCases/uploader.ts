@@ -1,5 +1,5 @@
-import { IUploaderRepository } from '../irepositories/uploader'
-import { MediaInput } from '../../data/models/media'
+import type { MediaInput } from '../../data/models/media'
+import type { IUploaderRepository } from '../irepositories/uploader'
 
 export class UploaderUseCase {
 	private readonly uploader: IUploaderRepository

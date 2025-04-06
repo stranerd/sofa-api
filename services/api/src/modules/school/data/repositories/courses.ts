@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { CourseEntity } from '../../domain/entities/courses'
-import { ICourseRepository } from '../../domain/irepositories/courses'
+
+import type { CourseEntity } from '../../domain/entities/courses'
+import type { ICourseRepository } from '../../domain/irepositories/courses'
 import { CourseMapper } from '../mappers/courses'
-import { CourseToModel } from '../models/courses'
+import type { CourseToModel } from '../models/courses'
 import { Course } from '../mongooseModels/courses'
 
 export class CourseRepository implements ICourseRepository {

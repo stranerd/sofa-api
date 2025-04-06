@@ -1,9 +1,11 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { MembersUseCases } from '../..'
-import { MemberFromModel } from '../../data/models/members'
-import { MemberEntity } from '../../domain/entities/members'
+import type { MemberFromModel } from '../../data/models/members'
+import type { MemberEntity } from '../../domain/entities/members'
 import { MemberTypes } from '../../domain/types'
 
 export const MemberDbChangeCallbacks: DbChangeCallbacks<MemberFromModel, MemberEntity> = {

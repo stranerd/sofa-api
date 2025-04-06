@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { fulfillTransaction, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TransactionsController {
 	static async getSecrets(_: Request) {

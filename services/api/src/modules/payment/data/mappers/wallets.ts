@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { WalletEntity } from '../../domain/entities/wallets'
-import { WalletFromModel, WalletToModel } from '../models/wallets'
+import type { WalletFromModel, WalletToModel } from '../models/wallets'
 
 export class WalletMapper extends BaseMapper<WalletFromModel, WalletToModel, WalletEntity> {
 	mapFrom(param: WalletFromModel | null) {

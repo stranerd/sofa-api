@@ -1,7 +1,9 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { MethodFromModel } from '../../data/models/methods'
-import { MethodEntity } from '../../domain/entities/methods'
+
+import type { MethodFromModel } from '../../data/models/methods'
+import type { MethodEntity } from '../../domain/entities/methods'
 
 export const MethodDbChangeCallbacks: DbChangeCallbacks<MethodFromModel, MethodEntity> = {
 	created: async ({ after }) => {

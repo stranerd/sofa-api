@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { ScheduleEntity } from '../../domain/entities/schedules'
-import { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
+import type { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
 
 export class ScheduleMapper extends BaseMapper<ScheduleFromModel, ScheduleToModel, ScheduleEntity> {
 	mapFrom(model: ScheduleFromModel | null) {

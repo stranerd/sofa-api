@@ -1,5 +1,7 @@
 import { CoursesUseCases, DraftStatus } from '@modules/study'
-import { Purchasables, Saleable } from '../domain/types'
+
+import type { Saleable } from '../domain/types'
+import { Purchasables } from '../domain/types'
 
 type Purchable = Saleable & {
 	id: string

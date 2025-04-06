@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { VerificationsController } from '@application/controllers/users/verifications'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const verificationsRoutes = groupRoutes({ path: '/verifications', middlewares: [isAuthenticated] }, [
 	{

@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { QuizToModel } from '../../data/models/quizzes'
-import { IQuizRepository } from '../irepositories/quizzes'
-import { EmbeddedUser, QuizMeta } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { QuizToModel } from '../../data/models/quizzes'
+import type { IQuizRepository } from '../irepositories/quizzes'
+import type { EmbeddedUser, QuizMeta } from '../types'
 
 export class QuizzesUseCase {
 	private repository: IQuizRepository

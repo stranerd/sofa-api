@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { ConnectEntity } from '../../domain/entities/connects'
-import { ConnectFromModel, ConnectToModel } from '../models/connects'
+import type { ConnectFromModel, ConnectToModel } from '../models/connects'
 
 export class ConnectMapper extends BaseMapper<ConnectFromModel, ConnectToModel, ConnectEntity> {
 	mapFrom(param: ConnectFromModel | null) {

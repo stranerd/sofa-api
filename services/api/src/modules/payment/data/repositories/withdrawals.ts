@@ -1,8 +1,10 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IWithdrawalRepository } from '../../domain/irepositories/withdrawals'
+
+import type { IWithdrawalRepository } from '../../domain/irepositories/withdrawals'
 import { WithdrawalMapper } from '../mappers/withdrawals'
-import { WithdrawalToModel } from '../models/withdrawals'
+import type { WithdrawalToModel } from '../models/withdrawals'
 import { Withdrawal } from '../mongooseModels/withdrawals'
 
 export class WithdrawalRepository implements IWithdrawalRepository {

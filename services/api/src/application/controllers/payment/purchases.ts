@@ -1,3 +1,6 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, QueryKeys, Schema, validate, Validation } from 'equipped'
+
 import {
 	findPurchasable,
 	FlutterwavePayment,
@@ -9,7 +12,7 @@ import {
 	TransactionType,
 	WalletsUseCases,
 } from '@modules/payment'
-import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate, Validation } from 'equipped'
+
 import { SelectedPaymentMethodSchema } from '.'
 
 export class PurchasesController {

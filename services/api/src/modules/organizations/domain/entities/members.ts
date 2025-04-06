@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, MemberTypes } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { EmbeddedUser, MemberTypes } from '../types'
 
 export class MemberEntity extends BaseEntity<MemberConstructorArgs> {
 	constructor(data: MemberConstructorArgs) {

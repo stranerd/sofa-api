@@ -1,5 +1,6 @@
 import { BaseEntity } from 'equipped'
-import { MethodData } from '../types'
+
+import type { MethodData } from '../types'
 
 export class MethodEntity extends BaseEntity<MethodConstructorArgs> {
 	constructor(data: MethodConstructorArgs) {

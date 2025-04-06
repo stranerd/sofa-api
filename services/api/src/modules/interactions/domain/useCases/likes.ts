@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { LikeToModel } from '../../data/models/likes'
-import { ILikeRepository } from '../irepositories/likes'
-import { Interaction } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { LikeToModel } from '../../data/models/likes'
+import type { ILikeRepository } from '../irepositories/likes'
+import type { Interaction } from '../types'
 
 export class LikesUseCase {
 	repository: ILikeRepository

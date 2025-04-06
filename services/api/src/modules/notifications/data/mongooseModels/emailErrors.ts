@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { EmailErrorDbChangeCallbacks } from '../../utils/changes/emailErrors'
 import { EmailErrorMapper } from '../mappers/emailErrors'
-import { EmailErrorFromModel } from '../models/emailErrors'
+import type { EmailErrorFromModel } from '../models/emailErrors'
 
 const Schema = new appInstance.dbs.mongo.Schema<EmailErrorFromModel>(
 	{

@@ -1,8 +1,11 @@
+import type { AuthUser, QueryParams, Request } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, QueryKeys, Schema, validate } from 'equipped'
+
 import { Currencies } from '@modules/payment'
 import { UploaderUseCases } from '@modules/storage'
 import { CoursesUseCases, DraftStatus, SectionsSchema, verifySections } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { AuthUser, BadRequestError, Conditions, NotAuthorizedError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+
 import { verifyTags } from './tags'
 
 const schema = (user: AuthUser | null) => ({

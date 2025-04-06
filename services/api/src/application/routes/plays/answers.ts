@@ -1,7 +1,8 @@
+import { groupRoutes } from 'equipped'
+
 import { AnswerController } from '@application/controllers/plays/answers'
 import { isAuthenticated } from '@application/middlewares'
 import { PlayTypes } from '@modules/plays'
-import { groupRoutes } from 'equipped'
 
 const types = Object.values(PlayTypes).join('|')
 export const answersRoutes = groupRoutes({ path: `/:type(${types})/:typeId/answers`, middlewares: [isAuthenticated] }, [

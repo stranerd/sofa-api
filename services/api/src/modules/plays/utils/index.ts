@@ -1,9 +1,12 @@
-import { InteractionEntities, ViewsUseCases } from '@modules/interactions'
-import { QuestionsUseCases, QuizEntity } from '@modules/study'
-import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Conditions } from 'equipped'
+
+import { InteractionEntities, ViewsUseCases } from '@modules/interactions'
+import type { QuizEntity } from '@modules/study'
+import { QuestionsUseCases } from '@modules/study'
+import { UsersUseCases } from '@modules/users'
+
 import { PlaysUseCases } from '..'
-import { PlayToModel } from '../data/models/plays'
+import type { PlayToModel } from '../data/models/plays'
 import { PlayTiming } from '../domain/types'
 
 export const createPlay = async (

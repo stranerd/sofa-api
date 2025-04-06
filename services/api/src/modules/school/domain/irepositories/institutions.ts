@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { InstitutionToModel } from '../../data/models/institutions'
-import { InstitutionEntity } from '../entities/institutions'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { InstitutionToModel } from '../../data/models/institutions'
+import type { InstitutionEntity } from '../entities/institutions'
 
 export interface IInstitutionRepository {
 	add: (data: InstitutionToModel) => Promise<InstitutionEntity>

@@ -1,5 +1,7 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { CoursesUseCases, DepartmentsUseCases, InstitutionsUseCases } from '@modules/school'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = () => ({
 	title: Schema.string().min(3),

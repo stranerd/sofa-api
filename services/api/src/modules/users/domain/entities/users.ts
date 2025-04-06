@@ -1,6 +1,7 @@
 import { BaseEntity, Validation } from 'equipped'
+
 import { getNextRank, getRank } from '../../utils/ranks'
-import {
+import type {
 	EmbeddedUser,
 	UserAccount,
 	UserAi,
@@ -11,9 +12,9 @@ import {
 	UserSocialsType,
 	UserStatus,
 	UserTutor,
-	UserType,
 	UserTypeData,
 } from '../types'
+import { UserType } from '../types'
 
 export class UserEntity extends BaseEntity<UserConstructorArgs, 'type.code' | 'bio.email' | 'bio.phone'> {
 	__ignoreInJSON = ['type.code' as const, 'bio.email' as const, 'bio.phone' as const]

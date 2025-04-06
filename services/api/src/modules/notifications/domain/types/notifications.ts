@@ -1,4 +1,4 @@
-import { Purchasables, Subscription } from '@modules/payment'
+import type { Purchasables, Subscription } from '@modules/payment'
 
 export enum NotificationType {
 	VerificationAccepted = 'VerificationAccepted',

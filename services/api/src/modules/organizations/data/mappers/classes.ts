@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { ClassEntity } from '../../domain/entities/classes'
-import { ClassFromModel, ClassToModel } from '../models/classes'
+import type { ClassFromModel, ClassToModel } from '../models/classes'
 
 export class ClassMapper extends BaseMapper<ClassFromModel, ClassToModel, ClassEntity> {
 	mapFrom(param: ClassFromModel | null) {

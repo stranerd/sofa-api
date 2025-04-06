@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { PurchaseDbChangeCallbacks } from '../../utils/changes/purchases'
 import { PurchaseMapper } from '../mappers/purchases'
-import { PurchaseFromModel } from '../models/purchases'
+import type { PurchaseFromModel } from '../models/purchases'
 
 const PurchaseSchema = new appInstance.dbs.mongo.Schema<PurchaseFromModel>(
 	{

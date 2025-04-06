@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { MessageToModel } from '../../data/models/messages'
-import { IMessageRepository } from '../irepositories/messages'
+import type { QueryParams } from 'equipped'
+
+import type { MessageToModel } from '../../data/models/messages'
+import type { IMessageRepository } from '../irepositories/messages'
 
 export class MessagesUseCase {
 	private repository: IMessageRepository

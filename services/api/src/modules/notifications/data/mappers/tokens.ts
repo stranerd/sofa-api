@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { TokenEntity } from '../../domain/entities/tokens'
-import { TokenFromModel, TokenToModel } from '../models/tokens'
+import type { TokenFromModel, TokenToModel } from '../models/tokens'
 
 export class TokenMapper extends BaseMapper<TokenFromModel, TokenToModel, TokenEntity> {
 	mapFrom(model: TokenFromModel | null) {

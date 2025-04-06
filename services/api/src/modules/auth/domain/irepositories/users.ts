@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { AuthUserEntity } from '../entities/users'
-import { RegisterInput, RoleInput, UserUpdateInput } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { AuthUserEntity } from '../entities/users'
+import type { RegisterInput, RoleInput, UserUpdateInput } from '../types'
 
 export interface IUserRepository {
 	findUser(id: string): Promise<AuthUserEntity | null>

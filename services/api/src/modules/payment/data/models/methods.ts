@@ -1,4 +1,4 @@
-import { MethodData } from '../../domain/types'
+import type { MethodData } from '../../domain/types'
 
 export interface MethodFromModel extends MethodToModel {
 	_id: string

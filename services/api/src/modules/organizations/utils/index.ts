@@ -1,4 +1,5 @@
-import { AuthUser } from 'equipped'
+import type { AuthUser } from 'equipped'
+
 import { ClassesUseCases, MemberTypes, MembersUseCases } from '..'
 
 export const canModOrgs = async (user: AuthUser, organizationId: string) => {

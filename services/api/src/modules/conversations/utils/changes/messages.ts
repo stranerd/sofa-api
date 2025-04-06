@@ -1,8 +1,10 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { MessageFromModel } from '../../data/models/messages'
-import { MessageEntity } from '../../domain/entities/messages'
+
+import type { MessageFromModel } from '../../data/models/messages'
+import type { MessageEntity } from '../../domain/entities/messages'
 import { generateResponse } from '../messages'
 
 export const MessageDbChangeCallbacks: DbChangeCallbacks<MessageFromModel, MessageEntity> = {

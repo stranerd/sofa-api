@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { NotificationsController } from '@application/controllers/notifications/notifications'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const notificationsRoutes = groupRoutes({ path: '/notifications', middlewares: [isAuthenticated] }, [
 	{

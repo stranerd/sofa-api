@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ReportEntity } from '../entities/reports'
-import { ReportToModel } from '../../data/models/reports'
-import { EmbeddedUser, Interaction } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ReportToModel } from '../../data/models/reports'
+import type { ReportEntity } from '../entities/reports'
+import type { EmbeddedUser, Interaction } from '../types'
 
 export interface IReportRepository {
 	find: (id: string) => Promise<ReportEntity | null>

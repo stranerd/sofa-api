@@ -1,9 +1,12 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { ClassesUseCases } from '@modules/organizations'
 import { CoursesUseCases, DepartmentsUseCases } from '@modules/school'
 import { UploaderUseCases } from '@modules/storage'
 import { Coursable, canAccessCoursable } from '@modules/study'
-import { UserSchool, UserSchoolType, UserSocials, UserType, UsersUseCases } from '@modules/users'
-import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import type { UserSchool } from '@modules/users'
+import { UserSchoolType, UserSocials, UserType, UsersUseCases } from '@modules/users'
 
 const schoolSchema = Schema.discriminate((s) => s.type, {
 	[UserSchoolType.secondary]: Schema.object({

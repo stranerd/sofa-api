@@ -1,9 +1,10 @@
-import { Phone } from '@modules/auth'
-import { MemberTypes } from '@modules/organizations'
-import { Ratings } from '@utils/commons'
-import { AuthRoles, MediaOutput } from 'equipped'
+import type { AuthRoles, MediaOutput } from 'equipped'
 
-export * from './verifications'
+import type { Phone } from '@modules/auth'
+import type { MemberTypes } from '@modules/organizations'
+import type { Ratings } from '@utils/commons'
+
+export type * from './verifications'
 
 export type UserBio = {
 	email: string

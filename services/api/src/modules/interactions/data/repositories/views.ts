@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IViewRepository } from '../../domain/irepositories/views'
-import { Interaction } from '../../domain/types'
+
+import type { IViewRepository } from '../../domain/irepositories/views'
+import type { Interaction } from '../../domain/types'
 import { ViewMapper } from '../mappers/views'
-import { ViewToModel } from '../models/views'
+import type { ViewToModel } from '../models/views'
 import { View } from '../mongooseModels/views'
 
 export class ViewRepository implements IViewRepository {

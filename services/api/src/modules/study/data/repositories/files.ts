@@ -1,9 +1,12 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IFileRepository } from '../../domain/irepositories/files'
-import { DraftStatus, EmbeddedUser } from '../../domain/types'
+
+import type { IFileRepository } from '../../domain/irepositories/files'
+import type { EmbeddedUser } from '../../domain/types'
+import { DraftStatus } from '../../domain/types'
 import { FileMapper } from '../mappers/files'
-import { FileToModel } from '../models/files'
+import type { FileToModel } from '../models/files'
 import { File } from '../mongooseModels/files'
 
 export class FileRepository implements IFileRepository {

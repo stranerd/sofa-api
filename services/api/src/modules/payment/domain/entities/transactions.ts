@@ -1,5 +1,7 @@
 import { BaseEntity } from 'equipped'
-import { Currencies, TransactionData, TransactionStatus, TransactionType } from '../types'
+
+import type { Currencies, TransactionData, TransactionStatus } from '../types'
+import { TransactionType } from '../types'
 
 export class TransactionEntity extends BaseEntity<TransactionConstructorArgs> {
 	constructor(data: TransactionConstructorArgs) {

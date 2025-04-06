@@ -1,10 +1,14 @@
+import type { QueryParams } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
-import { IQuizRepository } from '../../domain/irepositories/quizzes'
-import { DraftStatus, EmbeddedUser, QuizMeta } from '../../domain/types'
+
+import type { IQuizRepository } from '../../domain/irepositories/quizzes'
+import type { EmbeddedUser } from '../../domain/types'
+import { DraftStatus, QuizMeta } from '../../domain/types'
 import { compareArrayContents } from '../../utils'
 import { QuizMapper } from '../mappers/quizzes'
-import { QuizFromModel, QuizToModel } from '../models/quizzes'
+import type { QuizFromModel, QuizToModel } from '../models/quizzes'
 import { Quiz } from '../mongooseModels/quizzes'
 
 export class QuizRepository implements IQuizRepository {

@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { IUserRepository } from '../irepositories/users'
-import { UserAccount, UserAi, UserBio, UserLocation, UserRoles, UserSocialsType, UserTypeData } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { IUserRepository } from '../irepositories/users'
+import type { UserAccount, UserAi, UserBio, UserLocation, UserRoles, UserSocialsType, UserTypeData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository

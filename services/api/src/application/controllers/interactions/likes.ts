@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, QueryKeys, Schema, validate } from 'equipped'
+
 import { InteractionEntities, LikesUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class LikesController {
 	static async get(req: Request) {

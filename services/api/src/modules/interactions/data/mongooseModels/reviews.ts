@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { ReviewDbChangeCallbacks } from '../../utils/changes/reviews'
 import { ReviewMapper } from '../mappers/reviews'
-import { ReviewFromModel } from '../models/reviews'
+import type { ReviewFromModel } from '../models/reviews'
 
 const ReviewSchema = new appInstance.dbs.mongo.Schema<ReviewFromModel>(
 	{

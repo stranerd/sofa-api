@@ -1,4 +1,4 @@
-import { VerificationAcceptType, VerificationContent } from '../../domain/types'
+import type { VerificationAcceptType, VerificationContent } from '../../domain/types'
 
 export interface VerificationFromModel extends VerificationToModel {
 	_id: string

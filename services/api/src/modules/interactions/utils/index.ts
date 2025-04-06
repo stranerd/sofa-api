@@ -1,9 +1,12 @@
+import { BadRequestError } from 'equipped'
+
 import { ConversationsUseCases } from '@modules/conversations'
 import { CoursesUseCases, QuestionsUseCases, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError } from 'equipped'
+
 import { CommentsUseCases } from '../'
-import { InteractionEntities, InteractionEntity } from '../domain/types'
+import type { InteractionEntity } from '../domain/types'
+import { InteractionEntities } from '../domain/types'
 
 type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views'
 

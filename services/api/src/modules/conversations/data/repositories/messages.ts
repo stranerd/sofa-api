@@ -1,8 +1,10 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IMessageRepository } from '../../domain/irepositories/messages'
+
+import type { IMessageRepository } from '../../domain/irepositories/messages'
 import { MessageMapper } from '../mappers/messages'
-import { MessageToModel } from '../models/messages'
+import type { MessageToModel } from '../models/messages'
 import { Conversation } from '../mongooseModels/conversations'
 import { Message } from '../mongooseModels/messages'
 

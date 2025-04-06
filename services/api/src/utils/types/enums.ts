@@ -1,6 +1,6 @@
 import { makeEnum } from 'equipped'
 
-const Ar = makeEnum('AuthRole', {
+const _Ar = makeEnum('AuthRole', {
 	isAdmin: 'isAdmin',
 	isVerified: 'isVerified',
 	isSuperAdmin: 'isSuperAdmin',
@@ -8,31 +8,31 @@ const Ar = makeEnum('AuthRole', {
 	isOfficialAccount: 'isOfficialAccount',
 } as const)
 
-const El = makeEnum('EmailsList', {
+const _El = makeEnum('EmailsList', {
 	NO_REPLY: 'no-reply@stranerd.com',
 } as const)
 
-const Ev = makeEnum('EventTypes', {
+const _Ev = makeEnum('EventTypes', {
 	SENDMAIL: 'SENDMAIL',
 	SENDTEXT: 'SENDTEXT',
 	DELETEFILE: 'DELETEFILE',
 } as const)
 
-const Dj = makeEnum('DelayedJobs', {
+const _Dj = makeEnum('DelayedJobs', {
 	RenewSubscription: 'RenewSubscription',
 	RenewGenericSubscription: 'RenewGenericSubscription',
 	PlayTimer: 'PlayTimer',
 	PlayAnswerTimer: 'PlayAnswerTimer',
 } as const)
 
-const Clj = makeEnum('CronLikeJobs', {} as const)
+const _Clj = makeEnum('CronLikeJobs', {} as const)
 
 declare module 'equipped/lib/enums/types' {
-	type TAr = typeof Ar
-	type TEl = typeof El
-	type TEv = typeof Ev
-	type TDj = typeof Dj
-	type TClj = typeof Clj
+	type TAr = typeof _Ar
+	type TEl = typeof _El
+	type TEv = typeof _Ev
+	type TDj = typeof _Dj
+	type TClj = typeof _Clj
 	interface IAuthRole extends TAr {}
 	interface IEmailsList extends TEl {}
 	interface IEventTypes extends TEv {}

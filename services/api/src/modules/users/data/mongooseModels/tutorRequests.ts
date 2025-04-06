@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { TutorRequestDbChangeCallbacks } from '../../utils/changes/tutorRequests'
 import { TutorRequestMapper } from '../mappers/tutorRequests'
-import { TutorRequestFromModel } from '../models/tutorRequests'
+import type { TutorRequestFromModel } from '../models/tutorRequests'
 
 const TutorRequestSchema = new appInstance.dbs.mongo.Schema<TutorRequestFromModel>(
 	{

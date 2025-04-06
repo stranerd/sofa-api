@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ReviewToModel } from '../../data/models/reviews'
-import { ReviewEntity } from '../entities/reviews'
-import { EmbeddedUser, Interaction } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ReviewToModel } from '../../data/models/reviews'
+import type { ReviewEntity } from '../entities/reviews'
+import type { EmbeddedUser, Interaction } from '../types'
 
 export interface IReviewRepository {
 	get: (condition: QueryParams) => Promise<QueryResults<ReviewEntity>>

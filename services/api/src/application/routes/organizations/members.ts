@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { MembersController } from '@application/controllers/organizations/members'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const membersRoutes = groupRoutes({ path: '/members', middlewares: [isAuthenticated] }, [
 	{

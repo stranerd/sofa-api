@@ -1,8 +1,10 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { INotificationRepository } from '../../domain/irepositories/notifications'
+
+import type { INotificationRepository } from '../../domain/irepositories/notifications'
 import { NotificationMapper } from '../mappers/notifications'
-import { NotificationToModel } from '../models/notifications'
+import type { NotificationToModel } from '../models/notifications'
 import { Notification } from '../mongooseModels/notifications'
 
 export class NotificationRepository implements INotificationRepository {

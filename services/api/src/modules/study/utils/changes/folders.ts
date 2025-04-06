@@ -1,8 +1,10 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { FolderFromModel } from '../../data/models/folders'
-import { FolderEntity } from '../../domain/entities/folders'
+
+import type { FolderFromModel } from '../../data/models/folders'
+import type { FolderEntity } from '../../domain/entities/folders'
 
 export const FolderDbChangeCallbacks: DbChangeCallbacks<FolderFromModel, FolderEntity> = {
 	created: async ({ after }) => {

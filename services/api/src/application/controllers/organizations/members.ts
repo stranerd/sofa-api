@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { MemberTypes, MembersUseCases, canAccessOrgMembers } from '@modules/organizations'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class MembersController {
 	static async get(req: Request) {

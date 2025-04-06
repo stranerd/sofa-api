@@ -1,5 +1,5 @@
-import { EmbeddedUser } from '../../domain/types'
-import { MessageFromModel } from './messages'
+import type { MessageFromModel } from './messages'
+import type { EmbeddedUser } from '../../domain/types'
 
 export interface ConversationFromModel extends ConversationToModel {
 	_id: string

@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { ClassToModel } from '../../data/models/classes'
-import { IClassRepository } from '../irepositories/classes'
-import { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ClassToModel } from '../../data/models/classes'
+import type { IClassRepository } from '../irepositories/classes'
+import type { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
 
 export class ClassesUseCase {
 	private repository: IClassRepository

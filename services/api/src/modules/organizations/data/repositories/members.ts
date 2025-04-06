@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
-import { IMemberRepository } from '../../domain/irepositories/members'
-import { EmbeddedUser, MemberTypes } from '../../domain/types'
+
+import type { IMemberRepository } from '../../domain/irepositories/members'
+import type { EmbeddedUser, MemberTypes } from '../../domain/types'
 import { MemberMapper } from '../mappers/members'
-import { MemberFromModel, MemberToModel } from '../models/members'
+import type { MemberFromModel, MemberToModel } from '../models/members'
 import { Member } from '../mongooseModels/members'
 
 export class MemberRepository implements IMemberRepository {

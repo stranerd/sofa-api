@@ -1,9 +1,13 @@
+import type { QueryParams } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
-import { ICourseRepository } from '../../domain/irepositories/courses'
-import { Coursable, CourseMeta, CourseSections, DraftStatus, EmbeddedUser } from '../../domain/types'
+
+import type { ICourseRepository } from '../../domain/irepositories/courses'
+import type { CourseSections, EmbeddedUser } from '../../domain/types'
+import { Coursable, CourseMeta, DraftStatus } from '../../domain/types'
 import { CourseMapper } from '../mappers/courses'
-import { CourseFromModel, CourseToModel } from '../models/courses'
+import type { CourseFromModel, CourseToModel } from '../models/courses'
 import { Course } from '../mongooseModels/courses'
 import { File } from '../mongooseModels/files'
 import { Quiz } from '../mongooseModels/quizzes'

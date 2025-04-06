@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { SchedulesController } from '@application/controllers/organizations/schedules'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const schedulesRoutes = groupRoutes({ path: '/schedules', middlewares: [isAuthenticated] }, [
 	{

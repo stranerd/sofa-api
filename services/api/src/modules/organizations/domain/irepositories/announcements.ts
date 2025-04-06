@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { AnnouncementToModel } from '../../data/models/announcements'
-import { AnnouncementEntity } from '../entities/announcements'
-import { EmbeddedUser } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { AnnouncementToModel } from '../../data/models/announcements'
+import type { AnnouncementEntity } from '../entities/announcements'
+import type { EmbeddedUser } from '../types'
 
 export interface IAnnouncementRepository {
 	add: (data: AnnouncementToModel) => Promise<AnnouncementEntity>

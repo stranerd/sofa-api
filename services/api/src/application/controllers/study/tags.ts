@@ -1,5 +1,6 @@
-import { TagTypes, TagsUseCases } from '@modules/interactions'
 import { BadRequestError } from 'equipped'
+
+import { TagTypes, TagsUseCases } from '@modules/interactions'
 
 export const verifyTags = async (topic: string, genericTagTitles: string[]) => {
 	const [tag] = await TagsUseCases.autoCreate({ type: TagTypes.topics, titles: [topic] })

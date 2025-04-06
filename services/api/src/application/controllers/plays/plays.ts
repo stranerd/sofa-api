@@ -1,18 +1,9 @@
+import type { QueryParams, Request } from 'equipped'
+import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, Schema, validate, Validation } from 'equipped'
+
 import { PlayStatus, PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
 import { Coursable, canAccessCoursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import {
-	AuthRole,
-	Conditions,
-	NotAuthorizedError,
-	NotFoundError,
-	QueryKeys,
-	QueryParams,
-	Request,
-	Schema,
-	validate,
-	Validation,
-} from 'equipped'
 
 const publicTypes = [PlayTypes.games, PlayTypes.assessments]
 

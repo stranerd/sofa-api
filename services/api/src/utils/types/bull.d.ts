@@ -1,6 +1,7 @@
-import { Subscription } from '@modules/payment'
-import { PlayTypes } from '@modules/plays'
-import { DelayedJobs } from 'equipped'
+import type { DelayedJobs } from 'equipped'
+
+import type { Subscription } from '@modules/payment'
+import type { PlayTypes } from '@modules/plays'
 
 declare module 'equipped/lib/bull' {
 	interface DelayedJobEvents {

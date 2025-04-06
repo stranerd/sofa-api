@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { AnnouncementsController } from '@application/controllers/organizations/announcements'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const announcementsRoutes = groupRoutes({ path: '/announcements', middlewares: [isAuthenticated] }, [
 	{

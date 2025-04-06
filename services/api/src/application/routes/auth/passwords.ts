@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { PasswordsController } from '@application/controllers/auth/passwords'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const passwordsRoutes = groupRoutes({ path: '/passwords' }, [
 	{

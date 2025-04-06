@@ -1,4 +1,5 @@
 import { groupRoutes } from 'equipped'
+
 import { coursesRoutes } from './courses'
 import { departmentsRoutes } from './departments'
 import { facultiesRoutes } from './faculties'

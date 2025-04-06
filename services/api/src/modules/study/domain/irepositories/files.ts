@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { FileToModel } from '../../data/models/files'
-import { FileEntity } from '../entities/files'
-import { EmbeddedUser } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { FileToModel } from '../../data/models/files'
+import type { FileEntity } from '../entities/files'
+import type { EmbeddedUser } from '../types'
 
 export interface IFileRepository {
 	add: (data: FileToModel) => Promise<FileEntity>

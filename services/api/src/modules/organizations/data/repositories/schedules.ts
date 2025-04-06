@@ -1,10 +1,13 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IScheduleRepository } from '../../domain/irepositories/schedules'
-import { EmbeddedUser, ScheduleStatus } from '../../domain/types'
+
+import type { IScheduleRepository } from '../../domain/irepositories/schedules'
+import type { EmbeddedUser } from '../../domain/types'
+import { ScheduleStatus } from '../../domain/types'
 import { createLiveStream, endLiveStream } from '../../utils/livestreams'
 import { ScheduleMapper } from '../mappers/schedules'
-import { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
+import type { ScheduleFromModel, ScheduleToModel } from '../models/schedules'
 import { Schedule } from '../mongooseModels/schedules'
 
 export class ScheduleRepository implements IScheduleRepository {

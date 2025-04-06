@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { NotAuthorizedError, Schema, validate, ValidationError } from 'equipped'
+
 import { canAccessConversation, MessagesUseCases } from '@modules/conversations'
 import { UploaderUseCases } from '@modules/storage'
-import { NotAuthorizedError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class MessageController {
 	static async find(req: Request) {

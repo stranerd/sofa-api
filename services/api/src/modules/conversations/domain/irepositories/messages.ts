@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { MessageToModel } from '../../data/models/messages'
-import { MessageEntity } from '../entities/messages'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { MessageToModel } from '../../data/models/messages'
+import type { MessageEntity } from '../entities/messages'
 
 export interface IMessageRepository {
 	add: (data: MessageToModel) => Promise<MessageEntity>

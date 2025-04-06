@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ClassToModel } from '../../data/models/classes'
-import { ClassEntity } from '../entities/classes'
-import { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ClassToModel } from '../../data/models/classes'
+import type { ClassEntity } from '../entities/classes'
+import type { ClassLesson, ClassLessonInput, ClassMembers, EmbeddedUser, LessonMembers } from '../types'
 
 export interface IClassRepository {
 	add: (data: ClassToModel) => Promise<ClassEntity>

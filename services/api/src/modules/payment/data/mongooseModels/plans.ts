@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { PlanDataType } from '../../domain/types'
 import { PlanDbChangeCallbacks } from '../../utils/changes/plans'
 import { PlanMapper } from '../mappers/plans'
-import { PlanFromModel } from '../models/plans'
+import type { PlanFromModel } from '../models/plans'
 
 const PlanSchema = new appInstance.dbs.mongo.Schema<PlanFromModel>(
 	{

@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { CourseDbChangeCallbacks } from '../../utils/changes/courses'
 import { CourseMapper } from '../mappers/courses'
-import { CourseFromModel } from '../models/courses'
+import type { CourseFromModel } from '../models/courses'
 
 const Schema = new appInstance.dbs.mongo.Schema<CourseFromModel>(
 	{

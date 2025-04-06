@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { CommentsUseCases, InteractionEntities, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 const schema = () => ({
 	body: Schema.string().min(1),

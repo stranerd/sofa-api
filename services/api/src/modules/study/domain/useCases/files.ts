@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { FileToModel } from '../../data/models/files'
-import { IFileRepository } from '../irepositories/files'
-import { EmbeddedUser } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { FileToModel } from '../../data/models/files'
+import type { IFileRepository } from '../irepositories/files'
+import type { EmbeddedUser } from '../types'
 
 export class FilesUseCase {
 	private repository: IFileRepository

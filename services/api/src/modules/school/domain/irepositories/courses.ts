@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { CourseToModel } from '../../data/models/courses'
-import { CourseEntity } from '../entities/courses'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { CourseToModel } from '../../data/models/courses'
+import type { CourseEntity } from '../entities/courses'
 
 export interface ICourseRepository {
 	add: (data: CourseToModel) => Promise<CourseEntity>

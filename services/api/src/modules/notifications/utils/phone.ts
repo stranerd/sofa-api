@@ -1,7 +1,10 @@
+import axios from 'axios'
+import type { PhoneText } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { isDev, termiiAPIKey } from '@utils/environment'
 import { appInstance } from '@utils/types'
-import axios from 'axios'
-import { BadRequestError, PhoneText } from 'equipped'
+
 import { PhoneErrorsUseCases } from '../'
 import { PhoneErrorEntity } from '../domain/entities/phoneErrors'
 

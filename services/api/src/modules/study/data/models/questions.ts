@@ -1,4 +1,4 @@
-import { Media, QuestionData } from '../../domain/types'
+import type { Media, QuestionData } from '../../domain/types'
 
 export interface QuestionFromModel extends QuestionToModel {
 	_id: string

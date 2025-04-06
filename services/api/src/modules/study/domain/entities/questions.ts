@@ -1,6 +1,8 @@
 import { BaseEntity, Validation } from 'equipped'
 import stringSimilarity from 'string-similarity'
-import { Media, QuestionAnswer, QuestionData, QuestionTypes, StrippedQuestionData } from '../types'
+
+import type { Media, QuestionAnswer, QuestionData, StrippedQuestionData } from '../types'
+import { QuestionTypes } from '../types'
 
 export class QuestionEntity extends BaseEntity<QuestionConstructorArgs> {
 	public strippedData: StrippedQuestionData

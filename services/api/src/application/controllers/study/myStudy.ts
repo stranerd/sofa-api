@@ -1,7 +1,9 @@
+import type { QueryParams, Request } from 'equipped'
+import { Conditions } from 'equipped'
+
 import { InteractionEntities, ViewsUseCases } from '@modules/interactions'
 import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
-import { Conditions, QueryParams, Request } from 'equipped'
 
 export class MyStudyController {
 	static async recent(req: Request) {

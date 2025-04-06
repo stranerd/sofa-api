@@ -1,7 +1,8 @@
+import { groupRoutes, Schema, validate } from 'equipped'
+
 import { isAuthenticated } from '@application/middlewares'
 import { TokensUseCases } from '@modules/notifications'
 import { UsersUseCases } from '@modules/users'
-import { groupRoutes, Schema, validate } from 'equipped'
 
 export const tokenRoutes = groupRoutes({ path: '/push', middlewares: [isAuthenticated] }, [
 	{

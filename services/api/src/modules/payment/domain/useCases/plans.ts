@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
+import type { QueryParams } from 'equipped'
+
 import { getPlansList } from '../../utils/plans'
-import { IPlanRepository } from '../irepositories/plans'
+import type { IPlanRepository } from '../irepositories/plans'
 
 export class PlansUseCase {
 	repository: IPlanRepository

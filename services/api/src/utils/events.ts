@@ -1,7 +1,9 @@
-import { appInstance } from '@utils/types'
-import { EventTypes, Events } from 'equipped'
+import type { Events } from 'equipped'
+import { EventTypes } from 'equipped'
+
 import { sendMailAndCatchError, sendTextAndCatchError } from '@modules/notifications'
 import { UploaderUseCases } from '@modules/storage'
+import { appInstance } from '@utils/types'
 
 const eventBus = appInstance.eventBus
 

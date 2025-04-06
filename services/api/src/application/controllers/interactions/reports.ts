@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { AuthRole, BadRequestError, QueryKeys, Schema, validate } from 'equipped'
+
 import { InteractionEntities, ReportsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { AuthRole, BadRequestError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ReportController {
 	static async get(req: Request) {

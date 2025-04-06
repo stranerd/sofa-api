@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { PurchaseEntity } from '../../domain/entities/purchases'
-import { PurchaseFromModel, PurchaseToModel } from '../models/purchases'
+import type { PurchaseFromModel, PurchaseToModel } from '../models/purchases'
 
 export class PurchaseMapper extends BaseMapper<PurchaseFromModel, PurchaseToModel, PurchaseEntity> {
 	mapFrom(param: PurchaseFromModel | null) {

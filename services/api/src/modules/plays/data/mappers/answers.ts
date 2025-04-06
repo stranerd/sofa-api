@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { AnswerEntity } from '../../domain/entities/answers'
-import { AnswerFromModel, AnswerToModel } from '../models/answers'
+import type { AnswerFromModel, AnswerToModel } from '../models/answers'
 
 export class AnswerMapper extends BaseMapper<AnswerFromModel, AnswerToModel, AnswerEntity> {
 	mapFrom(model: AnswerFromModel | null) {

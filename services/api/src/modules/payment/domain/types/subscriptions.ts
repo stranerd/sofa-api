@@ -1,4 +1,4 @@
-import { SelectedPaymentMethod } from './purchases'
+import type { SelectedPaymentMethod } from './purchases'
 
 export type Subscription = {
 	active: boolean

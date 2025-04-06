@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { DepartmentDbChangeCallbacks } from '../../utils/changes/departments'
 import { DepartmentMapper } from '../mappers/departments'
-import { DepartmentFromModel } from '../models/departments'
+import type { DepartmentFromModel } from '../models/departments'
 
 const Schema = new appInstance.dbs.mongo.Schema<DepartmentFromModel>(
 	{

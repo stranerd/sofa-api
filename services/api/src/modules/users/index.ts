@@ -18,4 +18,5 @@ export const VerificationsUseCases = new VerificationsUseCase(verificationReposi
 export const TutorRequestsUseCases = new TutorRequestsUseCase(tutorRequestRepository)
 
 export { UserEntity, generateDefaultUser } from './domain/entities/users'
-export { EmbeddedUser, ScoreRewards, UserMeta, UserRankings, UserSchoolType, UserSocials, UserType, UserSchool } from './domain/types'
+export type { EmbeddedUser, UserSchool } from './domain/types'
+export { ScoreRewards, UserMeta, UserRankings, UserSchoolType, UserSocials, UserType } from './domain/types'

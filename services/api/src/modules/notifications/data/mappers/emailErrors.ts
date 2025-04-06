@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { EmailErrorEntity } from '../../domain/entities/emailErrors'
-import { EmailErrorFromModel, EmailErrorToModel } from '../models/emailErrors'
+import type { EmailErrorFromModel, EmailErrorToModel } from '../models/emailErrors'
 
 export class EmailErrorMapper extends BaseMapper<EmailErrorFromModel, EmailErrorToModel, EmailErrorEntity> {
 	mapFrom(model: EmailErrorFromModel | null) {

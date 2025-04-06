@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { WithdrawalDbChangeCallbacks } from '../../utils/changes/withdrawals'
 import { WithdrawalMapper } from '../mappers/withdrawals'
-import { WithdrawalFromModel } from '../models/withdrawals'
+import type { WithdrawalFromModel } from '../models/withdrawals'
 
 const WithdrawalSchema = new appInstance.dbs.mongo.Schema<WithdrawalFromModel>(
 	{

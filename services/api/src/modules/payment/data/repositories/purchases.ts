@@ -1,8 +1,10 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { IPurchaseRepository } from '../../domain/irepositories/purchases'
+
+import type { IPurchaseRepository } from '../../domain/irepositories/purchases'
 import { PurchaseMapper } from '../mappers/purchases'
-import { PurchaseToModel } from '../models/purchases'
+import type { PurchaseToModel } from '../models/purchases'
 import { Purchase } from '../mongooseModels/purchases'
 
 export class PurchaseRepository implements IPurchaseRepository {

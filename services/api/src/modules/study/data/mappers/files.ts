@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { FileEntity } from '../../domain/entities/files'
-import { FileFromModel, FileToModel } from '../models/files'
+import type { FileFromModel, FileToModel } from '../models/files'
 
 export class FileMapper extends BaseMapper<FileFromModel, FileToModel, FileEntity> {
 	mapFrom(model: FileFromModel | null) {

@@ -1,5 +1,7 @@
+import type { QueryParams, Request } from 'equipped'
+import { Schema, validate } from 'equipped'
+
 import { NotificationsUseCases } from '@modules/notifications'
-import { QueryParams, Request, Schema, validate } from 'equipped'
 
 export class NotificationsController {
 	static async get(req: Request) {

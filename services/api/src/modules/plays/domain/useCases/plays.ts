@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { PlayToModel } from '../../data/models/plays'
-import { IPlayRepository } from '../irepositories/plays'
-import { EmbeddedUser, PlayScore } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { PlayToModel } from '../../data/models/plays'
+import type { IPlayRepository } from '../irepositories/plays'
+import type { EmbeddedUser, PlayScore } from '../types'
 
 export class PlaysUseCase {
 	protected repository: IPlayRepository

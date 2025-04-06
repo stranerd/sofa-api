@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, FolderSaved } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { EmbeddedUser, FolderSaved } from '../types'
 
 export class FolderEntity extends BaseEntity<FolderConstructorArgs> {
 	constructor(data: FolderConstructorArgs) {

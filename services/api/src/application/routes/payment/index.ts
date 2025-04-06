@@ -1,4 +1,5 @@
 import { groupRoutes } from 'equipped'
+
 import { methodsRoutes } from './methods'
 import { plansRoutes } from './plans'
 import { purchasesRoutes } from './purchases'

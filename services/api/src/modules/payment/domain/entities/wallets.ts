@@ -1,5 +1,7 @@
 import { BaseEntity, CronTypes, Validation } from 'equipped'
-import { AccountDetails, Currencies, PlanDataType, Subscription, SubscriptionModel } from '../types'
+
+import type { AccountDetails, Currencies, Subscription, SubscriptionModel } from '../types'
+import { PlanDataType } from '../types'
 
 export class WalletEntity extends BaseEntity<WalletConstructorArgs> {
 	constructor(data: WalletConstructorArgs) {

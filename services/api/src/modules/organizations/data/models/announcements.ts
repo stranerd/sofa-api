@@ -1,4 +1,4 @@
-import { AnnouncementFilter, EmbeddedUser } from '../../domain/types'
+import type { AnnouncementFilter, EmbeddedUser } from '../../domain/types'
 
 export interface AnnouncementFromModel extends AnnouncementToModel {
 	_id: string

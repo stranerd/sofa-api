@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { PlayStatus, PlayTiming } from '../../domain/types'
 import { PlaysDbChangeCallbacks } from '../../utils/changes/plays'
 import { PlayMapper } from '../mappers/plays'
-import { PlayFromModel } from '../models/plays'
+import type { PlayFromModel } from '../models/plays'
 
 const Schema = new appInstance.dbs.mongo.Schema<PlayFromModel>(
 	{

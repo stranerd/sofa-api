@@ -1,9 +1,12 @@
+import type { DbChangeCallbacks } from 'equipped'
+import { AuthRole } from 'equipped'
+
 import { AuthUsersUseCases } from '@modules/auth'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/types'
-import { AuthRole, DbChangeCallbacks } from 'equipped'
-import { VerificationFromModel } from '../../data/models/verifications'
-import { VerificationEntity } from '../../domain/entities/verifications'
+
+import type { VerificationFromModel } from '../../data/models/verifications'
+import type { VerificationEntity } from '../../domain/entities/verifications'
 
 export const VerificationDbChangeCallbacks: DbChangeCallbacks<VerificationFromModel, VerificationEntity> = {
 	created: async ({ after }) => {

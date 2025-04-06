@@ -1,8 +1,10 @@
+import type { OnJoinFn } from 'equipped'
+import { AuthRole } from 'equipped'
+
 import { canAccessConversation } from '@modules/conversations'
 import { canAccessOrgClasses, canAccessOrgMembers } from '@modules/organizations'
 import { Coursable, canAccessCoursable } from '@modules/study'
 import { appInstance } from '@utils/types'
-import { AuthRole, OnJoinFn } from 'equipped'
 
 export const registerSockets = () => {
 	const isAdmin: OnJoinFn = async ({ channel, user }) => (user?.roles?.[AuthRole.isAdmin] ? channel : null)

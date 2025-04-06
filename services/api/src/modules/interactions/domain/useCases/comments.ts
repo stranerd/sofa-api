@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { CommentToModel } from '../../data/models/comments'
-import { ICommentRepository } from '../irepositories/comments'
-import { CommentMeta, Interaction } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { CommentToModel } from '../../data/models/comments'
+import type { ICommentRepository } from '../irepositories/comments'
+import type { CommentMeta, Interaction } from '../types'
 
 export class CommentsUseCase {
 	repository: ICommentRepository

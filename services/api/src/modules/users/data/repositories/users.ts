@@ -1,20 +1,11 @@
 import { appInstance } from '@utils/types'
-import { IUserRepository } from '../../domain/irepositories/users'
-import {
-	UserAccount,
-	UserAi,
-	UserBio,
-	UserLocation,
-	UserMeta,
-	UserRankings,
-	UserRoles,
-	UserSocialsType,
-	UserType,
-	UserTypeData,
-} from '../../domain/types'
+
+import type { IUserRepository } from '../../domain/irepositories/users'
+import type { UserAccount, UserAi, UserBio, UserLocation, UserRoles, UserSocialsType, UserTypeData } from '../../domain/types'
+import { UserMeta, UserRankings, UserType } from '../../domain/types'
 import { getDateDifference } from '../../utils/dates'
 import { UserMapper } from '../mappers/users'
-import { UserFromModel } from '../models/users'
+import type { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {

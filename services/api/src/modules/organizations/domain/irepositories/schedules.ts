@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { ScheduleToModel } from '../../data/models/schedules'
-import { ScheduleEntity } from '../entities/schedules'
-import { EmbeddedUser } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { ScheduleToModel } from '../../data/models/schedules'
+import type { ScheduleEntity } from '../entities/schedules'
+import type { EmbeddedUser } from '../types'
 
 export interface IScheduleRepository {
 	add: (data: ScheduleToModel) => Promise<ScheduleEntity>

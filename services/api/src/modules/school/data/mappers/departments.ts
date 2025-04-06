@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { DepartmentEntity } from '../../domain/entities/departments'
-import { DepartmentFromModel, DepartmentToModel } from '../models/departments'
+import type { DepartmentFromModel, DepartmentToModel } from '../models/departments'
 
 export class DepartmentMapper extends BaseMapper<DepartmentFromModel, DepartmentToModel, DepartmentEntity> {
 	mapFrom(model: DepartmentFromModel | null) {

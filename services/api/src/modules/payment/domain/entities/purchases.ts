@@ -1,5 +1,6 @@
 import { BaseEntity } from 'equipped'
-import { PurchaseData, Saleable } from '../types'
+
+import type { PurchaseData, Saleable } from '../types'
 
 export class PurchaseEntity extends BaseEntity<PurchaseConstructorArgs> {
 	constructor(data: PurchaseConstructorArgs) {

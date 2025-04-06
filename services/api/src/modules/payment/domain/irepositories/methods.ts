@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { MethodToModel } from '../../data/models/methods'
-import { MethodEntity } from '../entities/methods'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { MethodToModel } from '../../data/models/methods'
+import type { MethodEntity } from '../entities/methods'
 
 export interface IMethodRepository {
 	create: (data: MethodToModel) => Promise<MethodEntity>

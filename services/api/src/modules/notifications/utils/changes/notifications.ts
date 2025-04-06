@@ -1,12 +1,15 @@
+import type { DbChangeCallbacks } from 'equipped'
+import { EmailsList } from 'equipped'
+
 import { UsersUseCases } from '@modules/users'
+import { renderEmail } from '@utils/emails'
 import { clientDomain } from '@utils/environment'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks, EmailsList } from 'equipped'
-import { NotificationFromModel } from '../../data/models/notifications'
-import { NotificationEntity } from '../../domain/entities/notifications'
+
+import type { NotificationFromModel } from '../../data/models/notifications'
+import type { NotificationEntity } from '../../domain/entities/notifications'
 import { sendPushNotification } from '../push'
-import { renderEmail } from '@utils/emails'
 
 export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromModel, NotificationEntity> = {
 	created: async ({ after }) => {

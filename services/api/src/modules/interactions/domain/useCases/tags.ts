@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { TagToModel } from '../../data/models/tags'
-import { ITagRepository } from '../irepositories/tags'
-import { TagMeta, TagTypes } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { TagToModel } from '../../data/models/tags'
+import type { ITagRepository } from '../irepositories/tags'
+import type { TagMeta, TagTypes } from '../types'
 
 export class TagsUseCase {
 	private repository: ITagRepository

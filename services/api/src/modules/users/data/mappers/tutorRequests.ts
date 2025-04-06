@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { TutorRequestEntity } from '../../domain/entities/tutorRequests'
-import { TutorRequestFromModel, TutorRequestToModel } from '../models/tutorRequests'
+import type { TutorRequestFromModel, TutorRequestToModel } from '../models/tutorRequests'
 
 export class TutorRequestMapper extends BaseMapper<TutorRequestFromModel, TutorRequestToModel, TutorRequestEntity> {
 	mapFrom(param: TutorRequestFromModel | null) {

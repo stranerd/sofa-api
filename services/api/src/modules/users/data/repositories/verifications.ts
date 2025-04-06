@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
-import { IVerificationRepository } from '../../domain/irepositories/verifications'
-import { AcceptVerificationInput } from '../../domain/types'
+
+import type { IVerificationRepository } from '../../domain/irepositories/verifications'
+import type { AcceptVerificationInput } from '../../domain/types'
 import { VerificationMapper } from '../mappers/verifications'
-import { VerificationToModel } from '../models/verifications'
+import type { VerificationToModel } from '../models/verifications'
 import { Verification } from '../mongooseModels/verifications'
 
 export class VerificationRepository implements IVerificationRepository {

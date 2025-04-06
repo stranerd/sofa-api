@@ -1,7 +1,9 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser } from '../types'
-import { MessageEntity } from './messages'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { EmbeddedUser } from '../types'
+import type { MessageEntity } from './messages'
 
 export class ConversationEntity extends BaseEntity<ConversationConstructorArgs> {
 	static AI_Id = 'ai-bot'

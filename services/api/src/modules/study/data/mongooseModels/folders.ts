@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { FolderSaved } from '../../domain/types'
 import { FolderDbChangeCallbacks } from '../../utils/changes/folders'
 import { FolderMapper } from '../mappers/folders'
-import { FolderFromModel } from '../models/folders'
+import type { FolderFromModel } from '../models/folders'
 
 const Schema = new appInstance.dbs.mongo.Schema<FolderFromModel>(
 	{

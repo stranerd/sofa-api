@@ -1,7 +1,9 @@
-import { youtubeConfig } from '@utils/environment'
 import { google } from 'googleapis'
-import { ScheduleEntity } from '../domain/entities/schedules'
-import { ScheduleStream } from '../domain/types'
+
+import { youtubeConfig } from '@utils/environment'
+
+import type { ScheduleEntity } from '../domain/entities/schedules'
+import type { ScheduleStream } from '../domain/types'
 
 const getYoutubeClient = async () => {
 	const OAuth2Client = new google.auth.OAuth2(youtubeConfig.clientId, youtubeConfig.clientSecret)

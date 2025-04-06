@@ -1,8 +1,10 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { CommentsUseCases } from '../../'
-import { CommentFromModel } from '../../data/models/comments'
-import { CommentEntity } from '../../domain/entities/comments'
+import type { CommentFromModel } from '../../data/models/comments'
+import type { CommentEntity } from '../../domain/entities/comments'
 import { CommentMeta, InteractionEntities } from '../../domain/types'
 
 export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, CommentEntity> = {

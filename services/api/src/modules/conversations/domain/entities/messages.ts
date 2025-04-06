@@ -1,5 +1,6 @@
 import { BaseEntity } from 'equipped'
-import { Media } from '../types'
+
+import type { Media } from '../types'
 
 export class MessageEntity extends BaseEntity<MessageConstructorArgs> {
 	constructor(data: MessageConstructorArgs) {

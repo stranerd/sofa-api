@@ -1,10 +1,13 @@
+import type { DbChangeCallbacks } from 'equipped'
+import { AuthRole } from 'equipped'
+
 import { AuthUsersUseCases } from '@modules/auth'
 import { ClassesUseCases } from '@modules/organizations'
 import { appInstance } from '@utils/types'
-import { AuthRole, DbChangeCallbacks } from 'equipped'
-import { WalletFromModel } from '../../data/models/wallets'
-import { WalletEntity } from '../../domain/entities/wallets'
-import { Subscription } from '../../domain/types'
+
+import type { WalletFromModel } from '../../data/models/wallets'
+import type { WalletEntity } from '../../domain/entities/wallets'
+import type { Subscription } from '../../domain/types'
 
 export const WalletDbChangeCallbacks: DbChangeCallbacks<WalletFromModel, WalletEntity> = {
 	created: async ({ after }) => {

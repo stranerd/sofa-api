@@ -1,4 +1,6 @@
-import { Conditions, QueryParams } from 'equipped'
+import type { QueryParams } from 'equipped'
+import { Conditions } from 'equipped'
+
 import { QuizzesUseCases, CoursesUseCases, FilesUseCases } from '..'
 import { QuizEntity } from '../domain/entities/quizzes'
 import { FolderSaved } from '../domain/types'

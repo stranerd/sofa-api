@@ -1,5 +1,5 @@
-import { PhoneErrorToModel } from '../../data/models/phoneErrors'
-import { IPhoneErrorRepository } from '../irepositories/phoneErrors'
+import type { PhoneErrorToModel } from '../../data/models/phoneErrors'
+import type { IPhoneErrorRepository } from '../irepositories/phoneErrors'
 
 export class PhoneErrorsUseCase {
 	private repository: IPhoneErrorRepository

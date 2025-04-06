@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { TutorRequestToModel } from '../../data/models/tutorRequests'
-import { TutorRequestEntity } from '../entities/tutorRequests'
-import { AcceptVerificationInput } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { TutorRequestToModel } from '../../data/models/tutorRequests'
+import type { TutorRequestEntity } from '../entities/tutorRequests'
+import type { AcceptVerificationInput } from '../types'
 
 export interface ITutorRequestRepository {
 	find: (id: string) => Promise<TutorRequestEntity | null>

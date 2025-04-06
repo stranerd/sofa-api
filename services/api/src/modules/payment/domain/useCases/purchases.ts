@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { PurchaseToModel } from '../../data/models/purchases'
-import { IPurchaseRepository } from '../irepositories/purchases'
-import { Purchasables } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { PurchaseToModel } from '../../data/models/purchases'
+import type { IPurchaseRepository } from '../irepositories/purchases'
+import type { Purchasables } from '../types'
 
 export class PurchasesUseCase {
 	repository: IPurchaseRepository

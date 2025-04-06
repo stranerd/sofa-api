@@ -1,4 +1,4 @@
-export * from './push'
+export type * from './push'
 
 import { getEnvOrFail, Instance } from 'equipped'
 import './enums'

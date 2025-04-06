@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { ViewEntity } from '../../domain/entities/views'
-import { ViewFromModel, ViewToModel } from '../models/views'
+import type { ViewFromModel, ViewToModel } from '../models/views'
 
 export class ViewMapper extends BaseMapper<ViewFromModel, ViewToModel, ViewEntity> {
 	mapFrom(param: ViewFromModel | null) {

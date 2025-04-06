@@ -1,3 +1,5 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { ConversationsUseCases } from '@modules/conversations'
 import { CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases } from '@modules/interactions'
 import { AnnouncementsUseCases, ClassesUseCases, MembersUseCases, SchedulesUseCases } from '@modules/organizations'
@@ -5,10 +7,10 @@ import { PlaysUseCases } from '@modules/plays'
 import { CoursesUseCases, FilesUseCases, FoldersUseCases, QuizzesUseCases } from '@modules/study'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { ConnectsUseCases, UsersUseCases } from '../../'
-import { UserFromModel } from '../../data/models/users'
-import { UserEntity } from '../../domain/entities/users'
+import type { UserFromModel } from '../../data/models/users'
+import type { UserEntity } from '../../domain/entities/users'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {

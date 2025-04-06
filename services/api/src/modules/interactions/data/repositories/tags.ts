@@ -1,9 +1,12 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { ITagRepository } from '../../domain/irepositories/tags'
-import { TagMeta, TagTypes } from '../../domain/types'
+
+import type { ITagRepository } from '../../domain/irepositories/tags'
+import type { TagTypes } from '../../domain/types'
+import { TagMeta } from '../../domain/types'
 import { TagMapper } from '../mappers/tags'
-import { TagFromModel, TagToModel } from '../models/tags'
+import type { TagFromModel, TagToModel } from '../models/tags'
 import { Tag } from '../mongooseModels/tags'
 
 export class TagRepository implements ITagRepository {

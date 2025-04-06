@@ -1,5 +1,7 @@
+import type { Request } from 'equipped'
+import { AuthTypes, BadRequestError, Schema, validate, Validation } from 'equipped'
+
 import { AuthUseCases, AuthUsersUseCases, generateAuthOutput } from '@modules/auth'
-import { AuthTypes, BadRequestError, Request, Schema, validate, Validation } from 'equipped'
 
 export class EmailsController {
 	static async signup(req: Request) {

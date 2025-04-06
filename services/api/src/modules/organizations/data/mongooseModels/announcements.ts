@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { AnnouncementDbChangeCallbacks } from '../../utils/changes/announcements'
 import { AnnouncementMapper } from '../mappers/announcements'
-import { AnnouncementFromModel } from '../models/announcements'
+import type { AnnouncementFromModel } from '../models/announcements'
 
 const AnnouncementSchema = new appInstance.dbs.mongo.Schema<AnnouncementFromModel>(
 	{

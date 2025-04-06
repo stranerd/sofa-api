@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { AnswerToModel } from '../../data/models/answers'
-import { AnswerEntity } from '../entities/answers'
-import { PlayTypes } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { AnswerToModel } from '../../data/models/answers'
+import type { AnswerEntity } from '../entities/answers'
+import type { PlayTypes } from '../types'
 
 export interface IAnswerRepository {
 	answer: (data: AnswerToModel) => Promise<AnswerEntity | null>

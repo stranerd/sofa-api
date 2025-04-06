@@ -1,7 +1,9 @@
+import type { Request } from 'equipped'
+import { AuthRole, BadRequestError, NotFoundError, Schema, validate, Validation, verifyAccessToken } from 'equipped'
+
 import { AuthUsersUseCases, signOutUser } from '@modules/auth'
 import { UploaderUseCases } from '@modules/storage'
 import { officialAccountEmail, superAdminEmail } from '@utils/environment'
-import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, Validation, verifyAccessToken } from 'equipped'
 
 export class UserController {
 	static async find(req: Request) {

@@ -1,12 +1,14 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { InteractionEntities, ReviewsUseCases } from '@modules/interactions'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { PlanDataType, WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { MessagesUseCases } from '../../'
-import { ConversationFromModel } from '../../data/models/conversations'
-import { ConversationEntity } from '../../domain/entities/conversations'
+import type { ConversationFromModel } from '../../data/models/conversations'
+import type { ConversationEntity } from '../../domain/entities/conversations'
 
 export const ConversationDbChangeCallbacks: DbChangeCallbacks<ConversationFromModel, ConversationEntity> = {
 	created: async ({ after }) => {

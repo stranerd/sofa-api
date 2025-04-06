@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { InstitutionDbChangeCallbacks } from '../../utils/changes/institutions'
 import { InstitutionMapper } from '../mappers/institutions'
-import { InstitutionFromModel } from '../models/institutions'
+import type { InstitutionFromModel } from '../models/institutions'
 
 const Schema = new appInstance.dbs.mongo.Schema<InstitutionFromModel>(
 	{

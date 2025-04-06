@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { TagController } from '@application/controllers/interactions/tags'
 import { isAdmin } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const tagsRoutes = groupRoutes({ path: '/tags' }, [
 	{

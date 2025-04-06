@@ -1,8 +1,9 @@
 import { appInstance } from '@utils/types'
+
 import { ScheduleStatus } from '../../domain/types'
 import { ScheduleDbChangeCallbacks } from '../../utils/changes/schedules'
 import { ScheduleMapper } from '../mappers/schedules'
-import { ScheduleFromModel } from '../models/schedules'
+import type { ScheduleFromModel } from '../models/schedules'
 
 const ScheduleSchema = new appInstance.dbs.mongo.Schema<ScheduleFromModel>(
 	{

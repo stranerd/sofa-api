@@ -1,7 +1,8 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { TagToModel } from '../../data/models/tags'
-import { TagEntity } from '../entities/tags'
-import { TagMeta, TagTypes } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { TagToModel } from '../../data/models/tags'
+import type { TagEntity } from '../entities/tags'
+import type { TagMeta, TagTypes } from '../types'
 
 export interface ITagRepository {
 	add: (data: TagToModel) => Promise<TagEntity>

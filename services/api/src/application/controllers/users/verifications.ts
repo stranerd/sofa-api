@@ -1,6 +1,8 @@
+import type { QueryParams, Request } from 'equipped'
+import { BadRequestError, Conditions, NotAuthorizedError, Schema, validate } from 'equipped'
+
 import { CoursesUseCases, DraftStatus, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases, VerificationsUseCases } from '@modules/users'
-import { BadRequestError, Conditions, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class VerificationsController {
 	static async find(req: Request) {

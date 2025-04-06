@@ -1,7 +1,9 @@
-import { QuestionEntity } from '@modules/study'
 import { BaseMapper } from 'equipped'
+
+import { QuestionEntity } from '@modules/study'
+
 import { PlayEntity } from '../../domain/entities/plays'
-import { PlayFromModel, PlayToModel } from '../models/plays'
+import type { PlayFromModel, PlayToModel } from '../models/plays'
 
 export class PlayMapper extends BaseMapper<PlayFromModel, PlayToModel, PlayEntity> {
 	mapFrom(model: PlayFromModel | null) {

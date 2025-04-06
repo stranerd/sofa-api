@@ -1,4 +1,4 @@
-import { ITokenRepository } from '../../domain/irepositories/tokens'
+import type { ITokenRepository } from '../../domain/irepositories/tokens'
 import { TokenMapper } from '../mappers/tokens'
 import { Token } from '../mongooseModels/tokens'
 

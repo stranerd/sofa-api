@@ -1,4 +1,4 @@
-import { NotificationData } from '../../domain/types'
+import type { NotificationData } from '../../domain/types'
 
 export interface NotificationFromModel extends NotificationToModel {
 	_id: string

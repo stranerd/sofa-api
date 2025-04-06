@@ -1,5 +1,7 @@
+import type { Request } from 'equipped'
+import { BadRequestError, Hash, Schema, validate, ValidationError } from 'equipped'
+
 import { AuthUseCases, AuthUsersUseCases, generateAuthOutput } from '@modules/auth'
-import { BadRequestError, Hash, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class PasswordsController {
 	static async sendResetMail(req: Request) {

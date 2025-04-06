@@ -1,7 +1,8 @@
 import { appInstance } from '@utils/types'
+
 import { AnswerDbChangeCallbacks } from '../../utils/changes/answers'
 import { AnswerMapper } from '../mappers/answers'
-import { AnswerFromModel } from '../models/answers'
+import type { AnswerFromModel } from '../models/answers'
 
 const Schema = new appInstance.dbs.mongo.Schema<AnswerFromModel>(
 	{

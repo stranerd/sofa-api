@@ -1,6 +1,7 @@
 import { BaseMapper } from 'equipped'
+
 import { MessageEntity } from '../../domain/entities/messages'
-import { MessageFromModel, MessageToModel } from '../models/messages'
+import type { MessageFromModel, MessageToModel } from '../models/messages'
 
 export class MessageMapper extends BaseMapper<MessageFromModel, MessageToModel, MessageEntity> {
 	mapFrom(model: MessageFromModel | null) {

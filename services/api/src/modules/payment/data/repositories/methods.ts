@@ -1,8 +1,11 @@
+import type { QueryParams } from 'equipped'
+import { BadRequestError } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { BadRequestError, QueryParams } from 'equipped'
-import { IMethodRepository } from '../../domain/irepositories/methods'
+
+import type { IMethodRepository } from '../../domain/irepositories/methods'
 import { MethodMapper } from '../mappers/methods'
-import { MethodToModel } from '../models/methods'
+import type { MethodToModel } from '../models/methods'
 import { Method } from '../mongooseModels/methods'
 
 export class MethodRepository implements IMethodRepository {

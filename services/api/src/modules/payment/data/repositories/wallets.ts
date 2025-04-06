@@ -1,23 +1,15 @@
-import { appInstance } from '@utils/types'
 import { BadRequestError, DelayedJobs } from 'equipped'
-import { IWalletRepository } from '../../domain/irepositories/wallets'
-import {
-	AccountDetails,
-	Currencies,
-	PlanDataType,
-	Subscription,
-	SubscriptionModel,
-	TransactionStatus,
-	TransactionType,
-	TransferData,
-	WithdrawData,
-	WithdrawalStatus,
-} from '../../domain/types'
+
+import { appInstance } from '@utils/types'
+
+import type { IWalletRepository } from '../../domain/irepositories/wallets'
+import type { AccountDetails, PlanDataType, Subscription, SubscriptionModel, TransferData, WithdrawData } from '../../domain/types'
+import { Currencies, TransactionStatus, TransactionType, WithdrawalStatus } from '../../domain/types'
 import { FlutterwavePayment } from '../../utils/flutterwave'
 import { WalletMapper } from '../mappers/wallets'
-import { TransactionToModel } from '../models/transactions'
-import { WalletFromModel } from '../models/wallets'
-import { WithdrawalToModel } from '../models/withdrawals'
+import type { TransactionToModel } from '../models/transactions'
+import type { WalletFromModel } from '../models/wallets'
+import type { WithdrawalToModel } from '../models/withdrawals'
 import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
 import { Withdrawal } from '../mongooseModels/withdrawals'

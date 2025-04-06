@@ -1,10 +1,12 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { CourseMetaType, CoursesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { appInstance as purchases } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { TransactionsUseCases } from '../../'
-import { PurchaseFromModel } from '../../data/models/purchases'
+import type { PurchaseFromModel } from '../../data/models/purchases'
 import { PurchaseEntity } from '../../domain/entities/purchases'
 import { Purchasables, TransactionStatus, TransactionType } from '../../domain/types'
 

@@ -1,6 +1,7 @@
+import { groupRoutes } from 'equipped'
+
 import { WithdrawalsController } from '@application/controllers/payment/withdrawals'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes } from 'equipped'
 
 export const withdrawalsRoutes = groupRoutes({ path: '/withdrawals', middlewares: [isAuthenticated] }, [
 	{

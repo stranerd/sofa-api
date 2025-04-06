@@ -1,5 +1,6 @@
-import { PlansController } from '@application/controllers/payment/plans'
 import { groupRoutes } from 'equipped'
+
+import { PlansController } from '@application/controllers/payment/plans'
 
 export const plansRoutes = groupRoutes({ path: '/plans' }, [
 	{

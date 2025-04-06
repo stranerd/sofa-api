@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { ViewToModel } from '../../data/models/views'
-import { IViewRepository } from '../irepositories/views'
-import { Interaction } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { ViewToModel } from '../../data/models/views'
+import type { IViewRepository } from '../irepositories/views'
+import type { Interaction } from '../types'
 
 export class ViewsUseCase {
 	repository: IViewRepository

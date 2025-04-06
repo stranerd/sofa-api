@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { NotificationToModel } from '../../data/models/notifications'
-import { NotificationEntity } from '../entities/notifications'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { NotificationToModel } from '../../data/models/notifications'
+import type { NotificationEntity } from '../entities/notifications'
 
 export interface INotificationRepository {
 	find(id: string): Promise<NotificationEntity | null>

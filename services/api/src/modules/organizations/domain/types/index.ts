@@ -1,8 +1,8 @@
-import { CourseSections } from '@modules/study'
+import type { CourseSections } from '@modules/study'
 
-export { Saleable } from '@modules/payment'
-export { EmbeddedUser } from '@modules/users'
-export { MediaOutput as Media } from 'equipped'
+export type { Saleable } from '@modules/payment'
+export type { EmbeddedUser } from '@modules/users'
+export type { MediaOutput as Media } from 'equipped'
 
 export enum MemberTypes {
 	teacher = 'teacher',

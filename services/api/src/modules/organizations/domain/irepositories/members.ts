@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { MemberEntity } from '../entities/members'
-import { EmbeddedUser, MemberTypes } from '../types'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { MemberEntity } from '../entities/members'
+import type { EmbeddedUser, MemberTypes } from '../types'
 
 export interface IMemberRepository {
 	find: (id: string) => Promise<MemberEntity | null>

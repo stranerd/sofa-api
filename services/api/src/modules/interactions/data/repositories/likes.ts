@@ -1,9 +1,11 @@
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
-import { QueryParams } from 'equipped'
-import { ILikeRepository } from '../../domain/irepositories/likes'
-import { Interaction } from '../../domain/types'
+
+import type { ILikeRepository } from '../../domain/irepositories/likes'
+import type { Interaction } from '../../domain/types'
 import { LikeMapper } from '../mappers/likes'
-import { LikeFromModel, LikeToModel } from '../models/likes'
+import type { LikeFromModel, LikeToModel } from '../models/likes'
 import { Like } from '../mongooseModels/likes'
 
 export class LikeRepository implements ILikeRepository {

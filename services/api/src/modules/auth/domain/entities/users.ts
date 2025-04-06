@@ -1,5 +1,7 @@
-import { AuthRoles, AuthTypes, BaseEntity, Enum, MediaOutput } from 'equipped'
-import { Phone, UserUpdateInput } from '../types'
+import type { AuthRoles, AuthTypes, Enum, MediaOutput } from 'equipped'
+import { BaseEntity } from 'equipped'
+
+import type { Phone, UserUpdateInput } from '../types'
 
 export class AuthUserEntity extends BaseEntity<UserConstructorArgs, 'password'> {
 	__ignoreInJSON = ['password' as const]

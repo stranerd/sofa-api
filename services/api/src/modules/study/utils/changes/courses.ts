@@ -1,11 +1,13 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { InteractionEntities, ReviewsUseCases, TagMeta, TagsUseCases, ViewsUseCases } from '@modules/interactions'
 import { ScoreRewards, UserMeta, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
+
 import { CoursesUseCases, FoldersUseCases } from '../..'
-import { CourseFromModel } from '../../data/models/courses'
-import { CourseEntity } from '../../domain/entities/courses'
+import type { CourseFromModel } from '../../data/models/courses'
+import type { CourseEntity } from '../../domain/entities/courses'
 import { DraftStatus, FolderSaved } from '../../domain/types'
 
 export const CourseDbChangeCallbacks: DbChangeCallbacks<CourseFromModel, CourseEntity> = {

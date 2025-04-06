@@ -1,10 +1,12 @@
+import type { DbChangeCallbacks } from 'equipped'
+
 import { InteractionEntities } from '@modules/interactions/domain/types'
 import { CoursesUseCases, QuizzesUseCases } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/types'
-import { DbChangeCallbacks } from 'equipped'
-import { ReviewFromModel } from '../../data/models/reviews'
-import { ReviewEntity } from '../../domain/entities/reviews'
+
+import type { ReviewFromModel } from '../../data/models/reviews'
+import type { ReviewEntity } from '../../domain/entities/reviews'
 
 export const ReviewDbChangeCallbacks: DbChangeCallbacks<ReviewFromModel, ReviewEntity> = {
 	created: async ({ after }) => {

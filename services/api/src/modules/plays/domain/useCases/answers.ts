@@ -1,7 +1,8 @@
-import { QueryParams } from 'equipped'
-import { AnswerToModel } from '../../data/models/answers'
-import { IAnswerRepository } from '../irepositories/answers'
-import { PlayTypes } from '../types'
+import type { QueryParams } from 'equipped'
+
+import type { AnswerToModel } from '../../data/models/answers'
+import type { IAnswerRepository } from '../irepositories/answers'
+import type { PlayTypes } from '../types'
 
 export class AnswersUseCase {
 	private repository: IAnswerRepository

@@ -1,6 +1,7 @@
-import { QueryParams, QueryResults } from 'equipped'
-import { FacultyToModel } from '../../data/models/faculties'
-import { FacultyEntity } from '../entities/faculties'
+import type { QueryParams, QueryResults } from 'equipped'
+
+import type { FacultyToModel } from '../../data/models/faculties'
+import type { FacultyEntity } from '../entities/faculties'
 
 export interface IFacultyRepository {
 	add: (data: FacultyToModel) => Promise<FacultyEntity>

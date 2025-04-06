@@ -1,6 +1,8 @@
-import { generateDefaultUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
-import { EmbeddedUser, InteractionEntity } from '../types'
+
+import { generateDefaultUser } from '@modules/users'
+
+import type { EmbeddedUser, InteractionEntity } from '../types'
 
 export class LikeEntity extends BaseEntity<LikeConstructorArgs> {
 	constructor(data: LikeConstructorArgs) {

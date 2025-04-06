@@ -1,6 +1,7 @@
-import { QueryParams } from 'equipped'
-import { FacultyToModel } from '../../data/models/faculties'
-import { IFacultyRepository } from '../irepositories/faculties'
+import type { QueryParams } from 'equipped'
+
+import type { FacultyToModel } from '../../data/models/faculties'
+import type { IFacultyRepository } from '../irepositories/faculties'
 
 export class FacultiesUseCase {
 	private repository: IFacultyRepository

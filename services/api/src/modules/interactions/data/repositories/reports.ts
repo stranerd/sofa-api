@@ -1,10 +1,12 @@
-import { QueryParams } from 'equipped'
-import { IReportRepository } from '../../domain/irepositories/reports'
-import { EmbeddedUser, Interaction } from '../../domain/types'
-import { ReportMapper } from '../mappers/reports'
-import { ReportToModel } from '../models/reports'
-import { Report } from '../mongooseModels/reports'
+import type { QueryParams } from 'equipped'
+
 import { appInstance } from '@utils/types'
+
+import type { IReportRepository } from '../../domain/irepositories/reports'
+import type { EmbeddedUser, Interaction } from '../../domain/types'
+import { ReportMapper } from '../mappers/reports'
+import type { ReportToModel } from '../models/reports'
+import { Report } from '../mongooseModels/reports'
 
 export class ReportRepository implements IReportRepository {
 	private static instance: ReportRepository
