@@ -36,7 +36,7 @@ export class AnswerRepository implements IAnswerRepository {
 			const play = await this.#verifyType(type, typeId, { questionId, userId }, session)
 			if (!play) throw new BadRequestError('cannot answer this question')
 			const typeUserId = play.user.id
-			const now = Date.now()
+			const now = Date.now() - 5000
 			const timedOutAt = play.getUsesTimer() ? play.getAnswerEndsAt() : null
 			const answerModel = await Answer.findOneAndUpdate(
 				{ type, typeId, typeUserId, userId },
@@ -44,7 +44,8 @@ export class AnswerRepository implements IAnswerRepository {
 				{ upsert: true, new: true, session },
 			)
 			if ((answerModel.timedOutAt && answerModel.timedOutAt < now) || !!answerModel.endedAt)
-				throw new BadRequestError('your answers have been submitted already')
+				return res = answerModel
+				// throw new BadRequestError('your answers have been submitted already')
 
 			const newAnswer = questionId
 				? await Answer.findByIdAndUpdate(
@@ -53,8 +54,7 @@ export class AnswerRepository implements IAnswerRepository {
 						{ new: true, session },
 					)
 				: answerModel
-			res = newAnswer
-			return res
+			return res = newAnswer
 		})
 		return this.mapper.mapFrom(res)
 	}
