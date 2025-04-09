@@ -7,7 +7,6 @@
 			"@modules/*": ["./src/modules/*"],
 			"@utils/*": ["./src/utils/*"]
 		},
-		"baseUrl": "./",
 		"rootDir": "src",
 		"outDir": "lib"
 	},
