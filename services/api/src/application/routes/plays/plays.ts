@@ -1,7 +1,7 @@
 import { groupRoutes } from 'equipped'
 
 import { PlayController } from '@application/controllers/plays/plays'
-import { isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 
 export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthenticated] }, [
 	{
@@ -43,6 +43,12 @@ export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthent
 		path: '/:id/export',
 		method: 'post',
 		handler: PlayController.export,
+	},
+	{
+		path: '/export/admin',
+		method: 'post',
+		middlewares: [isAdmin],
+		handler: PlayController.adminExport,
 	},
 	{
 		path: '/:id/questions',

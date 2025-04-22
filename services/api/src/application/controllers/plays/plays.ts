@@ -1,7 +1,7 @@
 import type { QueryParams, Request } from 'equipped'
-import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, Schema, validate, Validation } from 'equipped'
+import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, Schema, Validation, validate } from 'equipped'
 
-import { PlayStatus, PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
+import { PlayEntity, PlayStatus, PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
 import { Coursable, canAccessCoursable } from '@modules/study'
 import { UsersUseCases } from '@modules/users'
 
@@ -101,33 +101,57 @@ export class PlayController {
 		throw new NotAuthorizedError()
 	}
 
-	static async export(req: Request) {
-		const play = await PlaysUseCases.find(req.params.id)
-		if (!play || play.status !== PlayStatus.scored || play.user.id !== req.authUser!.id) throw new NotAuthorizedError()
-		const participants = [...new Set(play.scores.map((score) => score.userId))]
+	static async formatForExport (plays: PlayEntity[]) {
+		const participants = [...new Set(
+			plays.flatMap((play) => play.scores.map((score) => score.userId))
+		)]
 		const { results: users } = await UsersUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: participants }],
 			all: true,
 		})
 		const usersMap = Object.fromEntries(users.map((u) => [u.id, u]))
 
-		const orderedUsers = play.scores
-			.map((score) => {
-				const user = usersMap[score.userId]
-				if (!user) return null
-				return {
-					name: user.bio.name.full,
-					email: user.bio.email,
-					score: score.value,
-				}
-			})
-			.filter(Boolean)
-			.map((user, i) => `${i + 1}. ${user!.name}(${user!.email}) - ${(user!.score * 100).toFixed(2)}%`)
+		return Object.fromEntries(
+			plays.map((play) => {
+				const orderedUsers = play.scores
+					.map((score) => {
+						const user = usersMap[score.userId]
+						return user ? { user, score } : null
+					})
+					.filter((u) => !!u)
+					.map((val, i) => {
+						if (!val) return ''
+						const { user, score } = val
+						const name = user.bio.name.full
+						const email = user.bio.email
+						const phone = user.bio.phone ? `${user.bio.phone.code} ${user.bio.phone.number}` : null
+						const location = user.location ? `${user.location.state}, ${user.location.country}` : null
+						return `${i + 1}. ${name}
+\t${email}${phone ? `(${phone})` : ''}${location ? `\n\t${location}` : null}
+\t${(score.value * 100).toFixed(2)}%`
+					})
 
-		return `${Validation.capitalize(play.title)}(#${play.id})
+				const result = `${Validation.capitalize(play.title)}(#${play.id})
 Type: ${Validation.capitalize(play.data.type)}
 
 Participants:
 ${orderedUsers.length ? orderedUsers.join('\n') : 'No participants'}`
+				return [play.id, result]
+			})
+		)
+	}
+
+	static async export(req: Request) {
+		const play = await PlaysUseCases.find(req.params.id)
+		if (!play || play.status !== PlayStatus.scored || play.user.id !== req.authUser!.id) throw new NotAuthorizedError()
+
+		const results = await PlayController.formatForExport([play])
+		return results[play.id]
+	}
+
+	static async adminExport (req: Request) {
+		const { results: plays } = await PlaysUseCases.get(req.body as QueryParams)
+		const results = await PlayController.formatForExport(plays)
+		return Object.values(results).join('\n'.repeat(10))
 	}
 }
