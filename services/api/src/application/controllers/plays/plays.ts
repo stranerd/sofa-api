@@ -3,7 +3,7 @@ import { AuthRole, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, Sch
 
 import { PlayEntity, PlayStatus, PlayTypes, PlaysUseCases, createPlay } from '@modules/plays'
 import { Coursable, canAccessCoursable } from '@modules/study'
-import { UsersUseCases } from '@modules/users'
+import { UserEntity, UsersUseCases } from '@modules/users'
 
 const publicTypes = [PlayTypes.games, PlayTypes.assessments]
 
@@ -111,47 +111,49 @@ export class PlayController {
 		})
 		const usersMap = Object.fromEntries(users.map((u) => [u.id, u]))
 
-		return Object.fromEntries(
-			plays.map((play) => {
-				const orderedUsers = play.scores
+		const columns = ['S/N', 'Name', 'Email', 'Phone', 'Location', 'Play', 'Score']
+
+		const rows = Object.values(plays.flatMap((play) => play.scores
 					.map((score) => {
 						const user = usersMap[score.userId]
-						return user ? { user, score } : null
+						return user ? { user, score, play } : null!
 					})
-					.filter((u) => !!u)
-					.map((val, i) => {
-						if (!val) return ''
-						const { user, score } = val
-						const name = user.bio.name.full
-						const email = user.bio.email
-						const phone = user.bio.phone ? `${user.bio.phone.code} ${user.bio.phone.number}` : null
-						const location = user.location ? `${user.location.state}, ${user.location.country}` : null
-						return `${i + 1}. ${name}
-\t${email}${phone ? `(${phone})` : ''}${location ? `\n\t${location}` : null}
-\t${(score.value * 100).toFixed(2)}%`
-					})
+			.filter((u) => !!u))
+			.reduce<Record<string, { user: UserEntity, score: { value: number } , play: PlayEntity }>>((acc, cur) => {
+				if (acc[cur.user.id] && acc[cur.user.id].score.value > cur.score.value) return acc
+				return { ...acc, [cur.user.id]: cur }
+			}, {}))
+			.sort((a, b) => b.score.value - a.score.value)
+			.map(({ user, score, play }, i) => [
+				`${i + 1}`,
+				user.bio.name.full,
+				user.bio.email,
+				user.bio.phone ? `${user.bio.phone.code}-${user.bio.phone.number}` : '',
+				user.location ? `${user.location.state}, ${user.location.country}` : '',
+				`${Validation.capitalize(play.title)}(#${play.id})`,
+				(score.value * 100).toFixed(2)
+		])
 
-				const result = `${Validation.capitalize(play.title)}(#${play.id})
-Type: ${Validation.capitalize(play.data.type)}
-
-Participants:
-${orderedUsers.length ? orderedUsers.join('\n') : 'No participants'}`
-				return [play.id, result]
-			})
-		)
+		return [columns, ...rows].map((row) => row.map((i) => i.replaceAll(',', '-')).join(',')).join('\n')
 	}
 
 	static async export(req: Request) {
 		const play = await PlaysUseCases.find(req.params.id)
 		if (!play || play.status !== PlayStatus.scored || play.user.id !== req.authUser!.id) throw new NotAuthorizedError()
 
-		const results = await PlayController.formatForExport([play])
-		return results[play.id]
+		const result = await PlayController.formatForExport([play])
+		return req.res({
+			body: result,
+			headers: { 'Content-Type': 'text/csv' }
+		})
 	}
 
 	static async adminExport (req: Request) {
 		const { results: plays } = await PlaysUseCases.get(req.body as QueryParams)
-		const results = await PlayController.formatForExport(plays)
-		return Object.values(results).join('\n'.repeat(10))
+		const result = await PlayController.formatForExport(plays)
+		return req.res({
+			body: result,
+			headers: { 'Content-Type': 'text/csv' }
+		})
 	}
 }
