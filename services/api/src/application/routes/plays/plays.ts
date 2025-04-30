@@ -2,6 +2,7 @@ import { groupRoutes } from 'equipped'
 
 import { PlayController } from '@application/controllers/plays/plays'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
+import { UsersUseCases } from '@modules/users'
 
 export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthenticated] }, [
 	{
@@ -60,4 +61,23 @@ export const playsRoutes = groupRoutes({ path: '/plays', middlewares: [isAuthent
 		method: 'get',
 		handler: PlayController.getCorrections,
 	},
+	{
+		path: '/export/users',
+		method: 'get',
+		middlewares: [isAdmin],
+		handler: async (req) => {
+			const { results: users } = await UsersUseCases.get(req.query ?? {})
+
+			const columns = ['Name', 'Email', 'Phone', 'User Type']
+
+			const rows = users.map((user) => {
+				if (user.type?.type !== 'student') return undefined!
+				return [user.bio.name.full, user.bio.email, user.bio.phone ? `${user.bio.phone.code}-${user.bio.phone.number}` : '', user.type?.type ?? '']
+			}).filter(Boolean)
+
+			const csv = [columns, ...rows].map((row) => row.join(',')).join('\n')
+
+			return req.res({ body: csv, headers: { 'Content-Type': 'text/csv' } })
+		}
+	}
 ])

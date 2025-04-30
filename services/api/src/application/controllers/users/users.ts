@@ -36,6 +36,7 @@ const schoolSchema = Schema.discriminate((s) => s.type, {
 }).nullable()
 
 const verifySchool = async (school: UserSchool): Promise<UserSchool> => {
+	if (school?.type === UserSchoolType.secondary) return school
 	if (school?.type === UserSchoolType.graduate) return school
 	if (school?.type === UserSchoolType.college) {
 		const department = await DepartmentsUseCases.find(school.departmentId)
